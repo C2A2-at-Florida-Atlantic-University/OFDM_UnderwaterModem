@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Mon Oct  4 14:50:42 2021
+# Process ID: 281603
+# Current directory: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver_less_ILAs/SDUAM.tmp/Clock_Divider_v1_0_project/Clock_Divider_v1_0_project.runs/synth_1
+# Command line: vivado -log Clock_Divider.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Clock_Divider.tcl
+# Log file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver_less_ILAs/SDUAM.tmp/Clock_Divider_v1_0_project/Clock_Divider_v1_0_project.runs/synth_1/Clock_Divider.vds
+# Journal file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver_less_ILAs/SDUAM.tmp/Clock_Divider_v1_0_project/Clock_Divider_v1_0_project.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source Clock_Divider.tcl -notrace

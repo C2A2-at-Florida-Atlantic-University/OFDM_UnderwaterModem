@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2021.2 (64-bit)
+# SW Build 3367213 on Tue Oct 19 02:47:39 MDT 2021
+# IP Build 3369179 on Thu Oct 21 08:25:16 MDT 2021
+# Start of session at: Thu Nov 25 09:46:57 2021
+# Process ID: 202899
+# Current directory: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.runs/synth_1
+# Command line: vivado -log delimiter.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source delimiter.tcl
+# Log file: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.runs/synth_1/delimiter.vds
+# Journal file: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.runs/synth_1/vivado.jou
+# Running On: saad-17Z90N-R-AAC8U1, OS: Linux, CPU Frequency: 3246.830 MHz, CPU Physical cores: 4, Host memory: 16390 MB
+#-----------------------------------------------------------
+source delimiter.tcl -notrace

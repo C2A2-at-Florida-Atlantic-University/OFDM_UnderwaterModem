@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>user.org</spirit:vendor>
+  <spirit:library>user</spirit:library>
+  <spirit:name>AXIS_Splitter</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:busInterfaces>
+    <spirit:busInterface>
+      <spirit:name>S00_AXIS</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TSTRB</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tstrb</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>WIZ_DATA_WIDTH</spirit:name>
+          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.S00_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>M01_AXIS</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m01_axis_tdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TSTRB</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m01_axis_tstrb</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m01_axis_tlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m01_axis_tvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m01_axis_tready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>WIZ_DATA_WIDTH</spirit:name>
+          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.M01_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>M00_AXIS</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m00_axis_tdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TSTRB</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m00_axis_tstrb</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m00_axis_tlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m00_axis_tvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m00_axis_tready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>WIZ_DATA_WIDTH</spirit:name>
+          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.M00_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>axis_aclk</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>axis_aclk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.AXIS_ACLK.ASSOCIATED_BUSIF">S00_AXIS:M01_AXIS:M00_AXIS</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+  </spirit:busInterfaces>
+  <spirit:model>
+    <spirit:views>
+      <spirit:view>
+        <spirit:name>xilinx_verilogsynthesis</spirit:name>
+        <spirit:displayName>Verilog Synthesis</spirit:displayName>
+        <spirit:envIdentifier>verilogSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
+        <spirit:language>verilog</spirit:language>
+        <spirit:modelName>AXIS_Splitter_v1_0</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_verilogsynthesis_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>8435ff3d</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_verilogbehavioralsimulation</spirit:name>
+        <spirit:displayName>Verilog Simulation</spirit:displayName>
+        <spirit:envIdentifier>verilogSource:vivado.xilinx.com:simulation</spirit:envIdentifier>
+        <spirit:language>verilog</spirit:language>
+        <spirit:modelName>AXIS_Splitter_v1_0</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_verilogbehavioralsimulation_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>8435ff3d</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_xpgui</spirit:name>
+        <spirit:displayName>UI Layout</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:xgui.ui</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_xpgui_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>ed3eb2f1</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>bd_tcl</spirit:name>
+        <spirit:displayName>Block Diagram</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:block.diagram</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>bd_tcl_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>45a2f450</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+    </spirit:views>
+    <spirit:ports>
+      <spirit:port>
+        <spirit:name>axis_aclk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tstrb</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) / 8) - 1)">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m01_axis_tvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m01_axis_tdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m01_axis_tstrb</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) / 8) - 1)">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m01_axis_tlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m01_axis_tready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tstrb</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.AXIS_TDATA_WIDTH&apos;)) / 8) - 1)">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+    </spirit:ports>
+    <spirit:modelParameters>
+      <spirit:modelParameter xsi:type="spirit:nameValueTypeType" spirit:dataType="integer">
+        <spirit:name>AXIS_TDATA_WIDTH</spirit:name>
+        <spirit:displayName>Axis Tdata Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.AXIS_TDATA_WIDTH">32</spirit:value>
+      </spirit:modelParameter>
+    </spirit:modelParameters>
+  </spirit:model>
+  <spirit:choices>
+    <spirit:choice>
+      <spirit:name>choice_list_6fc15197</spirit:name>
+      <spirit:enumeration>32</spirit:enumeration>
+    </spirit:choice>
+  </spirit:choices>
+  <spirit:fileSets>
+    <spirit:fileSet>
+      <spirit:name>xilinx_verilogsynthesis_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>hdl/AXIS_Splitter_v1_0.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_8435ff3d</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_verilogbehavioralsimulation_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>hdl/AXIS_Splitter_v1_0.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>xgui/AXIS_Splitter_v1_0.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_ed3eb2f1</spirit:userFileType>
+        <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>bd_tcl_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>bd/bd.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+  </spirit:fileSets>
+  <spirit:description>Split AXI Stream into multiple streams each sending the same information</spirit:description>
+  <spirit:parameters>
+    <spirit:parameter>
+      <spirit:name>Component_Name</spirit:name>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">AXIS_Splitter_v1_0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>AXIS_TDATA_WIDTH</spirit:name>
+      <spirit:displayName>Axis Tdata Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.AXIS_TDATA_WIDTH">32</spirit:value>
+    </spirit:parameter>
+  </spirit:parameters>
+  <spirit:vendorExtensions>
+    <xilinx:coreExtensions>
+      <xilinx:supportedFamilies>
+        <xilinx:family xilinx:lifeCycle="Pre-Production">zynq</xilinx:family>
+      </xilinx:supportedFamilies>
+      <xilinx:taxonomies>
+        <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
+      </xilinx:taxonomies>
+      <xilinx:displayName>AXIS_Splitter_Custom</xilinx:displayName>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-05-03T03:03:24Z</xilinx:coreCreationDateTime>
+      <xilinx:tags>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@61e6ead0_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4e8b664_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1c234238_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2402a91_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1348d9f_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4b37dbe6_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5426f232_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4dc0ecd8_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5e9e14eb_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4228bffe_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2dcc2e24_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6b8584b6_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@44c1a095_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@646af52f_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@67f78997_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@50f6212_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@70af8423_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@64bd1b15_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5633bc63_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5cba116f_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@191e104_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@401f2755_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@13e5456c_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@912405f_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@34ad5037_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3e162a57_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@bfa4e98_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6d0c3dea_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@58cfe2ec_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@13a2d368_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3a4d53eb_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@50f8d0e8_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6cd19817_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2da9f6f2_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@43aa85cb_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3b98cb22_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6b668913_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2c5557ac_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7109b346_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2502830a_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c62786f_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@213dd545_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@543a3d5d_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@38cfb4ae_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@9e14c22_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@35267735_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@717857d6_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@267e7402_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@162dcf3e_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@584eb204_ARCHIVE_LOCATION">/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/AXIS_Splitter_1.0</xilinx:tag>
+      </xilinx:tags>
+    </xilinx:coreExtensions>
+    <xilinx:packagingInfo>
+      <xilinx:xilinxVersion>2022.1</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="aa614265"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="359a55d0"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="5af9701f"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="249de9c2"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="c5544790"/>
+    </xilinx:packagingInfo>
+  </spirit:vendorExtensions>
+</spirit:component>

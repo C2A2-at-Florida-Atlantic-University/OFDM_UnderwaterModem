@@ -1,0 +1,250 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Wed Sep 22 20:34:10 2021
+# Process ID: 1128909
+# Current directory: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1
+# Command line: vivado -log AXIS_S_to_AD9764.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source AXIS_S_to_AD9764.tcl
+# Log file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1/AXIS_S_to_AD9764.vds
+# Journal file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source AXIS_S_to_AD9764.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/saad/Xilinx/Vivado/2021.1/data/ip'.
+Command: synth_design -top AXIS_S_to_AD9764 -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1128947
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2571.191 ; gain = 0.000 ; free physical = 522 ; free virtual = 2828
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'AXIS_S_to_AD9764' [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764.v:4]
+INFO: [Synth 8-6157] synthesizing module 'AXIS_S_to_AD9764_S00_AXIS' [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764_S00_AXIS.v:3]
+	Parameter C_S_AXIS_TDATA_WIDTH bound to: 32 - type: integer 
+	Parameter C_S_AXIS_TDATA_START bound to: 0 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764_S00_AXIS.v:61]
+INFO: [Synth 8-155] case statement is not full and has no default [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764_S00_AXIS.v:108]
+INFO: [Synth 8-6157] synthesizing module 'ODDR' [/home/saad/Xilinx/Vivado/2021.1/scripts/rt/data/unisim_comp.v:69805]
+	Parameter DDR_CLK_EDGE bound to: SAME_EDGE - type: string 
+	Parameter INIT bound to: 1'b0 
+	Parameter SRTYPE bound to: SYNC - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'ODDR' (1#1) [/home/saad/Xilinx/Vivado/2021.1/scripts/rt/data/unisim_comp.v:69805]
+INFO: [Synth 8-6155] done synthesizing module 'AXIS_S_to_AD9764_S00_AXIS' (2#1) [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764_S00_AXIS.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'AXIS_S_to_AD9764' (3#1) [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9764.v:4]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2571.191 ; gain = 0.000 ; free physical = 164 ; free virtual = 2119
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2571.191 ; gain = 0.000 ; free physical = 178 ; free virtual = 1930
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2571.191 ; gain = 0.000 ; free physical = 178 ; free virtual = 1930
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2571.191 ; gain = 0.000 ; free physical = 168 ; free virtual = 1922
+INFO: [Netlist 29-17] Analyzing 1 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9647_IPconstraints.xdc]
+Finished Parsing XDC File [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9647_IPconstraints.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/saad/Xilinx/2UnderwaterModem/MyXilinx/myIP_repo/AXIS_Slave_AD9764_DAC_IP_pkgd/src/AXIS_S_to_AD9647_IPconstraints.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/AXIS_S_to_AD9764_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/AXIS_S_to_AD9764_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2635.117 ; gain = 0.000 ; free physical = 878 ; free virtual = 2600
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2635.117 ; gain = 0.000 ; free physical = 877 ; free virtual = 2600
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 977 ; free virtual = 2734
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 977 ; free virtual = 2734
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 977 ; free virtual = 2734
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'myState_reg' in module 'AXIS_S_to_AD9764_S00_AXIS'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                              001 |                               00
+                    TEST |                              010 |                               10
+             STORE_TDATA |                              100 |                               01
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'myState_reg' using encoding 'one-hot' in module 'AXIS_S_to_AD9764_S00_AXIS'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 964 ; free virtual = 2725
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 1     
+	               14 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 2     
++---Muxes : 
+	   4 Input   14 Bit        Muxes := 1     
+	   2 Input   14 Bit        Muxes := 1     
+	   3 Input    3 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 4     
+	   3 Input    1 Bit        Muxes := 1     
+	   4 Input    1 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 80 (col length:40)
+BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 939 ; free virtual = 2714
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 826 ; free virtual = 2606
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 826 ; free virtual = 2606
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 824 ; free virtual = 2604
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |     4|
+|3     |LUT1   |     2|
+|4     |LUT2   |     5|
+|5     |LUT4   |     1|
+|6     |LUT6   |    16|
+|7     |ODDR   |     1|
+|8     |FDRE   |    10|
+|9     |FDSE   |    39|
+|10    |IBUF   |    22|
+|11    |OBUF   |    21|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 823 ; free virtual = 2603
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2635.117 ; gain = 0.000 ; free physical = 881 ; free virtual = 2661
+Synthesis Optimization Complete : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2635.117 ; gain = 63.926 ; free physical = 881 ; free virtual = 2661
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2635.117 ; gain = 0.000 ; free physical = 874 ; free virtual = 2655
+INFO: [Netlist 29-17] Analyzing 5 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2635.117 ; gain = 0.000 ; free physical = 887 ; free virtual = 2678
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: 626fa7c
+INFO: [Common 17-83] Releasing license: Synthesis
+30 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:25 ; elapsed = 00:00:21 . Memory (MB): peak = 2635.117 ; gain = 64.031 ; free physical = 1036 ; free virtual = 2827
+INFO: [Common 17-600] The following parameters have non-default value.
+tcl.collectionResultDisplayLimit
+INFO: [Common 17-1381] The checkpoint '/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1/AXIS_S_to_AD9764.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file AXIS_S_to_AD9764_utilization_synth.rpt -pb AXIS_S_to_AD9764_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Sep 22 20:34:39 2021...

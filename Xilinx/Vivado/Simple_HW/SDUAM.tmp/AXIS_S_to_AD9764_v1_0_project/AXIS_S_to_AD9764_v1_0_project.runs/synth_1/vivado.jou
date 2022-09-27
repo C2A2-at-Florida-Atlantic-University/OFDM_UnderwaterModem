@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Wed Sep 22 20:34:10 2021
+# Process ID: 1128909
+# Current directory: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1
+# Command line: vivado -log AXIS_S_to_AD9764.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source AXIS_S_to_AD9764.tcl
+# Log file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1/AXIS_S_to_AD9764.vds
+# Journal file: /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source AXIS_S_to_AD9764.tcl -notrace

@@ -1,0 +1,8 @@
+
+****** Webtalk v2021.1 (64-bit)
+  **** SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+  **** IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+    ** Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+
+source /home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/HW_Ver2/SDUAM.tmp/AXIS_S_to_AD9764_v1_0_project/AXIS_S_to_AD9764_v1_0_project.hw/webtalk/labtool_webtalk.tcl -notrace
+INFO: [Common 17-206] Exiting Webtalk at Wed Sep 22 21:03:45 2021...

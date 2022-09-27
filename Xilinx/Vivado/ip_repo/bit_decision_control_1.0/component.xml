@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>user.org</spirit:vendor>
+  <spirit:library>user</spirit:library>
+  <spirit:name>bit_decision_control</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:busInterfaces>
+    <spirit:busInterface>
+      <spirit:name>S00_AXIS</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_tready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>WIZ_DATA_WIDTH</spirit:name>
+          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.S00_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>S00_AXIS_RST</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_aresetn</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>POLARITY</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXIS_RST.POLARITY" spirit:choiceRef="choice_list_9d8b0d81">ACTIVE_LOW</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>S00_AXIS_CLK</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axis_aclk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXIS_CLK.ASSOCIATED_BUSIF">S00_AXIS:BRAM</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_RESET</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXIS_CLK.ASSOCIATED_RESET">s00_axis_aresetn</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>BRAM_rst</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_rst</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>BRAM_clk</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_clk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_RESET</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.BRAM_CLK.ASSOCIATED_RESET">BRAM_rst</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.BRAM_CLK.ASSOCIATED_BUSIF">S00_AXIS:BRAM</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>BRAM</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="bram" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="bram_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_rst</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_clk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>DIN</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_wrdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>EN</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_en</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>DOUT</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_rddata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WE</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_we</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ADDR</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>BRAM_addr</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+    </spirit:busInterface>
+  </spirit:busInterfaces>
+  <spirit:model>
+    <spirit:views>
+      <spirit:view>
+        <spirit:name>xilinx_vhdlsynthesis</spirit:name>
+        <spirit:displayName>VHDL Synthesis</spirit:displayName>
+        <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
+        <spirit:language>vhdl</spirit:language>
+        <spirit:modelName>bit_decision_control_v1_0</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>f71dc273</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_vhdlbehavioralsimulation</spirit:name>
+        <spirit:displayName>VHDL Simulation</spirit:displayName>
+        <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:simulation</spirit:envIdentifier>
+        <spirit:language>vhdl</spirit:language>
+        <spirit:modelName>bit_decision_control_v1_0</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>f71dc273</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_xpgui</spirit:name>
+        <spirit:displayName>UI Layout</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:xgui.ui</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_xpgui_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>dfa9b926</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>bd_tcl</spirit:name>
+        <spirit:displayName>Block Diagram</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:block.diagram</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>bd_tcl_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>45a2f450</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+    </spirit:views>
+    <spirit:ports>
+      <spirit:port>
+        <spirit:name>passthrough</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.Passthrough_num&apos;)) - 1)">1</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>overide</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>symbol_length</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>current_address</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>accumulator_nreset</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_addr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.BRAM_addr_width&apos;)) - 1)">13</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_wrdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_rddata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_en</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_we</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_clk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>BRAM_rst</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_aclk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_aresetn</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXIS_TDATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axis_tvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+    </spirit:ports>
+    <spirit:modelParameters>
+      <spirit:modelParameter xsi:type="spirit:nameValueTypeType" spirit:dataType="integer">
+        <spirit:name>C_S00_AXIS_TDATA_WIDTH</spirit:name>
+        <spirit:displayName>C S00 AXIS TDATA WIDTH</spirit:displayName>
+        <spirit:description>AXI4Stream sink: Data Width</spirit:description>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S00_AXIS_TDATA_WIDTH" spirit:order="3" spirit:rangeType="long">32</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>BRAM_addr_width</spirit:name>
+        <spirit:displayName>Bram Addr Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.BRAM_addr_width">14</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>Passthrough_num</spirit:name>
+        <spirit:displayName>Passthrough Num</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.Passthrough_num">2</spirit:value>
+      </spirit:modelParameter>
+    </spirit:modelParameters>
+  </spirit:model>
+  <spirit:choices>
+    <spirit:choice>
+      <spirit:name>choice_list_6fc15197</spirit:name>
+      <spirit:enumeration>32</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
+      <spirit:name>choice_list_9d8b0d81</spirit:name>
+      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
+      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
+    </spirit:choice>
+  </spirit:choices>
+  <spirit:fileSets>
+    <spirit:fileSet>
+      <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>hdl/bit_decision_control_v1_0.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_f71dc273</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>hdl/bit_decision_control_v1_0.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>xgui/bit_decision_control_v1_0.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_dfa9b926</spirit:userFileType>
+        <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>bd_tcl_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>bd/bd.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+  </spirit:fileSets>
+  <spirit:description>My new AXI IP</spirit:description>
+  <spirit:parameters>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXIS_TDATA_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXIS TDATA WIDTH</spirit:displayName>
+      <spirit:description>AXI4Stream sink: Data Width</spirit:description>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXIS_TDATA_WIDTH" spirit:order="3">32</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>Component_Name</spirit:name>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">bit_decision_control_v1_0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>BRAM_addr_width</spirit:name>
+      <spirit:displayName>Bram Addr Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.BRAM_addr_width">14</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>Passthrough_num</spirit:name>
+      <spirit:displayName>Passthrough Num</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.Passthrough_num">2</spirit:value>
+    </spirit:parameter>
+  </spirit:parameters>
+  <spirit:vendorExtensions>
+    <xilinx:coreExtensions>
+      <xilinx:supportedFamilies>
+        <xilinx:family xilinx:lifeCycle="Pre-Production">zynq</xilinx:family>
+      </xilinx:supportedFamilies>
+      <xilinx:taxonomies>
+        <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
+      </xilinx:taxonomies>
+      <xilinx:displayName>bit_decision_control_v1.0</xilinx:displayName>
+      <xilinx:coreRevision>27</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-01-12T03:48:41Z</xilinx:coreCreationDateTime>
+      <xilinx:tags>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3334cb86_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@18b512c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4d823872_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e1636b5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@48dc9217_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5bc08e42_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@37a75ebb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@329b7bc5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7ec40c5a_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6836f033_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6907c0d4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@52b0df11_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6d569893_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5411a8b4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1965ac7f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5b412498_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6237df5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3014232b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4a75e3cb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3ee11d63_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@26329910_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1c9c05ef_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e8ee53c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@337ff5c3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4235d1cb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@598e81f6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2e42c950_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@788e3d4b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@271fd0d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@47e689b6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@67014687_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@561b3238_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@16eacef9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e8f4aaa_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@637432b3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@55ac0200_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@b103822_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4a07b1d3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7aeace7b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@25d9051a_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@46e4a801_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e6f8af6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6346f4f6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f47f944_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@a2b4d06_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5d85f6e9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2a0554ca_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@185da21c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@74650d52_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@76eec841_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3529bdc8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2756081e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6ba5b32_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4b72e996_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@67a51a5d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@281f3b6b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6569afe7_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@14ca7030_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@21c87fa3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4ee1785f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@262a7c8f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3b6f5edb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5cae441c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7792839d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@29d9eb0f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@25edf4e7_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5c642ee9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3a051650_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@201633f8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3d1a7008_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3f9816ba_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2c02dea2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5f33afaa_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2a69958a_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6efdde3e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c6c6977_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2bf4e79_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2eaa9f07_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@de107c3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@24854e9f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@375f8824_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f3eca76_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@45d12faa_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@764aad28_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@698e2744_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6b67a840_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7932ea58_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2d58ae57_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1095c075_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@43dde3f1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@d91e9da_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4c9f4c68_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3433cfba_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6ad38213_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@67232119_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@8adb5a9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4f2e1558_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c51cad5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@249f824e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6bf6b2d9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@323fdd68_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@566a1465_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@269d23bd_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@b379bce_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7d4ecde1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@942be2c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2f8ce35d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@773edf5c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6132a722_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7b4dbad1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@234ec6d0_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@46b00e12_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f3eb5f6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@71fb680b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@17e379e3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2e613687_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@619fe7f5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@61010bcf_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6ecd61c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@644c64cc_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4b3d6e6a_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@64c305d1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@69207272_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@448c4e63_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4bf6c1ce_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6d7c6460_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6778b9e4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3d879cf_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5874f481_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6ca59229_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@8121564_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5c3573fb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5aae5817_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@39ad1966_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2dbfa34b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@512134f6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f2edc5e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63ec7279_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@16b25cae_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@45947aa9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4d8edfde_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7667907b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2dfeef5e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2d08a1e9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5c780867_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@55d451e4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7a85242b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@b2c88ba_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@29a1bb64_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@33432a0f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@72063e9b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@51d0d193_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6fed68a_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4626271b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@57db1d1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3021f580_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2407936c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@457a5d63_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3bd91750_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7e1d1701_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@16281314_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@40485b8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1a50fdde_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@19d57222_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@486e40c2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@cba4add_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5fc2bde8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@59d4de43_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@426f88fe_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@45c977f8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1330939b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@478301e2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@17680b83_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2ca1a3cd_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@193c79fb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7cf15ad9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7adfd442_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@49924e19_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@51e6c11d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63174a94_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@421c1cdf_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4a04b5fe_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5a99d78_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@69f23ec6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7a121fcb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7e9014bc_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@766952f7_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5370e2a4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@69bb4983_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@25a65461_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@20cb49be_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@727a1ae7_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7faae7cb_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1fb45c58_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5fd99f37_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@c3d1e3b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@227d2ce4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1f91bba3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5c7cae75_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6b31f0df_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@15d4b4a0_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@17e33ef9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6b945319_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3349db0e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4fe3a18c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c387419_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@75d70527_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4263faa8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2acc26bd_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5e7809a5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@73335ff3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6ac89e30_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@52b903d0_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3cc8857b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5db0c157_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4e90e358_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@32213dc6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1b62c9d9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@36e55089_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1f07f6bc_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5b26cf0e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@419bfdc6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@49faf743_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3a487d3b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6e1b74c8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@64af6a64_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@8a740c2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3671e29f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3e7896a0_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6d4087db_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@14b061ce_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2c3c942f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4e13bc73_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c23a062_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@17664b16_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4d3dda30_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7bfddc79_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7bbc2702_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@77d16fd8_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2b03c914_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@16f090a9_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1de8f932_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@475cca1f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6dec02e5_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@235d39e6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3166c745_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4caa48af_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6dcaa206_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@33d86d1c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@84f78f0_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5b9aadde_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2ee8846b_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7cf2f832_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3de14322_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@41aa6154_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4474810f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@257608ec_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@278a9b00_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@8e44f35_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5ff650a1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@14baef16_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f4fb5b2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5568000f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@459f996c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6138026f_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@fb7e8d6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6d83e521_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@39dc0490_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6929aa31_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7bc2a824_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@b442d09_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63f72796_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@d2480f6_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6db1fc15_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@27209653_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@342d0613_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@35b87044_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2eade437_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@656c593c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6a20507c_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@310c17af_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3f879d4e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@11471b3d_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@599a9681_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@77edd39_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1725d9be_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@b373a51_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@10f45e36_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7fcfaeba_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6110b502_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@32a9dc49_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2ca850f2_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@29c939c3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5180d67e_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@57949976_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63fbd6a4_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4575fd45_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5f225ce1_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@158ec6d3_ARCHIVE_LOCATION">/home/saad/Xilinx/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@519a85fc_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@161f5861_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@200e6e67_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@68be46fd_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@18877548_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@975199_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@215441eb_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f475f28_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@49d7ddc1_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3477c4f9_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3f06525b_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@663a0ddd_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@eaee726_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@50f51a8a_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@195bc01_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7bd049d7_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@47c5ca23_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@15d4c5e5_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1ff62319_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@184bd1c0_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1513c0b_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@76a54ea0_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@255ed6a1_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4265c60b_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c9fad5d_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1f98d6d1_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3c2832a0_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@91ea897_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4eabe6a0_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2be3d201_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5060e2c8_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1365e09a_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@ac86a81_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6a05e0af_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@73df748b_ARCHIVE_LOCATION">/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/bit_decision_control_1.0</xilinx:tag>
+      </xilinx:tags>
+    </xilinx:coreExtensions>
+    <xilinx:packagingInfo>
+      <xilinx:xilinxVersion>2021.2</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="8f9a2ce6"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="74ec4287"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="ed1a589e"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="7e6b2509"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="c2140832"/>
+    </xilinx:packagingInfo>
+  </spirit:vendorExtensions>
+</spirit:component>

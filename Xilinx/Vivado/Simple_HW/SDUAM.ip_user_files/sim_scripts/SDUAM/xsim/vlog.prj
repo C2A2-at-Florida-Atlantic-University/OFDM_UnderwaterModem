@@ -1,0 +1,8 @@
+verilog xil_defaultlib --include "C:/Xilinx_2022.1/Vivado/2022.1/data/xilinx_vip/include" --include "../../../../SDUAM.gen/sources_1/bd/SDUAM/ipshared/ec67/hdl" --include "../../../../SDUAM.gen/sources_1/bd/SDUAM/ipshared/5765/hdl" \
+"../../../bd/SDUAM/ip/SDUAM_processing_system7_0_0/sim/SDUAM_processing_system7_0_0.v" \
+"../../../bd/SDUAM/ip/SDUAM_auto_pc_0/sim/SDUAM_auto_pc_0.v" \
+"../../../bd/SDUAM/sim/SDUAM.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+nosort

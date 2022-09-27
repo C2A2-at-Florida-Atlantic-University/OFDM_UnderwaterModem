@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/3_Simple_HW/SDUAM.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wdb" id="1">
+         <top_modules>
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0"></ZoomStartTime>
+      <ZoomEndTime time="1,025"></ZoomEndTime>
+      <Cursor1Time time="20"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="434"></NameColumnWidth>
+      <ValueColumnWidth column_width="210"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="15" />
+   <wave_markers>
+   </wave_markers>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe0_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe0_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">probe0_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">gpio_reg_array_0_out00</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe1_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe1_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">probe1_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">gpio_reg_array_0_out01</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe2_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe2_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">probe2_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">gpio_reg_array_0_out02</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe3_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe3_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">probe3_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">gpio_reg_array_0_out03</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="SDUAM_i/system_ila_0/inst/probe4_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe4_1</obj_property>
+      <obj_property name="ObjectShortName">probe4_1</obj_property>
+      <obj_property name="label">blk_mem_gen_0_rsta_busy</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="SDUAM_i/system_ila_0/inst/probe5_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe5_1</obj_property>
+      <obj_property name="ObjectShortName">probe5_1</obj_property>
+      <obj_property name="label">blk_mem_gen_0_rstb_busy</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_addr_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_addr_1[11:0]</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_addr_1[11:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_din_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_din_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_din_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_dout_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_dout_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_dout_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_en_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_en_1</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_en_1</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_rst_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_rst_1</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_rst_1</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_we_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/SLOT_0_BRAM_we_1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">SLOT_0_BRAM_we_1[3:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe6_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe6_1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">probe6_1[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">blk_mem_gen_0_doutb</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe7_1">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe7_1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">probe7_1[3:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="SDUAM_i/system_ila_0/inst/probe8_1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">SDUAM_i/system_ila_0/inst/probe8_1[10:0]</obj_property>
+      <obj_property name="ObjectShortName">probe8_1[10:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">gpio_reg_array_0_BRAM_addr</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+</wave_config>

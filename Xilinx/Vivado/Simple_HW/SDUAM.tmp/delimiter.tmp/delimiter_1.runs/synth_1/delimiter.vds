@@ -1,0 +1,204 @@
+#-----------------------------------------------------------
+# Vivado v2021.2 (64-bit)
+# SW Build 3367213 on Tue Oct 19 02:47:39 MDT 2021
+# IP Build 3369179 on Thu Oct 21 08:25:16 MDT 2021
+# Start of session at: Thu Nov 25 11:13:39 2021
+# Process ID: 221348
+# Current directory: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.runs/synth_1
+# Command line: vivado -log delimiter.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source delimiter.tcl
+# Log file: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.runs/synth_1/delimiter.vds
+# Journal file: /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.runs/synth_1/vivado.jou
+# Running On: saad-17Z90N-R-AAC8U1, OS: Linux, CPU Frequency: 3487.506 MHz, CPU Physical cores: 4, Host memory: 16390 MB
+#-----------------------------------------------------------
+source delimiter.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/media/saad/NVMe2/Xilinx/Vivado/2021.2/data/ip'.
+WARNING: [IP_Flow 19-1663] Duplicate IP found for 'user.org:user:delimiter:1.0'. The one found in IP location '/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0' will take precedence over the same IP in location /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter
+Command: read_checkpoint -auto_incremental -incremental /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.srcs/utils_1/imports/synth_1/delimiter.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from /media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.srcs/utils_1/imports/synth_1/delimiter.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top delimiter -part xc7z010clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010'
+WARNING: [Designutils 20-4072] Reference run did not run incremental synthesis because the design is too small; reverting to default synthesis
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 221396
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2863.504 ; gain = 0.000 ; free physical = 1099 ; free virtual = 4496
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'delimiter' [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:1]
+WARNING: [Synth 8-3848] Net OUT2 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:18]
+WARNING: [Synth 8-3848] Net OUT3 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:19]
+WARNING: [Synth 8-3848] Net OUT4 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:20]
+WARNING: [Synth 8-3848] Net OUT5 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:21]
+WARNING: [Synth 8-3848] Net OUT6 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:22]
+WARNING: [Synth 8-3848] Net OUT7 in module/entity delimiter does not have driver. [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:23]
+INFO: [Synth 8-6155] done synthesizing module 'delimiter' (1#1) [/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/ip_repo/delimiter_1.0/src/delimiter.sv:1]
+WARNING: [Synth 8-3330] design delimiter has an empty top module
+WARNING: [Synth 8-7129] Port OUT2[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT3[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT4[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT5[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT6[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT7[0] in module delimiter is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2863.504 ; gain = 0.000 ; free physical = 276 ; free virtual = 3599
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2863.504 ; gain = 0.000 ; free physical = 251 ; free virtual = 3592
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 251 ; free virtual = 3592
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z010clg400-1
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 248 ; free virtual = 3591
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 80 (col length:40)
+BRAMs: 120 (col length: RAMB18 40 RAMB36 20)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3330] design delimiter has an empty top module
+WARNING: [Synth 8-7129] Port OUT2[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT3[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT4[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT5[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT6[0] in module delimiter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port OUT7[0] in module delimiter is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 936 ; free virtual = 4281
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 933 ; free virtual = 4278
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 933 ; free virtual = 4278
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------+------+
+|      |Cell  |Count |
++------+------+------+
+|1     |IBUF  |     4|
+|2     |OBUF  |     4|
+|3     |OBUFT |     6|
++------+------+------+
+
+Report Instance Areas: 
++------+---------+-------+------+
+|      |Instance |Module |Cells |
++------+---------+-------+------+
+|1     |top      |       |    14|
++------+---------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 21 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.383 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+Synthesis Optimization Complete : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2871.391 ; gain = 7.879 ; free physical = 930 ; free virtual = 4276
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2871.391 ; gain = 0.000 ; free physical = 1017 ; free virtual = 4362
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2871.391 ; gain = 0.000 ; free physical = 927 ; free virtual = 4273
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: 90a4e16
+INFO: [Common 17-83] Releasing license: Synthesis
+18 Infos, 23 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:17 ; elapsed = 00:00:12 . Memory (MB): peak = 2871.391 ; gain = 8.012 ; free physical = 1124 ; free virtual = 4469
+INFO: [Common 17-1381] The checkpoint '/media/saad/NVMe2/UnderwaterModem/Updated_MyXilinx/2Non_Interpolated_Vivado_HW/SDUAM.tmp/delimiter.tmp/delimiter_1.runs/synth_1/delimiter.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file delimiter_utilization_synth.rpt -pb delimiter_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 25 11:14:02 2021...
