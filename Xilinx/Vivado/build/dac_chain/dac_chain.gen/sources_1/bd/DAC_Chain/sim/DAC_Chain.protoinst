@@ -1,0 +1,20 @@
+{
+	"version": "1.0",
+	"modules": {
+		"DAC_Chain": {
+			"proto_instances": {
+				"/dac_resampler_0/s_axis": {
+					"interface": "xilinx.com:interface:axis:1.0",
+					"ports": {
+						"ACLK": { "actual": "axis_aclk"},
+						"ARESETN": { "actual": "axis_aresetn"},
+						"TDATA": { "actual": "s_axis_tdata"},
+						"TLAST": { "actual": "s_axis_tlast"},
+						"TREADY": { "actual": "s_axis_tready"},
+						"TVALID": { "actual": "s_axis_tvalid"}
+					}
+				}
+			}
+		}
+	}
+}

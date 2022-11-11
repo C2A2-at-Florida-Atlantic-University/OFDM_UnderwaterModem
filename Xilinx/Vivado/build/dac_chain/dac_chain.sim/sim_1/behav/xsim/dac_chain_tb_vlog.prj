@@ -1,0 +1,14 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../dac_chain.ip_user_files/bd/DAC_Chain/ip/DAC_Chain_dac_resampler_0_0/sim/DAC_Chain_dac_resampler_0_0.v" \
+"../../../../dac_chain.ip_user_files/bd/DAC_Chain/sim/DAC_Chain.v" \
+"../../../../dac_chain.gen/sources_1/bd/DAC_Chain/hdl/DAC_Chain_wrapper.v" \
+
+sv xil_defaultlib  \
+"../../../../../../modules/sim/dac_chain_tb.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

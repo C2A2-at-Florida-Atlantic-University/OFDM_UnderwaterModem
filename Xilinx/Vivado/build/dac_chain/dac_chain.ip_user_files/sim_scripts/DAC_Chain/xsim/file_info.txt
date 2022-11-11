@@ -1,0 +1,3 @@
+DAC_Chain_dac_resampler_0_0.v,verilog,xil_defaultlib,../../../bd/DAC_Chain/ip/DAC_Chain_dac_resampler_0_0/sim/DAC_Chain_dac_resampler_0_0.v,
+DAC_Chain.v,verilog,xil_defaultlib,../../../bd/DAC_Chain/sim/DAC_Chain.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

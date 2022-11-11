@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root MajorVersion="0" MinorVersion="40">
+  <CompositeFile CompositeFileTopName="Radio_Top_Pynq" CanBeSetAsTop="false" CanDisplayChildGraph="true">
+    <Description>Composite Fileset</Description>
+    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1666840240"/>
+    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1666840240"/>
+    <Generation Name="SIMULATION" State="STALE" Timestamp="1666840240"/>
+    <Generation Name="HW_HANDOFF" State="STALE" Timestamp="1666840240"/>
+    <FileCollection Name="SOURCES" Type="SOURCES"/>
+    <BlockContainerCollection>
+      <BlockContainer InstPath="/Transmit_Chain_0" IsPR="false" State="Stale">
+        <ActiveVariantSynth FileName="bd\Transmit_Chain_inst_0\Transmit_Chain_inst_0.bd"/>
+        <ActiveVariantSim FileName="bd\Transmit_Chain_inst_0\Transmit_Chain_inst_0.bd"/>
+        <VariantsCollection>
+          <BDFile BDFilePath="bd\Transmit_Chain_inst_0\Transmit_Chain_inst_0.bd" BDFileset="Transmit_Chain_inst_0" BDSourceFile="..\..\..\..\radio_top_pynq.srcs\sources_1\bd\Transmit_Chain\Transmit_Chain.bd" BDSourceFileset="sources_1" BDVariantType="ALL"/>
+        </VariantsCollection>
+      </BlockContainer>
+    </BlockContainerCollection>
+    <ReferenceCollection>
+      <ModuleReference TargetName="Transmit_Chain" Type="Block Design" SubInstancePath="Radio_Top_Pynq_Transmit_Chain_0">
+        <TopFile Name="..\..\..\..\radio_top_pynq.srcs\sources_1\bd\Transmit_Chain\Transmit_Chain.bd"/>
+        <FileCollection>
+          <File Name="..\..\..\..\..\..\modules\rtl\conj.vhd"/>
+          <File Name="..\..\..\..\..\..\modules\rtl\fft_config.vhd"/>
+          <File Name="..\..\..\..\..\..\modules\rtl\mux.vhd"/>
+          <File Name="..\..\..\..\..\..\modules\rtl\playback_ctrl.vhd"/>
+          <File Name="..\..\..\..\..\..\modules\rtl\tlast_gen.vhd"/>
+          <File Name="..\..\..\..\..\..\modules\rtl\real_time_sampler.vhd"/>
+          <File Name="..\..\..\..\radio_top_pynq.srcs\sources_1\bd\Transmit_Chain\Transmit_Chain.bd"/>
+        </FileCollection>
+      </ModuleReference>
+    </ReferenceCollection>
+  </CompositeFile>
+</Root>

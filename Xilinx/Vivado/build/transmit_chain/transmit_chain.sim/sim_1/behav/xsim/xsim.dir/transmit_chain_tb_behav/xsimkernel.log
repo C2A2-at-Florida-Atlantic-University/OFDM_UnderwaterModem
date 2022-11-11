@@ -1,0 +1,4 @@
+Running: xsim.dir/transmit_chain_tb_behav/xsimk.exe -simmode gui -wdb transmit_chain_tb_behav.wdb -simrunnum 0 -socket 58879
+Design successfully loaded
+Design Loading Memory Usage: 40068 KB (Peak: 40068 KB)
+Design Loading CPU Usage: 46 ms

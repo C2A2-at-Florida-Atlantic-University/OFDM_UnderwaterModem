@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# mux, playback_ctrl
+# conj, fft_config, mux, playback_ctrl, real_time_sampler, tlast_gen
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -49,7 +49,8 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-   create_project project_1 myproj -part xc7z010clg400-1
+   create_project project_1 myproj -part xc7z020clg400-1
+   set_property BOARD_PART tul.com.tw:pynq-z2:part0:1.0 [current_project]
 }
 
 
@@ -130,6 +131,7 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:axi_bram_ctrl:*\
+xilinx.com:ip:axis_data_fifo:*\
 xilinx.com:ip:xfft:*\
 xilinx.com:ip:blk_mem_gen:*\
 "
@@ -157,8 +159,12 @@ xilinx.com:ip:blk_mem_gen:*\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
+conj\
+fft_config\
 mux\
 playback_ctrl\
+real_time_sampler\
+tlast_gen\
 "
 
    set list_mods_missing ""
@@ -232,8 +238,8 @@ proc create_root_design { parentCell } {
    CONFIG.LAYERED_METADATA {undef} \
    CONFIG.TDATA_NUM_BYTES {4} \
    CONFIG.TDEST_WIDTH {0} \
-   CONFIG.TID_WIDTH {8} \
-   CONFIG.TUSER_WIDTH {8} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
    ] $S_AXIS
 
   set S_BRAM_AXI [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_BRAM_AXI ]
@@ -274,24 +280,81 @@ proc create_root_design { parentCell } {
    CONFIG.ASSOCIATED_BUSIF {S_AXIS:M_AXIS:S_BRAM_AXI} \
  ] $aclk
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
+  set config_start_0 [ create_bd_port -dir I config_start_0 ]
+  set continuous_0 [ create_bd_port -dir I continuous_0 ]
+  set cp_len_0 [ create_bd_port -dir I -from 15 -to 0 cp_len_0 ]
+  set dl_en_0 [ create_bd_port -dir I dl_en_0 ]
+  set fs_cycles_0 [ create_bd_port -dir I -from 26 -to 0 fs_cycles_0 ]
+  set i_negative_freq_0 [ create_bd_port -dir I i_negative_freq_0 ]
+  set inv_0 [ create_bd_port -dir I inv_0 ]
+  set nfft_0 [ create_bd_port -dir I -from 4 -to 0 nfft_0 ]
+  set nfft_scaled_0 [ create_bd_port -dir I -from 11 -to 0 nfft_scaled_0 ]
   set playback_en [ create_bd_port -dir I playback_en ]
+  set symbols_0 [ create_bd_port -dir I -from 3 -to 0 symbols_0 ]
 
   # Create instance: axi_bram_ctrl_0, and set properties
   set axi_bram_ctrl_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl axi_bram_ctrl_0 ]
   set_property -dict [ list \
-   CONFIG.PROTOCOL {AXI4} \
    CONFIG.SINGLE_PORT_BRAM {1} \
  ] $axi_bram_ctrl_0
 
+  # Create instance: axis_data_fifo_0, and set properties
+  set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_0 ]
+  set_property -dict [ list \
+   CONFIG.FIFO_DEPTH {4096} \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.TDATA_NUM_BYTES {4} \
+ ] $axis_data_fifo_0
+
+  # Create instance: axis_data_fifo_1, and set properties
+  set axis_data_fifo_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_1 ]
+  set_property -dict [ list \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.TDATA_NUM_BYTES {4} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+ ] $axis_data_fifo_1
+
+  # Create instance: conj_0, and set properties
+  set block_name conj
+  set block_cell_name conj_0
+  if { [catch {set conj_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $conj_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  set_property -dict [ list \
+   CONFIG.LAYERED_METADATA {} \
+ ] [get_bd_intf_pins /conj_0/s_axis]
+
+  # Create instance: fft_config_0, and set properties
+  set block_name fft_config
+  set block_cell_name fft_config_0
+  if { [catch {set fft_config_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $fft_config_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: ifft, and set properties
   set ifft [ create_bd_cell -type ip -vlnv xilinx.com:ip:xfft ifft ]
   set_property -dict [ list \
    CONFIG.aresetn {true} \
+   CONFIG.cyclic_prefix_insertion {true} \
    CONFIG.data_format {fixed_point} \
    CONFIG.implementation_options {automatically_select} \
-   CONFIG.number_of_stages_using_block_ram_for_data_and_phase_factors {3} \
-   CONFIG.run_time_configurable_transform_length {false} \
+   CONFIG.number_of_stages_using_block_ram_for_data_and_phase_factors {5} \
+   CONFIG.output_ordering {natural_order} \
+   CONFIG.run_time_configurable_transform_length {true} \
+   CONFIG.scaling_options {scaled} \
    CONFIG.target_clock_frequency {100} \
+   CONFIG.throttle_scheme {nonrealtime} \
+   CONFIG.transform_length {4096} \
  ] $ifft
 
   # Create instance: mux_0, and set properties
@@ -320,27 +383,77 @@ proc create_root_design { parentCell } {
   set playback_mem [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen playback_mem ]
   set_property -dict [ list \
    CONFIG.Assume_Synchronous_Clk {false} \
+   CONFIG.Byte_Size {9} \
+   CONFIG.Coe_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.coe} \
+   CONFIG.EN_SAFETY_CKT {false} \
+   CONFIG.Enable_32bit_Address {false} \
    CONFIG.Enable_B {Use_ENB_Pin} \
+   CONFIG.Fill_Remaining_Memory_Locations {true} \
+   CONFIG.Load_Init_File {true} \
    CONFIG.Memory_Type {True_Dual_Port_RAM} \
    CONFIG.Port_B_Clock {100} \
    CONFIG.Port_B_Enable_Rate {100} \
    CONFIG.Port_B_Write_Rate {50} \
-   CONFIG.Use_RSTB_Pin {true} \
+   CONFIG.Register_PortA_Output_of_Memory_Primitives {true} \
+   CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
+   CONFIG.Use_Byte_Write_Enable {false} \
+   CONFIG.Use_RSTA_Pin {false} \
+   CONFIG.Use_RSTB_Pin {false} \
+   CONFIG.Write_Depth_A {4096} \
+   CONFIG.use_bram_block {Stand_Alone} \
  ] $playback_mem
 
+  # Create instance: real_time_sampler_0, and set properties
+  set block_name real_time_sampler
+  set block_cell_name real_time_sampler_0
+  if { [catch {set real_time_sampler_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $real_time_sampler_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: tlast_gen_0, and set properties
+  set block_name tlast_gen
+  set block_cell_name tlast_gen_0
+  if { [catch {set tlast_gen_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $tlast_gen_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create interface connections
-  connect_bd_intf_net -intf_net S_AXI_0_1 [get_bd_intf_ports S_BRAM_AXI] [get_bd_intf_pins axi_bram_ctrl_0/S_AXI]
+  connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins axis_data_fifo_1/S_AXIS]
+  connect_bd_intf_net -intf_net S_BRAM_AXI_1 [get_bd_intf_ports S_BRAM_AXI] [get_bd_intf_pins axi_bram_ctrl_0/S_AXI]
   connect_bd_intf_net -intf_net axi_bram_ctrl_0_BRAM_PORTA [get_bd_intf_pins axi_bram_ctrl_0/BRAM_PORTA] [get_bd_intf_pins playback_mem/BRAM_PORTA]
+  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins axis_data_fifo_0/M_AXIS] [get_bd_intf_pins real_time_sampler_0/s_axis]
+  connect_bd_intf_net -intf_net axis_data_fifo_1_M_AXIS [get_bd_intf_pins axis_data_fifo_1/M_AXIS] [get_bd_intf_pins tlast_gen_0/s_axis]
+  connect_bd_intf_net -intf_net conj_0_m_axis [get_bd_intf_pins axis_data_fifo_0/S_AXIS] [get_bd_intf_pins conj_0/m_axis]
+  connect_bd_intf_net -intf_net fft_config_0_m_axis [get_bd_intf_pins fft_config_0/m_axis] [get_bd_intf_pins ifft/S_AXIS_CONFIG]
+  connect_bd_intf_net -intf_net ifft_M_AXIS_DATA [get_bd_intf_pins conj_0/s_axis] [get_bd_intf_pins ifft/M_AXIS_DATA]
   connect_bd_intf_net -intf_net mux_0_m_axis [get_bd_intf_pins ifft/S_AXIS_DATA] [get_bd_intf_pins mux_0/m_axis]
   connect_bd_intf_net -intf_net playback_ctrl_0_BRAM_PORT [get_bd_intf_pins playback_ctrl_0/BRAM_PORT] [get_bd_intf_pins playback_mem/BRAM_PORTB]
   connect_bd_intf_net -intf_net playback_ctrl_0_M_AXIS [get_bd_intf_pins mux_0/s_axis1] [get_bd_intf_pins playback_ctrl_0/M_AXIS]
-  connect_bd_intf_net -intf_net s_axis0_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins mux_0/s_axis0]
-  connect_bd_intf_net -intf_net xfft_0_M_AXIS_DATA [get_bd_intf_ports M_AXIS] [get_bd_intf_pins ifft/M_AXIS_DATA]
+  connect_bd_intf_net -intf_net real_time_sampler_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins real_time_sampler_0/m_axis]
+  connect_bd_intf_net -intf_net tlast_gen_0_m_axis [get_bd_intf_pins mux_0/s_axis0] [get_bd_intf_pins tlast_gen_0/m_axis]
 
   # Create port connections
+  connect_bd_net -net config_start_0_1 [get_bd_ports config_start_0] [get_bd_pins fft_config_0/config_start]
+  connect_bd_net -net continuous_0_1 [get_bd_ports continuous_0] [get_bd_pins playback_ctrl_0/continuous]
+  connect_bd_net -net cp_len_0_1 [get_bd_ports cp_len_0] [get_bd_pins fft_config_0/cp_len]
+  connect_bd_net -net dl_en_0_1 [get_bd_ports dl_en_0] [get_bd_pins real_time_sampler_0/dl_en] [get_bd_pins tlast_gen_0/i_start]
+  connect_bd_net -net fs_cycles_0_1 [get_bd_ports fs_cycles_0] [get_bd_pins playback_ctrl_0/fs_cycles] [get_bd_pins real_time_sampler_0/fs_cycles]
+  connect_bd_net -net i_negative_freq_0_1 [get_bd_ports i_negative_freq_0] [get_bd_pins conj_0/i_negative_freq]
   connect_bd_net -net i_select_0_1 [get_bd_ports playback_en] [get_bd_pins mux_0/i_select] [get_bd_pins playback_ctrl_0/playback_en]
-  connect_bd_net -net s_axi_aclk_0_1 [get_bd_ports aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins ifft/aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins playback_ctrl_0/axis_aclk]
-  connect_bd_net -net s_axi_aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins ifft/aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins playback_ctrl_0/axis_aresetn]
+  connect_bd_net -net inv_0_1 [get_bd_ports inv_0] [get_bd_pins fft_config_0/inv]
+  connect_bd_net -net nfft_0_1 [get_bd_ports nfft_0] [get_bd_pins fft_config_0/nfft]
+  connect_bd_net -net nfft_scaled_0_1 [get_bd_ports nfft_scaled_0] [get_bd_pins playback_ctrl_0/nfft_scaled] [get_bd_pins tlast_gen_0/nfft_scaled]
+  connect_bd_net -net s_axi_aclk_0_1 [get_bd_ports aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_fifo_1/s_axis_aclk] [get_bd_pins conj_0/axis_aclk] [get_bd_pins fft_config_0/axis_aclk] [get_bd_pins ifft/aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins playback_ctrl_0/axis_aclk] [get_bd_pins real_time_sampler_0/axis_aclk] [get_bd_pins tlast_gen_0/axis_aclk]
+  connect_bd_net -net s_axi_aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_fifo_1/s_axis_aresetn] [get_bd_pins conj_0/axis_aresetn] [get_bd_pins fft_config_0/axis_aresetn] [get_bd_pins ifft/aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins playback_ctrl_0/axis_aresetn] [get_bd_pins real_time_sampler_0/axis_aresetn] [get_bd_pins tlast_gen_0/axis_aresetn]
+  connect_bd_net -net symbols_0_1 [get_bd_ports symbols_0] [get_bd_pins playback_ctrl_0/symbols]
 
   # Create address segments
   assign_bd_address -offset 0x00000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces S_BRAM_AXI] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] -force

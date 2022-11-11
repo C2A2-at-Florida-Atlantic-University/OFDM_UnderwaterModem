@@ -1,0 +1,22 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../transmit_chain.gen/sources_1/bd/Transmit_Chain/ipshared/8713/hdl" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_0_1/sim/Transmit_Chain_axis_data_fifo_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_1_1/sim/Transmit_Chain_axis_data_fifo_1_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_conj_0_1/sim/Transmit_Chain_conj_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_fft_config_0_1/sim/Transmit_Chain_fft_config_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_mux_0_1/sim/Transmit_Chain_mux_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_playback_ctrl_0_1/sim/Transmit_Chain_playback_ctrl_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_playback_mem_1/sim/Transmit_Chain_playback_mem_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_real_time_sampler_0_0/sim/Transmit_Chain_real_time_sampler_0_0.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_tlast_gen_0_1/sim/Transmit_Chain_tlast_gen_0_1.v" \
+"../../../../transmit_chain.ip_user_files/bd/Transmit_Chain/sim/Transmit_Chain.v" \
+"../../../../transmit_chain.gen/sources_1/bd/Transmit_Chain/hdl/Transmit_Chain_wrapper.v" \
+
+sv xil_defaultlib  --include "../../../../transmit_chain.gen/sources_1/bd/Transmit_Chain/ipshared/8713/hdl" \
+"../../../../../../modules/sim/transmit_chain_tb.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

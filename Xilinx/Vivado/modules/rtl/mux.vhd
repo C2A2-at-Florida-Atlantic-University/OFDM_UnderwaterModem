@@ -18,23 +18,18 @@ entity mux is
 
     s_axis0_tdata                 : in  std_logic_vector(g_TDATA_WIDTH-1 downto 0);
     s_axis0_tvalid                : in  std_logic;
-    s_axis0_tid                   : in  std_logic_vector(7 downto 0);
-    s_axis0_tuser                 : in  std_logic_vector(7 downto 0);
     s_axis0_tlast                 : in  std_logic;
     s_axis0_tready                : out std_logic;
     
     s_axis1_tdata                 : in  std_logic_vector(g_TDATA_WIDTH-1 downto 0);
     s_axis1_tvalid                : in  std_logic;
-    s_axis1_tid                   : in  std_logic_vector(7 downto 0);
-    s_axis1_tuser                 : in  std_logic_vector(7 downto 0);
     s_axis1_tlast                 : in  std_logic;
     s_axis1_tready                : out std_logic;
 
     m_axis_tdata                  : out std_logic_vector(g_TDATA_WIDTH-1 downto 0);
     m_axis_tvalid                 : out std_logic;
-    m_axis_tid                    : out std_logic_vector(7 downto 0);
-    m_axis_tuser                  : out std_logic_vector(7 downto 0);
     m_axis_tlast                  : out std_logic;
+    m_axis_tready                 : in  std_logic;
     
     i_select                      : in  std_logic
   );
@@ -63,17 +58,16 @@ begin
       if i_select = '0' then
         m_axis_tdata              <= s_axis0_tdata;
         m_axis_tvalid             <= s_axis0_tvalid;
-        m_axis_tid                <= s_axis0_tid;
-        m_axis_tuser              <= s_axis0_tuser;
         m_axis_tlast              <= s_axis0_tlast;
       else
         m_axis_tdata              <= s_axis1_tdata;
         m_axis_tvalid             <= s_axis1_tvalid;
-        m_axis_tid                <= s_axis1_tid;
-        m_axis_tuser              <= s_axis1_tuser;
         m_axis_tlast              <= s_axis1_tlast;
       end if;
     end if;
   end process P_MUX;
+
+  s_axis0_tready                  <= m_axis_tready;
+  s_axis1_tready                  <= m_axis_tready;
 
 end architecture RTL;

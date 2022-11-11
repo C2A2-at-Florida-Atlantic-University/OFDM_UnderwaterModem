@@ -1,0 +1,23 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"1.0",
+   "Default View_TopLeft":"-532,-148",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
+#  -string -flagsOSRD
+preplace port S_AXIS -pg 1 -lvl 0 -x 0 -y 50 -defaultsOSRD
+preplace port port-id_aclk -pg 1 -lvl 0 -x 0 -y 70 -defaultsOSRD
+preplace port port-id_aresetn -pg 1 -lvl 0 -x 0 -y 90 -defaultsOSRD
+preplace port port-id_dl_en_0 -pg 1 -lvl 0 -x 0 -y 110 -defaultsOSRD
+preplace portBus interp_cycles_0 -pg 1 -lvl 0 -x 0 -y 130 -defaultsOSRD
+preplace inst dac_resampler_0 -pg 1 -lvl 1 -x 170 -y 90 -defaultsOSRD
+preplace netloc axis_aclk_0_1 1 0 1 NJ 70
+preplace netloc axis_aresetn_0_1 1 0 1 NJ 90
+preplace netloc dl_en_0_1 1 0 1 NJ 110
+preplace netloc interp_cycles_0_1 1 0 1 NJ 130
+preplace netloc s_axis_0_1 1 0 1 NJ 50
+levelinfo -pg 1 0 170 330
+pagesize -pg 1 -db -bbox -sgen -190 -10 330 190
+"
+}
+

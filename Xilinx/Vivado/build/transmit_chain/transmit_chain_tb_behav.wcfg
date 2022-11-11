@@ -1,0 +1,1474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="transmit_chain_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_bram_ctrl_funcs" />
+            <top_module name="glbl" />
+            <top_module name="transmit_chain_tb" />
+            <top_module name="vcomponents" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="2,910.830001 us"></ZoomEndTime>
+      <Cursor1Time time="65.150000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="236"></NameColumnWidth>
+      <ValueColumnWidth column_width="70"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="32" />
+   <wave_markers>
+      <marker time="95980000" label="" />
+      <marker time="88869720" label="" />
+   </wave_markers>
+   <wvobject fp_name="/transmit_chain_tb/r_clk" type="logic">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/r_nRst" type="logic">
+      <obj_property name="ElementShortName">r_nRst</obj_property>
+      <obj_property name="ObjectShortName">r_nRst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group145" type="group">
+      <obj_property name="label">S_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata" type="array">
+         <obj_property name="ElementShortName">s_axis0_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis0_tdata[31:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus303" type="vbus">
+         <obj_property name="label">I</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[15]" type="logic">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[14]" type="logic">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[13]" type="logic">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[12]" type="logic">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[11]" type="logic">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[10]" type="logic">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[9]" type="logic">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[8]" type="logic">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[7]" type="logic">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[6]" type="logic">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[5]" type="logic">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[4]" type="logic">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[3]" type="logic">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[2]" type="logic">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[1]" type="logic">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[0]" type="logic">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="vbus286" type="vbus">
+         <obj_property name="label">Q</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/mux_0/s_axis0_tdata[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/in_axis_tdata" type="array">
+         <obj_property name="ElementShortName">in_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">in_axis_tdata[31:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus337" type="vbus">
+         <obj_property name="label">I</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[15]" type="logic">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[14]" type="logic">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[13]" type="logic">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[12]" type="logic">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[11]" type="logic">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[10]" type="logic">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[9]" type="logic">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[8]" type="logic">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[7]" type="logic">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[6]" type="logic">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[5]" type="logic">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[4]" type="logic">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[3]" type="logic">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[2]" type="logic">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[1]" type="logic">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[0]" type="logic">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="vbus320" type="vbus">
+         <obj_property name="label">Q</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/in_axis_tdata[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/in_axis_tlast" type="logic">
+         <obj_property name="ElementShortName">in_axis_tlast</obj_property>
+         <obj_property name="ObjectShortName">in_axis_tlast</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/in_axis_tready" type="logic">
+         <obj_property name="ElementShortName">in_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">in_axis_tready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/in_axis_tvalid" type="logic">
+         <obj_property name="ElementShortName">in_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">in_axis_tvalid</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group336" type="group">
+      <obj_property name="label">IFFT</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="group150" type="group">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata" type="array">
+            <obj_property name="ElementShortName">m_axis_data_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus393" type="vbus">
+            <obj_property name="label">I</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus376" type="vbus">
+            <obj_property name="label">Q</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tvalid" type="logic">
+            <obj_property name="ElementShortName">m_axis_data_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tready" type="logic">
+            <obj_property name="ElementShortName">m_axis_data_tready</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tready</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/m_axis_data_tlast" type="logic">
+            <obj_property name="ElementShortName">m_axis_data_tlast</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tlast</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group329" type="group">
+         <obj_property name="label">S_CONFIG_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_config_tready" type="logic">
+            <obj_property name="ElementShortName">s_axis_config_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tready</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_config_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_config_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_config_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_config_tdata[39:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tdata[39:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_frame_started" type="logic">
+         <obj_property name="ElementShortName">event_frame_started</obj_property>
+         <obj_property name="ObjectShortName">event_frame_started</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/fft_config_0/inv" type="logic">
+         <obj_property name="ElementShortName">inv</obj_property>
+         <obj_property name="ObjectShortName">inv</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/fft_config_0/cp_len" type="array">
+         <obj_property name="ElementShortName">cp_len[15:0]</obj_property>
+         <obj_property name="ObjectShortName">cp_len[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_tlast_unexpected" type="logic">
+         <obj_property name="ElementShortName">event_tlast_unexpected</obj_property>
+         <obj_property name="ObjectShortName">event_tlast_unexpected</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_tlast_missing" type="logic">
+         <obj_property name="ElementShortName">event_tlast_missing</obj_property>
+         <obj_property name="ObjectShortName">event_tlast_missing</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_status_channel_halt" type="logic">
+         <obj_property name="ElementShortName">event_status_channel_halt</obj_property>
+         <obj_property name="ObjectShortName">event_status_channel_halt</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_data_in_channel_halt" type="logic">
+         <obj_property name="ElementShortName">event_data_in_channel_halt</obj_property>
+         <obj_property name="ObjectShortName">event_data_in_channel_halt</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/event_data_out_channel_halt" type="logic">
+         <obj_property name="ElementShortName">event_data_out_channel_halt</obj_property>
+         <obj_property name="ObjectShortName">event_data_out_channel_halt</obj_property>
+      </wvobject>
+      <wvobject fp_name="group341" type="group">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_data_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus403" type="vbus">
+            <obj_property name="label">I</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus386" type="vbus">
+            <obj_property name="label">Q</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_data_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tready" type="logic">
+            <obj_property name="ElementShortName">s_axis_data_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tready</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/ifft/s_axis_data_tlast" type="logic">
+            <obj_property name="ElementShortName">s_axis_data_tlast</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tlast</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/inst/counter" type="array">
+      <obj_property name="ElementShortName">counter[11:0]</obj_property>
+      <obj_property name="ObjectShortName">counter[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus689" type="vbus">
+      <obj_property name="label">I</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus672" type="vbus">
+      <obj_property name="label">Q</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/ifft" type="array">
+      <obj_property name="ElementShortName">ifft[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ifft[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus367" type="vbus">
+      <obj_property name="label">I</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/ifft[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">[15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">[14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">[13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">[12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">[11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">[10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">[9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">[8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus350" type="vbus">
+      <obj_property name="label">Q</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/ifft[31]" type="logic">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">[31]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[30]" type="logic">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">[30]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[29]" type="logic">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">[29]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[28]" type="logic">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">[28]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[27]" type="logic">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">[27]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[26]" type="logic">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">[26]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[25]" type="logic">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">[25]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[24]" type="logic">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">[24]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[23]" type="logic">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">[23]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[22]" type="logic">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">[22]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[21]" type="logic">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">[21]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[20]" type="logic">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">[20]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[19]" type="logic">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">[19]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[18]" type="logic">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">[18]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[17]" type="logic">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">[17]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft[16]" type="logic">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">[16]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/ifft_tvalid" type="logic">
+      <obj_property name="ElementShortName">ifft_tvalid</obj_property>
+      <obj_property name="ObjectShortName">ifft_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/ifft_tlast" type="logic">
+      <obj_property name="ElementShortName">ifft_tlast</obj_property>
+      <obj_property name="ObjectShortName">ifft_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/inst/counter" type="array">
+      <obj_property name="ElementShortName">counter[11:0]</obj_property>
+      <obj_property name="ObjectShortName">counter[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group165" type="group">
+      <obj_property name="label">PLAYBACK</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group150" type="group">
+         <obj_property name="label">BRAM</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_din" type="array">
+            <obj_property name="ElementShortName">BRAM_PORT_din[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BRAM_PORT_din[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_addr" type="array">
+            <obj_property name="ElementShortName">BRAM_PORT_addr[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BRAM_PORT_addr[31:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout" type="array">
+            <obj_property name="ElementShortName">BRAM_PORT_dout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BRAM_PORT_dout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus1545" type="vbus">
+            <obj_property name="label">I</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus1528" type="vbus">
+            <obj_property name="label">Q</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_dout[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/BRAM_PORT_en" type="logic">
+            <obj_property name="ElementShortName">BRAM_PORT_en</obj_property>
+            <obj_property name="ObjectShortName">BRAM_PORT_en</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group155" type="group">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/M_AXIS_tdata" type="array">
+            <obj_property name="ElementShortName">M_AXIS_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">M_AXIS_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/M_AXIS_tvalid" type="logic">
+            <obj_property name="ElementShortName">M_AXIS_tvalid</obj_property>
+            <obj_property name="ObjectShortName">M_AXIS_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/M_AXIS_tlast" type="logic">
+            <obj_property name="ElementShortName">M_AXIS_tlast</obj_property>
+            <obj_property name="ObjectShortName">M_AXIS_tlast</obj_property>
+         </wvobject>
+         <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/M_AXIS_tready" type="logic">
+            <obj_property name="ElementShortName">M_AXIS_tready</obj_property>
+            <obj_property name="ObjectShortName">M_AXIS_tready</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/symbol_counter" type="array">
+         <obj_property name="ElementShortName">symbol_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">symbol_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/nfft_counter" type="array">
+         <obj_property name="ElementShortName">nfft_counter[11:0]</obj_property>
+         <obj_property name="ObjectShortName">nfft_counter[11:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/quiet_counter" type="array">
+         <obj_property name="ElementShortName">quiet_counter[26:0]</obj_property>
+         <obj_property name="ObjectShortName">quiet_counter[26:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/bram_addr" type="array">
+         <obj_property name="ElementShortName">bram_addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">bram_addr[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/playback_en" type="logic">
+         <obj_property name="ElementShortName">playback_en</obj_property>
+         <obj_property name="ObjectShortName">playback_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/fs_cycles" type="array">
+         <obj_property name="ElementShortName">fs_cycles[26:0]</obj_property>
+         <obj_property name="ObjectShortName">fs_cycles[26:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/symbols" type="array">
+         <obj_property name="ElementShortName">symbols[3:0]</obj_property>
+         <obj_property name="ObjectShortName">symbols[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/nfft_scaled" type="array">
+         <obj_property name="ElementShortName">nfft_scaled[11:0]</obj_property>
+         <obj_property name="ObjectShortName">nfft_scaled[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/playback_ctrl_0/inst/continuous" type="logic">
+         <obj_property name="ElementShortName">continuous</obj_property>
+         <obj_property name="ObjectShortName">continuous</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft_in_tvalid" type="logic">
+         <obj_property name="ElementShortName">ifft_in_tvalid</obj_property>
+         <obj_property name="ObjectShortName">ifft_in_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/ifft_in_tdata" type="array">
+         <obj_property name="ElementShortName">ifft_in_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ifft_in_tdata[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tready" type="logic">
+      <obj_property name="ElementShortName">s_axis_tready</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tlast" type="logic">
+      <obj_property name="ElementShortName">s_axis_tlast</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tready" type="logic">
+      <obj_property name="ElementShortName">m_axis_tready</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata" type="array">
+      <obj_property name="ElementShortName">m_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus2628" type="vbus">
+      <obj_property name="label">I</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">[15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">[14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">[13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">[12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">[11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">[10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">[9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">[8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus2611" type="vbus">
+      <obj_property name="label">Q</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[31]" type="logic">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">[31]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[30]" type="logic">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">[30]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[29]" type="logic">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">[29]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[28]" type="logic">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">[28]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[27]" type="logic">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">[27]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[26]" type="logic">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">[26]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[25]" type="logic">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">[25]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[24]" type="logic">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">[24]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[23]" type="logic">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">[23]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[22]" type="logic">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">[22]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[21]" type="logic">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">[21]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[20]" type="logic">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">[20]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[19]" type="logic">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">[19]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[18]" type="logic">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">[18]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[17]" type="logic">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">[17]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tdata[16]" type="logic">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">[16]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/m_axis_tlast" type="logic">
+      <obj_property name="ElementShortName">m_axis_tlast</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus2698" type="vbus">
+      <obj_property name="label">I</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">[15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">[14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">[13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">[12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">[11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">[10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">[9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">[8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus2681" type="vbus">
+      <obj_property name="label">Q</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[31]" type="logic">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">[31]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[30]" type="logic">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">[30]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[29]" type="logic">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">[29]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[28]" type="logic">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">[28]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[27]" type="logic">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">[27]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[26]" type="logic">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">[26]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[25]" type="logic">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">[25]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[24]" type="logic">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">[24]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[23]" type="logic">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">[23]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[22]" type="logic">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">[22]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[21]" type="logic">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">[21]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[20]" type="logic">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">[20]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[19]" type="logic">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">[19]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[18]" type="logic">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">[18]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[17]" type="logic">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">[17]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tdata[16]" type="logic">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">[16]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tready" type="logic">
+      <obj_property name="ElementShortName">s_axis_tready</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/axis_data_fifo_1/s_axis_tlast" type="logic">
+      <obj_property name="ElementShortName">s_axis_tlast</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="group384" type="group">
+      <obj_property name="label">TLAST</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/s_axis_tready" type="logic">
+         <obj_property name="ElementShortName">s_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">s_axis_tready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/m_axis_tready" type="logic">
+         <obj_property name="ElementShortName">m_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/m_axis_tvalid" type="logic">
+         <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/inst/counter" type="array">
+         <obj_property name="ElementShortName">counter[11:0]</obj_property>
+         <obj_property name="ObjectShortName">counter[11:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/inst/symbol_counter" type="array">
+         <obj_property name="ElementShortName">symbol_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">symbol_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/transmit_chain_tb/DUT/Transmit_Chain_i/tlast_gen_0/inst/stop" type="logic">
+         <obj_property name="ElementShortName">stop</obj_property>
+         <obj_property name="ObjectShortName">stop</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/transmit_chain_tb/count" type="array">
+      <obj_property name="ElementShortName">count[31:0]</obj_property>
+      <obj_property name="ObjectShortName">count[31:0]</obj_property>
+   </wvobject>
+</wave_config>

@@ -1,0 +1,78 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.237947",
+   "Default View_TopLeft":"0,-164",
+   "ExpandedHierarchyInLayout":"/Transmit_Chain_0",
+   "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 9 -x 5030 -y 870 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 9 -x 5030 -y 890 -defaultsOSRD
+preplace inst Transmit_Chain_0 -pg 1 -lvl 4 -x 1270 -y 202 -defaultsOSRD
+preplace inst axi_dma_0 -pg 1 -lvl 6 -x 4000 -y 640 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 4 -x 1270 -y 974 -defaultsOSRD
+preplace inst axi_interconnect_0 -pg 1 -lvl 3 -x 820 -y 410 -defaultsOSRD
+preplace inst axi_interconnect_1 -pg 1 -lvl 7 -x 4383 -y 910 -defaultsOSRD
+preplace inst axis_data_fifo_1 -pg 1 -lvl 5 -x 3680 -y 670 -defaultsOSRD
+preplace inst proc_sys_reset_0 -pg 1 -lvl 1 -x 200 -y 1050 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 8 -x 4770 -y 920 -defaultsOSRD
+preplace inst system_ila_0 -pg 1 -lvl 4 -x 1270 -y 1374 -defaultsOSRD
+preplace inst Transmit_Chain_0|axi_bram_ctrl_0 -pg 1 -lvl 1 -x 1390 -y 112 -defaultsOSRD
+preplace inst Transmit_Chain_0|axis_data_fifo_0 -pg 1 -lvl 6 -x 2990 -y 512 -defaultsOSRD
+preplace inst Transmit_Chain_0|axis_data_fifo_1 -pg 1 -lvl 1 -x 1390 -y 252 -defaultsOSRD
+preplace inst Transmit_Chain_0|conj_0 -pg 1 -lvl 5 -x 2730 -y 492 -defaultsOSRD
+preplace inst Transmit_Chain_0|fft_config_0 -pg 1 -lvl 3 -x 2060 -y 742 -defaultsOSRD
+preplace inst Transmit_Chain_0|ifft -pg 1 -lvl 4 -x 2410 -y 522 -defaultsOSRD
+preplace inst Transmit_Chain_0|mux_0 -pg 1 -lvl 3 -x 2060 -y 492 -defaultsOSRD
+preplace inst Transmit_Chain_0|playback_ctrl_0 -pg 1 -lvl 1 -x 1390 -y 462 -defaultsOSRD
+preplace inst Transmit_Chain_0|playback_mem -pg 1 -lvl 2 -x 1730 -y 122 -defaultsOSRD
+preplace inst Transmit_Chain_0|tlast_gen_0 -pg 1 -lvl 2 -x 1730 -y 292 -defaultsOSRD
+preplace inst Transmit_Chain_0|real_time_sampler_0 -pg 1 -lvl 7 -x 3250 -y 552 -defaultsOSRD
+preplace netloc ARESETN_1 1 1 6 N 1090 430 250 1010 1154 3540 750 3820 760 4200
+preplace netloc axi_gpio_0_gpio2_io_o 1 3 2 1030 884 3490
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 9 20 490 N 490 420 240 1000 1174 3550 760 3810 770 4190 1060 4540 810 5000
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 9 20 1150 NJ 1150 NJ 1150 980J 1634 3560J 1150 NJ 1150 NJ 1150 NJ 1150 5000
+preplace netloc S00_AXI_1 1 6 1 4220 580n
+preplace netloc S01_AXI_1 1 6 1 4210 600n
+preplace netloc S_AXIS_1 1 3 4 1020 1064 3500 510 N 510 4190
+preplace netloc Transmit_Chain_0_M_AXIS 1 3 2 1030 1134 3520
+preplace netloc axi_interconnect_0_M00_AXI 1 3 3 980 1074 3530J 590 NJ
+preplace netloc axi_interconnect_0_M01_AXI 1 3 1 970 92n
+preplace netloc axi_interconnect_0_M02_AXI 1 3 1 990 430n
+preplace netloc axi_interconnect_1_M00_AXI 1 7 1 N 910
+preplace netloc axis_data_fifo_1_M_AXIS 1 5 1 3800 610n
+preplace netloc processing_system7_0_DDR 1 8 1 NJ 870
+preplace netloc processing_system7_0_FIXED_IO 1 8 1 NJ 890
+preplace netloc processing_system7_0_M_AXI_GP0 1 2 7 440 570 970J 1054 3510J 520 NJ 520 NJ 520 NJ 520 5010
+preplace netloc Transmit_Chain_0|config_start_0_1 1 0 3 1190J 582 NJ 582 1900
+preplace netloc Transmit_Chain_0|continuous_0_1 1 0 1 N 522
+preplace netloc Transmit_Chain_0|cp_len_0_1 1 0 3 1180J 592 NJ 592 1890
+preplace netloc Transmit_Chain_0|dl_en_0_1 1 0 7 NJ 602 1570 572 1910J 612 2220J 642 NJ 642 NJ 642 3110
+preplace netloc Transmit_Chain_0|fs_cycles_0_1 1 0 7 1220 622 NJ 622 NJ 622 2200J 662 NJ 662 NJ 662 3120
+preplace netloc Transmit_Chain_0|i_negative_freq_0_1 1 0 5 1220J 632 NJ 632 NJ 632 2190J 672 2600
+preplace netloc Transmit_Chain_0|i_select_0_1 1 0 3 1210 772 NJ 772 1880
+preplace netloc Transmit_Chain_0|inv_0_1 1 0 3 NJ 732 NJ 732 1870
+preplace netloc Transmit_Chain_0|nfft_0_1 1 0 3 NJ 752 NJ 752 N
+preplace netloc Transmit_Chain_0|nfft_scaled_0_1 1 0 2 1200 762 1590
+preplace netloc Transmit_Chain_0|s_axi_aclk_0_1 1 0 7 1230 332 1560 192 1920 392 2230 402 2590 402 2860 422 3120J
+preplace netloc Transmit_Chain_0|s_axi_aresetn_0_1 1 0 7 1180 342 1580 512 1930 592 2230 652 2590 582 2870 432 3110J
+preplace netloc Transmit_Chain_0|symbols_0_1 1 0 1 1230 482n
+preplace netloc Transmit_Chain_0|S_AXIS_1 1 0 1 1220 72n
+preplace netloc Transmit_Chain_0|S_BRAM_AXI_1 1 0 1 N 92
+preplace netloc Transmit_Chain_0|axi_bram_ctrl_0_BRAM_PORTA 1 1 1 N 112
+preplace netloc Transmit_Chain_0|axis_data_fifo_1_M_AXIS 1 1 1 N 252
+preplace netloc Transmit_Chain_0|conj_0_m_axis 1 5 1 N 492
+preplace netloc Transmit_Chain_0|fft_config_0_m_axis 1 3 1 2210 512n
+preplace netloc Transmit_Chain_0|ifft_M_AXIS_DATA 1 4 1 N 462
+preplace netloc Transmit_Chain_0|mux_0_m_axis 1 3 1 N 492
+preplace netloc Transmit_Chain_0|playback_ctrl_0_BRAM_PORT 1 1 1 1550 132n
+preplace netloc Transmit_Chain_0|playback_ctrl_0_M_AXIS 1 1 2 N 472 NJ
+preplace netloc Transmit_Chain_0|tlast_gen_0_m_axis 1 2 1 1930 292n
+preplace netloc Transmit_Chain_0|axis_data_fifo_0_M_AXIS 1 6 1 N 512
+preplace netloc Transmit_Chain_0|real_time_sampler_0_m_axis 1 7 1 N 552
+levelinfo -pg 1 0 200 400 820 1270 3680 4000 4383 4770 5030
+levelinfo -hier Transmit_Chain_0 * 1390 1730 2060 2410 2730 2990 3250 *
+pagesize -pg 1 -db -bbox -sgen 0 0 5150 1650
+pagesize -hier Transmit_Chain_0 -db -bbox -sgen 1150 32 3410 852
+"
+}
+0
