@@ -1,13 +1,13 @@
 Vivado Simulator v2022.1
 Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
-Running: C:/Xilinx_2022.1/Vivado/2022.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L axi_bram_ctrl_v4_1_6 -L axis_infrastructure_v1_1_0 -L axis_data_fifo_v2_0_8 -L xbip_utils_v3_0_10 -L axi_utils_v2_0_6 -L c_reg_fd_v12_0_6 -L xbip_dsp48_wrapper_v3_0_4 -L xbip_pipe_v3_0_6 -L xbip_dsp48_addsub_v3_0_6 -L xbip_addsub_v3_0_6 -L c_addsub_v12_0_14 -L c_mux_bit_v12_0_6 -L c_shift_ram_v12_0_14 -L xbip_bram18k_v3_0_6 -L mult_gen_v12_0_18 -L cmpy_v6_0_21 -L floating_point_v7_0_20 -L xfft_v9_1_8 -L blk_mem_gen_v8_4_5 -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot transmit_chain_tb_behav xil_defaultlib.transmit_chain_tb xil_defaultlib.glbl -log elaborate.log 
+Running: C:/Xilinx/Vivado/2022.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L axi_bram_ctrl_v4_1_6 -L axis_infrastructure_v1_1_0 -L axis_data_fifo_v2_0_8 -L xbip_utils_v3_0_10 -L axi_utils_v2_0_6 -L c_reg_fd_v12_0_6 -L xbip_dsp48_wrapper_v3_0_4 -L xbip_pipe_v3_0_6 -L xbip_dsp48_addsub_v3_0_6 -L xbip_addsub_v3_0_6 -L c_addsub_v12_0_14 -L c_mux_bit_v12_0_6 -L c_shift_ram_v12_0_14 -L xbip_bram18k_v3_0_6 -L mult_gen_v12_0_18 -L cmpy_v6_0_21 -L floating_point_v7_0_20 -L xfft_v9_1_8 -L blk_mem_gen_v8_4_5 -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot transmit_chain_tb_behav xil_defaultlib.transmit_chain_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 12 for port 'nfft_scaled_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:58]
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 27 for port 'fs_cycles_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:61]
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 4 for port 'symbols_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:62]
-WARNING: [VRFC 10-5021] port 'S_BRAM_AXI_araddr' is not connected on this instance [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:49]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 12 for port 'nfft_scaled_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:67]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 27 for port 'fs_cycles_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:70]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 4 for port 'symbols_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:71]
+WARNING: [VRFC 10-5021] port 'S_BRAM_AXI_araddr' is not connected on this instance [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv:58]
 WARNING: [VRFC 10-5021] port 'bram_rst_a' is not connected on this instance [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/sim/Transmit_Chain.v:262]
 WARNING: [VRFC 10-5021] port 's_axis_config_tready' is not connected on this instance [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/sim/Transmit_Chain.v:345]
 Completed static elaboration
@@ -588,7 +588,7 @@ Compiling module xil_defaultlib.Transmit_Chain_tlast_gen_0_1
 Compiling module xil_defaultlib.Transmit_Chain
 Compiling module xil_defaultlib.Transmit_Chain_wrapper
 Compiling module xil_defaultlib.transmit_chain_tb
-WARNING: [XSIM 43-3373] "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv" Line 169. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
-WARNING: [XSIM 43-3373] "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv" Line 208. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv" Line 178. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv" Line 217. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot transmit_chain_tb_behav

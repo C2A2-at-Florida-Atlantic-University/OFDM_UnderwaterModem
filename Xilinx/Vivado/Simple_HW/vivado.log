@@ -1,0 +1,73 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Mon Oct 17 11:52:01 2022
+# Process ID: 16928
+# Current directory: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW
+# Command line: vivado.exe SDUAM.xpr
+# Log file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/vivado.log
+# Journal file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW\vivado.jou
+# Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
+#-----------------------------------------------------------
+start_gui
+open_project SDUAM.xpr
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120_es:part0:1.2 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120/es/1.2/board.xml as part xcvp1202-vsva2785-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120_es_revb:part0:1.0 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120_revb/es/1.0/board.xml as part xcvp1202-vsva2785-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670:part0:2.0 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670/2.0/board.xml as part xczu67dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at C:/Xilinx_2022.1/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+CRITICAL WARNING: [Project 1-19] Could not find the file 'c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/component.xml'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository 'c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/ip_repo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx_2022.1/Vivado/2022.1/data/ip'.
+open_project: Time (s): cpu = 00:00:12 ; elapsed = 00:00:06 . Memory (MB): peak = 1687.156 ; gain = 0.000
+open_bd_design {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd}
+Reading block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd>...
+Adding component instance block -- xilinx.com:ip:processing_system7:5.5 - processing_system7_0
+WARNING: [BD 41-176] The physical port 'S_AXI_GP2_rd_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP2_wr_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP3_rd_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP3_wr_socket' specified in the portmap, is not found on the block! 
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - rst_ps7_0_100M
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - axi_gpio_0
+Adding component instance block -- xilinx.com:ip:axi_interconnect:2.1 - axi_interconnect_0
+Adding component instance block -- xilinx.com:ip:axi_crossbar:2.1 - xbar
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_dma:7.1 - axi_dma_0
+Adding Block Design Container - Transmit_Chain_0
+Adding component instance block -- xilinx.com:ip:axi_interconnect:2.1 - axi_interconnect_1
+Adding component instance block -- xilinx.com:ip:axi_crossbar:2.1 - xbar
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_dma:7.1 - axi_dma_1
+Successfully read diagram <SDUAM> from block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd>
+open_bd_design: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1687.156 ; gain = 0.000
+update_compile_order -fileset sources_1
+write_bd_tcl -force -no_ip_version ../bd/radio_top_bd.tcl
+INFO: [BD 5-148] Tcl file written out <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/bd/radio_top_bd.tcl>.
+
+open_bd_design {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd}
+Reading block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd>...
+Adding component instance block -- xilinx.com:ip:axi_bram_ctrl:4.1 - axi_bram_ctrl_0
+Adding component instance block -- xilinx.com:ip:blk_mem_gen:8.4 - playback_mem
+Adding component instance block -- xilinx.com:module_ref:mux:1.0 - mux_0
+Adding component instance block -- xilinx.com:ip:xfft:9.1 - ifft
+Adding component instance block -- xilinx.com:module_ref:playback_ctrl:1.0 - playback_ctrl_0
+Successfully read diagram <Transmit_Chain> from block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simple_HW/SDUAM.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd>
+write_bd_tcl -force -no_ip_version ../bd/Transmit_Chain_bd.tcl
+INFO: [BD 5-148] Tcl file written out <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/bd/Transmit_Chain_bd.tcl>.
+
+current_bd_design [get_bd_designs SDUAM]
+write_bd_tcl -force -no_ip_version ../bd/Radio_Top_bd.tcl
+INFO: [BD 5-148] Tcl file written out <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/bd/Radio_Top_bd.tcl>.
+
+exit
+INFO: [Common 17-206] Exiting Vivado at Mon Oct 17 13:05:16 2022...

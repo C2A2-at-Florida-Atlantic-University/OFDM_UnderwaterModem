@@ -1,10 +1,10 @@
 -makelib xcelium_lib/xpm -sv \
-  "C:/Xilinx_2022.1/Vivado/2022.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
-  "C:/Xilinx_2022.1/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv" \
-  "C:/Xilinx_2022.1/Vivado/2022.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+  "C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+  "C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv" \
+  "C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 -endlib
 -makelib xcelium_lib/xpm \
-  "C:/Xilinx_2022.1/Vivado/2022.1/data/ip/xpm/xpm_VCOMP.vhd" \
+  "C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_VCOMP.vhd" \
 -endlib
 -makelib xcelium_lib/axi_bram_ctrl_v4_1_6 \
   "../../../../transmit_chain.gen/sources_1/bd/Transmit_Chain/ipshared/3c31/hdl/axi_bram_ctrl_v4_1_rfs.vhd" \
@@ -21,7 +21,6 @@
 -makelib xcelium_lib/xil_defaultlib \
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_0_1/sim/Transmit_Chain_axis_data_fifo_0_1.v" \
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_1_1/sim/Transmit_Chain_axis_data_fifo_1_1.v" \
-  "../../../bd/Transmit_Chain/ip/Transmit_Chain_conj_0_1/sim/Transmit_Chain_conj_0_1.v" \
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_fft_config_0_1/sim/Transmit_Chain_fft_config_0_1.v" \
 -endlib
 -makelib xcelium_lib/xbip_utils_v3_0_10 \
@@ -83,6 +82,7 @@
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_playback_mem_1/sim/Transmit_Chain_playback_mem_1.v" \
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_real_time_sampler_0_0/sim/Transmit_Chain_real_time_sampler_0_0.v" \
   "../../../bd/Transmit_Chain/ip/Transmit_Chain_tlast_gen_0_1/sim/Transmit_Chain_tlast_gen_0_1.v" \
+  "../../../bd/Transmit_Chain/ip/Transmit_Chain_conj_0_1/sim/Transmit_Chain_conj_0_1.v" \
   "../../../bd/Transmit_Chain/sim/Transmit_Chain.v" \
 -endlib
 -makelib xcelium_lib/xil_defaultlib \

@@ -1,0 +1,38 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Mon Jan  2 11:59:59 2023
+# Process ID: 21536
+# Current directory: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain
+# Command line: vivado.exe Transmit_Chain.xpr
+# Log file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain/vivado.log
+# Journal file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain\vivado.jou
+# Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
+#-----------------------------------------------------------
+start_gui
+open_project Transmit_Chain.xpr
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120_es:part0:1.2 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120/es/1.2/board.xml as part xcvp1202-vsva2785-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120_es_revb:part0:1.0 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120_revb/es/1.0/board.xml as part xcvp1202-vsva2785-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670:part0:2.0 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670/2.0/board.xml as part xczu67dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at C:/Xilinx/Vivado/2022.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2022.1/data/ip'.
+update_compile_order -fileset sources_1
+open_bd_design {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain/Transmit_Chain.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd}
+Reading block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain/Transmit_Chain.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd>...
+Adding component instance block -- xilinx.com:ip:axi_bram_ctrl:4.1 - axi_bram_ctrl_0
+Adding component instance block -- xilinx.com:ip:xfft:9.1 - ifft
+Adding component instance block -- xilinx.com:module_ref:mux:1.0 - mux_0
+Adding component instance block -- xilinx.com:module_ref:playback_ctrl:1.0 - playback_ctrl_0
+Adding component instance block -- xilinx.com:ip:blk_mem_gen:8.4 - playback_mem
+Successfully read diagram <Transmit_Chain> from block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/Simulations/Transmit_Chain/Transmit_Chain.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd>
+WARNING: [IP_Flow 19-4067] Ignoring invalid widget type specified checkbox.Providing a default widget
+WARNING: [IP_Flow 19-4067] Ignoring invalid widget type specified checkbox.Providing a default widget
+exit
+INFO: [Common 17-206] Exiting Vivado at Mon Jan  9 12:33:33 2023...

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Nov  6 11:11:42 2022" VIVADOVERSION="2022.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Mon Feb 20 21:24:32 2023" VIVADOVERSION="2022.1">
 
   <SYSTEMINFO ARCH="zynq" DEVICE="7z010" NAME="Transmit_Chain" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -9,13 +9,13 @@
         <CONNECTION INSTANCE="axi_bram_ctrl_0" PORT="s_axi_aclk"/>
         <CONNECTION INSTANCE="axis_data_fifo_0" PORT="s_axis_aclk"/>
         <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aclk"/>
-        <CONNECTION INSTANCE="conj_0" PORT="axis_aclk"/>
         <CONNECTION INSTANCE="fft_config_0" PORT="axis_aclk"/>
         <CONNECTION INSTANCE="ifft" PORT="aclk"/>
         <CONNECTION INSTANCE="mux_0" PORT="axis_aclk"/>
         <CONNECTION INSTANCE="playback_ctrl_0" PORT="axis_aclk"/>
         <CONNECTION INSTANCE="real_time_sampler_0" PORT="axis_aclk"/>
         <CONNECTION INSTANCE="tlast_gen_0" PORT="axis_aclk"/>
+        <CONNECTION INSTANCE="conj_0" PORT="axis_aclk"/>
       </CONNECTIONS>
     </PORT>
     <PORT DIR="I" NAME="aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="External_Ports_aresetn">
@@ -23,13 +23,13 @@
         <CONNECTION INSTANCE="axi_bram_ctrl_0" PORT="s_axi_aresetn"/>
         <CONNECTION INSTANCE="axis_data_fifo_0" PORT="s_axis_aresetn"/>
         <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aresetn"/>
-        <CONNECTION INSTANCE="conj_0" PORT="axis_aresetn"/>
         <CONNECTION INSTANCE="fft_config_0" PORT="axis_aresetn"/>
         <CONNECTION INSTANCE="ifft" PORT="aresetn"/>
         <CONNECTION INSTANCE="mux_0" PORT="axis_aresetn"/>
         <CONNECTION INSTANCE="playback_ctrl_0" PORT="axis_aresetn"/>
         <CONNECTION INSTANCE="real_time_sampler_0" PORT="axis_aresetn"/>
         <CONNECTION INSTANCE="tlast_gen_0" PORT="axis_aresetn"/>
+        <CONNECTION INSTANCE="conj_0" PORT="axis_aresetn"/>
       </CONNECTIONS>
     </PORT>
     <PORT DIR="I" NAME="config_start_0" SIGIS="undef" SIGNAME="External_Ports_config_start_0">

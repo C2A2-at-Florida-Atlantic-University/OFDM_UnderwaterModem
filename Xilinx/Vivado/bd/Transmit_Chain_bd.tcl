@@ -49,8 +49,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-   create_project project_1 myproj -part xc7z020clg400-1
-   set_property BOARD_PART tul.com.tw:pynq-z2:part0:1.0 [current_project]
+   create_project project_1 myproj -part xc7z010clg400-1
 }
 
 
@@ -301,7 +300,7 @@ proc create_root_design { parentCell } {
   # Create instance: axis_data_fifo_0, and set properties
   set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_0 ]
   set_property -dict [ list \
-   CONFIG.FIFO_DEPTH {4096} \
+   CONFIG.FIFO_DEPTH {16384} \
    CONFIG.HAS_TLAST {1} \
    CONFIG.TDATA_NUM_BYTES {4} \
  ] $axis_data_fifo_0
@@ -309,6 +308,8 @@ proc create_root_design { parentCell } {
   # Create instance: axis_data_fifo_1, and set properties
   set axis_data_fifo_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_1 ]
   set_property -dict [ list \
+   CONFIG.FIFO_DEPTH {512} \
+   CONFIG.FIFO_MODE {1} \
    CONFIG.HAS_TLAST {1} \
    CONFIG.TDATA_NUM_BYTES {4} \
    CONFIG.TID_WIDTH {0} \
@@ -444,7 +445,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net config_start_0_1 [get_bd_ports config_start_0] [get_bd_pins fft_config_0/config_start]
   connect_bd_net -net continuous_0_1 [get_bd_ports continuous_0] [get_bd_pins playback_ctrl_0/continuous]
   connect_bd_net -net cp_len_0_1 [get_bd_ports cp_len_0] [get_bd_pins fft_config_0/cp_len]
-  connect_bd_net -net dl_en_0_1 [get_bd_ports dl_en_0] [get_bd_pins real_time_sampler_0/dl_en] [get_bd_pins tlast_gen_0/i_start]
+  connect_bd_net -net dl_en_0_1 [get_bd_ports dl_en_0] [get_bd_pins real_time_sampler_0/dl_en] [get_bd_pins tlast_gen_0/dl_en] [get_bd_pins tlast_gen_0/i_start]
   connect_bd_net -net fs_cycles_0_1 [get_bd_ports fs_cycles_0] [get_bd_pins playback_ctrl_0/fs_cycles] [get_bd_pins real_time_sampler_0/fs_cycles]
   connect_bd_net -net i_negative_freq_0_1 [get_bd_ports i_negative_freq_0] [get_bd_pins conj_0/i_negative_freq]
   connect_bd_net -net i_select_0_1 [get_bd_ports playback_en] [get_bd_pins mux_0/i_select] [get_bd_pins playback_ctrl_0/playback_en]
@@ -453,7 +454,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net nfft_scaled_0_1 [get_bd_ports nfft_scaled_0] [get_bd_pins playback_ctrl_0/nfft_scaled] [get_bd_pins tlast_gen_0/nfft_scaled]
   connect_bd_net -net s_axi_aclk_0_1 [get_bd_ports aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_fifo_1/s_axis_aclk] [get_bd_pins conj_0/axis_aclk] [get_bd_pins fft_config_0/axis_aclk] [get_bd_pins ifft/aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins playback_ctrl_0/axis_aclk] [get_bd_pins real_time_sampler_0/axis_aclk] [get_bd_pins tlast_gen_0/axis_aclk]
   connect_bd_net -net s_axi_aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_fifo_1/s_axis_aresetn] [get_bd_pins conj_0/axis_aresetn] [get_bd_pins fft_config_0/axis_aresetn] [get_bd_pins ifft/aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins playback_ctrl_0/axis_aresetn] [get_bd_pins real_time_sampler_0/axis_aresetn] [get_bd_pins tlast_gen_0/axis_aresetn]
-  connect_bd_net -net symbols_0_1 [get_bd_ports symbols_0] [get_bd_pins playback_ctrl_0/symbols]
+  connect_bd_net -net symbols_0_1 [get_bd_ports symbols_0] [get_bd_pins playback_ctrl_0/symbols] [get_bd_pins tlast_gen_0/symbols]
 
   # Create address segments
   assign_bd_address -offset 0x00000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces S_BRAM_AXI] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] -force

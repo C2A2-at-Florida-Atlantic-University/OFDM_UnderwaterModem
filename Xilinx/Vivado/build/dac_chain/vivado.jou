@@ -1,0 +1,16 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Mon Feb 20 21:25:38 2023
+# Process ID: 3008
+# Current directory: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain
+# Command line: vivado.exe dac_chain.xpr
+# Log file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain/vivado.log
+# Journal file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain\vivado.jou
+# Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
+#-----------------------------------------------------------
+start_gui
+open_project dac_chain.xpr
+open_bd_design {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain/dac_chain.srcs/sources_1/bd/DAC_Chain/DAC_Chain.bd}
+update_compile_order -fileset sources_1

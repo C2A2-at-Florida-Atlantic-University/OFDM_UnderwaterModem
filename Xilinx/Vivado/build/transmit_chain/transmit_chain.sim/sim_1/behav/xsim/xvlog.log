@@ -1,22 +1,2 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_0_1/sim/Transmit_Chain_axis_data_fifo_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_axis_data_fifo_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_axis_data_fifo_1_1/sim/Transmit_Chain_axis_data_fifo_1_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_axis_data_fifo_1_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_conj_0_1/sim/Transmit_Chain_conj_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_conj_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_fft_config_0_1/sim/Transmit_Chain_fft_config_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_fft_config_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_mux_0_1/sim/Transmit_Chain_mux_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_mux_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_playback_ctrl_0_1/sim/Transmit_Chain_playback_ctrl_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_playback_ctrl_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_playback_mem_1/sim/Transmit_Chain_playback_mem_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_playback_mem_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_real_time_sampler_0_0/sim/Transmit_Chain_real_time_sampler_0_0.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_real_time_sampler_0_0
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/ip/Transmit_Chain_tlast_gen_0_1/sim/Transmit_Chain_tlast_gen_0_1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_tlast_gen_0_1
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.ip_user_files/bd/Transmit_Chain/sim/Transmit_Chain.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain
-INFO: [VRFC 10-2263] Analyzing Verilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/transmit_chain/transmit_chain.gen/sources_1/bd/Transmit_Chain/hdl/Transmit_Chain_wrapper.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module Transmit_Chain_wrapper
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_tb.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module transmit_chain_tb

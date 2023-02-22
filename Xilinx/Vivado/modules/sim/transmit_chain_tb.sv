@@ -1,6 +1,15 @@
 //---------------------------------------------------------------
 // Jared Hermans
 //---------------------------------------------------------------
+// Steps to run:
+//  1. Run Matlab Script "transmit_chain.mlx" until 
+//     "Reading Testbench Files"
+//  2. Run Vivado sim
+//  3. Reformat coe_samples.txt into coe_samples.coe
+//  4. Open BRAM IP and re-select coe_samples.coe
+//  5. Run Vivado sim again
+//  6. Run Matlab Script "transmit_chain.mlx"
+
 `timescale 1 ns / 1 ps
 
 module transmit_chain_tb();
@@ -56,7 +65,7 @@ module transmit_chain_tb();
     .inv_0                          (inv),
     .nfft_0                         (nfft_scale),
     .nfft_scaled_0                  (nfft),
-    .i_negative_freq_0              (1'b0),
+    .i_negative_freq_0              (1'b1),
     .dl_en_0                        (1'b1),
     .fs_cycles_0                    (fs_cycles),
     .symbols_0                      (ofdm_symbols),
@@ -86,7 +95,7 @@ module transmit_chain_tb();
 // Scoreboard IFFT input
 //---------------------------------------------------------------
   initial begin
-    fd_ifft_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/ifft_sim_in.txt","w");
+    fd_ifft_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_in.txt","w");
     if (fd_ifft_in) $display("File was opened successfully: %0d ",fd_ifft_in);
     else begin
       $display("fd_ifft file was NOT opened successfully: %0d",fd_ifft_in);
@@ -117,7 +126,7 @@ module transmit_chain_tb();
 // Scoreboard IFFT output
 //---------------------------------------------------------------
   initial begin
-    fd_ifft = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/ifft_sim_out.txt","w");
+    fd_ifft = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_out.txt","w");
     if (fd_ifft) $display("File was opened successfully: %0d ",fd_ifft);
     else begin
       $display("fd_ifft file was NOT opened successfully: %0d",fd_ifft);
@@ -144,7 +153,7 @@ module transmit_chain_tb();
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
-    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/carriers_in_data.txt","r");
+    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_carriers_in_data.txt","r");
     //fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/cw_in_data.txt","r");
     if (fd) $display("File was opened successfully: %0d ",fd);
     else begin
@@ -159,7 +168,7 @@ module transmit_chain_tb();
       $stop;
     end
 
-    fd_coe = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.txt","w");
+    fd_coe = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_coe_samples.txt","w");
     if (fd_info) $display("File was opened successfully: %0d ",fd_info);
     else begin
       $display("File was NOT opened successfully: %0d",fd_info);
@@ -227,8 +236,7 @@ module transmit_chain_tb();
 
     in_axis_tlast                   <= 1'b0;
     in_axis_tvalid                  <= 1'b0;
-
-    #(7*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+    #(ofdm_symbols*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
     $fclose(fd);
     $fclose(fd_info);
     $fclose(fd_ifft);

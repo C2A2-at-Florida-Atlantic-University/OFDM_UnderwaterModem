@@ -62,7 +62,7 @@ module dac_chain_tb();
 // Scoreboard Interpolation filter input
 //---------------------------------------------------------------
   initial begin
-    fd_filt_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/filt_in.txt","w");
+    fd_filt_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/dac_chain_filt_in.txt","w");
     if (fd_filt_in) $display("File was opened successfully: %0d ",fd_filt_in);
     else begin
       $display("File was NOT opened successfully: %0d",fd_filt_in);
@@ -94,7 +94,7 @@ module dac_chain_tb();
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
-    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/ifft_sim_out.txt","r");
+    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_out.txt","r");
     //fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/ifft_matlab_out.txt","r");
     if (fd) $display("File was opened successfully: %0d ",fd);
     else begin

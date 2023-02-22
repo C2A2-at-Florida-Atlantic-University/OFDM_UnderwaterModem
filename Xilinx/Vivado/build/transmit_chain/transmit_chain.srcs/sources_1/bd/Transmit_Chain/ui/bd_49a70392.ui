@@ -1,7 +1,7 @@
 {
    "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"1.86667",
-   "Default View_TopLeft":"38,393",
+   "Default View_ScaleFactor":"0.466997",
+   "Default View_TopLeft":"-199,-199",
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
 #  -string -flagsOSRD
@@ -24,7 +24,6 @@ preplace portBus symbols_0 -pg 1 -lvl 0 -x -30 -y 530 -defaultsOSRD
 preplace inst axi_bram_ctrl_0 -pg 1 -lvl 1 -x 210 -y 310 -defaultsOSRD
 preplace inst axis_data_fifo_0 -pg 1 -lvl 6 -x 1870 -y 210 -defaultsOSRD
 preplace inst axis_data_fifo_1 -pg 1 -lvl 1 -x 210 -y 140 -defaultsOSRD
-preplace inst conj_0 -pg 1 -lvl 5 -x 1600 -y 190 -defaultsOSRD
 preplace inst fft_config_0 -pg 1 -lvl 3 -x 920 -y 210 -defaultsOSRD
 preplace inst ifft -pg 1 -lvl 4 -x 1260 -y 220 -defaultsOSRD
 preplace inst mux_0 -pg 1 -lvl 3 -x 920 -y 460 -defaultsOSRD
@@ -32,6 +31,7 @@ preplace inst playback_ctrl_0 -pg 1 -lvl 1 -x 210 -y 510 -defaultsOSRD
 preplace inst playback_mem -pg 1 -lvl 2 -x 590 -y 320 -defaultsOSRD
 preplace inst real_time_sampler_0 -pg 1 -lvl 7 -x 2160 -y 250 -defaultsOSRD
 preplace inst tlast_gen_0 -pg 1 -lvl 2 -x 590 -y 540 -defaultsOSRD
+preplace inst conj_0 -pg 1 -lvl 5 -x 1600 -y 190 -defaultsOSRD
 preplace netloc config_start_0_1 1 0 3 NJ 20 NJ 20 790J
 preplace netloc continuous_0_1 1 0 1 NJ 570
 preplace netloc cp_len_0_1 1 0 3 NJ 40 NJ 40 780J
