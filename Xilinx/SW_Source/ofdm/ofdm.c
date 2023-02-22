@@ -10,6 +10,7 @@
 
 Ofdm_Parameters_Type OfdmParams;
 Ofdm_Timing_Type OfdmTiming;
+Calculated_Ofdm_Parameters OfdmCalcParams;
 
 int main(int argc, char **argv)
 {
@@ -23,9 +24,10 @@ int main(int argc, char **argv)
 
   OfdmTiming.SymbolGuardPeriod = DEFAULT_SYMBOL_GUARD_PERIOD;
   OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
+  OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
 
   do {
-    printf("----- MODEM MENU -----\n");
+    printf("\n----- MODEM MENU -----\n");
     printf("0 - Exit\n");
     printf("1 - Enter OFDM Parameters\n");
     printf("2 - Enter OFDM Timing Parameters\n");
@@ -53,25 +55,51 @@ int main(int argc, char **argv)
         scanf("%d", &OfdmTiming.SymbolGuardPeriod);
         printf("\tEnter Frame Guard Period in ms: ");
         scanf("%d", &OfdmTiming.FrameGuardPeriod);
+        printf("\tEnter OFDM Symbols per Frame: ");
+        scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
         break;
 
       case 3:
-        printf("\tNFFT:                %d\n", OfdmParams.Nfft);
-        printf("\tBandwidth:           %d kHz\n", OfdmParams.BandWidth);
-        printf("\tCP Length:           %d\n", OfdmParams.CpLen);
-        printf("\tModulation Order:    %d\n\n", OfdmParams.ModOrder);
-        printf("\tSymbol Guard Period: %d ms\n",
+        printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
+        printf("\tBandwidth:                %d kHz\n", 
+          OfdmParams.BandWidth);
+        printf("\tCP Length:                %d\n", OfdmParams.CpLen);
+        printf("\tModulation Order:         %d\n\n", OfdmParams.ModOrder);
+        printf("\tSymbol Guard Period:      %d ms\n",
           OfdmTiming.SymbolGuardPeriod);
-        printf("\tFrame Guard Period:  %d ms\n", 
+        printf("\tFrame Guard Period:       %d ms\n", 
           OfdmTiming.FrameGuardPeriod);
+        printf("\tSymbols per Frame         %d\n",
+          OfdmTiming.OfdmSymbolsPerFrame);
+
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+        OfdmCalcParams = TransmitChainGetParams();
+
+        printf("\n");
+        printf("\tSCS:                      %lf Hz\n", 
+          OfdmCalcParams.Scs);
+        printf("\tSamples per Symbol:       %d\n", 
+          OfdmCalcParams.Symbol.Samples);
+        printf("\tSymbol Period:            %lf ms\n", 
+          OfdmCalcParams.Symbol.Time);
+        printf("\tSymbol Data Rate:         %lf kbit/sec\n", 
+          OfdmCalcParams.SymbolDataRate);
+        printf("\tFrame Data Rate:          %lf kbit/sec\n",
+          OfdmCalcParams.FrameDataRate);
+        printf("\n\t100MHz Cycles per:\n");
+        printf("\t  Sample:                 %d\n",
+          OfdmCalcParams.Symbol.FpgaClkSamples);
+        printf("\t  Symbol Guard Period:    %d\n",
+          OfdmCalcParams.SymbolGuard.FpgaClkSamples);
+        printf("\t  Frame Guard Period:     %d\n",
+          OfdmCalcParams.FrameGuard.FpgaClkSamples);
         break;
 
       default:
         printf("Invalid selection\n");
     }
-    printf("\n");
   } while (Selection);
+  printf("\n");
 
   return 0;
 }
