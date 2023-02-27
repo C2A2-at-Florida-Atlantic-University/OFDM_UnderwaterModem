@@ -1,65 +1,65 @@
 {
    "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"0.737699",
-   "Default View_TopLeft":"-191,-312",
+   "Default View_ScaleFactor":"0.485522",
+   "Default View_TopLeft":"-171,-115",
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
 #  -string -flagsOSRD
-preplace port M_AXIS -pg 1 -lvl 8 -x 2290 -y 250 -defaultsOSRD
-preplace port S_AXIS -pg 1 -lvl 0 -x -20 -y 120 -defaultsOSRD
-preplace port S_BRAM_AXI -pg 1 -lvl 0 -x -20 -y 290 -defaultsOSRD
-preplace port port-id_aclk -pg 1 -lvl 0 -x -20 -y 160 -defaultsOSRD
-preplace port port-id_aresetn -pg 1 -lvl 0 -x -20 -y 140 -defaultsOSRD
-preplace port port-id_config_start_0 -pg 1 -lvl 0 -x -20 -y 20 -defaultsOSRD
-preplace port port-id_continuous_0 -pg 1 -lvl 0 -x -20 -y 570 -defaultsOSRD
-preplace port port-id_dl_en_0 -pg 1 -lvl 0 -x -20 -y 640 -defaultsOSRD
-preplace port port-id_i_negative_freq_0 -pg 1 -lvl 0 -x -20 -y 240 -defaultsOSRD
-preplace port port-id_inv_0 -pg 1 -lvl 0 -x -20 -y 60 -defaultsOSRD
-preplace port port-id_playback_en -pg 1 -lvl 0 -x -20 -y 490 -defaultsOSRD
-preplace portBus cp_len_0 -pg 1 -lvl 0 -x -20 -y 40 -defaultsOSRD
-preplace portBus fs_cycles_0 -pg 1 -lvl 0 -x -20 -y 510 -defaultsOSRD
-preplace portBus nfft_0 -pg 1 -lvl 0 -x -20 -y 220 -defaultsOSRD
-preplace portBus nfft_scaled_0 -pg 1 -lvl 0 -x -20 -y 550 -defaultsOSRD
-preplace portBus symbols_0 -pg 1 -lvl 0 -x -20 -y 530 -defaultsOSRD
-preplace inst axi_bram_ctrl_0 -pg 1 -lvl 1 -x 210 -y 310 -defaultsOSRD
-preplace inst axis_data_fifo_0 -pg 1 -lvl 6 -x 1850 -y 210 -defaultsOSRD
-preplace inst axis_data_fifo_1 -pg 1 -lvl 1 -x 210 -y 140 -defaultsOSRD
-preplace inst conj_0 -pg 1 -lvl 5 -x 1580 -y 190 -defaultsOSRD
-preplace inst fft_config_0 -pg 1 -lvl 3 -x 920 -y 210 -defaultsOSRD
-preplace inst ifft -pg 1 -lvl 4 -x 1250 -y 220 -defaultsOSRD
-preplace inst mux_0 -pg 1 -lvl 3 -x 920 -y 460 -defaultsOSRD
-preplace inst playback_ctrl_0 -pg 1 -lvl 1 -x 210 -y 510 -defaultsOSRD
-preplace inst playback_mem -pg 1 -lvl 2 -x 590 -y 320 -defaultsOSRD
-preplace inst tlast_gen_0 -pg 1 -lvl 2 -x 590 -y 540 -defaultsOSRD
-preplace inst real_time_sampler_0 -pg 1 -lvl 7 -x 2120 -y 270 -defaultsOSRD
-preplace netloc config_start_0_1 1 0 3 NJ 20 NJ 20 780J
-preplace netloc continuous_0_1 1 0 1 NJ 570
-preplace netloc cp_len_0_1 1 0 3 NJ 40 NJ 40 750J
-preplace netloc dl_en_0_1 1 0 7 0J 660 400 70 N 70 N 70 N 70 N 70 1980
-preplace netloc fs_cycles_0_1 1 0 7 30 640 410 410 730 360 N 360 N 360 N 360 1980
-preplace netloc i_negative_freq_0_1 1 0 5 10J 230 NJ 230 730J 80 NJ 80 1450J
-preplace netloc i_select_0_1 1 0 3 10 670 NJ 670 790J
-preplace netloc inv_0_1 1 0 3 NJ 60 NJ 60 740J
-preplace netloc nfft_0_1 1 0 3 NJ 220 NJ 220 NJ
-preplace netloc nfft_scaled_0_1 1 0 2 20 630 440J
-preplace netloc s_axi_aclk_0_1 1 0 7 50 390 390 420 760 90 1070 90 1440 280 1720 290 1970
-preplace netloc s_axi_aresetn_0_1 1 0 7 40 650 430 430 770 100 1050 100 1430 290 1710 300 1990
-preplace netloc symbols_0_1 1 0 1 NJ 530
-preplace netloc S_AXIS_1 1 0 1 NJ 120
-preplace netloc S_BRAM_AXI_1 1 0 1 NJ 290
-preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 1 1 N 310
-preplace netloc axis_data_fifo_1_M_AXIS 1 1 1 420 140n
-preplace netloc conj_0_m_axis 1 5 1 N 190
-preplace netloc fft_config_0_m_axis 1 3 1 N 210
-preplace netloc ifft_M_AXIS_DATA 1 4 1 N 160
-preplace netloc mux_0_m_axis 1 3 1 1060 190n
-preplace netloc playback_ctrl_0_BRAM_PORT 1 1 1 370 330n
-preplace netloc playback_ctrl_0_M_AXIS 1 1 2 380 440 NJ
-preplace netloc tlast_gen_0_m_axis 1 2 1 780 420n
-preplace netloc axis_data_fifo_0_M_AXIS 1 6 1 1970 210n
-preplace netloc real_time_sampler_0_m_axis 1 7 1 2250 250n
-levelinfo -pg 1 -20 210 590 920 1250 1580 1850 2120 2290
-pagesize -pg 1 -db -bbox -sgen -190 -80 2400 690
+preplace port M_AXIS -pg 1 -lvl 8 -x 2250 -y 530 -defaultsOSRD
+preplace port S_AXIS -pg 1 -lvl 0 -x 0 -y 200 -defaultsOSRD
+preplace port S_BRAM_AXI -pg 1 -lvl 0 -x 0 -y 60 -defaultsOSRD
+preplace port port-id_aclk -pg 1 -lvl 0 -x 0 -y 240 -defaultsOSRD
+preplace port port-id_aresetn -pg 1 -lvl 0 -x 0 -y 220 -defaultsOSRD
+preplace port port-id_config_start_0 -pg 1 -lvl 0 -x 0 -y 680 -defaultsOSRD
+preplace port port-id_continuous_0 -pg 1 -lvl 0 -x 0 -y 500 -defaultsOSRD
+preplace port port-id_dl_en_0 -pg 1 -lvl 0 -x 0 -y 560 -defaultsOSRD
+preplace port port-id_i_negative_freq_0 -pg 1 -lvl 0 -x 0 -y 600 -defaultsOSRD
+preplace port port-id_inv_0 -pg 1 -lvl 0 -x 0 -y 740 -defaultsOSRD
+preplace port port-id_playback_en -pg 1 -lvl 0 -x 0 -y 420 -defaultsOSRD
+preplace portBus cp_len_0 -pg 1 -lvl 0 -x 0 -y 720 -defaultsOSRD
+preplace portBus fs_cycles_0 -pg 1 -lvl 0 -x 0 -y 440 -defaultsOSRD
+preplace portBus nfft_0 -pg 1 -lvl 0 -x 0 -y 700 -defaultsOSRD
+preplace portBus nfft_scaled_0 -pg 1 -lvl 0 -x 0 -y 480 -defaultsOSRD
+preplace portBus symbols_0 -pg 1 -lvl 0 -x 0 -y 460 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 1 -x 230 -y 80 -defaultsOSRD
+preplace inst axis_data_fifo_0 -pg 1 -lvl 6 -x 1820 -y 490 -defaultsOSRD
+preplace inst axis_data_fifo_1 -pg 1 -lvl 1 -x 230 -y 220 -defaultsOSRD
+preplace inst conj_0 -pg 1 -lvl 5 -x 1560 -y 470 -defaultsOSRD
+preplace inst fft_config_0 -pg 1 -lvl 3 -x 890 -y 690 -defaultsOSRD
+preplace inst ifft -pg 1 -lvl 4 -x 1230 -y 500 -defaultsOSRD
+preplace inst mux_0 -pg 1 -lvl 3 -x 890 -y 470 -defaultsOSRD
+preplace inst playback_ctrl_0 -pg 1 -lvl 1 -x 230 -y 440 -defaultsOSRD
+preplace inst playback_mem -pg 1 -lvl 2 -x 590 -y 90 -defaultsOSRD
+preplace inst real_time_sampler_0 -pg 1 -lvl 7 -x 2100 -y 530 -defaultsOSRD
+preplace inst tlast_gen_0 -pg 1 -lvl 2 -x 590 -y 330 -defaultsOSRD
+preplace netloc config_start_0_1 1 0 3 NJ 680 NJ 680 NJ
+preplace netloc continuous_0_1 1 0 1 NJ 500
+preplace netloc cp_len_0_1 1 0 3 NJ 720 NJ 720 NJ
+preplace netloc dl_en_0_1 1 0 7 NJ 560 410 200 NJ 200 NJ 200 NJ 200 NJ 200 1960J
+preplace netloc fs_cycles_0_1 1 0 7 50 310 400J 210 NJ 210 NJ 210 NJ 210 NJ 210 1950J
+preplace netloc i_negative_freq_0_1 1 0 5 NJ 600 NJ 600 760J 570 1020J 380 1410J
+preplace netloc i_select_0_1 1 0 3 40 590 NJ 590 740J
+preplace netloc inv_0_1 1 0 3 NJ 740 NJ 740 NJ
+preplace netloc nfft_0_1 1 0 3 NJ 700 NJ 700 NJ
+preplace netloc nfft_scaled_0_1 1 0 2 20 570 420J
+preplace netloc s_axi_aclk_0_1 1 0 7 60 300 430 460 750 580 1040 620 1430 560 1700 190 1970J
+preplace netloc s_axi_aresetn_0_1 1 0 7 70 320 440 470 730 800 1050 630 1420 380 1690 570 1940J
+preplace netloc symbols_0_1 1 0 2 30 580 450J
+preplace netloc S_AXIS_1 1 0 1 NJ 200
+preplace netloc S_BRAM_AXI_1 1 0 1 NJ 60
+preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 1 1 N 80
+preplace netloc axis_data_fifo_0_M_AXIS 1 6 1 N 490
+preplace netloc axis_data_fifo_1_M_AXIS 1 1 1 440 220n
+preplace netloc conj_0_m_axis 1 5 1 N 470
+preplace netloc fft_config_0_m_axis 1 3 1 1030 490n
+preplace netloc ifft_M_AXIS_DATA 1 4 1 N 440
+preplace netloc mux_0_m_axis 1 3 1 N 470
+preplace netloc playback_ctrl_0_BRAM_PORT 1 1 1 390 100n
+preplace netloc playback_ctrl_0_M_AXIS 1 1 2 N 450 NJ
+preplace netloc real_time_sampler_0_m_axis 1 7 1 N 530
+preplace netloc tlast_gen_0_m_axis 1 2 1 730 330n
+levelinfo -pg 1 0 230 590 890 1230 1560 1820 2100 2250
+pagesize -pg 1 -db -bbox -sgen -170 0 2360 810
 "
 }
 0

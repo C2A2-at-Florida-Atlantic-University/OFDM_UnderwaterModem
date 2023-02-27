@@ -14,3 +14,11 @@ start_gui
 open_project dac_chain.xpr
 open_bd_design {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain/dac_chain.srcs/sources_1/bd/DAC_Chain/DAC_Chain.bd}
 update_compile_order -fileset sources_1
+close_project
+open_project C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.xpr
+open_bd_design {C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd}
+update_compile_order -fileset sources_1
+set_property range 8M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 4M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 2M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 512M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]

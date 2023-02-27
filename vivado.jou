@@ -1,0 +1,26 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sun Feb 26 21:22:01 2023
+# Process ID: 136648
+# Current directory: c:/Projects/FAU-Modem/OFDM
+# Command line: vivado.exe
+# Log file: c:/Projects/FAU-Modem/OFDM/vivado.log
+# Journal file: c:/Projects/FAU-Modem/OFDM\vivado.jou
+# Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr
+open_bd_design {C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Radio_Top_Pynq/Radio_Top_Pynq.bd}
+update_compile_order -fileset sources_1
+open_bd_design {C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Transmit_Chain/Transmit_Chain.bd}
+add_files -fileset constrs_1 -norecurse C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc
+current_bd_design [get_bd_designs Radio_Top_Pynq]
+reset_run PS_Zynq_inst_0_processing_system7_0_0_synth_1
+reset_run PS_Zynq_inst_0_xbar_0_synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 24
+wait_on_run impl_1
+write_hw_platform -fixed -include_bit -force -file C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/Radio_Top_Pynq_wrapper.xsa
+regenerate_bd_layout
+regenerate_bd_layout

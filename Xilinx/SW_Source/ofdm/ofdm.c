@@ -1,10 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 // Jared Hermans
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "ReturnStatus.h"
+#include "FpgaInterface.h"
 #include "TransmitChain.h"
+#include "TxModulate.h"
+#include "rtwtypes.h"
 
 #define DEBUG
 
@@ -15,7 +19,9 @@ Calculated_Ofdm_Parameters OfdmCalcParams;
 int main(int argc, char **argv)
 {
   unsigned Selection;
-  //ReturnStatusType ReturnStatus;
+  int TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+  char FileName[20];
+  ReturnStatusType ReturnStatus;
 
   OfdmParams.Nfft = DEFAULT_NFFT;
   OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
@@ -26,12 +32,23 @@ int main(int argc, char **argv)
   OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
   OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
 
+  ReturnStatus = FpgaInterfaceSetup();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    return 1;
+  }
+
+  ReturnStatus = TxModulateDigitalGain(TxGainDb);
+
   do {
     printf("\n----- MODEM MENU -----\n");
     printf("0 - Exit\n");
     printf("1 - Enter OFDM Parameters\n");
     printf("2 - Enter OFDM Timing Parameters\n");
-    printf("3 - Display OFDM Parameters\n");
+    printf("3 - Enter TX Digital Gain (dBFS)\n");
+    printf("4 - Display OFDM Parameters\n");
+    printf("5 - Transmit Single OFDM Frame from File\n");
 
     scanf("%d", &Selection);
 
@@ -48,6 +65,19 @@ int main(int argc, char **argv)
         scanf("%d", &OfdmParams.CpLen);
         printf("\tEnter modulation order: ");
         scanf("%d", &OfdmParams.ModOrder);
+
+        ReturnStatus = TransmitChainParamCheck(&OfdmParams);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          printf("\tERROR: Reseting OFDM Parameters back to defaults\n");
+          OfdmParams.Nfft = DEFAULT_NFFT;
+          OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
+          OfdmParams.CpLen = DEFAULT_CP_LEN;
+          OfdmParams.ModOrder = DEFAULT_MOD_ORDER;
+        }
+
+        TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         break;
 
       case 2:
@@ -57,9 +87,21 @@ int main(int argc, char **argv)
         scanf("%d", &OfdmTiming.FrameGuardPeriod);
         printf("\tEnter OFDM Symbols per Frame: ");
         scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
+        TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         break;
 
       case 3:
+        printf("\tEnter TX Digital Gain (dBFS): ");
+        scanf("%d", &TxGainDb);
+        ReturnStatus = TxModulateDigitalGain(TxGainDb);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+        }
+        break;
+
+      case 4:
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
         printf("\tBandwidth:                %d kHz\n", 
           OfdmParams.BandWidth);
@@ -91,8 +133,36 @@ int main(int argc, char **argv)
           OfdmCalcParams.Symbol.FpgaClkSamples);
         printf("\t  Symbol Guard Period:    %d\n",
           OfdmCalcParams.SymbolGuard.FpgaClkSamples);
-        printf("\t  Frame Guard Period:     %d\n",
+        printf("\t  Frame Guard Period:     %d\n\n",
           OfdmCalcParams.FrameGuard.FpgaClkSamples);
+
+        printf("\tTX Digital Gain:          %d dBFS = %d\n",
+          TxGainDb, TxModulateGetScalarGain());
+        break;
+
+      case 5:
+        printf("Enter file name: ");
+        scanf("%s", FileName);
+        ReturnStatus = TxModulateGetFileData(FileName);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+        ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
+          OfdmParams.Nfft);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+        ReturnStatus = TransmitChainEnableDl(false, &OfdmParams, 
+          &OfdmTiming);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
         break;
 
       default:

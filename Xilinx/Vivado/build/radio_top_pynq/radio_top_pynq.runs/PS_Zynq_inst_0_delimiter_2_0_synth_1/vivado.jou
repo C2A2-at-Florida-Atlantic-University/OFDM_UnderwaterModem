@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sun Feb 26 20:53:12 2023
+# Process ID: 152432
+# Current directory: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_delimiter_2_0_synth_1
+# Command line: vivado.exe -log PS_Zynq_inst_0_delimiter_2_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source PS_Zynq_inst_0_delimiter_2_0.tcl
+# Log file: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_delimiter_2_0_synth_1/PS_Zynq_inst_0_delimiter_2_0.vds
+# Journal file: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_delimiter_2_0_synth_1\vivado.jou
+# Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
+#-----------------------------------------------------------
+source PS_Zynq_inst_0_delimiter_2_0.tcl -notrace

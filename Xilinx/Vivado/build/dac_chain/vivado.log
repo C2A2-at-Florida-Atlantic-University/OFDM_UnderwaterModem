@@ -28,3 +28,83 @@ Reading block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_ch
 Adding component instance block -- xilinx.com:module_ref:dac_resampler:1.0 - dac_resampler_0
 Successfully read diagram <DAC_Chain> from block design file <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/dac_chain/dac_chain.srcs/sources_1/bd/DAC_Chain/DAC_Chain.bd>
 update_compile_order -fileset sources_1
+close_project
+open_project C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.xpr
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository 'c:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/ip_repo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2022.1/data/ip'.
+open_project: Time (s): cpu = 00:00:12 ; elapsed = 00:00:15 . Memory (MB): peak = 1851.246 ; gain = 137.891
+open_bd_design {C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd}
+Reading block design file <C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd>...
+Adding component instance block -- xilinx.com:ip:processing_system7:5.5 - processing_system7_0
+WARNING: [BD 41-176] The physical port 'S_AXI_GP2_rd_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP2_wr_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP3_rd_socket' specified in the portmap, is not found on the block! 
+WARNING: [BD 41-176] The physical port 'S_AXI_GP3_wr_socket' specified in the portmap, is not found on the block! 
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - rst_ps7_0_100M
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - proc_sys_reset_0
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - proc_sys_reset_2
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - proc_sys_reset_1
+Adding component instance block -- xilinx.com:ip:xlconcat:2.1 - xlconcat_0
+Adding component instance block -- user.org:user:bit_decision_control:1.0 - bit_decision_control_0
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - fixed_to_float_0
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - square_0
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - accumulator_0
+Adding component instance block -- user.org:user:AXIS_Splitter:1.0 - AXIS_Splitter_0
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - square_1
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - accumulator_1
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - fixed_to_float_1
+Adding component instance block -- user.org:user:AXIS_Splitter:1.0 - AXIS_Splitter_1
+Adding component instance block -- xilinx.com:ip:floating_point:7.1 - comparator
+Adding component instance block -- xilinx.com:ip:system_ila:1.1 - Integrator
+Adding component instance block -- xilinx.com:user:AD9244_to_AXIS_M:1.0 - AD9244_to_AXIS_M_0
+Adding component instance block -- xilinx.com:ip:axis_data_fifo:2.0 - axis_data_fifo_ADC
+Adding component instance block -- xilinx.com:ip:fir_compiler:7.2 - Decimator
+Adding component instance block -- xilinx.com:ip:system_ila:1.1 - ADC_0
+Adding component instance block -- user.org:user:AXIS_Splitter:1.0 - AXIS_Splitter_0
+Adding component instance block -- user.org:user:AXIS_Splitter:1.0 - AXIS_Splitter_1
+Adding component instance block -- xilinx.com:ip:xlconcat:2.1 - xlconcat_1
+Adding component instance block -- user.org:user:fir_reconfig:1.0 - fir_reconfig_0
+Adding component instance block -- xilinx.com:ip:xlconstant:1.1 - xlconstant_0
+Adding component instance block -- user.org:user:fir_reconfig:1.0 - fir_reconfig_1
+Adding component instance block -- xilinx.com:ip:fir_compiler:7.2 - correlator_f1
+Adding component instance block -- xilinx.com:ip:fir_compiler:7.2 - correlator_f0
+Adding component instance block -- xilinx.com:ip:system_ila:1.1 - BPF
+Adding component instance block -- xilinx.com:ip:system_ila:1.1 - fir_error
+Adding component instance block -- user.org:user:AXIS_threshold:1.0 - AXIS_threshold_0
+Adding component instance block -- user.org:user:AXIS_threshold:1.0 - AXIS_threshold_1
+Adding component instance block -- xilinx.com:ip:system_ila:1.1 - BRAM
+Adding component instance block -- xilinx.com:user:AXIS_S_to_AD9764:1.0 - AXIS_S_to_AD9764_0
+Adding component instance block -- user.org:user:Clock_Divider:1.0 - Clock_Divider_0
+Adding component instance block -- xilinx.com:ip:axis_data_fifo:2.0 - axis_data_fifo_DAC
+Adding component instance block -- xilinx.com:ip:fir_compiler:7.2 - up_sampler
+Adding component instance block -- xilinx.com:ip:fir_compiler:7.2 - Interpolation_Filter
+Adding component instance block -- user.org:user:delimiter:1.0 - delimiter_0
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - SymbolLength_Threshold
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - adcControl_dacControl_coeff_timeout_overide_adcStatus
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - BRAMaddr_passthrough
+Adding component instance block -- xilinx.com:ip:axi_interconnect:2.1 - ps7_0_axi_periph
+Adding component instance block -- xilinx.com:ip:axi_crossbar:2.1 - xbar
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:axi_bram_ctrl:4.1 - axi_bram_ctrl_0
+Adding component instance block -- xilinx.com:ip:blk_mem_gen:8.4 - blk_mem_gen_0
+Adding component instance block -- xilinx.com:ip:axi_dma:7.1 - axi_dma_data
+Adding component instance block -- xilinx.com:ip:axi_dma:7.1 - axi_dma_reload_0
+Adding component instance block -- xilinx.com:ip:axi_dma:7.1 - axi_dma_reload_1
+Adding component instance block -- xilinx.com:ip:axi_interconnect:2.1 - axi_interconnect_0
+Adding component instance block -- xilinx.com:ip:axi_crossbar:2.1 - xbar
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_dwidth_converter:2.1 - auto_us
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_ADC
+Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_DAC
+Successfully read diagram <SDUAM> from block design file <C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/SDUAM.bd>
+update_compile_order -fileset sources_1
+set_property range 8M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 4M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 2M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+set_property range 512M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]

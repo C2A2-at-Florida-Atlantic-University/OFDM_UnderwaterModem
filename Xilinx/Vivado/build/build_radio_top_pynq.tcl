@@ -10,6 +10,7 @@ source file_list.tcl
 
 cd $FAUPath/bd
 source Transmit_Chain_bd.tcl
+source PS_Zynq_Pynq_bd.tcl
 source Radio_Top_Pynq_bd.tcl
 
 update_compile_order -fileset sources_1
@@ -21,5 +22,7 @@ generate_target -force -verbose -quiet {synthesis} [get_ips]
 
 update_compile_order -fileset sources_1
 
+cd $FAUPath/constraints
+add_files -fileset constrs_1 -norecurse base_pynq_z2.xdc
 
 start_gui
