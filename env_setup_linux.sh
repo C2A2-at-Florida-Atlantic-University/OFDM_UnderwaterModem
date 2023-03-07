@@ -15,4 +15,4 @@ echo Your repo path: $FAU_OFDM_REPO_PATH
 
 cd Xilinx/Vivado/bd
 set -x
-sed -i "s|c:/Projects/FAU-Modem/OFDM|$FAU_OFDM_REPO_PATH|g" *
+sed -i "s|/mnt/c/Projects/FAU-Modem/OFDM|$FAU_OFDM_REPO_PATH|g" Transmit_Chain_bd.tcl
