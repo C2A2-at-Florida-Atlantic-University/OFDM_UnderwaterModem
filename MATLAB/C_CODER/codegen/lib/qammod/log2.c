@@ -5,7 +5,7 @@
  * File: log2.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /* Include Files */
@@ -15,26 +15,26 @@
 
 /* Function Definitions */
 /*
- * Arguments    : double x
- * Return Type  : double
+ * Arguments    : real_T x
+ * Return Type  : real_T
  */
-double b_log2(double x)
+real_T b_log2(real_T x)
 {
-  double f;
-  int eint;
+  real_T f;
+  int32_T eint;
   if (x == 0.0) {
     f = rtMinusInf;
   } else if (x < 0.0) {
     f = rtNaN;
   } else {
-    double t;
+    real_T t;
     t = frexp(x, &eint);
     if (t == 0.5) {
-      f = (double)eint - 1.0;
+      f = (real_T)eint - 1.0;
     } else if ((eint == 1) && (t < 0.75)) {
       f = log(2.0 * t) / 0.69314718055994529;
     } else {
-      f = log(t) / 0.69314718055994529 + (double)eint;
+      f = log(t) / 0.69314718055994529 + (real_T)eint;
     }
   }
   return f;

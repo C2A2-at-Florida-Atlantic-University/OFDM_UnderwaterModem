@@ -2,18 +2,18 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: qammod_data.c
+ * File: QamMod_data.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /* Include Files */
-#include "qammod_data.h"
+#include "QamMod_data.h"
 #include "rt_nonfinite.h"
 
 /*
- * File trailer for qammod_data.c
+ * File trailer for QamMod_data.c
  *
  * [EOF]
  */

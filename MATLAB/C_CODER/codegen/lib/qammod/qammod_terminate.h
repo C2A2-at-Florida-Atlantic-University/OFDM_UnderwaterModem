@@ -2,10 +2,10 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: qammod_terminate.h
+ * File: QamMod_terminate.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef QAMMOD_TERMINATE_H
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-extern void qammod_terminate(void);
+extern void QamMod_terminate(void);
 
 #ifdef __cplusplus
 }
@@ -29,7 +29,7 @@ extern void qammod_terminate(void);
 
 #endif
 /*
- * File trailer for qammod_terminate.h
+ * File trailer for QamMod_terminate.h
  *
  * [EOF]
  */

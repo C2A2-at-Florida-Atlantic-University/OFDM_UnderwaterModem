@@ -2,10 +2,10 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: qammod.h
+ * File: QamMod.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef QAMMOD_H
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-extern creal_T qammod(signed char x, signed char M);
+extern creal_T QamMod(int8_T x, int8_T M);
 
 #ifdef __cplusplus
 }
@@ -29,7 +29,7 @@ extern creal_T qammod(signed char x, signed char M);
 
 #endif
 /*
- * File trailer for qammod.h
+ * File trailer for QamMod.h
  *
  * [EOF]
  */

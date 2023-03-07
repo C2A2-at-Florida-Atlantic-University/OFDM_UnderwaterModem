@@ -5,7 +5,7 @@
  * File: log2.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef LOG2_H
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-double b_log2(double x);
+real_T b_log2(real_T x);
 
 #ifdef __cplusplus
 }

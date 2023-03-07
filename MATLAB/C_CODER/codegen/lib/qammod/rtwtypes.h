@@ -5,7 +5,7 @@
  * File: rtwtypes.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef RTWTYPES_H
@@ -39,11 +39,6 @@
 
 /* Include Files */
 #include "tmwtypes.h"
-
-typedef struct {
-    real32_T re; /*Real Component*/
-    real32_T im; /*Imaginary Component*/
-} creal_T;
 
 #endif
 /*

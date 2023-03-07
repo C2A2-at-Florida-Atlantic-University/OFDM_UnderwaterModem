@@ -5,7 +5,7 @@
  * File: main.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /*************************************************************************/
@@ -35,29 +35,29 @@
 
 /* Include Files */
 #include "main.h"
-#include "qammod.h"
-#include "qammod_terminate.h"
+#include "QamMod.h"
+#include "QamMod_terminate.h"
 #include "rt_nonfinite.h"
 
 /* Function Declarations */
-static signed char argInit_int8_T(void);
+static int8_T argInit_int8_T(void);
 
 /* Function Definitions */
 /*
  * Arguments    : void
- * Return Type  : signed char
+ * Return Type  : int8_T
  */
-static signed char argInit_int8_T(void)
+static int8_T argInit_int8_T(void)
 {
   return 0;
 }
 
 /*
- * Arguments    : int argc
+ * Arguments    : int32_T argc
  *                char **argv
- * Return Type  : int
+ * Return Type  : int32_T
  */
-int main(int argc, char **argv)
+int32_T main(int32_T argc, char **argv)
 {
   (void)argc;
   (void)argv;
@@ -65,10 +65,10 @@ int main(int argc, char **argv)
    * function. So, a call to initialize is not included here. */
   /* Invoke the entry-point functions.
 You can call entry-point functions multiple times. */
-  main_qammod();
+  main_QamMod();
   /* Terminate the application.
 You do not need to do this more than one time. */
-  qammod_terminate();
+  QamMod_terminate();
   return 0;
 }
 
@@ -76,14 +76,14 @@ You do not need to do this more than one time. */
  * Arguments    : void
  * Return Type  : void
  */
-void main_qammod(void)
+void main_QamMod(void)
 {
   creal_T y;
-  signed char x_tmp;
-  /* Initialize function 'qammod' input arguments. */
+  int8_T x_tmp;
+  /* Initialize function 'QamMod' input arguments. */
   x_tmp = argInit_int8_T();
-  /* Call the entry-point 'qammod'. */
-  y = qammod(x_tmp, x_tmp);
+  /* Call the entry-point 'QamMod'. */
+  y = QamMod(x_tmp, x_tmp);
 }
 
 /*

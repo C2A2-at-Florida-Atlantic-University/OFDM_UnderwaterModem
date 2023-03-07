@@ -1,9 +1,9 @@
 ###########################################################################
-## Makefile generated for component 'qammod'. 
+## Makefile generated for component 'QamMod'. 
 ## 
-## Makefile     : qammod_rtw.mk
-## Generated on : Sun Feb 26 10:54:51 2023
-## Final product: ./qammod.lib
+## Makefile     : QamMod_rtw.mk
+## Generated on : Sun Feb 26 12:22:21 2023
+## Final product: ./QamMod.lib
 ## Product type : static-library
 ## 
 ###########################################################################
@@ -19,22 +19,22 @@
 # CMD_FILE                Command file
 # MODELLIB                Static library target
 
-PRODUCT_NAME              = qammod
-MAKEFILE                  = qammod_rtw.mk
+PRODUCT_NAME              = QamMod
+MAKEFILE                  = QamMod_rtw.mk
 MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2022b
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2022b/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
-START_DIR                 = C:/Projects/FAU-Modem/OFDM/MATLAB/C_CODER
+START_DIR                 = C:/Projects/FAU-Modem/OFDM/MATLAB/C_CODER2
 TGT_FCN_LIB               = ISO_C
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0
 MODEL_HAS_DYNAMICALLY_LOADED_SFCNS = 
 RELATIVE_PATH_TO_ANCHOR   = ../../..
-COMPILER_COMMAND_FILE     = qammod_rtw_comp.rsp
-CMD_FILE                  = qammod_rtw.rsp
+COMPILER_COMMAND_FILE     = QamMod_rtw_comp.rsp
+CMD_FILE                  = QamMod_rtw.rsp
 C_STANDARD_OPTS           = -fwrapv
 CPP_STANDARD_OPTS         = -fwrapv
-MODELLIB                  = qammod.lib
+MODELLIB                  = QamMod.lib
 
 ###########################################################################
 ## TOOLCHAIN SPECIFICATIONS
@@ -157,7 +157,7 @@ SHAREDLIB_LDFLAGS    = -shared -Wl,--no-undefined \
 ## OUTPUT INFO
 ###########################################################################
 
-PRODUCT = ./qammod.lib
+PRODUCT = ./QamMod.lib
 PRODUCT_TYPE = "static-library"
 BUILD_TYPE = "Static Library"
 
@@ -175,7 +175,7 @@ INCLUDES = $(INCLUDES_BUILDINFO)
 
 DEFINES_ = -D__USE_MINGW_ANSI_STDIO=1
 DEFINES_CUSTOM = 
-DEFINES_STANDARD = -DMODEL=qammod
+DEFINES_STANDARD = -DMODEL=QamMod
 
 DEFINES = $(DEFINES_) $(DEFINES_CUSTOM) $(DEFINES_STANDARD)
 
@@ -183,7 +183,7 @@ DEFINES = $(DEFINES_) $(DEFINES_CUSTOM) $(DEFINES_STANDARD)
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)/codegen/lib/qammod/qammod_data.c $(START_DIR)/codegen/lib/qammod/rt_nonfinite.c $(START_DIR)/codegen/lib/qammod/rtGetNaN.c $(START_DIR)/codegen/lib/qammod/rtGetInf.c $(START_DIR)/codegen/lib/qammod/qammod_initialize.c $(START_DIR)/codegen/lib/qammod/qammod_terminate.c $(START_DIR)/codegen/lib/qammod/qammod.c $(START_DIR)/codegen/lib/qammod/log2.c $(START_DIR)/codegen/lib/qammod/getConstellation.c
+SRCS = $(START_DIR)/codegen/lib/QamMod/QamMod_data.c $(START_DIR)/codegen/lib/QamMod/rt_nonfinite.c $(START_DIR)/codegen/lib/QamMod/rtGetNaN.c $(START_DIR)/codegen/lib/QamMod/rtGetInf.c $(START_DIR)/codegen/lib/QamMod/QamMod_initialize.c $(START_DIR)/codegen/lib/QamMod/QamMod_terminate.c $(START_DIR)/codegen/lib/QamMod/QamMod.c $(START_DIR)/codegen/lib/QamMod/log2.c $(START_DIR)/codegen/lib/QamMod/getConstellation.c
 
 ALL_SRCS = $(SRCS)
 
@@ -191,7 +191,7 @@ ALL_SRCS = $(SRCS)
 ## OBJECTS
 ###########################################################################
 
-OBJS = qammod_data.obj rt_nonfinite.obj rtGetNaN.obj rtGetInf.obj qammod_initialize.obj qammod_terminate.obj qammod.obj log2.obj getConstellation.obj
+OBJS = QamMod_data.obj rt_nonfinite.obj rtGetNaN.obj rtGetInf.obj QamMod_initialize.obj QamMod_terminate.obj QamMod.obj log2.obj getConstellation.obj
 
 ALL_OBJS = $(OBJS)
 
@@ -318,11 +318,11 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-%.obj : $(START_DIR)/codegen/lib/qammod/%.c
+%.obj : $(START_DIR)/codegen/lib/QamMod/%.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-%.obj : $(START_DIR)/codegen/lib/qammod/%.cpp
+%.obj : $(START_DIR)/codegen/lib/QamMod/%.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
@@ -334,39 +334,39 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-qammod_data.obj : $(START_DIR)/codegen/lib/qammod/qammod_data.c
+QamMod_data.obj : $(START_DIR)/codegen/lib/QamMod/QamMod_data.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rt_nonfinite.obj : $(START_DIR)/codegen/lib/qammod/rt_nonfinite.c
+rt_nonfinite.obj : $(START_DIR)/codegen/lib/QamMod/rt_nonfinite.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rtGetNaN.obj : $(START_DIR)/codegen/lib/qammod/rtGetNaN.c
+rtGetNaN.obj : $(START_DIR)/codegen/lib/QamMod/rtGetNaN.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rtGetInf.obj : $(START_DIR)/codegen/lib/qammod/rtGetInf.c
+rtGetInf.obj : $(START_DIR)/codegen/lib/QamMod/rtGetInf.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-qammod_initialize.obj : $(START_DIR)/codegen/lib/qammod/qammod_initialize.c
+QamMod_initialize.obj : $(START_DIR)/codegen/lib/QamMod/QamMod_initialize.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-qammod_terminate.obj : $(START_DIR)/codegen/lib/qammod/qammod_terminate.c
+QamMod_terminate.obj : $(START_DIR)/codegen/lib/QamMod/QamMod_terminate.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-qammod.obj : $(START_DIR)/codegen/lib/qammod/qammod.c
+QamMod.obj : $(START_DIR)/codegen/lib/QamMod/QamMod.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-log2.obj : $(START_DIR)/codegen/lib/qammod/log2.c
+log2.obj : $(START_DIR)/codegen/lib/QamMod/log2.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-getConstellation.obj : $(START_DIR)/codegen/lib/qammod/getConstellation.c
+getConstellation.obj : $(START_DIR)/codegen/lib/QamMod/getConstellation.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 

@@ -2,25 +2,28 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: _coder_qammod_api.c
+ * File: _coder_QamMod_api.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /* Include Files */
-#include "_coder_qammod_api.h"
-#include "_coder_qammod_mex.h"
+#include "_coder_QamMod_api.h"
+#include "_coder_QamMod_mex.h"
+#include "xil_host_interface.h"
 
 /* Variable Definitions */
 emlrtCTX emlrtRootTLSGlobal = NULL;
+
+static boolean_T xilAlreadyInited;
 
 emlrtContext emlrtContextGlobal = {
     true,                                                 /* bFirstTime */
     false,                                                /* bInitialized */
     131627U,                                              /* fVersionInfo */
     NULL,                                                 /* fErrorFunction */
-    "qammod",                                             /* fFunctionName */
+    "QamMod",                                             /* fFunctionName */
     NULL,                                                 /* fRTCallStack */
     false,                                                /* bDebugMode */
     {2045744189U, 2170104910U, 2743257031U, 4284093946U}, /* fSigWrd */
@@ -28,8 +31,12 @@ emlrtContext emlrtContextGlobal = {
 };
 
 /* Function Declarations */
+static void QamMod_once(void);
+
 static int8_T b_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u,
                                  const emlrtMsgIdentifier *parentId);
+
+static void b_xilHostDeserializer(real_T *r);
 
 static int8_T c_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src,
                                  const emlrtMsgIdentifier *msgId);
@@ -39,7 +46,20 @@ static int8_T emlrt_marshallIn(const emlrtStack *sp, const mxArray *x,
 
 static const mxArray *emlrt_marshallOut(const creal_T u);
 
+static void xilHostDeserializer(creal_T *r);
+
+static void xilHostSerializer(const int8_T *r);
+
 /* Function Definitions */
+/*
+ * Arguments    : void
+ * Return Type  : void
+ */
+static void QamMod_once(void)
+{
+  xilAlreadyInited = false;
+}
+
 /*
  * Arguments    : const emlrtStack *sp
  *                const mxArray *u
@@ -53,6 +73,15 @@ static int8_T b_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u,
   y = c_emlrt_marshallIn(sp, emlrtAlias(u), parentId);
   emlrtDestroyArray(&u);
   return y;
+}
+
+/*
+ * Arguments    : real_T *r
+ * Return Type  : void
+ */
+static void b_xilHostDeserializer(real_T *r)
+{
+  xilReadData((uint8_T *)r, (size_t)1, MEM_UNIT_DOUBLE_TYPE);
 }
 
 /*
@@ -111,11 +140,53 @@ static const mxArray *emlrt_marshallOut(const creal_T u)
 }
 
 /*
+ * Arguments    : creal_T *r
+ * Return Type  : void
+ */
+static void xilHostDeserializer(creal_T *r)
+{
+  real_T im;
+  real_T re;
+  b_xilHostDeserializer(&re);
+  b_xilHostDeserializer(&im);
+  r->re = re;
+  r->im = im;
+}
+
+/*
+ * Arguments    : const int8_T *r
+ * Return Type  : void
+ */
+static void xilHostSerializer(const int8_T *r)
+{
+  xilWriteData((uint8_T *)r, (size_t)1, MEM_UNIT_INT8_TYPE);
+}
+
+/*
+ * Arguments    : int8_T x
+ *                int8_T M
+ * Return Type  : creal_T
+ */
+creal_T QamModXilWrapper(int8_T x, int8_T M)
+{
+  creal_T y;
+  /* Serialize function input argument x. */
+  xilHostSerializer(&x);
+  /* Serialize function input argument M. */
+  xilHostSerializer(&M);
+  /* Calling XIL to invoke target side. */
+  xilEntryPointHost(1U);
+  /* Deserialize function output argument y. */
+  xilHostDeserializer(&y);
+  return y;
+}
+
+/*
  * Arguments    : const mxArray * const prhs[2]
  *                const mxArray **plhs
  * Return Type  : void
  */
-void qammod_api(const mxArray *const prhs[2], const mxArray **plhs)
+void QamMod_api(const mxArray *const prhs[2], const mxArray **plhs)
 {
   emlrtStack st = {
       NULL, /* site */
@@ -129,8 +200,12 @@ void qammod_api(const mxArray *const prhs[2], const mxArray **plhs)
   /* Marshall function inputs */
   x = emlrt_marshallIn(&st, emlrtAliasP(prhs[0]), "x");
   M = emlrt_marshallIn(&st, emlrtAliasP(prhs[1]), "M");
-  /* Invoke the target function */
-  y = qammod(x, M);
+  /* Calling XIL to setup. */
+  xilPreEntryPointHost(1U);
+  /* Invoke the wrapper function */
+  y = QamModXilWrapper(x, M);
+  /* Calling Xil to clean-up. */
+  xilPostEntryPointHost(1U);
   /* Marshall function outputs */
   *plhs = emlrt_marshallOut(y);
 }
@@ -139,7 +214,7 @@ void qammod_api(const mxArray *const prhs[2], const mxArray **plhs)
  * Arguments    : void
  * Return Type  : void
  */
-void qammod_atexit(void)
+void QamMod_atexit(void)
 {
   emlrtStack st = {
       NULL, /* site */
@@ -150,8 +225,8 @@ void qammod_atexit(void)
   st.tls = emlrtRootTLSGlobal;
   emlrtEnterRtStackR2012b(&st);
   emlrtDestroyRootTLS(&emlrtRootTLSGlobal);
-  qammod_xil_terminate();
-  qammod_xil_shutdown();
+  QamMod_xil_terminate();
+  QamMod_xil_shutdown();
   emlrtExitTimeCleanup(&emlrtContextGlobal);
 }
 
@@ -159,7 +234,7 @@ void qammod_atexit(void)
  * Arguments    : void
  * Return Type  : void
  */
-void qammod_initialize(void)
+void QamMod_initialize(void)
 {
   emlrtStack st = {
       NULL, /* site */
@@ -170,20 +245,36 @@ void qammod_initialize(void)
   st.tls = emlrtRootTLSGlobal;
   emlrtClearAllocCountR2012b(&st, false, 0U, NULL);
   emlrtEnterRtStackR2012b(&st);
-  emlrtFirstTimeR2012b(emlrtRootTLSGlobal);
+  if (emlrtFirstTimeR2012b(emlrtRootTLSGlobal)) {
+    QamMod_once();
+  }
+  if (!xilAlreadyInited) {
+    xilInitializeHost(&xil_terminate);
+    xilAlreadyInited = true;
+  }
 }
 
 /*
  * Arguments    : void
  * Return Type  : void
  */
-void qammod_terminate(void)
+void QamMod_terminate(void)
 {
   emlrtDestroyRootTLS(&emlrtRootTLSGlobal);
 }
 
 /*
- * File trailer for _coder_qammod_api.c
+ * Arguments    : void
+ * Return Type  : void
+ */
+void xil_terminate(void)
+{
+  xilAlreadyInited = false;
+  QamMod_terminate();
+}
+
+/*
+ * File trailer for _coder_QamMod_api.c
  *
  * [EOF]
  */

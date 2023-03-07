@@ -5,7 +5,7 @@
  * File: getConstellation.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef GETCONSTELLATION_H
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-void getConstellation(double M, creal_T const_data[], int const_size[2]);
+void getConstellation(real_T M, creal_T const_data[], int32_T const_size[2]);
 
 #ifdef __cplusplus
 }

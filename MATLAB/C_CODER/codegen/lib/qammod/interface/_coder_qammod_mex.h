@@ -2,10 +2,10 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: _coder_qammod_mex.h
+ * File: _coder_QamMod_mex.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 #ifndef _CODER_QAMMOD_MEX_H
@@ -26,7 +26,7 @@ MEXFUNCTION_LINKAGE void mexFunction(int32_T nlhs, mxArray *plhs[],
 
 emlrtCTX mexFunctionCreateRootTLS(void);
 
-void unsafe_qammod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
+void unsafe_QamMod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
                                const mxArray *prhs[2]);
 
 #ifdef __cplusplus
@@ -35,7 +35,7 @@ void unsafe_qammod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
 
 #endif
 /*
- * File trailer for _coder_qammod_mex.h
+ * File trailer for _coder_QamMod_mex.h
  *
  * [EOF]
  */

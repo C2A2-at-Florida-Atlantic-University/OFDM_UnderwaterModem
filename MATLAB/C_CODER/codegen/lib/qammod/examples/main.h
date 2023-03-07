@@ -5,7 +5,7 @@
  * File: main.h
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /*************************************************************************/
@@ -46,9 +46,9 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-extern int main(int argc, char **argv);
+extern int32_T main(int32_T argc, char **argv);
 
-extern void main_qammod(void);
+extern void main_QamMod(void);
 
 #ifdef __cplusplus
 }

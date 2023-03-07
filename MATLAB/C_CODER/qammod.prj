@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.coder" plugin-version="R2021a">
-  <configuration build-checksum="3682593814" file="C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER\qammod.prj" location="C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER" name="qammod" target="target.unifiedcoder" target-name="MATLAB Coder">
+  <configuration build-checksum="1614259003" file="C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER2\QamMod.prj" location="C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER2" name="QamMod" target="target.unifiedcoder" target-name="MATLAB Coder">
     <profile key="profile.mex">
       <param.BuiltInstrumentedMex>false</param.BuiltInstrumentedMex>
       <param.RanInstrumentedMex>false</param.RanInstrumentedMex>
@@ -213,7 +213,7 @@
       <param.HeaderGuardStyle>option.HeaderGuardStyle.UseIncludeGuard</param.HeaderGuardStyle>
       <param.CodeFormattingTool>option.CodeFormattingTool.Auto</param.CodeFormattingTool>
       <param.ClangFormatFile>option.ClangFormatFile.Generate</param.ClangFormatFile>
-      <param.DataTypeReplacement>option.DataTypeReplacement.CBuiltIn</param.DataTypeReplacement>
+      <param.DataTypeReplacement>option.DataTypeReplacement.CoderTypedefs</param.DataTypeReplacement>
       <param.EnableCustomReplacementTypes>false</param.EnableCustomReplacementTypes>
       <param.ReplacementTypes.double />
       <param.ReplacementTypes.single />
@@ -262,7 +262,7 @@
       <param.CodeStackProfiling>false</param.CodeStackProfiling>
       <param.DefaultTestFile />
       <param.MergeInstrumentationResults>false</param.MergeInstrumentationResults>
-      <param.RanPilSilVerification>false</param.RanPilSilVerification>
+      <param.RanPilSilVerification>true</param.RanPilSilVerification>
       <param.VerificationMode>option.VerificationMode.None</param.VerificationMode>
       <param.VerificationStatus>option.VerificationStatus.Inactive</param.VerificationStatus>
       <param.CustomSourceCode />
@@ -331,7 +331,7 @@
       <param.IndentStyle>option.IndentStyle.K&amp;R</param.IndentStyle>
       <param.IndentSize>2</param.IndentSize>
       <param.ColumnLimit>80</param.ColumnLimit>
-      <param.grt.GenCodeOnly>true</param.grt.GenCodeOnly>
+      <param.grt.GenCodeOnly>false</param.grt.GenCodeOnly>
       <param.ConstantFoldingTimeout>40000</param.ConstantFoldingTimeout>
       <param.CompileTimeRecursionLimit>50</param.CompileTimeRecursionLimit>
       <param.EnableRuntimeRecursion>true</param.EnableRuntimeRecursion>
@@ -420,7 +420,6 @@
         <param.HeaderGuardStyle />
         <param.CodeFormattingTool />
         <param.ClangFormatFile />
-        <param.DataTypeReplacement />
         <param.EnableCustomReplacementTypes />
         <param.ReplacementTypes.double />
         <param.ReplacementTypes.single />
@@ -469,7 +468,6 @@
         <param.CodeStackProfiling />
         <param.DefaultTestFile />
         <param.MergeInstrumentationResults />
-        <param.RanPilSilVerification />
         <param.VerificationMode />
         <param.VerificationStatus />
         <param.CustomSourceCode />
@@ -523,6 +521,7 @@
         <param.IndentStyle />
         <param.IndentSize />
         <param.ColumnLimit />
+        <param.grt.GenCodeOnly />
         <param.ConstantFoldingTimeout />
         <param.CompileTimeRecursionLimit />
         <param.EnableRuntimeRecursion />
@@ -570,13 +569,13 @@
       </unset>
     </profile>
     <param.objective>option.objective.c</param.objective>
-    <param.WorkflowStep>workflowSummary</param.WorkflowStep>
+    <param.WorkflowStep>generateCode</param.WorkflowStep>
     <param.TestSnippets>
-      <item>qammod(int8(1),int8(16))</item>
+      <item>QamMod(int8(1),int8(16))</item>
     </param.TestSnippets>
     <param.ExternalFcnMajority>column</param.ExternalFcnMajority>
     <param.UseGlobals>option.UseGlobals.No</param.UseGlobals>
-    <param.outputfile>${PROJECT_ROOT}\codegen\lib\qammod\qammod.lib</param.outputfile>
+    <param.outputfile>${PROJECT_ROOT}\codegen\lib\QamMod\QamMod.lib</param.outputfile>
     <param.version>R2012a</param.version>
     <param.HasECoderFeatures>true</param.HasECoderFeatures>
     <param.HasGpuCoder>true</param.HasGpuCoder>
@@ -591,23 +590,23 @@
     <param.AutoInferUnboundedSizeThreshold>2048</param.AutoInferUnboundedSizeThreshold>
     <param.EnableFixedPointStep>false</param.EnableFixedPointStep>
     <param.EnableScreener>true</param.EnableScreener>
-    <param.AnnotationChecksum>4173356969</param.AnnotationChecksum>
+    <param.AnnotationChecksum>3283911229</param.AnnotationChecksum>
     <var.LegacyTarget />
     <var.MirrorOnOpen>false</var.MirrorOnOpen>
     <param.FixedPointEnabled>false</param.FixedPointEnabled>
     <var.redirectedInputTypeData />
-    <var.DismissScreener>true</var.DismissScreener>
+    <var.DismissScreener>false</var.DismissScreener>
     <param.unifiedParamStorage />
     <param.hdlParamStorage />
-    <var.gc.lastOutputRoot>codegen\lib\qammod</var.gc.lastOutputRoot>
-    <var.gc.lastOutputType>C_CODE</var.gc.lastOutputType>
-    <var.gc.preBuildChecksum>229015772</var.gc.preBuildChecksum>
-    <var.cfi.lastOutputRoot>codegen\mex\qammod</var.cfi.lastOutputRoot>
-    <var.cfi.preBuildChecksum>2121735280</var.cfi.preBuildChecksum>
-    <var.lastCfiTestSnippet>qammod(int8(1),int8(16))</var.lastCfiTestSnippet>
+    <var.gc.lastOutputRoot>codegen\lib\QamMod</var.gc.lastOutputRoot>
+    <var.gc.lastOutputType>STATIC_LIBRARY</var.gc.lastOutputType>
+    <var.gc.preBuildChecksum>1614259003</var.gc.preBuildChecksum>
+    <var.cfi.lastOutputRoot>codegen\mex\QamMod</var.cfi.lastOutputRoot>
+    <var.cfi.preBuildChecksum>2938739535</var.cfi.preBuildChecksum>
+    <var.lastCfiTestSnippet>QamMod(int8(1),int8(16))</var.lastCfiTestSnippet>
     <var.outdatedOnRestore>false</var.outdatedOnRestore>
-    <var.lastUserSourceChecksum>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;checksum&gt;&lt;includedFiles&gt;&lt;file&gt;C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER\qammod.m&lt;/file&gt;&lt;/includedFiles&gt;&lt;value&gt;2984881612&lt;/value&gt;&lt;/checksum&gt;</var.lastUserSourceChecksum>
-    <var.sourceSetState>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;sourceModel&gt;&lt;primarySourceFiles&gt;&lt;file&gt;C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER\qammod.m&lt;/file&gt;&lt;/primarySourceFiles&gt;&lt;fixedPointSourceFiles/&gt;&lt;fixedPointSourceRegistered&gt;false&lt;/fixedPointSourceRegistered&gt;&lt;fixedPointSourceSelected&gt;false&lt;/fixedPointSourceSelected&gt;&lt;/sourceModel&gt;</var.sourceSetState>
+    <var.lastUserSourceChecksum>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;checksum&gt;&lt;includedFiles&gt;&lt;file&gt;C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER2\QamMod.m&lt;/file&gt;&lt;/includedFiles&gt;&lt;value&gt;2517497666&lt;/value&gt;&lt;/checksum&gt;</var.lastUserSourceChecksum>
+    <var.sourceSetState>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;sourceModel&gt;&lt;primarySourceFiles&gt;&lt;file&gt;C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER2\QamMod.m&lt;/file&gt;&lt;/primarySourceFiles&gt;&lt;fixedPointSourceFiles/&gt;&lt;fixedPointSourceRegistered&gt;false&lt;/fixedPointSourceRegistered&gt;&lt;fixedPointSourceSelected&gt;false&lt;/fixedPointSourceSelected&gt;&lt;/sourceModel&gt;</var.sourceSetState>
     <param.forceMexBuild>false</param.forceMexBuild>
     <param.NoDefaultJIT>false</param.NoDefaultJIT>
     <param.configImportActive>false</param.configImportActive>
@@ -621,10 +620,10 @@
     <param.EnableStructExplosion>true</param.EnableStructExplosion>
     <param.ForceANSIC>false</param.ForceANSIC>
     <param.NumCompileJobs>1</param.NumCompileJobs>
-    <param.mex.outputfile>qammod_mex</param.mex.outputfile>
-    <param.grt.outputfile>qammod</param.grt.outputfile>
+    <param.mex.outputfile>QamMod_mex</param.mex.outputfile>
+    <param.grt.outputfile>QamMod</param.grt.outputfile>
     <param.artifact>option.target.artifact.lib</param.artifact>
-    <param.outputfile>${PROJECT_ROOT}\codegen\lib\qammod\qammod.lib</param.outputfile>
+    <param.outputfile>${PROJECT_ROOT}\codegen\lib\QamMod\QamMod.lib</param.outputfile>
     <param.CppNamespace />
     <param.CppPackagesToNamespaces>true</param.CppPackagesToNamespaces>
     <param.CppNamespaceForMathworksCode>coder</param.CppNamespaceForMathworksCode>
@@ -742,6 +741,7 @@
       <var.MirrorOnOpen />
       <param.FixedPointEnabled />
       <var.redirectedInputTypeData />
+      <var.DismissScreener />
       <param.unifiedParamStorage />
       <param.hdlParamStorage />
       <var.outdatedOnRestore />
@@ -854,17 +854,16 @@
       <param.FixedPointUseDesignRanges />
     </unset>
     <fileset.entrypoints>
-      <file custom-data-expanded="false" value="${PROJECT_ROOT}\qammod.m">
-        <Marker>1677426842161</Marker>
+      <file custom-data-expanded="false" value="${PROJECT_ROOT}\QamMod.m">
+        <Marker>1677431629142</Marker>
       </file>
     </fileset.entrypoints>
     <fileset.testbench />
     <fileset.inputtypes>
-      <file custom-data-expanded="false" value="${PROJECT_ROOT}\qammod.m">
-        <Inputs fileName="qammod.m" functionName="qammod">
+      <file custom-data-expanded="false" value="${PROJECT_ROOT}\QamMod.m">
+        <Inputs fileName="QamMod.m" functionName="QamMod">
           <Input Name="x" typeId="0" />
           <Input Name="M" typeId="0" />
-          <Input Name="varargin" typeId="1" />
           <idpTable>
             <type typeId="0">
               <Class>int8</Class>
@@ -874,26 +873,12 @@
               <UserDefined>true</UserDefined>
               <Complex>false</Complex>
             </type>
-            <type typeId="1">
-              <Class>cell</Class>
-              <Size>1 x 0</Size>
-              <Value />
-              <InitialValue />
-              <UserDefined>false</UserDefined>
-              <Complex>false</Complex>
-              <Sparse>false</Sparse>
-              <TypeName />
-              <Extern>false</Extern>
-              <HeaderFile />
-              <Alignment>-1</Alignment>
-              <Homogeneous>false</Homogeneous>
-            </type>
           </idpTable>
         </Inputs>
       </file>
     </fileset.inputtypes>
     <build-deliverables>
-      <file location="${PROJECT_ROOT}\codegen\lib\qammod" name="qammod.lib" optional="false">C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER\codegen\lib\qammod\qammod.lib</file>
+      <file location="${PROJECT_ROOT}\codegen\lib\QamMod" name="QamMod.lib" optional="false">C:\Projects\FAU-Modem\OFDM\MATLAB\C_CODER2\codegen\lib\QamMod\QamMod.lib</file>
     </build-deliverables>
     <workflow />
     <matlab>

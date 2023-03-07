@@ -4,7 +4,7 @@ call "setup_mingw.bat"
 
 cd .
 
-if "%1"=="" ("C:\PROGRA~1\MATLAB\R2022b\bin\win64\gmake"  -f qammod_rtw.mk all) else ("C:\PROGRA~1\MATLAB\R2022b\bin\win64\gmake"  -f qammod_rtw.mk %1)
+if "%1"=="" ("C:\PROGRA~1\MATLAB\R2022b\bin\win64\gmake"  -f QamMod_rtw.mk all) else ("C:\PROGRA~1\MATLAB\R2022b\bin\win64\gmake"  -f QamMod_rtw.mk %1)
 @if errorlevel 1 goto error_exit
 
 exit /B 0

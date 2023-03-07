@@ -5,7 +5,7 @@
  * File: getConstellation.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /* Include Files */
@@ -17,22 +17,22 @@
 #include <string.h>
 
 /* Function Declarations */
-static double rt_powd_snf(double u0, double u1);
+static real_T rt_powd_snf(real_T u0, real_T u1);
 
 /* Function Definitions */
 /*
- * Arguments    : double u0
- *                double u1
- * Return Type  : double
+ * Arguments    : real_T u0
+ *                real_T u1
+ * Return Type  : real_T
  */
-static double rt_powd_snf(double u0, double u1)
+static real_T rt_powd_snf(real_T u0, real_T u1)
 {
-  double y;
+  real_T y;
   if (rtIsNaN(u0) || rtIsNaN(u1)) {
     y = rtNaN;
   } else {
-    double d;
-    double d1;
+    real_T d;
+    real_T d1;
     d = fabs(u0);
     d1 = fabs(u1);
     if (rtIsInf(u1)) {
@@ -71,12 +71,12 @@ static double rt_powd_snf(double u0, double u1)
 }
 
 /*
- * Arguments    : double M
+ * Arguments    : real_T M
  *                creal_T const_data[]
- *                int const_size[2]
+ *                int32_T const_size[2]
  * Return Type  : void
  */
-void getConstellation(double M, creal_T const_data[], int const_size[2])
+void getConstellation(real_T M, creal_T const_data[], int32_T const_size[2])
 {
   static const cint8_T icv[8] = {{
                                      -3, /* re */
@@ -110,25 +110,25 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
                                      3, /* re */
                                      -1 /* im */
                                  }};
-  double xPoints_data[11];
-  double yPoints_data[11];
-  double nbits;
-  int i;
-  int ibmat;
-  int itilerow;
-  int kd;
+  real_T xPoints_data[11];
+  real_T yPoints_data[11];
+  real_T nbits;
+  int32_T i;
+  int32_T ibmat;
+  int32_T itilerow;
+  int32_T kd;
   nbits = b_log2(M);
-  kd = (int)M;
-  const_size[1] = (int)M;
+  kd = (int32_T)M;
+  const_size[1] = (int32_T)M;
   if (nbits == 1.0) {
     const_size[0] = 1;
-    const_size[1] = (int)M;
+    const_size[1] = (int32_T)M;
     for (i = 0; i < kd; i++) {
-      const_data[i].re = 2.0 * (double)i - 1.0;
+      const_data[i].re = 2.0 * (real_T)i - 1.0;
       const_data[i].im = -0.0;
     }
   } else {
-    double sqrtM;
+    real_T sqrtM;
     if (rtIsNaN(nbits) || rtIsInf(nbits)) {
       sqrtM = rtNaN;
     } else if (nbits == 0.0) {
@@ -142,12 +142,12 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
       }
     }
     if ((sqrtM != 0.0) && (nbits > 3.0)) {
-      double mI;
-      double mQ;
-      double tmp2;
-      double tmp3;
-      double tmp4;
-      double tmp5;
+      real_T mI;
+      real_T mQ;
+      real_T tmp2;
+      real_T tmp3;
+      real_T tmp4;
+      real_T tmp5;
       mI = rt_powd_snf(2.0, (nbits + 1.0) / 2.0);
       mQ = rt_powd_snf(2.0, (nbits - 1.0) / 2.0);
       nbits = trunc((M - 1.0) / mI);
@@ -155,11 +155,11 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
       tmp3 = mI / 2.0;
       tmp4 = mQ / 2.0;
       tmp5 = 2.0 * mQ;
-      i = (int)((M - 1.0) + 1.0);
+      i = (int32_T)((M - 1.0) + 1.0);
       if (i - 1 >= 0) {
         if (nbits < 2.147483648E+9) {
           if (nbits >= -2.147483648E+9) {
-            itilerow = (int)nbits;
+            itilerow = (int32_T)nbits;
           } else {
             itilerow = MIN_int32_T;
           }
@@ -170,13 +170,13 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
         }
       }
       for (kd = 0; kd < i; kd++) {
-        double apnd;
-        nbits = 2.0 * trunc((double)kd / mQ) + (1.0 - mI);
-        sqrtM = -(2.0 * (double)(kd & itilerow) + (1.0 - mQ));
+        real_T apnd;
+        nbits = 2.0 * trunc((real_T)kd / mQ) + (1.0 - mI);
+        sqrtM = -(2.0 * (real_T)(kd & itilerow) + (1.0 - mQ));
         apnd = fabs(floor(nbits));
         if (apnd > tmp2) {
-          double cdiff;
-          int nm1d2;
+          real_T cdiff;
+          int32_T nm1d2;
           cdiff = fabs(floor(sqrtM));
           if (nbits < 0.0) {
             nm1d2 = -1;
@@ -189,30 +189,30 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
             ibmat = (sqrtM > 0.0);
           }
           if (cdiff > tmp4) {
-            nbits = (double)nm1d2 * (apnd - tmp3);
-            sqrtM = (double)ibmat * (tmp5 - cdiff);
+            nbits = (real_T)nm1d2 * (apnd - tmp3);
+            sqrtM = (real_T)ibmat * (tmp5 - cdiff);
           } else {
-            nbits = (double)nm1d2 * (mI - apnd);
-            sqrtM = (double)ibmat * (mQ + cdiff);
+            nbits = (real_T)nm1d2 * (mI - apnd);
+            sqrtM = (real_T)ibmat * (mQ + cdiff);
           }
         }
         const_data[kd].re = nbits;
         const_data[kd].im = sqrtM;
       }
     } else if (nbits == 3.0) {
-      const_size[1] = (int)M;
+      const_size[1] = (int32_T)M;
       for (i = 0; i < kd; i++) {
         const_data[i].re = icv[i].re;
         const_data[i].im = icv[i].im;
       }
     } else {
-      double x_data[121];
-      double y_data[121];
-      double apnd;
-      double cdiff;
-      int b_n;
-      int n;
-      int nm1d2;
+      real_T x_data[121];
+      real_T y_data[121];
+      real_T apnd;
+      real_T cdiff;
+      int32_T b_n;
+      int32_T n;
+      int32_T nm1d2;
       sqrtM = rt_powd_snf(2.0, nbits / 2.0);
       if (rtIsNaN(-(sqrtM - 1.0)) || rtIsNaN(sqrtM - 1.0)) {
         n = 1;
@@ -224,10 +224,10 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
         n = 1;
         xPoints_data[0] = rtNaN;
       } else if (floor(-(sqrtM - 1.0)) == -(sqrtM - 1.0)) {
-        kd = (int)(((sqrtM - 1.0) - (-(sqrtM - 1.0))) / 2.0);
+        kd = (int32_T)(((sqrtM - 1.0) - (-(sqrtM - 1.0))) / 2.0);
         n = kd + 1;
         for (i = 0; i <= kd; i++) {
-          xPoints_data[i] = -(sqrtM - 1.0) + 2.0 * (double)i;
+          xPoints_data[i] = -(sqrtM - 1.0) + 2.0 * (real_T)i;
         }
       } else {
         nbits = floor(((sqrtM - 1.0) - (-(sqrtM - 1.0))) / 2.0 + 0.5);
@@ -243,7 +243,7 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
           nbits++;
         }
         if (nbits >= 0.0) {
-          n = (int)nbits;
+          n = (int32_T)nbits;
         } else {
           n = 0;
         }
@@ -251,18 +251,18 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
           xPoints_data[0] = -(sqrtM - 1.0);
           if (n > 1) {
             xPoints_data[n - 1] = apnd;
-            nm1d2 = (unsigned char)(n - 1) >> 1;
+            nm1d2 = (uint8_T)(n - 1) >> 1;
             for (ibmat = 0; ibmat <= nm1d2 - 2; ibmat++) {
               kd = (ibmat + 1) << 1;
-              xPoints_data[ibmat + 1] = -(sqrtM - 1.0) + (double)kd;
-              xPoints_data[(n - ibmat) - 2] = apnd - (double)kd;
+              xPoints_data[ibmat + 1] = -(sqrtM - 1.0) + (real_T)kd;
+              xPoints_data[(n - ibmat) - 2] = apnd - (real_T)kd;
             }
             i = nm1d2 << 1;
             if (i == n - 1) {
               xPoints_data[nm1d2] = (-(sqrtM - 1.0) + apnd) / 2.0;
             } else {
-              xPoints_data[nm1d2] = -(sqrtM - 1.0) + (double)i;
-              xPoints_data[nm1d2 + 1] = apnd - (double)i;
+              xPoints_data[nm1d2] = -(sqrtM - 1.0) + (real_T)i;
+              xPoints_data[nm1d2 + 1] = apnd - (real_T)i;
             }
           }
         }
@@ -277,10 +277,10 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
         b_n = 1;
         yPoints_data[0] = rtNaN;
       } else if (floor(sqrtM - 1.0) == sqrtM - 1.0) {
-        kd = (int)((-(sqrtM - 1.0) - (sqrtM - 1.0)) / -2.0);
+        kd = (int32_T)((-(sqrtM - 1.0) - (sqrtM - 1.0)) / -2.0);
         b_n = kd + 1;
         for (i = 0; i <= kd; i++) {
-          yPoints_data[i] = (sqrtM - 1.0) + -2.0 * (double)i;
+          yPoints_data[i] = (sqrtM - 1.0) + -2.0 * (real_T)i;
         }
       } else {
         nbits = floor((-(sqrtM - 1.0) - (sqrtM - 1.0)) / -2.0 + 0.5);
@@ -296,7 +296,7 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
           nbits++;
         }
         if (nbits >= 0.0) {
-          b_n = (int)nbits;
+          b_n = (int32_T)nbits;
         } else {
           b_n = 0;
         }
@@ -304,32 +304,32 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
           yPoints_data[0] = sqrtM - 1.0;
           if (b_n > 1) {
             yPoints_data[b_n - 1] = apnd;
-            nm1d2 = (unsigned char)(b_n - 1) >> 1;
+            nm1d2 = (uint8_T)(b_n - 1) >> 1;
             for (ibmat = 0; ibmat <= nm1d2 - 2; ibmat++) {
               kd = (ibmat + 1) * -2;
-              yPoints_data[ibmat + 1] = (sqrtM - 1.0) + (double)kd;
-              yPoints_data[(b_n - ibmat) - 2] = apnd - (double)kd;
+              yPoints_data[ibmat + 1] = (sqrtM - 1.0) + (real_T)kd;
+              yPoints_data[(b_n - ibmat) - 2] = apnd - (real_T)kd;
             }
             if (nm1d2 << 1 == b_n - 1) {
               yPoints_data[nm1d2] = ((sqrtM - 1.0) + apnd) / 2.0;
             } else {
               kd = nm1d2 * -2;
-              yPoints_data[nm1d2] = (sqrtM - 1.0) + (double)kd;
-              yPoints_data[nm1d2 + 1] = apnd - (double)kd;
+              yPoints_data[nm1d2] = (sqrtM - 1.0) + (real_T)kd;
+              yPoints_data[nm1d2 + 1] = apnd - (real_T)kd;
             }
           }
         }
       }
-      nm1d2 = (int)sqrtM;
+      nm1d2 = (int32_T)sqrtM;
       for (kd = 0; kd < n; kd++) {
-        ibmat = kd * (int)sqrtM;
+        ibmat = kd * (int32_T)sqrtM;
         for (itilerow = 0; itilerow < nm1d2; itilerow++) {
           x_data[ibmat + itilerow] = xPoints_data[kd];
         }
       }
       if (b_n - 1 >= 0) {
         memcpy(&xPoints_data[0], &yPoints_data[0],
-               (unsigned int)b_n * sizeof(double));
+               (uint32_T)b_n * sizeof(real_T));
       }
       for (itilerow = 0; itilerow < nm1d2; itilerow++) {
         kd = itilerow * b_n;
@@ -337,7 +337,7 @@ void getConstellation(double M, creal_T const_data[], int const_size[2])
           y_data[kd + ibmat] = xPoints_data[ibmat];
         }
       }
-      kd = (int)sqrtM * n;
+      kd = (int32_T)sqrtM * n;
       const_size[1] = kd;
       for (i = 0; i < kd; i++) {
         const_data[i].re = x_data[i];

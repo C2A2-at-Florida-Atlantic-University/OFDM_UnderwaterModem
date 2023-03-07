@@ -2,15 +2,15 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: _coder_qammod_mex.c
+ * File: _coder_QamMod_mex.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 26-Feb-2023 10:54:48
+ * C/C++ source code generated on  : 26-Feb-2023 12:23:52
  */
 
 /* Include Files */
-#include "_coder_qammod_mex.h"
-#include "_coder_qammod_api.h"
+#include "_coder_QamMod_mex.h"
+#include "_coder_QamMod_api.h"
 
 /* Function Definitions */
 /*
@@ -23,13 +23,13 @@
 void mexFunction(int32_T nlhs, mxArray *plhs[], int32_T nrhs,
                  const mxArray *prhs[])
 {
-  mexAtExit(&qammod_atexit);
+  mexAtExit(&QamMod_atexit);
   /* Module initialization. */
-  qammod_initialize();
+  QamMod_initialize();
   /* Dispatch the entry-point. */
-  unsafe_qammod_mexFunction(nlhs, plhs, nrhs, prhs);
+  unsafe_QamMod_mexFunction(nlhs, plhs, nrhs, prhs);
   /* Module termination. */
-  qammod_terminate();
+  QamMod_terminate();
 }
 
 /*
@@ -50,7 +50,7 @@ emlrtCTX mexFunctionCreateRootTLS(void)
  *                const mxArray *prhs[2]
  * Return Type  : void
  */
-void unsafe_qammod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
+void unsafe_QamMod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
                                const mxArray *prhs[2])
 {
   emlrtStack st = {
@@ -63,20 +63,20 @@ void unsafe_qammod_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
   /* Check for proper number of arguments. */
   if (nrhs != 2) {
     emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:WrongNumberOfInputs", 5, 12, 2, 4,
-                        6, "qammod");
+                        6, "QamMod");
   }
   if (nlhs > 1) {
     emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:TooManyOutputArguments", 3, 4, 6,
-                        "qammod");
+                        "QamMod");
   }
   /* Call the function. */
-  qammod_api(prhs, &outputs);
+  QamMod_api(prhs, &outputs);
   /* Copy over outputs to the caller. */
   emlrtReturnArrays(1, &plhs[0], &outputs);
 }
 
 /*
- * File trailer for _coder_qammod_mex.c
+ * File trailer for _coder_QamMod_mex.c
  *
  * [EOF]
  */
