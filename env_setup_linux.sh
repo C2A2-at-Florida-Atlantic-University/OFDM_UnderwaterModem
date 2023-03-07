@@ -10,9 +10,15 @@
 # If on windows, run with git cmd (MINGW)
 
 set +x
+echo
 echo "Environment Setup Script - set PI_RADIO_REPO_PATH env variable first"
-echo Your repo path: $FAU_OFDM_REPO_PATH
+echo Your repo path: \$FAU_OFDM_REPO_PATH = $FAU_OFDM_REPO_PATH
+echo
 
 cd Xilinx/Vivado/bd
 set -x
 sed -i "s|/mnt/c/Projects/FAU-Modem/OFDM|$FAU_OFDM_REPO_PATH|g" Transmit_Chain_bd.tcl
+set +x
+echo
+echo "NOTE: Remember to set PetaLinuxPath and PetaLinuxPathPynq environment variables to build PetaLinux projects for FAU-Modem and Pynq-z2"
+echo
