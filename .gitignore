@@ -9,6 +9,7 @@
 *hw
 *ip_user_files
 *sim
+*runs
 *srcs
 *.xpr
 *.xsa
