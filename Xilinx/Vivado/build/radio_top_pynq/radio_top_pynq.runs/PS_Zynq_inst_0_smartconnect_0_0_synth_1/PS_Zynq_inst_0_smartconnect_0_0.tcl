@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.tcl"
+  variable script "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,6 +70,7 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "PS_Zynq_inst_0_smartconnect_0_0_synth_1" START { ROLLUP_AUTO }
+set_param chipscope.maxJobs 6
 set_param project.vivado.isBlockSynthRun true
 set_msg_config -msgmgr_mode ooc_run
 OPTRACE "Creating in-memory project" START { }
@@ -79,8 +80,8 @@ set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
-set_property webtalk.parent_dir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
-set_property parent.project_path C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
+set_property webtalk.parent_dir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
+set_property parent.project_path c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
 set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
@@ -91,7 +92,7 @@ set_property ip_output_repo c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_ip -quiet C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.xci
+read_ip -quiet c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.xci
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_1/bd_055b_psr_aclk_0_board.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_1/bd_055b_psr_aclk_0.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_2/bd_055b_arsw_0_ooc.xdc]
@@ -151,7 +152,7 @@ set_property used_in_implementation false [get_files dont_touch.xdc]
 set_param ips.enableIPCacheLiteLoad 1
 OPTRACE "Configure IP Cache" START { }
 
-set cacheID [config_ip_cache -export -no_bom  -dir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1 -new_name PS_Zynq_inst_0_smartconnect_0_0 -ip [get_ips PS_Zynq_inst_0_smartconnect_0_0]]
+set cacheID [config_ip_cache -export -no_bom  -dir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1 -new_name PS_Zynq_inst_0_smartconnect_0_0 -ip [get_ips PS_Zynq_inst_0_smartconnect_0_0]]
 
 OPTRACE "Configure IP Cache" END { }
 if { $cacheID == "" } {
@@ -206,7 +207,7 @@ create_report "PS_Zynq_inst_0_smartconnect_0_0_synth_1_synth_report_utilization_
 OPTRACE "synth reports" END { }
 
 if { [catch {
-  file copy -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.dcp
+  file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.dcp
 } _RESULT ] } { 
   send_msg_id runtcl-3 status "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
   error "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
@@ -241,47 +242,47 @@ if { [catch {
 
 
 if { [catch {
-  file copy -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.dcp
+  file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.dcp
 } _RESULT ] } { 
   send_msg_id runtcl-3 status "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
   error "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
 }
 
 if { [catch {
-  file rename -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_stub.v c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.v
+  file rename -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_stub.v c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.v
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create a Verilog synthesis stub for the sub-design. This may lead to errors in top level synthesis of the design. Error reported: $_RESULT"
 }
 
 if { [catch {
-  file rename -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl
+  file rename -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create a VHDL synthesis stub for the sub-design. This may lead to errors in top level synthesis of the design. Error reported: $_RESULT"
 }
 
 if { [catch {
-  file rename -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.v c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.v
+  file rename -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.v c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.v
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create the Verilog functional simulation sub-design file. Post-Synthesis Functional Simulation with this file may not be possible or may give incorrect results. Error reported: $_RESULT"
 }
 
 if { [catch {
-  file rename -force C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.vhdl c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.vhdl
+  file rename -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.vhdl c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_sim_netlist.vhdl
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create the VHDL functional simulation sub-design file. Post-Synthesis Functional Simulation with this file may not be possible or may give incorrect results. Error reported: $_RESULT"
 }
 
 }; # end if cacheID 
 
-if {[file isdir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0]} {
+if {[file isdir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0]} {
   catch { 
-    file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.v C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0
+    file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.v c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0
   }
 }
 
-if {[file isdir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0]} {
+if {[file isdir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0]} {
   catch { 
-    file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0
+    file copy -force c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0_stub.vhdl c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.ip_user_files/ip/PS_Zynq_inst_0_smartconnect_0_0
   }
 }
 file delete __synthesis_is_running__

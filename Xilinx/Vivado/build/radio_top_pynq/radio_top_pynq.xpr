@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="60" Path="C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr">
+<Project Version="7" Minor="60" Path="c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="165af5aa4dcd4485b0ed8283ff639de4"/>
@@ -95,11 +95,11 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="Radio_Top_Pynq.bd" FileRelPathName="ip/Radio_Top_Pynq_axis_data_fifo_1_0/Radio_Top_Pynq_axis_data_fifo_1_0.xci">
-          <Proxy FileSetName="Radio_Top_Pynq_axis_data_fifo_1_0"/>
-        </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="Radio_Top_Pynq.bd" FileRelPathName="ip/Radio_Top_Pynq_axi_dma_0_0/Radio_Top_Pynq_axi_dma_0_0.xci">
           <Proxy FileSetName="Radio_Top_Pynq_axi_dma_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="Radio_Top_Pynq.bd" FileRelPathName="ip/Radio_Top_Pynq_axis_data_fifo_1_0/Radio_Top_Pynq_axis_data_fifo_1_0.xci">
+          <Proxy FileSetName="Radio_Top_Pynq_axis_data_fifo_1_0"/>
         </CompFileExtendedInfo>
       </File>
       <File Path="$PGENDIR/sources_1/bd/Radio_Top_Pynq/hdl/Radio_Top_Pynq_wrapper.v">
@@ -216,6 +216,14 @@
     </FileSet>
     <FileSet Name="utils_1" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
       <Filter Type="Utils"/>
+      <File Path="$PSRCDIR/utils_1/imports/synth_1/Radio_Top_Pynq_wrapper.dcp">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedInSteps" Val="synth_1"/>
+          <Attr Name="AutoDcp" Val="1"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
@@ -245,41 +253,11 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_processing_system7_0_0/PS_Zynq_inst_0_processing_system7_0_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_processing_system7_0_0"/>
-        </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_smartconnect_0_0/PS_Zynq_inst_0_smartconnect_0_0.xci">
           <Proxy FileSetName="PS_Zynq_inst_0_smartconnect_0_0"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_xbar_0/PS_Zynq_inst_0_xbar_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_xbar_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_proc_sys_reset_100_0/PS_Zynq_inst_0_proc_sys_reset_100_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_proc_sys_reset_100_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_axi_gpio_1_0/PS_Zynq_inst_0_axi_gpio_1_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_axi_gpio_1_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_delimiter_1_0/PS_Zynq_inst_0_delimiter_1_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_delimiter_1_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_delimiter_0_0/PS_Zynq_inst_0_delimiter_0_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_delimiter_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_delimiter_2_0/PS_Zynq_inst_0_delimiter_2_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_delimiter_2_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_axi_gpio_2_0/PS_Zynq_inst_0_axi_gpio_2_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_axi_gpio_2_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_proc_sys_reset_40_0/PS_Zynq_inst_0_proc_sys_reset_40_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_proc_sys_reset_40_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_proc_sys_reset_10_0/PS_Zynq_inst_0_proc_sys_reset_10_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_proc_sys_reset_10_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_axi_gpio_0_0/PS_Zynq_inst_0_axi_gpio_0_0.xci">
-          <Proxy FileSetName="PS_Zynq_inst_0_axi_gpio_0_0"/>
+        <CompFileExtendedInfo CompFileName="PS_Zynq_inst_0.bd" FileRelPathName="ip/PS_Zynq_inst_0_processing_system7_0_0/PS_Zynq_inst_0_processing_system7_0_0.xci">
+          <Proxy FileSetName="PS_Zynq_inst_0_processing_system7_0_0"/>
         </CompFileExtendedInfo>
       </File>
       <Config>
@@ -299,9 +277,9 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_proc_sys_reset_100_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_proc_sys_reset_100_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_proc_sys_reset_100_0">
+    <FileSet Name="Transmit_Chain_inst_0_ifft_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/Transmit_Chain_inst_0_ifft_0" RelGenDir="$PGENDIR/Transmit_Chain_inst_0_ifft_0">
       <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_proc_sys_reset_100_0"/>
+        <Option Name="TopModule" Val="Transmit_Chain_inst_0_ifft_0"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -311,69 +289,9 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_proc_sys_reset_40_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_proc_sys_reset_40_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_proc_sys_reset_40_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_proc_sys_reset_40_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
     <FileSet Name="PS_Zynq_inst_0_processing_system7_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_processing_system7_0_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_processing_system7_0_0">
       <Config>
         <Option Name="TopModule" Val="PS_Zynq_inst_0_processing_system7_0_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_xbar_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_xbar_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_xbar_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_xbar_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_proc_sys_reset_10_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_proc_sys_reset_10_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_proc_sys_reset_10_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_proc_sys_reset_10_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_delimiter_2_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_delimiter_2_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_delimiter_2_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_delimiter_2_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_delimiter_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_delimiter_0_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_delimiter_0_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_delimiter_0_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_axi_gpio_2_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_axi_gpio_2_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_axi_gpio_2_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_axi_gpio_2_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_axi_gpio_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_axi_gpio_0_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_axi_gpio_0_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_axi_gpio_0_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_delimiter_1_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_delimiter_1_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_delimiter_1_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_delimiter_1_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="PS_Zynq_inst_0_axi_gpio_1_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PS_Zynq_inst_0_axi_gpio_1_0" RelGenDir="$PGENDIR/PS_Zynq_inst_0_axi_gpio_1_0">
-      <Config>
-        <Option Name="TopModule" Val="PS_Zynq_inst_0_axi_gpio_1_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
-    <FileSet Name="Transmit_Chain_inst_0_ifft_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/Transmit_Chain_inst_0_ifft_0" RelGenDir="$PGENDIR/Transmit_Chain_inst_0_ifft_0">
-      <Config>
-        <Option Name="TopModule" Val="Transmit_Chain_inst_0_ifft_0"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -397,7 +315,7 @@
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="19">
-    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="true" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/synth_1">
+    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="true" IncrementalCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Radio_Top_Pynq_wrapper.dcp" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
         <Step Id="synth_design"/>
@@ -427,7 +345,7 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_100_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_proc_sys_reset_100_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_100_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_proc_sys_reset_100_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_100_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_100_0_synth_1">
+    <Run Id="Transmit_Chain_inst_0_ifft_0_synth_1" Type="Ft3:Synth" SrcSet="Transmit_Chain_inst_0_ifft_0" Part="xc7z020clg400-1" ConstrsSet="Transmit_Chain_inst_0_ifft_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/Transmit_Chain_inst_0_ifft_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
         <Step Id="synth_design"/>
@@ -439,17 +357,9 @@
     </Run>
     <Run Id="PS_Zynq_inst_0_smartconnect_0_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_smartconnect_0_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_smartconnect_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_smartconnect_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_smartconnect_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_smartconnect_0_0_synth_1">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_40_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_proc_sys_reset_40_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_40_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_proc_sys_reset_40_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_40_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_40_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -458,96 +368,6 @@
       <RQSFiles/>
     </Run>
     <Run Id="PS_Zynq_inst_0_processing_system7_0_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_processing_system7_0_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_processing_system7_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_processing_system7_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_processing_system7_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_processing_system7_0_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_xbar_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_xbar_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_xbar_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_xbar_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_xbar_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_xbar_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_10_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_proc_sys_reset_10_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_10_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_proc_sys_reset_10_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_10_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_10_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_2_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_delimiter_2_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_2_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_delimiter_2_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_2_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_2_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_0_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_delimiter_0_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_delimiter_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_0_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_2_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_axi_gpio_2_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_2_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_axi_gpio_2_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_2_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_2_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_0_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_axi_gpio_0_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_axi_gpio_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_0_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_1_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_delimiter_1_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_1_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_delimiter_1_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_1_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_1_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_1_0_synth_1" Type="Ft3:Synth" SrcSet="PS_Zynq_inst_0_axi_gpio_1_0" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_1_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/PS_Zynq_inst_0_axi_gpio_1_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_1_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_1_0_synth_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="Transmit_Chain_inst_0_ifft_0_synth_1" Type="Ft3:Synth" SrcSet="Transmit_Chain_inst_0_ifft_0" Part="xc7z020clg400-1" ConstrsSet="Transmit_Chain_inst_0_ifft_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/Transmit_Chain_inst_0_ifft_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
           <Desc>Vivado Synthesis Defaults</Desc>
@@ -611,7 +431,7 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_100_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_100_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_proc_sys_reset_100_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_100_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_100_0_impl_1">
+    <Run Id="Transmit_Chain_inst_0_ifft_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="Transmit_Chain_inst_0_ifft_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="Transmit_Chain_inst_0_ifft_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_impl_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
         <Step Id="init_design"/>
@@ -630,24 +450,9 @@
     </Run>
     <Run Id="PS_Zynq_inst_0_smartconnect_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_smartconnect_0_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_smartconnect_0_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_smartconnect_0_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_smartconnect_0_0_impl_1">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_40_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_40_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_proc_sys_reset_40_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_40_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_40_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -663,159 +468,6 @@
       <RQSFiles/>
     </Run>
     <Run Id="PS_Zynq_inst_0_processing_system7_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_processing_system7_0_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_processing_system7_0_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_processing_system7_0_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_processing_system7_0_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_xbar_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_xbar_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_xbar_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_xbar_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_xbar_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_proc_sys_reset_10_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_proc_sys_reset_10_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_proc_sys_reset_10_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_10_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_proc_sys_reset_10_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_2_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_2_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_delimiter_2_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_2_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_2_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_0_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_delimiter_0_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_0_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_0_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_2_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_2_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_axi_gpio_2_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_2_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_2_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_0_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_axi_gpio_0_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_0_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_0_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_delimiter_1_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_delimiter_1_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_delimiter_1_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_1_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_delimiter_1_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="PS_Zynq_inst_0_axi_gpio_1_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="PS_Zynq_inst_0_axi_gpio_1_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="PS_Zynq_inst_0_axi_gpio_1_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_1_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/PS_Zynq_inst_0_axi_gpio_1_0_impl_1">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-      <RQSFiles/>
-    </Run>
-    <Run Id="Transmit_Chain_inst_0_ifft_0_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="Transmit_Chain_inst_0_ifft_0" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="Transmit_Chain_inst_0_ifft_0_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/Transmit_Chain_inst_0_ifft_0_impl_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022">
           <Desc>Default settings for Implementation.</Desc>

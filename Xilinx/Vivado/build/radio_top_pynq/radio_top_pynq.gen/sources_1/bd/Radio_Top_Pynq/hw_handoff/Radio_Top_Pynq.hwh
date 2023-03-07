@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Feb 26 21:30:38 2023" VIVADOVERSION="2022.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Feb 28 17:49:26 2023" VIVADOVERSION="2022.1">
 
   <SYSTEMINFO ARCH="zynq" BOARD="tul.com.tw:pynq-z2:part0:1.0" DEVICE="7z020" NAME="Radio_Top_Pynq" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -170,86 +170,105 @@
         <PARAMETER NAME="ENABLE_DFX" VALUE="0"/>
       </PARAMETERS>
       <PORTS>
-        <PORT DIR="O" LEFT="9" NAME="M_AXI_DMA_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awaddr">
+        <PORT CLKFREQUENCY="100000000" DIR="O" NAME="aclk_100M" SIGIS="clk" SIGNAME="PS_Zynq_0_aclk_100M">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awaddr"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="aclk"/>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_aclk"/>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_aclk"/>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_aclk"/>
+            <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aclk"/>
+            <CONNECTION INSTANCE="system_ila_DMA" PORT="clk"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="M_AXI_DMA_awvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awvalid">
+        <PORT CLKFREQUENCY="10000000" DIR="O" NAME="aclk_10M" SIGIS="clk"/>
+        <PORT CLKFREQUENCY="40000000" DIR="O" NAME="aclk_40M" SIGIS="clk"/>
+        <PORT DIR="O" LEFT="0" NAME="aresetn_40M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst"/>
+        <PORT DIR="O" LEFT="0" NAME="aresetn_10M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst"/>
+        <PORT DIR="O" LEFT="0" NAME="aresetn_100M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst" SIGNAME="PS_Zynq_0_aresetn_100M">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awvalid"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="aresetn"/>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="axi_resetn"/>
+            <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aresetn"/>
+            <CONNECTION INSTANCE="system_ila_DMA" PORT="resetn"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="M_AXI_DMA_awready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awready">
+        <PORT DIR="O" LEFT="26" NAME="fs_cycles" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fs_cycles">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awready"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="fs_cycles_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="31" NAME="M_AXI_DMA_wdata" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wdata">
+        <PORT DIR="O" LEFT="4" NAME="nfft" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_nfft">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wdata"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="nfft_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="M_AXI_DMA_wvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wvalid">
+        <PORT DIR="O" LEFT="15" NAME="cp_len" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_cp_len">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wvalid"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="cp_len_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="M_AXI_DMA_wready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wready">
+        <PORT DIR="O" LEFT="11" NAME="nfft_scaled" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_nfft_scaled">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wready"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="nfft_scaled_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="1" NAME="M_AXI_DMA_bresp" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bresp">
+        <PORT DIR="O" LEFT="3" NAME="symbols" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_symbols">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bresp"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="symbols_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="M_AXI_DMA_bvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bvalid">
+        <PORT DIR="O" LEFT="0" NAME="fft_inv" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fft_inv">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bvalid"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="inv_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="M_AXI_DMA_bready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bready">
+        <PORT DIR="O" LEFT="0" NAME="negative_freq" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_negative_freq">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bready"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="i_negative_freq_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="9" NAME="M_AXI_DMA_araddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_araddr">
+        <PORT DIR="O" LEFT="0" NAME="continuous" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_continuous">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_araddr"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="continuous_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="M_AXI_DMA_arvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_arvalid">
+        <PORT DIR="O" LEFT="0" NAME="dl_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_dl_en">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_arvalid"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="dl_en_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="M_AXI_DMA_arready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_arready">
+        <PORT DIR="O" LEFT="0" NAME="playback_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_playback_en">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_arready"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="playback_en"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="31" NAME="M_AXI_DMA_rdata" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rdata">
+        <PORT DIR="O" LEFT="0" NAME="fft_config_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fft_config_en">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rdata"/>
+            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="config_start_0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="1" NAME="M_AXI_DMA_rresp" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rresp">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rresp"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="I" NAME="M_AXI_DMA_rvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rvalid">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rvalid"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" NAME="M_AXI_DMA_rready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rready">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rready"/>
-          </CONNECTIONS>
-        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="S00_AXI_DMA_awid" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="31" NAME="S00_AXI_DMA_awaddr" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="7" NAME="S00_AXI_DMA_awlen" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="2" NAME="S00_AXI_DMA_awsize" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="1" NAME="S00_AXI_DMA_awburst" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="S00_AXI_DMA_awlock" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_awcache" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="2" NAME="S00_AXI_DMA_awprot" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_awregion" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_awqos" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S00_AXI_DMA_awvalid" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S00_AXI_DMA_awready" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="31" NAME="S00_AXI_DMA_wdata" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_wstrb" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S00_AXI_DMA_wlast" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S00_AXI_DMA_wvalid" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S00_AXI_DMA_wready" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="S00_AXI_DMA_bid" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="1" NAME="S00_AXI_DMA_bresp" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S00_AXI_DMA_bvalid" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S00_AXI_DMA_bready" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="S00_AXI_DMA_arid" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="31" NAME="S00_AXI_DMA_araddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S00_AXI_DMA_araddr">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_araddr"/>
@@ -270,6 +289,7 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_arburst"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="0" NAME="S00_AXI_DMA_arlock" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_arcache" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S00_AXI_DMA_arcache">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_arcache"/>
@@ -280,6 +300,8 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_arprot"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_arregion" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S00_AXI_DMA_arqos" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" NAME="S00_AXI_DMA_arvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_S00_AXI_DMA_arvalid">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_arvalid"/>
@@ -290,6 +312,7 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_arready"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" LEFT="0" NAME="S00_AXI_DMA_rid" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="O" LEFT="31" NAME="S00_AXI_DMA_rdata" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S00_AXI_DMA_rdata">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_rdata"/>
@@ -315,6 +338,7 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_rready"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="0" NAME="S01_AXI_DMA_awid" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="31" NAME="S01_AXI_DMA_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S01_AXI_DMA_awaddr">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_awaddr"/>
@@ -335,6 +359,7 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_awburst"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="0" NAME="S01_AXI_DMA_awlock" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_awcache" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S01_AXI_DMA_awcache">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_awcache"/>
@@ -345,6 +370,8 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_awprot"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_awregion" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_awqos" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" NAME="S01_AXI_DMA_awvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_S01_AXI_DMA_awvalid">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_awvalid"/>
@@ -380,6 +407,7 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_wready"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" LEFT="0" NAME="S01_AXI_DMA_bid" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="O" LEFT="1" NAME="S01_AXI_DMA_bresp" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_S01_AXI_DMA_bresp">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_bresp"/>
@@ -395,6 +423,24 @@
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_bready"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="0" NAME="S01_AXI_DMA_arid" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="31" NAME="S01_AXI_DMA_araddr" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="7" NAME="S01_AXI_DMA_arlen" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="2" NAME="S01_AXI_DMA_arsize" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="1" NAME="S01_AXI_DMA_arburst" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="S01_AXI_DMA_arlock" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_arcache" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="2" NAME="S01_AXI_DMA_arprot" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_arregion" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="3" NAME="S01_AXI_DMA_arqos" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S01_AXI_DMA_arvalid" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S01_AXI_DMA_arready" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="S01_AXI_DMA_rid" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="31" NAME="S01_AXI_DMA_rdata" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="1" NAME="S01_AXI_DMA_rresp" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S01_AXI_DMA_rlast" SIGIS="undef"/>
+        <PORT DIR="O" NAME="S01_AXI_DMA_rvalid" SIGIS="undef"/>
+        <PORT DIR="I" NAME="S01_AXI_DMA_rready" SIGIS="undef"/>
         <PORT DIR="IO" NAME="DDR_cas_n" SIGIS="undef" SIGNAME="PS_Zynq_0_DDR_cas_n">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Radio_Top_Pynq_imp" PORT="DDR_cas_n"/>
@@ -420,7 +466,7 @@
             <CONNECTION INSTANCE="Radio_Top_Pynq_imp" PORT="DDR_cs_n"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="IO" NAME="DDR_reset_n" SIGIS="undef" SIGNAME="PS_Zynq_0_DDR_reset_n">
+        <PORT DIR="IO" NAME="DDR_reset_n" POLARITY="ACTIVE_LOW" SIGIS="undef" SIGNAME="PS_Zynq_0_DDR_reset_n">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Radio_Top_Pynq_imp" PORT="DDR_reset_n"/>
           </CONNECTIONS>
@@ -500,6 +546,103 @@
             <CONNECTION INSTANCE="Radio_Top_Pynq_imp" PORT="FIXED_IO_ps_porb"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" LEFT="9" NAME="M_AXI_DMA_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awaddr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awaddr"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="7" NAME="M_AXI_DMA_awlen" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="2" NAME="M_AXI_DMA_awsize" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="1" NAME="M_AXI_DMA_awburst" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="M_AXI_DMA_awlock" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_DMA_awcache" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="2" NAME="M_AXI_DMA_awprot" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_DMA_awqos" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="M_AXI_DMA_awvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="M_AXI_DMA_awready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_awready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_awready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="M_AXI_DMA_wdata" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wdata">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wdata"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_DMA_wstrb" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="M_AXI_DMA_wlast" SIGIS="undef"/>
+        <PORT DIR="O" NAME="M_AXI_DMA_wvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="M_AXI_DMA_wready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_wready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_wready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="1" NAME="M_AXI_DMA_bresp" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bresp">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bresp"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="M_AXI_DMA_bvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="M_AXI_DMA_bready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_bready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_bready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="9" NAME="M_AXI_DMA_araddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_araddr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_araddr"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="7" NAME="M_AXI_DMA_arlen" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="2" NAME="M_AXI_DMA_arsize" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="1" NAME="M_AXI_DMA_arburst" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="M_AXI_DMA_arlock" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_DMA_arcache" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="2" NAME="M_AXI_DMA_arprot" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_DMA_arqos" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="M_AXI_DMA_arvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_arvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_arvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="M_AXI_DMA_arready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_arready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_arready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="M_AXI_DMA_rdata" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rdata">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rdata"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="1" NAME="M_AXI_DMA_rresp" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rresp">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rresp"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="M_AXI_DMA_rlast" SIGIS="undef"/>
+        <PORT DIR="I" NAME="M_AXI_DMA_rvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="M_AXI_DMA_rready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_DMA_rready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_rready"/>
+          </CONNECTIONS>
+        </PORT>
         <PORT DIR="O" LEFT="13" NAME="M_AXI_BRAM_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_BRAM_awaddr">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_awaddr"/>
@@ -535,6 +678,7 @@
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_awprot"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_BRAM_awqos" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="O" NAME="M_AXI_BRAM_awvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_BRAM_awvalid">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_awvalid"/>
@@ -620,6 +764,7 @@
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_arprot"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" LEFT="3" NAME="M_AXI_BRAM_arqos" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="O" NAME="M_AXI_BRAM_arvalid" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_BRAM_arvalid">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_arvalid"/>
@@ -653,83 +798,6 @@
         <PORT DIR="O" NAME="M_AXI_BRAM_rready" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_BRAM_rready">
           <CONNECTIONS>
             <CONNECTION INSTANCE="Transmit_Chain_0" PORT="S_BRAM_AXI_rready"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT CLKFREQUENCY="100000000" DIR="O" NAME="aclk_100M" SIGIS="clk" SIGNAME="PS_Zynq_0_aclk_100M">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="aclk"/>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_mm2s_aclk"/>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axi_s2mm_aclk"/>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="s_axi_lite_aclk"/>
-            <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aclk"/>
-            <CONNECTION INSTANCE="system_ila_DMA" PORT="clk"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT CLKFREQUENCY="10000000" DIR="O" NAME="aclk_10M" SIGIS="clk"/>
-        <PORT CLKFREQUENCY="40000000" DIR="O" NAME="aclk_40M" SIGIS="clk"/>
-        <PORT DIR="O" LEFT="0" NAME="aresetn_40M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst"/>
-        <PORT DIR="O" LEFT="0" NAME="aresetn_10M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst"/>
-        <PORT DIR="O" LEFT="0" NAME="aresetn_100M" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst" SIGNAME="PS_Zynq_0_aresetn_100M">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="aresetn"/>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="axi_resetn"/>
-            <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_aresetn"/>
-            <CONNECTION INSTANCE="system_ila_DMA" PORT="resetn"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="26" NAME="fs_cycles" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fs_cycles">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="fs_cycles_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="4" NAME="nfft" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_nfft">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="nfft_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="15" NAME="cp_len" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_cp_len">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="cp_len_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="11" NAME="nfft_scaled" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_nfft_scaled">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="nfft_scaled_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="3" NAME="symbols" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_symbols">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="symbols_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="fft_inv" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fft_inv">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="inv_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="negative_freq" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_negative_freq">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="i_negative_freq_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="continuous" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_continuous">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="continuous_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="dl_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_dl_en">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="dl_en_0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="playback_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_playback_en">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="playback_en"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="fft_config_en" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_fft_config_en">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="Transmit_Chain_0" PORT="config_start_0"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
@@ -768,19 +836,36 @@
           <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
           <PORTMAPS>
             <PORTMAP LOGICAL="AWADDR" PHYSICAL="M_AXI_DMA_awaddr"/>
+            <PORTMAP LOGICAL="AWLEN" PHYSICAL="M_AXI_DMA_awlen"/>
+            <PORTMAP LOGICAL="AWSIZE" PHYSICAL="M_AXI_DMA_awsize"/>
+            <PORTMAP LOGICAL="AWBURST" PHYSICAL="M_AXI_DMA_awburst"/>
+            <PORTMAP LOGICAL="AWLOCK" PHYSICAL="M_AXI_DMA_awlock"/>
+            <PORTMAP LOGICAL="AWCACHE" PHYSICAL="M_AXI_DMA_awcache"/>
+            <PORTMAP LOGICAL="AWPROT" PHYSICAL="M_AXI_DMA_awprot"/>
+            <PORTMAP LOGICAL="AWQOS" PHYSICAL="M_AXI_DMA_awqos"/>
             <PORTMAP LOGICAL="AWVALID" PHYSICAL="M_AXI_DMA_awvalid"/>
             <PORTMAP LOGICAL="AWREADY" PHYSICAL="M_AXI_DMA_awready"/>
             <PORTMAP LOGICAL="WDATA" PHYSICAL="M_AXI_DMA_wdata"/>
+            <PORTMAP LOGICAL="WSTRB" PHYSICAL="M_AXI_DMA_wstrb"/>
+            <PORTMAP LOGICAL="WLAST" PHYSICAL="M_AXI_DMA_wlast"/>
             <PORTMAP LOGICAL="WVALID" PHYSICAL="M_AXI_DMA_wvalid"/>
             <PORTMAP LOGICAL="WREADY" PHYSICAL="M_AXI_DMA_wready"/>
             <PORTMAP LOGICAL="BRESP" PHYSICAL="M_AXI_DMA_bresp"/>
             <PORTMAP LOGICAL="BVALID" PHYSICAL="M_AXI_DMA_bvalid"/>
             <PORTMAP LOGICAL="BREADY" PHYSICAL="M_AXI_DMA_bready"/>
             <PORTMAP LOGICAL="ARADDR" PHYSICAL="M_AXI_DMA_araddr"/>
+            <PORTMAP LOGICAL="ARLEN" PHYSICAL="M_AXI_DMA_arlen"/>
+            <PORTMAP LOGICAL="ARSIZE" PHYSICAL="M_AXI_DMA_arsize"/>
+            <PORTMAP LOGICAL="ARBURST" PHYSICAL="M_AXI_DMA_arburst"/>
+            <PORTMAP LOGICAL="ARLOCK" PHYSICAL="M_AXI_DMA_arlock"/>
+            <PORTMAP LOGICAL="ARCACHE" PHYSICAL="M_AXI_DMA_arcache"/>
+            <PORTMAP LOGICAL="ARPROT" PHYSICAL="M_AXI_DMA_arprot"/>
+            <PORTMAP LOGICAL="ARQOS" PHYSICAL="M_AXI_DMA_arqos"/>
             <PORTMAP LOGICAL="ARVALID" PHYSICAL="M_AXI_DMA_arvalid"/>
             <PORTMAP LOGICAL="ARREADY" PHYSICAL="M_AXI_DMA_arready"/>
             <PORTMAP LOGICAL="RDATA" PHYSICAL="M_AXI_DMA_rdata"/>
             <PORTMAP LOGICAL="RRESP" PHYSICAL="M_AXI_DMA_rresp"/>
+            <PORTMAP LOGICAL="RLAST" PHYSICAL="M_AXI_DMA_rlast"/>
             <PORTMAP LOGICAL="RVALID" PHYSICAL="M_AXI_DMA_rvalid"/>
             <PORTMAP LOGICAL="RREADY" PHYSICAL="M_AXI_DMA_rready"/>
           </PORTMAPS>
@@ -818,14 +903,40 @@
           <PARAMETER NAME="WUSER_BITS_PER_BYTE" VALUE="0"/>
           <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
           <PORTMAPS>
+            <PORTMAP LOGICAL="AWID" PHYSICAL="S00_AXI_DMA_awid"/>
+            <PORTMAP LOGICAL="AWADDR" PHYSICAL="S00_AXI_DMA_awaddr"/>
+            <PORTMAP LOGICAL="AWLEN" PHYSICAL="S00_AXI_DMA_awlen"/>
+            <PORTMAP LOGICAL="AWSIZE" PHYSICAL="S00_AXI_DMA_awsize"/>
+            <PORTMAP LOGICAL="AWBURST" PHYSICAL="S00_AXI_DMA_awburst"/>
+            <PORTMAP LOGICAL="AWLOCK" PHYSICAL="S00_AXI_DMA_awlock"/>
+            <PORTMAP LOGICAL="AWCACHE" PHYSICAL="S00_AXI_DMA_awcache"/>
+            <PORTMAP LOGICAL="AWPROT" PHYSICAL="S00_AXI_DMA_awprot"/>
+            <PORTMAP LOGICAL="AWREGION" PHYSICAL="S00_AXI_DMA_awregion"/>
+            <PORTMAP LOGICAL="AWQOS" PHYSICAL="S00_AXI_DMA_awqos"/>
+            <PORTMAP LOGICAL="AWVALID" PHYSICAL="S00_AXI_DMA_awvalid"/>
+            <PORTMAP LOGICAL="AWREADY" PHYSICAL="S00_AXI_DMA_awready"/>
+            <PORTMAP LOGICAL="WDATA" PHYSICAL="S00_AXI_DMA_wdata"/>
+            <PORTMAP LOGICAL="WSTRB" PHYSICAL="S00_AXI_DMA_wstrb"/>
+            <PORTMAP LOGICAL="WLAST" PHYSICAL="S00_AXI_DMA_wlast"/>
+            <PORTMAP LOGICAL="WVALID" PHYSICAL="S00_AXI_DMA_wvalid"/>
+            <PORTMAP LOGICAL="WREADY" PHYSICAL="S00_AXI_DMA_wready"/>
+            <PORTMAP LOGICAL="BID" PHYSICAL="S00_AXI_DMA_bid"/>
+            <PORTMAP LOGICAL="BRESP" PHYSICAL="S00_AXI_DMA_bresp"/>
+            <PORTMAP LOGICAL="BVALID" PHYSICAL="S00_AXI_DMA_bvalid"/>
+            <PORTMAP LOGICAL="BREADY" PHYSICAL="S00_AXI_DMA_bready"/>
+            <PORTMAP LOGICAL="ARID" PHYSICAL="S00_AXI_DMA_arid"/>
             <PORTMAP LOGICAL="ARADDR" PHYSICAL="S00_AXI_DMA_araddr"/>
             <PORTMAP LOGICAL="ARLEN" PHYSICAL="S00_AXI_DMA_arlen"/>
             <PORTMAP LOGICAL="ARSIZE" PHYSICAL="S00_AXI_DMA_arsize"/>
             <PORTMAP LOGICAL="ARBURST" PHYSICAL="S00_AXI_DMA_arburst"/>
+            <PORTMAP LOGICAL="ARLOCK" PHYSICAL="S00_AXI_DMA_arlock"/>
             <PORTMAP LOGICAL="ARCACHE" PHYSICAL="S00_AXI_DMA_arcache"/>
             <PORTMAP LOGICAL="ARPROT" PHYSICAL="S00_AXI_DMA_arprot"/>
+            <PORTMAP LOGICAL="ARREGION" PHYSICAL="S00_AXI_DMA_arregion"/>
+            <PORTMAP LOGICAL="ARQOS" PHYSICAL="S00_AXI_DMA_arqos"/>
             <PORTMAP LOGICAL="ARVALID" PHYSICAL="S00_AXI_DMA_arvalid"/>
             <PORTMAP LOGICAL="ARREADY" PHYSICAL="S00_AXI_DMA_arready"/>
+            <PORTMAP LOGICAL="RID" PHYSICAL="S00_AXI_DMA_rid"/>
             <PORTMAP LOGICAL="RDATA" PHYSICAL="S00_AXI_DMA_rdata"/>
             <PORTMAP LOGICAL="RRESP" PHYSICAL="S00_AXI_DMA_rresp"/>
             <PORTMAP LOGICAL="RLAST" PHYSICAL="S00_AXI_DMA_rlast"/>
@@ -866,12 +977,16 @@
           <PARAMETER NAME="WUSER_BITS_PER_BYTE" VALUE="0"/>
           <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
           <PORTMAPS>
+            <PORTMAP LOGICAL="AWID" PHYSICAL="S01_AXI_DMA_awid"/>
             <PORTMAP LOGICAL="AWADDR" PHYSICAL="S01_AXI_DMA_awaddr"/>
             <PORTMAP LOGICAL="AWLEN" PHYSICAL="S01_AXI_DMA_awlen"/>
             <PORTMAP LOGICAL="AWSIZE" PHYSICAL="S01_AXI_DMA_awsize"/>
             <PORTMAP LOGICAL="AWBURST" PHYSICAL="S01_AXI_DMA_awburst"/>
+            <PORTMAP LOGICAL="AWLOCK" PHYSICAL="S01_AXI_DMA_awlock"/>
             <PORTMAP LOGICAL="AWCACHE" PHYSICAL="S01_AXI_DMA_awcache"/>
             <PORTMAP LOGICAL="AWPROT" PHYSICAL="S01_AXI_DMA_awprot"/>
+            <PORTMAP LOGICAL="AWREGION" PHYSICAL="S01_AXI_DMA_awregion"/>
+            <PORTMAP LOGICAL="AWQOS" PHYSICAL="S01_AXI_DMA_awqos"/>
             <PORTMAP LOGICAL="AWVALID" PHYSICAL="S01_AXI_DMA_awvalid"/>
             <PORTMAP LOGICAL="AWREADY" PHYSICAL="S01_AXI_DMA_awready"/>
             <PORTMAP LOGICAL="WDATA" PHYSICAL="S01_AXI_DMA_wdata"/>
@@ -879,9 +994,28 @@
             <PORTMAP LOGICAL="WLAST" PHYSICAL="S01_AXI_DMA_wlast"/>
             <PORTMAP LOGICAL="WVALID" PHYSICAL="S01_AXI_DMA_wvalid"/>
             <PORTMAP LOGICAL="WREADY" PHYSICAL="S01_AXI_DMA_wready"/>
+            <PORTMAP LOGICAL="BID" PHYSICAL="S01_AXI_DMA_bid"/>
             <PORTMAP LOGICAL="BRESP" PHYSICAL="S01_AXI_DMA_bresp"/>
             <PORTMAP LOGICAL="BVALID" PHYSICAL="S01_AXI_DMA_bvalid"/>
             <PORTMAP LOGICAL="BREADY" PHYSICAL="S01_AXI_DMA_bready"/>
+            <PORTMAP LOGICAL="ARID" PHYSICAL="S01_AXI_DMA_arid"/>
+            <PORTMAP LOGICAL="ARADDR" PHYSICAL="S01_AXI_DMA_araddr"/>
+            <PORTMAP LOGICAL="ARLEN" PHYSICAL="S01_AXI_DMA_arlen"/>
+            <PORTMAP LOGICAL="ARSIZE" PHYSICAL="S01_AXI_DMA_arsize"/>
+            <PORTMAP LOGICAL="ARBURST" PHYSICAL="S01_AXI_DMA_arburst"/>
+            <PORTMAP LOGICAL="ARLOCK" PHYSICAL="S01_AXI_DMA_arlock"/>
+            <PORTMAP LOGICAL="ARCACHE" PHYSICAL="S01_AXI_DMA_arcache"/>
+            <PORTMAP LOGICAL="ARPROT" PHYSICAL="S01_AXI_DMA_arprot"/>
+            <PORTMAP LOGICAL="ARREGION" PHYSICAL="S01_AXI_DMA_arregion"/>
+            <PORTMAP LOGICAL="ARQOS" PHYSICAL="S01_AXI_DMA_arqos"/>
+            <PORTMAP LOGICAL="ARVALID" PHYSICAL="S01_AXI_DMA_arvalid"/>
+            <PORTMAP LOGICAL="ARREADY" PHYSICAL="S01_AXI_DMA_arready"/>
+            <PORTMAP LOGICAL="RID" PHYSICAL="S01_AXI_DMA_rid"/>
+            <PORTMAP LOGICAL="RDATA" PHYSICAL="S01_AXI_DMA_rdata"/>
+            <PORTMAP LOGICAL="RRESP" PHYSICAL="S01_AXI_DMA_rresp"/>
+            <PORTMAP LOGICAL="RLAST" PHYSICAL="S01_AXI_DMA_rlast"/>
+            <PORTMAP LOGICAL="RVALID" PHYSICAL="S01_AXI_DMA_rvalid"/>
+            <PORTMAP LOGICAL="RREADY" PHYSICAL="S01_AXI_DMA_rready"/>
           </PORTMAPS>
         </BUSINTERFACE>
         <BUSINTERFACE BUSNAME="PS_Zynq_0_DDR" DATAWIDTH="8" NAME="DDR" TYPE="INITIATOR" VLNV="xilinx.com:interface:ddrx:1.0">
@@ -968,6 +1102,7 @@
             <PORTMAP LOGICAL="AWLOCK" PHYSICAL="M_AXI_BRAM_awlock"/>
             <PORTMAP LOGICAL="AWCACHE" PHYSICAL="M_AXI_BRAM_awcache"/>
             <PORTMAP LOGICAL="AWPROT" PHYSICAL="M_AXI_BRAM_awprot"/>
+            <PORTMAP LOGICAL="AWQOS" PHYSICAL="M_AXI_BRAM_awqos"/>
             <PORTMAP LOGICAL="AWVALID" PHYSICAL="M_AXI_BRAM_awvalid"/>
             <PORTMAP LOGICAL="AWREADY" PHYSICAL="M_AXI_BRAM_awready"/>
             <PORTMAP LOGICAL="WDATA" PHYSICAL="M_AXI_BRAM_wdata"/>
@@ -985,6 +1120,7 @@
             <PORTMAP LOGICAL="ARLOCK" PHYSICAL="M_AXI_BRAM_arlock"/>
             <PORTMAP LOGICAL="ARCACHE" PHYSICAL="M_AXI_BRAM_arcache"/>
             <PORTMAP LOGICAL="ARPROT" PHYSICAL="M_AXI_BRAM_arprot"/>
+            <PORTMAP LOGICAL="ARQOS" PHYSICAL="M_AXI_BRAM_arqos"/>
             <PORTMAP LOGICAL="ARVALID" PHYSICAL="M_AXI_BRAM_arvalid"/>
             <PORTMAP LOGICAL="ARREADY" PHYSICAL="M_AXI_BRAM_arready"/>
             <PORTMAP LOGICAL="RDATA" PHYSICAL="M_AXI_BRAM_rdata"/>
@@ -1040,6 +1176,11 @@
         <PORT DIR="I" NAME="S_AXIS_tvalid" SIGIS="undef" SIGNAME="Transmit_Chain_0_S_AXIS_tvalid">
           <CONNECTIONS>
             <CONNECTION INSTANCE="axi_dma_0" PORT="m_axis_mm2s_tvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="3" NAME="S_AXIS_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="Transmit_Chain_0_S_AXIS_tkeep">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axis_mm2s_tkeep"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" LEFT="13" NAME="S_BRAM_AXI_araddr" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_M_AXI_BRAM_araddr">
@@ -1260,11 +1401,6 @@
         <PORT DIR="I" LEFT="3" NAME="symbols_0" RIGHT="0" SIGIS="undef" SIGNAME="PS_Zynq_0_symbols">
           <CONNECTIONS>
             <CONNECTION INSTANCE="PS_Zynq_0" PORT="symbols"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="I" LEFT="3" NAME="S_AXIS_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="Transmit_Chain_0_S_AXIS_tkeep">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="axi_dma_0" PORT="m_axis_mm2s_tkeep"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>

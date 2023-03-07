@@ -3400,7 +3400,7 @@
       <spirit:modelParameter spirit:dataType="bitString">
         <spirit:name>C_SEP_PROTOCOL_ARRAY</spirit:name>
         <spirit:displayName>C_SEP_PROTOCOL_ARRAY</spirit:displayName>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_SEP_PROTOCOL_ARRAY" spirit:bitStringLength="160">0x0000000000000000000000020000000200000002</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_SEP_PROTOCOL_ARRAY" spirit:bitStringLength="160">0x0000000000000002000000020000000200000000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="long">
         <spirit:name>C_NUM_MSC</spirit:name>
@@ -3667,7 +3667,7 @@
     <spirit:parameter>
       <spirit:name>SEP000_PROTOCOL</spirit:name>
       <spirit:displayName>SEP000_PROTOCOL</spirit:displayName>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.SEP000_PROTOCOL" spirit:choiceRef="choice_list_7235ff92">AXI4LITE</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.SEP000_PROTOCOL" spirit:choiceRef="choice_list_7235ff92">AXI4</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>SEP001_RDATA_WIDTH</spirit:name>
@@ -3712,7 +3712,7 @@
     <spirit:parameter>
       <spirit:name>SEP003_PROTOCOL</spirit:name>
       <spirit:displayName>SEP003_PROTOCOL</spirit:displayName>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.SEP003_PROTOCOL" spirit:choiceRef="choice_list_7235ff92">AXI4</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.SEP003_PROTOCOL" spirit:choiceRef="choice_list_7235ff92">AXI4LITE</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>SEP004_RDATA_WIDTH</spirit:name>

@@ -128,7 +128,7 @@ void PS_Zynq_inst_0_processing_system7_0_0::before_end_of_elaboration()
 
   // 'M_AXI_GP0' transactor parameters
     xsc::common_cpp::properties M_AXI_GP0_transactor_param_props;
-    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "0");
+    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "1");
     M_AXI_GP0_transactor_param_props.addLong("NUM_WRITE_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("NUM_READ_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("DATA_WIDTH", "32");
@@ -409,7 +409,7 @@ void PS_Zynq_inst_0_processing_system7_0_0::before_end_of_elaboration()
 
   // 'M_AXI_GP0' transactor parameters
     xsc::common_cpp::properties M_AXI_GP0_transactor_param_props;
-    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "0");
+    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "1");
     M_AXI_GP0_transactor_param_props.addLong("NUM_WRITE_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("NUM_READ_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("DATA_WIDTH", "32");
@@ -690,7 +690,7 @@ void PS_Zynq_inst_0_processing_system7_0_0::before_end_of_elaboration()
 
   // 'M_AXI_GP0' transactor parameters
     xsc::common_cpp::properties M_AXI_GP0_transactor_param_props;
-    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "0");
+    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "1");
     M_AXI_GP0_transactor_param_props.addLong("NUM_WRITE_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("NUM_READ_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("DATA_WIDTH", "32");
@@ -960,7 +960,7 @@ PS_Zynq_inst_0_processing_system7_0_0::PS_Zynq_inst_0_processing_system7_0_0(con
 
   // configure M_AXI_GP0_transactor
     xsc::common_cpp::properties M_AXI_GP0_transactor_param_props;
-    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "0");
+    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "1");
     M_AXI_GP0_transactor_param_props.addLong("NUM_WRITE_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("NUM_READ_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("DATA_WIDTH", "32");
@@ -1241,7 +1241,7 @@ PS_Zynq_inst_0_processing_system7_0_0::PS_Zynq_inst_0_processing_system7_0_0(con
 
   // configure M_AXI_GP0_transactor
     xsc::common_cpp::properties M_AXI_GP0_transactor_param_props;
-    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "0");
+    M_AXI_GP0_transactor_param_props.addLong("SUPPORTS_NARROW_BURST", "1");
     M_AXI_GP0_transactor_param_props.addLong("NUM_WRITE_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("NUM_READ_OUTSTANDING", "8");
     M_AXI_GP0_transactor_param_props.addLong("DATA_WIDTH", "32");

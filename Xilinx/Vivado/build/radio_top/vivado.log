@@ -46,3 +46,5 @@ INFO: [BD 5-148] Tcl file written out <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/
 write_bd_tcl -force -no_ip_version ../../bd/Transmit_Chain_bd.tcl
 INFO: [BD 5-148] Tcl file written out <c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/bd/Transmit_Chain_bd.tcl>.
 
+exit
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 27 00:17:46 2023...

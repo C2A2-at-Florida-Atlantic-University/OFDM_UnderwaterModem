@@ -2,12 +2,12 @@
 # Vivado v2022.1 (64-bit)
 # SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
 # IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-# Start of session at: Sun Feb 26 21:31:06 2023
-# Process ID: 142640
-# Current directory: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1
+# Start of session at: Tue Feb 28 17:49:37 2023
+# Process ID: 22972
+# Current directory: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1
 # Command line: vivado.exe -log PS_Zynq_inst_0_smartconnect_0_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source PS_Zynq_inst_0_smartconnect_0_0.tcl
-# Log file: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.vds
-# Journal file: C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1\vivado.jou
+# Log file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.vds
+# Journal file: c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1\vivado.jou
 # Running On: DESKTOP-1UDCE0K, OS: Windows, CPU Frequency: 3187 MHz, CPU Physical cores: 16, Host memory: 137149 MB
 #-----------------------------------------------------------
 source PS_Zynq_inst_0_smartconnect_0_0.tcl -notrace
@@ -23,12 +23,12 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020
 INFO: [Device 21-403] Loading part xc7z020clg400-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 140904
+INFO: [Synth 8-7075] Helper process launched with PID 23264
 WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:4023]
 WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ipshared/f0b6/hdl/sc_util_v1_0_vl_rfs.sv:2831]
 WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ipshared/f0b6/hdl/sc_util_v1_0_vl_rfs.sv:2899]
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1664.453 ; gain = 0.000
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1663.133 ; gain = 0.000
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'PS_Zynq_inst_0_smartconnect_0_0' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/synth/PS_Zynq_inst_0_smartconnect_0_0.v:53]
 INFO: [Synth 8-6157] synthesizing module 'bd_055b' [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/synth/bd_055b.v:9]
@@ -365,18 +365,18 @@ WARNING: [Synth 8-7129] Port dinb[7] in module xpm_memory_base__parameterized9 i
 WARNING: [Synth 8-7129] Port dinb[6] in module xpm_memory_base__parameterized9 is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1893.066 ; gain = 228.613
+Finished RTL Elaboration : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 1893.707 ; gain = 230.574
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1893.066 ; gain = 228.613
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1893.707 ; gain = 230.574
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1893.066 ; gain = 228.613
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1893.707 ; gain = 230.574
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2280.914 ; gain = 16.129
+Netlist sorting complete. Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 2282.465 ; gain = 16.824
 INFO: [Netlist 29-17] Analyzing 13 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
@@ -389,8 +389,8 @@ Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/
 Finished Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_1/bd_055b_psr_aclk_0_board.xdc] for cell 'inst/clk_map/psr_aclk/U0'
 Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_1/bd_055b_psr_aclk_0.xdc] for cell 'inst/clk_map/psr_aclk/U0'
 Finished Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_smartconnect_0_0/bd_0/ip/ip_1/bd_055b_psr_aclk_0.xdc] for cell 'inst/clk_map/psr_aclk/U0'
-Parsing XDC File [C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc]
-Finished Parsing XDC File [C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc]
+Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc]
 WARNING: [Vivado 12-180] No cells matched 'get_cells -hier -filter {PRIMITIVE_SUBGROUP==LUTRAM || PRIMITIVE_SUBGROUP==dram || PRIMITIVE_SUBGROUP==uram || PRIMITIVE_SUBGROUP==BRAM}'. [C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl:3]
 WARNING: [Vivado 12-180] No cells matched 'get_cells -hier -filter {PRIMITIVE_SUBGROUP==LUTRAM || PRIMITIVE_SUBGROUP==dram || PRIMITIVE_SUBGROUP==uram || PRIMITIVE_SUBGROUP==BRAM}'. [C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl:3]
 WARNING: [Vivado 12-180] No cells matched 'get_cells -hier -filter {PRIMITIVE_SUBGROUP==LUTRAM || PRIMITIVE_SUBGROUP==dram || PRIMITIVE_SUBGROUP==uram || PRIMITIVE_SUBGROUP==BRAM}'. [C:/Xilinx/Vivado/2022.1/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl:3]
@@ -456,28 +456,28 @@ Resolution: To avoid this warning, move constraints listed in [.Xil/PS_Zynq_inst
 INFO: [Project 1-1714] 128 XPM XDC files have been applied to the design.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.036 . Memory (MB): peak = 2920.449 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.031 . Memory (MB): peak = 2920.176 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 13 instances were transformed.
   FDR => FDRE: 12 instances
   SRL16 => SRL16E: 1 instance 
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 2940.895 ; gain = 20.445
+Constraint Validation Runtime : Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2940.641 ; gain = 20.465
 INFO: [Designutils 20-5008] Incremental synthesis strategy off
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:46 ; elapsed = 00:00:45 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Constraint Validation : Time (s): cpu = 00:00:44 ; elapsed = 00:00:43 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7z020clg400-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:46 ; elapsed = 00:00:45 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:44 ; elapsed = 00:00:43 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
-Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc, line 253).
+Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/dont_touch.xdc, line 253).
 Applied set_property KEEP_HIERARCHY = SOFT for inst/m00_nodes/m00_ar_node/inst/m_sc_xpm_cdc_async_rst_inst. (constraint file  auto generated constraint).
 Applied set_property KEEP_HIERARCHY = SOFT for inst/m00_nodes/m00_aw_node/inst/m_sc_xpm_cdc_async_rst_inst. (constraint file  auto generated constraint).
 Applied set_property KEEP_HIERARCHY = SOFT for inst/m00_nodes/m00_b_node/inst/m_sc_xpm_cdc_async_rst_inst. (constraint file  auto generated constraint).
@@ -607,7 +607,7 @@ Applied set_property KEEP_HIERARCHY = SOFT for inst/s00_nodes/s00_b_node/inst/in
 Applied set_property KEEP_HIERARCHY = SOFT for inst/s00_nodes/s00_r_node/inst/inst_mi_handler/\gen_normal_area.inst_fifo_node_payld /\gen_xpm_memory_fifo.inst_fifo /\gen_mem_rep[0].inst_xpm_memory . (constraint file  auto generated constraint).
 Applied set_property KEEP_HIERARCHY = SOFT for inst/s00_nodes/s00_w_node/inst/inst_mi_handler/\gen_normal_area.inst_fifo_node_payld /\gen_xpm_memory_fifo.inst_fifo /\gen_mem_rep[0].inst_xpm_memory . (constraint file  auto generated constraint).
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:46 ; elapsed = 00:00:46 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:45 ; elapsed = 00:00:44 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'w_state_reg' in module 'sc_exit_v1_0_13_axilite_conv'
 INFO: [Synth 8-802] inferred FSM for state register 'r_state_reg' in module 'sc_exit_v1_0_13_axilite_conv'
@@ -661,7 +661,7 @@ INFO: [Synth 8-3354] encoded FSM with state register 'gen_axi.gen_write.write_cs
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'sc_transaction_regulator_v1_0_9_multithread'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:52 ; elapsed = 00:00:52 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:50 ; elapsed = 00:00:49 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -781,7 +781,7 @@ Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:16 ; elapsed = 00:02:16 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:48 ; elapsed = 00:01:49 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -834,13 +834,13 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:02:19 ; elapsed = 00:02:20 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:52 ; elapsed = 00:01:52 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:02:27 ; elapsed = 00:02:27 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Timing Optimization : Time (s): cpu = 00:01:59 ; elapsed = 00:01:59 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -892,7 +892,7 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:02:35 ; elapsed = 00:02:36 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Technology Mapping : Time (s): cpu = 00:02:05 ; elapsed = 00:02:06 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -910,37 +910,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:02:40 ; elapsed = 00:02:41 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished IO Insertion : Time (s): cpu = 00:02:08 ; elapsed = 00:02:09 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:02:40 ; elapsed = 00:02:41 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:08 ; elapsed = 00:02:09 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:42 ; elapsed = 00:02:43 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:09 ; elapsed = 00:02:10 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:02:42 ; elapsed = 00:02:43 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Renaming Generated Ports : Time (s): cpu = 00:02:09 ; elapsed = 00:02:10 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:02:42 ; elapsed = 00:02:44 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:02:42 ; elapsed = 00:02:44 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Renaming Generated Nets : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -974,11 +974,11 @@ Report Cell Usage:
 +------+---------+------+
 |1     |CARRY4   |    24|
 |2     |LUT1     |   430|
-|3     |LUT2     |   593|
-|4     |LUT3     |  1670|
-|5     |LUT4     |  1179|
-|6     |LUT5     |  1199|
-|7     |LUT6     |  2223|
+|3     |LUT2     |   594|
+|4     |LUT3     |  1671|
+|5     |LUT4     |  1188|
+|6     |LUT5     |  1202|
+|7     |LUT6     |  2208|
 |8     |MUXF7    |    12|
 |9     |RAM32M   |   195|
 |10    |RAM32X1D |    11|
@@ -991,18 +991,18 @@ Report Cell Usage:
 |17    |FDSE     |   383|
 +------+---------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:02:42 ; elapsed = 00:02:44 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 4645 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:02:01 ; elapsed = 00:02:15 . Memory (MB): peak = 2940.895 ; gain = 228.613
-Synthesis Optimization Complete : Time (s): cpu = 00:02:43 ; elapsed = 00:02:44 . Memory (MB): peak = 2940.895 ; gain = 1276.441
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:28 ; elapsed = 00:01:43 . Memory (MB): peak = 2940.641 ; gain = 230.574
+Synthesis Optimization Complete : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 2940.641 ; gain = 1277.508
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.786 . Memory (MB): peak = 2940.895 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.472 . Memory (MB): peak = 2940.641 ; gain = 0.000
 INFO: [Netlist 29-17] Analyzing 247 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.013 . Memory (MB): peak = 2940.895 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 2940.641 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 211 instances were transformed.
   FDR => FDRE: 4 instances
@@ -1010,14 +1010,14 @@ INFO: [Project 1-111] Unisim Transformation Summary:
   RAM32X1D => RAM32X1D (RAMD32(x2)): 11 instances
   SRL16 => SRL16E: 1 instance 
 
-Synth Design complete, checksum: 607f63bc
+Synth Design complete, checksum: 7b2f175d
 INFO: [Common 17-83] Releasing license: Synthesis
 248 Infos, 171 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:02:52 ; elapsed = 00:02:54 . Memory (MB): peak = 2940.895 ; gain = 1276.441
-INFO: [Common 17-1381] The checkpoint 'C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp' has been generated.
-INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP PS_Zynq_inst_0_smartconnect_0_0, cache-ID = 8ac509c35121038b
+synth_design: Time (s): cpu = 00:02:16 ; elapsed = 00:02:17 . Memory (MB): peak = 2940.641 ; gain = 1277.508
+INFO: [Common 17-1381] The checkpoint 'c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP PS_Zynq_inst_0_smartconnect_0_0, cache-ID = b2021d57d16de655
 INFO: [Coretcl 2-1174] Renamed 1155 cell refs.
-INFO: [Common 17-1381] The checkpoint 'C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp' has been generated.
+INFO: [Common 17-1381] The checkpoint 'c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/PS_Zynq_inst_0_smartconnect_0_0_synth_1/PS_Zynq_inst_0_smartconnect_0_0.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file PS_Zynq_inst_0_smartconnect_0_0_utilization_synth.rpt -pb PS_Zynq_inst_0_smartconnect_0_0_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Sun Feb 26 21:34:24 2023...
+INFO: [Common 17-206] Exiting Vivado at Tue Feb 28 17:52:10 2023...

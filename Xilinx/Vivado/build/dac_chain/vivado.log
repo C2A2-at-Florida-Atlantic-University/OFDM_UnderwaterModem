@@ -108,3 +108,10 @@ set_property range 8M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processi
 set_property range 4M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
 set_property range 2M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
 set_property range 512M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+save_bd_design
+Wrote  : <C:\Projects\FAU-Modem\FH-FSK\UnderwaterModem\Updated_MyXilinx\MODEM_HW\SDUAM.srcs\sources_1\bd\SDUAM\SDUAM.bd> 
+Wrote  : <C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/ui/bd_d78569f0.ui> 
+Wrote  : <C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/ui/bd_a14673ac.ui> 
+Wrote  : <C:/Projects/FAU-Modem/FH-FSK/UnderwaterModem/Updated_MyXilinx/MODEM_HW/SDUAM.srcs/sources_1/bd/SDUAM/ui/bd_e8063b88.ui> 
+exit
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 27 00:17:42 2023...

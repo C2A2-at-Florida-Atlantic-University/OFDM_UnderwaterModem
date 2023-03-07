@@ -22,3 +22,4 @@ set_property range 8M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processi
 set_property range 4M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
 set_property range 2M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
 set_property range 512M [get_bd_addr_segs {DMA/axi_dma_data/Data_MM2S/SEG_processing_system7_0_HP0_DDR_LOWOCM}]
+save_bd_design

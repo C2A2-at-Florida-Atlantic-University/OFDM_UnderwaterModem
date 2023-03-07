@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc rfile:../../../../../constraints/base_pynq_z2.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc rfile:../../../../../constraints/base_pynq_z2.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:5 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict {PACKAGE_PIN M20 IOSTANDARD LVCMOS33} [get_ports {sws_2bits_tri_i[0]}]
 set_property src_info {type:XDC file:1 line:6 export:INPUT save:INPUT read:READ} [current_design]

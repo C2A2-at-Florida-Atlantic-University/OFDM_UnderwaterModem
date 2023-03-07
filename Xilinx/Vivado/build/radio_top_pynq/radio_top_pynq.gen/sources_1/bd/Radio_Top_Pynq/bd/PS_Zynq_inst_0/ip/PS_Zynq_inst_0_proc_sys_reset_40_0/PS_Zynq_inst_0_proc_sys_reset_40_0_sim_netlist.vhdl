@@ -1,10 +1,10 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.1 (win64) Build 3526262 Mon Apr 18 15:48:16 MDT 2022
--- Date        : Sun Feb 26 20:54:37 2023
+-- Date        : Sun Feb 26 20:54:36 2023
 -- Host        : DESKTOP-1UDCE0K running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim
---               c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_proc_sys_reset_40_0/PS_Zynq_inst_0_proc_sys_reset_40_0_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top PS_Zynq_inst_0_proc_sys_reset_40_0 -prefix
+--               PS_Zynq_inst_0_proc_sys_reset_40_0_ PS_Zynq_inst_0_proc_sys_reset_40_0_sim_netlist.vhdl
 -- Design      : PS_Zynq_inst_0_proc_sys_reset_40_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -25,8 +25,6 @@ entity PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync is
     aux_reset_in : in STD_LOGIC;
     slowest_sync_clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync : entity is "cdc_sync";
 end PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync;
 
 architecture STRUCTURE of PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync is
@@ -247,8 +245,6 @@ entity PS_Zynq_inst_0_proc_sys_reset_40_0_upcnt_n is
     seq_cnt_en : in STD_LOGIC;
     slowest_sync_clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of PS_Zynq_inst_0_proc_sys_reset_40_0_upcnt_n : entity is "upcnt_n";
 end PS_Zynq_inst_0_proc_sys_reset_40_0_upcnt_n;
 
 architecture STRUCTURE of PS_Zynq_inst_0_proc_sys_reset_40_0_upcnt_n is
@@ -413,8 +409,6 @@ entity PS_Zynq_inst_0_proc_sys_reset_40_0_lpf is
     ext_reset_in : in STD_LOGIC;
     aux_reset_in : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of PS_Zynq_inst_0_proc_sys_reset_40_0_lpf : entity is "lpf";
 end PS_Zynq_inst_0_proc_sys_reset_40_0_lpf;
 
 architecture STRUCTURE of PS_Zynq_inst_0_proc_sys_reset_40_0_lpf is
@@ -603,8 +597,6 @@ entity PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr is
     lpf_int : in STD_LOGIC;
     slowest_sync_clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr : entity is "sequence_psr";
 end PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr;
 
 architecture STRUCTURE of PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr is
@@ -943,8 +935,6 @@ entity PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset is
   attribute C_NUM_PERP_ARESETN of PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset : entity is 1;
   attribute C_NUM_PERP_RST : integer;
   attribute C_NUM_PERP_RST of PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset : entity is 1;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset : entity is "proc_sys_reset";
 end PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset;
 
 architecture STRUCTURE of PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset is

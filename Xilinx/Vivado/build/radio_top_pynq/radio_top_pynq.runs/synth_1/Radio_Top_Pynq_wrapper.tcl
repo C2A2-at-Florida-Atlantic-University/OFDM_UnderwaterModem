@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/synth_1/Radio_Top_Pynq_wrapper.tcl"
+  variable script "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/synth_1/Radio_Top_Pynq_wrapper.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,6 +70,7 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param chipscope.maxJobs 6
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7z020clg400-1
 
@@ -77,8 +78,8 @@ set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
-set_property webtalk.parent_dir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
-set_property parent.project_path C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
+set_property webtalk.parent_dir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
+set_property parent.project_path c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
 set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
@@ -89,9 +90,17 @@ set_property ip_output_repo c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-add_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.coe
-read_verilog -library xil_defaultlib C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/hdl/Radio_Top_Pynq_wrapper.v
-add_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/PS_Zynq_inst_0.bd
+add_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.coe
+read_verilog -library xil_defaultlib c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/hdl/Radio_Top_Pynq_wrapper.v
+add_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/Transmit_Chain_inst_0.bd
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axi_bram_ctrl_0_0/Transmit_Chain_inst_0_axi_bram_ctrl_0_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axis_data_fifo_0_0/Transmit_Chain_inst_0_axis_data_fifo_0_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axis_data_fifo_1_0/Transmit_Chain_inst_0_axis_data_fifo_1_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_ifft_0/Transmit_Chain_inst_0_ifft_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_playback_mem_0/Transmit_Chain_inst_0_playback_mem_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/Transmit_Chain_inst_0_ooc.xdc]
+
+add_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/PS_Zynq_inst_0.bd
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_processing_system7_0_0/PS_Zynq_inst_0_processing_system7_0_0.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_proc_sys_reset_100_0/PS_Zynq_inst_0_proc_sys_reset_100_0_board.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_proc_sys_reset_100_0/PS_Zynq_inst_0_proc_sys_reset_100_0.xdc]
@@ -163,17 +172,9 @@ set_property used_in_synthesis false [get_files -all c:/Projects/FAU-Modem/OFDM/
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_auto_us_1/PS_Zynq_inst_0_auto_us_1_clocks.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_auto_us_1/PS_Zynq_inst_0_auto_us_1_ooc.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_auto_pc_0/PS_Zynq_inst_0_auto_pc_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/PS_Zynq_inst_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/PS_Zynq_inst_0_ooc.xdc]
 
-add_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/Transmit_Chain_inst_0.bd
-set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axi_bram_ctrl_0_0/Transmit_Chain_inst_0_axi_bram_ctrl_0_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axis_data_fifo_0_0/Transmit_Chain_inst_0_axis_data_fifo_0_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_axis_data_fifo_1_0/Transmit_Chain_inst_0_axis_data_fifo_1_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_ifft_0/Transmit_Chain_inst_0_ifft_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/ip/Transmit_Chain_inst_0_playback_mem_0/Transmit_Chain_inst_0_playback_mem_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/Transmit_Chain_inst_0/Transmit_Chain_inst_0_ooc.xdc]
-
-add_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Radio_Top_Pynq/Radio_Top_Pynq.bd
+add_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Radio_Top_Pynq/Radio_Top_Pynq.bd
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/ip/Radio_Top_Pynq_axi_dma_0_0/Radio_Top_Pynq_axi_dma_0_0.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/ip/Radio_Top_Pynq_axi_dma_0_0/Radio_Top_Pynq_axi_dma_0_0_clocks.xdc]
 set_property used_in_implementation false [get_files -all c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/ip/Radio_Top_Pynq_axi_dma_0_0/Radio_Top_Pynq_axi_dma_0_0_ooc.xdc]
@@ -195,12 +196,14 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc
-set_property used_in_implementation false [get_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc]
+read_xdc c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc
+set_property used_in_implementation false [get_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc]
 
 read_xdc dont_touch.xdc
 set_property used_in_implementation false [get_files dont_touch.xdc]
 set_param ips.enableIPCacheLiteLoad 1
+
+read_checkpoint -auto_incremental -incremental c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/utils_1/imports/synth_1/Radio_Top_Pynq_wrapper.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }

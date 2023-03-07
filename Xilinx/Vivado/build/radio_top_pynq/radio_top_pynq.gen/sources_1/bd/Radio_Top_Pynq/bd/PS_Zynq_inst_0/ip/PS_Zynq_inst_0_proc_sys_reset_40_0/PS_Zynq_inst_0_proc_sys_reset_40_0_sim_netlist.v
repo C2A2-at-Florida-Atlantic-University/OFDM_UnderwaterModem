@@ -1,10 +1,10 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2022.1 (win64) Build 3526262 Mon Apr 18 15:48:16 MDT 2022
-// Date        : Sun Feb 26 20:54:37 2023
+// Date        : Sun Feb 26 20:54:36 2023
 // Host        : DESKTOP-1UDCE0K running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim
-//               c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_proc_sys_reset_40_0/PS_Zynq_inst_0_proc_sys_reset_40_0_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top PS_Zynq_inst_0_proc_sys_reset_40_0 -prefix
+//               PS_Zynq_inst_0_proc_sys_reset_40_0_ PS_Zynq_inst_0_proc_sys_reset_40_0_sim_netlist.v
 // Design      : PS_Zynq_inst_0_proc_sys_reset_40_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -69,7 +69,6 @@ module PS_Zynq_inst_0_proc_sys_reset_40_0
         .slowest_sync_clk(slowest_sync_clk));
 endmodule
 
-(* ORIG_REF_NAME = "cdc_sync" *) 
 module PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync
    (lpf_asr_reg,
     scndry_out,
@@ -265,7 +264,6 @@ module PS_Zynq_inst_0_proc_sys_reset_40_0_cdc_sync_0
         .O(lpf_exr_reg));
 endmodule
 
-(* ORIG_REF_NAME = "lpf" *) 
 module PS_Zynq_inst_0_proc_sys_reset_40_0_lpf
    (lpf_int,
     slowest_sync_clk,
@@ -420,7 +418,6 @@ endmodule
 (* C_AUX_RESET_HIGH = "1'b0" *) (* C_AUX_RST_WIDTH = "4" *) (* C_EXT_RESET_HIGH = "1'b0" *) 
 (* C_EXT_RST_WIDTH = "4" *) (* C_FAMILY = "zynq" *) (* C_NUM_BUS_RST = "1" *) 
 (* C_NUM_INTERCONNECT_ARESETN = "1" *) (* C_NUM_PERP_ARESETN = "1" *) (* C_NUM_PERP_RST = "1" *) 
-(* ORIG_REF_NAME = "proc_sys_reset" *) 
 module PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset
    (slowest_sync_clk,
     ext_reset_in,
@@ -537,7 +534,6 @@ module PS_Zynq_inst_0_proc_sys_reset_40_0_proc_sys_reset
         .slowest_sync_clk(slowest_sync_clk));
 endmodule
 
-(* ORIG_REF_NAME = "sequence_psr" *) 
 module PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr
    (MB_out,
     Bsr_out,
@@ -778,7 +774,6 @@ module PS_Zynq_inst_0_proc_sys_reset_40_0_sequence_psr
         .R(lpf_int));
 endmodule
 
-(* ORIG_REF_NAME = "upcnt_n" *) 
 module PS_Zynq_inst_0_proc_sys_reset_40_0_upcnt_n
    (Q,
     seq_clr,

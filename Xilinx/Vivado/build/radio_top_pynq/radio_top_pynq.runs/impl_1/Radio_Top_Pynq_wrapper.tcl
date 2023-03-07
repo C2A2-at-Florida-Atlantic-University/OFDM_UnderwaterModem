@@ -17,7 +17,7 @@ proc create_report { reportName command } {
   }
 }
 namespace eval ::optrace {
-  variable script "C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/impl_1/Radio_Top_Pynq_wrapper.tcl"
+  variable script "c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/impl_1/Radio_Top_Pynq_wrapper.tcl"
   variable category "vivado_impl"
 }
 
@@ -130,22 +130,22 @@ OPTRACE "create in-memory project" START { }
   set_param project.singleFileAddWarning.threshold 0
 OPTRACE "create in-memory project" END { }
 OPTRACE "set parameters" START { }
-  set_property webtalk.parent_dir C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
-  set_property parent.project_path C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
-  set_property ip_repo_paths C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/ip_repo [current_project]
+  set_property webtalk.parent_dir c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/wt [current_project]
+  set_property parent.project_path c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.xpr [current_project]
+  set_property ip_repo_paths c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/ip_repo [current_project]
   update_ip_catalog
-  set_property ip_output_repo C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/ip [current_project]
+  set_property ip_output_repo c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
   set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
-  add_files -quiet C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/synth_1/Radio_Top_Pynq_wrapper.dcp
+  add_files -quiet c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.runs/synth_1/Radio_Top_Pynq_wrapper.dcp
   set_msg_config -source 4 -id {BD 41-1661} -limit 0
   set_param project.isImplRun true
-  add_files C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Radio_Top_Pynq/Radio_Top_Pynq.bd
+  add_files c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.srcs/sources_1/bd/Radio_Top_Pynq/Radio_Top_Pynq.bd
   set_param project.isImplRun false
 OPTRACE "read constraints: implementation" START { }
-  read_xdc C:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc
+  read_xdc c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/constraints/base_pynq_z2.xdc
 OPTRACE "read constraints: implementation" END { }
 OPTRACE "add files" END { }
 OPTRACE "link_design" START { }

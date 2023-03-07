@@ -17,7 +17,7 @@ static void *FpgaVirtualAddr;
 ReturnStatusType FpgaInterfaceSetup(void)
 {
   ReturnStatusType ReturnStatus;
-/*
+  
   if ((FpgaRegDevice = open("/dev/mem", (O_RDWR | O_SYNC))) == -1)
   {
     sprintf(ReturnStatus.ErrString,
@@ -25,14 +25,13 @@ ReturnStatusType FpgaInterfaceSetup(void)
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     return ReturnStatus;
   }
-*/
 
   if (getuid() == 0)
   {
     // Process is running as root, drop privileges
     printf("Process is running as root\n");
   }
-/*
+  
   FpgaVirtualAddr = mmap(NULL, FPGA_REG_SPAN, (PROT_READ | PROT_WRITE),
     MAP_SHARED, FpgaRegDevice, FPGA_REG_BASE_ADDR);
   if (FpgaVirtualAddr == MAP_FAILED)
@@ -42,7 +41,7 @@ ReturnStatusType FpgaInterfaceSetup(void)
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     return ReturnStatus;
   }
-*/
+
 #ifdef DEBUG
   printf("FpgaInterfaceSetup: Allocated page size of 0x%X\n", 
     FPGA_REG_SPAN);
@@ -58,8 +57,7 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
   printf("FpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
 #endif
 
-  //*pValue = *((unsigned *)(FpgaVirtualAddr+addr));
-  *pValue = 0xA8000000;
+  *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
 
 #ifdef DEBUG
   printf("FpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
@@ -73,7 +71,7 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value)
     addr);
 #endif
 
-  //*((unsigned *)(FpgaVirtualAddr+addr)) = value;
+  *((unsigned *)(FpgaVirtualAddr+addr)) = value;
 
 #ifdef DEBUG
   printf("FpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);

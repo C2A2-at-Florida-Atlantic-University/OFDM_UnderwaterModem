@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1677465058">
+<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1677624574" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Radio_Top_Pynq_wrapper.dcp">
   <File Type="PA-TCL" Name="Radio_Top_Pynq_wrapper.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="Radio_Top_Pynq_wrapper_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="Radio_Top_Pynq_wrapper_reports.tcl"/>
@@ -108,6 +108,14 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
     <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/Radio_Top_Pynq_wrapper.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
@@ -119,18 +127,8 @@
   <BlockFileSet Type="BlockSrcs" Name="Transmit_Chain_inst_0"/>
   <BlockFileSet Type="BlockSrcs" Name="Radio_Top_Pynq_axi_dma_0_0"/>
   <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_xbar_0"/>
   <BlockFileSet Type="BlockSrcs" Name="Radio_Top_Pynq_axis_data_fifo_1_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_proc_sys_reset_100_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_smartconnect_0_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_proc_sys_reset_40_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_processing_system7_0_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_proc_sys_reset_10_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_delimiter_2_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_delimiter_0_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_axi_gpio_2_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_axi_gpio_0_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_delimiter_1_0"/>
-  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_axi_gpio_1_0"/>
   <BlockFileSet Type="BlockSrcs" Name="Transmit_Chain_inst_0_ifft_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_smartconnect_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="PS_Zynq_inst_0_processing_system7_0_0"/>
 </GenRun>

@@ -36,7 +36,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default"
           },
           "HAS_TKEEP": {
             "value": "0",
@@ -111,7 +111,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default"
           },
           "HAS_TKEEP": {
             "value": "1",
@@ -216,7 +216,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -240,7 +240,7 @@
           },
           "HAS_QOS": {
             "value": "1",
-            "value_src": "default_prop"
+            "value_src": "strong"
           },
           "HAS_REGION": {
             "value": "0",
@@ -506,7 +506,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default"
           },
           "FREQ_TOLERANCE_HZ": {
             "value": "0",

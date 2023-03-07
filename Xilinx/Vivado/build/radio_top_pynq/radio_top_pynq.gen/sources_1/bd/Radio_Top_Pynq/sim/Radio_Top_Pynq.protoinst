@@ -123,7 +123,7 @@
 						"ACLK": { "actual": "aclk"},
 						"ARESETN": { "actual": "aresetn"},
 						"TDATA": { "actual": "S_AXIS_tdata"},
-						"TKEEP": { "actual": "S_AXIS_tkeep[3:0]"},
+						"TKEEP": { "actual": "S_AXIS_tkeep"},
 						"TLAST": { "actual": "S_AXIS_tlast"},
 						"TREADY": { "actual": "S_AXIS_tready"},
 						"TVALID": { "actual": "S_AXIS_tvalid"}

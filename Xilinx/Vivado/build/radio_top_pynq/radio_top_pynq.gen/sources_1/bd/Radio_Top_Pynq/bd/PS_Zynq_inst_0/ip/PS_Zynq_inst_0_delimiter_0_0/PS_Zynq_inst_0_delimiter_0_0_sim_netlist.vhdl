@@ -1,10 +1,10 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.1 (win64) Build 3526262 Mon Apr 18 15:48:16 MDT 2022
--- Date        : Sun Feb 26 20:55:30 2023
+-- Date        : Sun Feb 26 20:55:29 2023
 -- Host        : DESKTOP-1UDCE0K running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim
---               c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/build/radio_top_pynq/radio_top_pynq.gen/sources_1/bd/Radio_Top_Pynq/bd/PS_Zynq_inst_0/ip/PS_Zynq_inst_0_delimiter_0_0/PS_Zynq_inst_0_delimiter_0_0_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top PS_Zynq_inst_0_delimiter_0_0 -prefix
+--               PS_Zynq_inst_0_delimiter_0_0_ PS_Zynq_inst_0_delimiter_0_0_sim_netlist.vhdl
 -- Design      : PS_Zynq_inst_0_delimiter_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.

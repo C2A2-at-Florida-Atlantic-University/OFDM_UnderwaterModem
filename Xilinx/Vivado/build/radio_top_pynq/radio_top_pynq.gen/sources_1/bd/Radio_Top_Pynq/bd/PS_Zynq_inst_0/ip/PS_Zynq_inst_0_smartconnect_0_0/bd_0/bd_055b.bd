@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x6E4B9FB192DDE231",
+      "boundary_crc": "0x6E4B9FB1B6C99F59",
       "design_src": "SBD",
       "device": "xc7z020clg400-1",
       "name": "bd_055b",
@@ -124,7 +124,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -209,8 +209,8 @@
             "value_src": "const_prop"
           },
           "SUPPORTS_NARROW_BURST": {
-            "value": "0",
-            "value_src": "user_prop"
+            "value": "1",
+            "value_src": "default_prop"
           },
           "WUSER_BITS_PER_BYTE": {
             "value": "0",
@@ -259,7 +259,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -383,7 +383,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -507,7 +507,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -631,7 +631,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -755,7 +755,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "HAS_BRESP": {
             "value": "1",
@@ -867,7 +867,7 @@
           },
           "FREQ_HZ": {
             "value": "100000000",
-            "value_src": "user_prop"
+            "value_src": "default_prop"
           },
           "FREQ_TOLERANCE_HZ": {
             "value": "0",
@@ -1820,7 +1820,7 @@
                 "value": "1"
               },
               "SEG001_BASE_ADDR": {
-                "value": "0x0000000040020000"
+                "value": "0x0000000040010000"
               },
               "SEG001_SECURE_READ": {
                 "value": "0"
@@ -1829,10 +1829,10 @@
                 "value": "0"
               },
               "SEG001_SEP_ROUTE": {
-                "value": "0b0000000000000000000000000000000000000000000000000000000000000001"
+                "value": "0b0000000000000000000000000000000000000000000000000000000000000010"
               },
               "SEG001_SIZE": {
-                "value": "14"
+                "value": "7"
               },
               "SEG001_SUPPORTS_READ": {
                 "value": "1"
@@ -1841,7 +1841,7 @@
                 "value": "1"
               },
               "SEG002_BASE_ADDR": {
-                "value": "0x0000000041200000"
+                "value": "0x0000000040010100"
               },
               "SEG002_SECURE_READ": {
                 "value": "0"
@@ -1850,10 +1850,10 @@
                 "value": "0"
               },
               "SEG002_SEP_ROUTE": {
-                "value": "0b0000000000000000000000000000000000000000000000000000000000000010"
+                "value": "0b0000000000000000000000000000000000000000000000000000000000000011"
               },
               "SEG002_SIZE": {
-                "value": "16"
+                "value": "7"
               },
               "SEG002_SUPPORTS_READ": {
                 "value": "1"
@@ -1862,7 +1862,7 @@
                 "value": "1"
               },
               "SEG003_BASE_ADDR": {
-                "value": "0x0000000041210000"
+                "value": "0x0000000040010200"
               },
               "SEG003_SECURE_READ": {
                 "value": "0"
@@ -1871,10 +1871,10 @@
                 "value": "0"
               },
               "SEG003_SEP_ROUTE": {
-                "value": "0b0000000000000000000000000000000000000000000000000000000000000011"
+                "value": "0b0000000000000000000000000000000000000000000000000000000000000100"
               },
               "SEG003_SIZE": {
-                "value": "16"
+                "value": "7"
               },
               "SEG003_SUPPORTS_READ": {
                 "value": "1"
@@ -1883,7 +1883,7 @@
                 "value": "1"
               },
               "SEG004_BASE_ADDR": {
-                "value": "0x0000000041220000"
+                "value": "0x0000000040020000"
               },
               "SEG004_SECURE_READ": {
                 "value": "0"
@@ -1892,10 +1892,10 @@
                 "value": "0"
               },
               "SEG004_SEP_ROUTE": {
-                "value": "0b0000000000000000000000000000000000000000000000000000000000000100"
+                "value": "0b0000000000000000000000000000000000000000000000000000000000000001"
               },
               "SEG004_SIZE": {
-                "value": "16"
+                "value": "14"
               },
               "SEG004_SUPPORTS_READ": {
                 "value": "1"
@@ -1904,7 +1904,7 @@
                 "value": "1"
               },
               "SUPPORTS_NARROW": {
-                "value": "0"
+                "value": "1"
               },
               "S_ARUSER_WIDTH": {
                 "value": "0"
@@ -2097,7 +2097,7 @@
                 "value": "32"
               },
               "SEP001_PROTOCOL": {
-                "value": "AXI4"
+                "value": "AXI4LITE"
               },
               "SEP001_RDATA_WIDTH": {
                 "value": "32"
@@ -2124,7 +2124,7 @@
                 "value": "32"
               },
               "SEP004_PROTOCOL": {
-                "value": "AXI4LITE"
+                "value": "AXI4"
               },
               "SEP004_RDATA_WIDTH": {
                 "value": "32"
@@ -2133,7 +2133,7 @@
                 "value": "32"
               },
               "SUPPORTS_NARROW": {
-                "value": "0"
+                "value": "1"
               },
               "S_RUSER_BITS_PER_BYTE": {
                 "value": "0"

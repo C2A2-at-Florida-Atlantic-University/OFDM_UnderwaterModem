@@ -3883,28 +3883,28 @@
             "segments": {
               "SEG_M_AXI_BRAM_Reg": {
                 "address_block": "/M_AXI_BRAM/Reg",
-                "offset": "0x43C00000",
-                "range": "64K"
+                "offset": "0x40020000",
+                "range": "16K"
               },
               "SEG_M_AXI_DMA_Reg": {
                 "address_block": "/M_AXI_DMA/Reg",
-                "offset": "0x43C10000",
-                "range": "64K"
+                "offset": "0x40000000",
+                "range": "4K"
               },
               "SEG_axi_gpio_0_Reg": {
                 "address_block": "/gpio_regs/axi_gpio_0/S_AXI/Reg",
-                "offset": "0x41200000",
-                "range": "64K"
+                "offset": "0x40010000",
+                "range": "128"
               },
               "SEG_axi_gpio_1_Reg": {
                 "address_block": "/gpio_regs/axi_gpio_1/S_AXI/Reg",
-                "offset": "0x41210000",
-                "range": "64K"
+                "offset": "0x40010100",
+                "range": "128"
               },
               "SEG_axi_gpio_2_Reg": {
                 "address_block": "/gpio_regs/axi_gpio_2/S_AXI/Reg",
-                "offset": "0x41220000",
-                "range": "64K"
+                "offset": "0x40010200",
+                "range": "128"
               }
             }
           }

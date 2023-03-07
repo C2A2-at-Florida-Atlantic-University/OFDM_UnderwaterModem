@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Feb 26 21:30:18 2023" VIVADOVERSION="2022.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Feb 28 17:49:07 2023" VIVADOVERSION="2022.1">
 
   <SYSTEMINFO ARCH="zynq" BOARD="tul.com.tw:pynq-z2:part0:1.0" DEVICE="7z020" NAME="Transmit_Chain_inst_0" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -37,6 +37,11 @@
     <PORT DIR="I" NAME="S_AXIS_tvalid" SIGIS="undef" SIGNAME="axis_data_fifo_1_s_axis_tvalid">
       <CONNECTIONS>
         <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_tvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="3" NAME="S_AXIS_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="axis_data_fifo_1_s_axis_tkeep">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_tkeep"/>
       </CONNECTIONS>
     </PORT>
     <PORT DIR="I" LEFT="13" NAME="S_BRAM_AXI_araddr" RIGHT="0" SIGIS="undef" SIGNAME="axi_bram_ctrl_0_s_axi_araddr">
@@ -281,11 +286,6 @@
       <CONNECTIONS>
         <CONNECTION INSTANCE="playback_ctrl_0" PORT="symbols"/>
         <CONNECTION INSTANCE="tlast_gen_0" PORT="symbols"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="I" LEFT="3" NAME="S_AXIS_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="axis_data_fifo_1_s_axis_tkeep">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axis_data_fifo_1" PORT="s_axis_tkeep"/>
       </CONNECTIONS>
     </PORT>
   </EXTERNALPORTS>
