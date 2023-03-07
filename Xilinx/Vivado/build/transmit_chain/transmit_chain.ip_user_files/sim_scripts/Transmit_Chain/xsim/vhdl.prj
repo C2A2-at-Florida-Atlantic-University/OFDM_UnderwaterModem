@@ -1,5 +1,0 @@
-vhdl xil_defaultlib  \
-"../../../bd/Transmit_Chain/ip/Transmit_Chain_axi_bram_ctrl_0_1/sim/Transmit_Chain_axi_bram_ctrl_0_1.vhd" \
-"../../../bd/Transmit_Chain/ip/Transmit_Chain_ifft_1/sim/Transmit_Chain_ifft_1.vhd" \
-
-nosort

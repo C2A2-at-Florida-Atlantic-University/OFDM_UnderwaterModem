@@ -95,27 +95,23 @@ module transmit_chain_tb();
 // Scoreboard IFFT input
 //---------------------------------------------------------------
   initial begin
-    fd_ifft_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_in.txt","w");
+    //fd_ifft_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_in.txt","w");
+    fd_ifft_in = $fopen("../../../../../../modules/sim/transmit_chain_ifft_sim_in.txt","w");
     if (fd_ifft_in) $display("File was opened successfully: %0d ",fd_ifft_in);
     else begin
       $display("fd_ifft file was NOT opened successfully: %0d",fd_ifft_in);
       $stop;
     end
 
-    #(CLOCK_CYCLE*10)
+    #(CLOCK_PERIOD*22);
 
     for (int i = 0; i < (ofdm_symbols*(nfft)); i++) begin
-      //while (DUT.Transmit_Chain_i.ifft.s_axis_data_tvalid)
-      while (~ifft_in_tvalid) begin
-        #CLOCK_PERIOD;
-      end
-
-      ifft_in_tdata                  <= DUT.Transmit_Chain_i.ifft.s_axis_data_tdata;
-      //$fdisplay(fd_ifft_in,"%4h%4h,",ifft_in_tdata[31:16],
-      //          ifft_in_tdata[15:0]);
+      ifft_in_tdata                  = DUT.Transmit_Chain_i.ifft.s_axis_data_tdata;
       $fdisplay(fd_ifft_in,"%d, %d",$signed(ifft_in_tdata[15:0]),$signed(ifft_in_tdata[31:16]));
       #CLOCK_PERIOD;
     end
+    $display("%d, %d",$signed(ifft_in_tdata[15:0]),$signed(ifft_in_tdata[31:16]));
+    $fdisplay(fd_ifft_in,"%d, %d",$signed(ifft_in_tdata[15:0]),$signed(ifft_in_tdata[31:16]));
 
   end
 
@@ -126,15 +122,24 @@ module transmit_chain_tb();
 // Scoreboard IFFT output
 //---------------------------------------------------------------
   initial begin
-    fd_ifft = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_out.txt","w");
+    //fd_ifft = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_out.txt","w");
+    fd_ifft = $fopen("../../../../../../modules/sim/transmit_chain_ifft_sim_out.txt","w");
     if (fd_ifft) $display("File was opened successfully: %0d ",fd_ifft);
     else begin
       $display("fd_ifft file was NOT opened successfully: %0d",fd_ifft);
       $stop;
     end
 
-    //#(CLOCK_PERIOD*3568);
-    #(CLOCK_PERIOD*2000);
+    #(CLOCK_PERIOD*10);
+
+    if (nfft == 4096 || nfft == 2048 || nfft == 1024)
+      #(CLOCK_PERIOD*2000);
+    else if (nfft == 512)
+      #(CLOCK_PERIOD*1000);
+    else if (nfft == 256)
+      #(CLOCK_PERIOD*500);
+    else if (nfft == 128)
+      #(CLOCK_PERIOD*250);
 
     $display("nfft = %d, cp_len = %d, ofdm_symbols = %d",nfft,cp_len,ofdm_symbols);
 
@@ -153,22 +158,24 @@ module transmit_chain_tb();
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
-    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_carriers_in_data.txt","r");
-    //fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/cw_in_data.txt","r");
+    //fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_carriers_in_data.txt","r");
+    fd = $fopen("../../../../../../modules/sim/transmit_chain_carriers_in_data.txt","r");
     if (fd) $display("File was opened successfully: %0d ",fd);
     else begin
       $display("File was NOT opened successfully: %0d",fd);
       $stop;
     end
 
-    fd_info = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/info.txt","r");
+    //fd_info = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/info.txt","r");
+    fd_info = $fopen("../../../../../../modules/sim/info.txt","r");
     if (fd_info) $display("File was opened successfully: %0d ",fd_info);
     else begin
       $display("File was NOT opened successfully: %0d",fd_info);
       $stop;
     end
 
-    fd_coe = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_coe_samples.txt","w");
+    //fd_coe = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_coe_samples.txt","w");
+    fd_coe = $fopen("../../../../../../modules/sim/transmit_chain_coe_samples.txt","w");
     if (fd_info) $display("File was opened successfully: %0d ",fd_info);
     else begin
       $display("File was NOT opened successfully: %0d",fd_info);
@@ -236,7 +243,15 @@ module transmit_chain_tb();
 
     in_axis_tlast                   <= 1'b0;
     in_axis_tvalid                  <= 1'b0;
-    #(ofdm_symbols*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+    if (nfft == 4096 || nfft == 2048 || nfft == 1024)
+      #(ofdm_symbols*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+    else if (nfft == 512)
+      #(ofdm_symbols*2*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+    else if (nfft == 256)
+      #(ofdm_symbols*6*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+    else if (nfft == 128)
+      #(ofdm_symbols*8*(nfft+cp_len)*fs_cycles*CLOCK_PERIOD);
+      //#(CLOCK_PERIOD*30);
     $fclose(fd);
     $fclose(fd_info);
     $fclose(fd_ifft);

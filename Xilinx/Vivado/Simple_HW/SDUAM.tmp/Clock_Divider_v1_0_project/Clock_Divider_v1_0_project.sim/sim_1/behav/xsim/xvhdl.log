@@ -1,2 +1,0 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/saad/Xilinx/2UnderwaterModem/MyXilinx/SDUAM/ip_repo/clock_divider/src/clock_divider_tb.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'clock_divider_tb'

@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../../../../ip_repo/clock_divider/src/clock_divider.vhd" \
-"../../../../../../../ip_repo/clock_divider/src/clock_divider_tb.vhd" \
-
-# Do not sort compile order
-nosort
