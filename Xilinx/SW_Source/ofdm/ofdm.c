@@ -23,6 +23,36 @@ int main(int argc, char **argv)
   char FileName[20];
   ReturnStatusType ReturnStatus;
 
+  if (argc == 1)
+  {
+    printf("Warning: Did not select TX/RX\n");
+    printf("\tEX: ofdm TX\n");
+    printf("Default to TX\n");
+  }
+  else if (argc == 2)
+  {
+    if (!(strcmp(argv[1], "TX") && strcmp(argv[1], "Tx") && strcmp(argv[1], "tx")))
+    {
+      printf("\nSelected TX Control\n\n");
+    }
+    else if (!(strcmp(argv[1], "RX") && strcmp(argv[1], "Rx") && strcmp(argv[1], "rx")))
+    {
+      printf("\nSelected RX Control\n\n");
+    }
+    else
+    {
+      printf("Error: Wrong arguments\n");
+      printf("\tEX: ofdm TX\n");
+      return 1;
+    }
+  }
+  else
+  {
+    printf("Error: Wrong arguments\n");
+    printf("\tEX: ofdm TX\n");
+    return 1;
+  }
+
   OfdmParams.Nfft = DEFAULT_NFFT;
   OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
   OfdmParams.CpLen = DEFAULT_CP_LEN;
@@ -49,8 +79,10 @@ int main(int argc, char **argv)
     printf("3 - Enter TX Digital Gain (dBFS)\n");
     printf("4 - Display OFDM Parameters\n");
     printf("5 - Transmit Single OFDM Frame from File\n");
-
+    printf("6 - Write Transmitted Sub-Carriers to File\n");
+    printf("=> ");
     scanf("%d", &Selection);
+    printf("\n");
 
     switch (Selection) {
       case 0:
@@ -141,14 +173,25 @@ int main(int argc, char **argv)
         break;
 
       case 5:
+        ReturnStatus = TransmitChainParamCheck(&OfdmParams);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+
+        TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+
         printf("Enter file name: ");
         scanf("%s", FileName);
+        printf("\n");
         ReturnStatus = TxModulateGetFileData(FileName);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
           OfdmParams.Nfft);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -156,6 +199,7 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+
         ReturnStatus = TransmitChainEnableDl(false, &OfdmParams, 
           &OfdmTiming);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)

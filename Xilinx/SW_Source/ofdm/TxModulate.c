@@ -14,6 +14,7 @@
 
 #define DEBUG
 #define EXTRA_DEBUG
+//#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static uint8_T TxOfdmSymbolBinData[MAX_NFFT]; // Message signal {0,M-1}
@@ -80,7 +81,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
       }
 
       // Print out some digital data after factoring the modulation order
-#ifdef EXTRA_DEBUG
+#ifdef SAMPLE_DEBUG
       if (NfftCount < NFFT_DEBUG_COUNT)
       {
         printf("TxModulateFileData: TxOfdmSymbolBinData[%d] = %d\n",
@@ -117,7 +118,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
   {
     ModData = QamMod(TxOfdmSymbolBinData[NfftCount], ModOrder);
     // Print out some Frequency domain data
-#ifdef EXTRA_DEBUG
+#ifdef SAMPLE_DEBUG
     if (NfftCount < NFFT_DEBUG_COUNT)
     {
       TxModulatePrintCrealType(ModData);
@@ -133,7 +134,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
   }
 
   // Print out some Frequency domain data after being scaled
-#ifdef EXTRA_DEBUG
+#ifdef SAMPLE_DEBUG
   NfftCount = 0;
   printf("TxModulateFileData: Scaled Frequency Domain Data:\n");
   while (NfftCount < NFFT_DEBUG_COUNT)

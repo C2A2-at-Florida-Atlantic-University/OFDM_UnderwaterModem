@@ -41,7 +41,12 @@ ReturnStatusType TransmitChainEnableDl(bool Continuous,
 {
   ReturnStatusType ReturnStatus;
  
-  HwInterfaceConfigFftCore(OfdmParams, &OfdmCalcParams, OfdmTiming);
+  HwInterfaceConfigTxChain(OfdmParams, &OfdmCalcParams, OfdmTiming);
+  HwInterfaceConfigFftCore();
+  HwInterfaceStartTx();
+
+  HwInterfaceStopTx();
+
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }

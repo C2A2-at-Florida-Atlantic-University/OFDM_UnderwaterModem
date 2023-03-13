@@ -9,7 +9,9 @@
 #include "FpgaInterface.h"
 
 #define DEBUG
-#define EXTRA_DEBUG
+#define READ_DEBUG
+#define WRITE_DEBUG
+#define NO_DEVMEM
 
 static int FpgaRegDevice;
 static void *FpgaVirtualAddr;
@@ -17,7 +19,8 @@ static void *FpgaVirtualAddr;
 ReturnStatusType FpgaInterfaceSetup(void)
 {
   ReturnStatusType ReturnStatus;
-  
+ 
+#ifndef NO_DEVMEM
   if ((FpgaRegDevice = open("/dev/mem", (O_RDWR | O_SYNC))) == -1)
   {
     sprintf(ReturnStatus.ErrString,
@@ -46,6 +49,7 @@ ReturnStatusType FpgaInterfaceSetup(void)
   printf("FpgaInterfaceSetup: Allocated page size of 0x%X\n", 
     FPGA_REG_SPAN);
 #endif
+#endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -53,28 +57,33 @@ ReturnStatusType FpgaInterfaceSetup(void)
 
 void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
 {
-#ifdef EXTRA_DEBUG
-  printf("FpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
+#ifdef READ_DEBUG
+  printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
 #endif
 
-  *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
+  //*pValue = *((unsigned *)(FpgaVirtualAddr+addr));
 
 #ifdef DEBUG
-  printf("FpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
+#ifdef NO_DEVMEM
+  printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n",
+    0xFFFFFFFF, addr);
+#else
+  printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
+#endif
 #endif
 }
 
 void FpgaInterfaceWrite32(unsigned addr, unsigned value)
 {
-#ifdef EXTRA_DEBUG
-  printf("FpgaInterfaceWrite32: About to write 0x%X to 0x%X\n", value,
+#ifdef WRITE_DEBUG
+  printf("\tFpgaInterfaceWrite32: About to write 0x%X to 0x%X\n", value,
     addr);
 #endif
 
-  *((unsigned *)(FpgaVirtualAddr+addr)) = value;
+  //*((unsigned *)(FpgaVirtualAddr+addr)) = value;
 
 #ifdef DEBUG
-  printf("FpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
+  printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
 #endif
 }
 
@@ -82,16 +91,20 @@ void FpgaInterfaceWrite(unsigned addr, unsigned value, unsigned mask)
 {
   unsigned RegValue;
 
+#if defined (WRITE_DEBUG) || defined (READ_DEBUG)
+  printf("\tFpgaInterfaceWrite: Mask = 0x%X\n", mask);
+#endif
+
   if (mask == 0xFFFFFFFF)
   {
-#ifdef EXTRA_DEBUG
-    printf("FpgaInterfaceWrite: Full mask\n");
-#endif
     FpgaInterfaceWrite32(addr, value);
   }
   else
   {
     FpgaInterfaceRead32(addr, &RegValue);
+#ifdef NO_DEVMEM
+    RegValue = 0xFFFFFFFF; // Debug value
+#endif
     RegValue &= (~mask);
     RegValue |= (value & mask);
     FpgaInterfaceWrite32(addr, RegValue);

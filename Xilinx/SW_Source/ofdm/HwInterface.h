@@ -13,22 +13,22 @@
 #define IFFT_CONFIG_START_REG_MASK 0x10000
 #define IFFT_CONFIG_START_REG_OFFSET 16
 
-// Select IFFT or FFT
+// Select IFFT (1) or FFT (0)
 #define SEL_IFFT_FFT_REG 0x40010100
 #define SEL_IFFT_FFT_REG_MASK 0x1
-#define SEL_IFFT_FFT_REG_OFSET 0
+#define SEL_IFFT_FFT_REG_OFFSET 0
 
 // Cyclic Prefix length in samples
 #define CP_LEN_REG 0x40010004
 #define CP_LEN_REG_MASK 0xFFFF
 #define CP_LEN_REG_OFFSET 0
 
-// ceil(log2(nfft))
+// Actual nfft value
 #define NFFT_SCALED_REG 0x40010004
 #define NFFT_SCALED_REG_MASK 0xFFF0000
 #define NFFT_SCALED_REG_OFFSET 16
 
-// Actual nfft value
+// ceil(log2(nfft))
 #define NFFT_REG 0x40010000
 #define NFFT_REG_MASK 0xF8000000
 #define NFFT_REG_OFFSET 27
@@ -37,6 +37,11 @@
 #define NEGATIVE_FREQ_REG 0x40010100
 #define NEGATIVE_FREQ_REG_MASK 0x2
 #define NEGATIVE_FREQ_REG_OFFSET 1
+
+// Configure FFT core with rising edge
+#define CONFIG_FFT_CORE_REG 0x40010100
+#define CONFIG_FFT_CORE_MASK 0x10000
+#define CONFIG_FFT_CORE_OFFSET 16
 
 // OFDM symbol playback from memory
 #define PLAYBACK_EN_REG 0x40010100
@@ -68,14 +73,13 @@
 #define DL_EN_REG_MASK 0x100
 #define DL_EN_REG_OFFSET 8
 
-extern unsigned HwInterfaceCalcNfftScaling(unsigned Nfft);
-extern void HwInterfaceConfigFftCore(Ofdm_Parameters_Type *OfdmParams,
+extern void HwInterfaceStartTx(void);
+extern void HwInterfaceStopTx(void);
+extern void HwInterfaceConfigFftCore(void);
+extern void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
   Calculated_Ofdm_Parameters *OfdmCalcParams, Ofdm_Timing_Type
   *OfdmTiming);
 extern void HwInterfaceConfigSymbPlayback(Ofdm_Parameters_Type
   *OfdmParams, Ofdm_Timing_Type *OfdmTiming);
-extern void HwInterfaceConfigTxChain(Ofdm_Parameters_Type
-  *OfdmParams, Calculated_Ofdm_Parameters *OfdmCalcParams, 
-  Ofdm_Timing_Type *OfdmTiming);
 
 #endif

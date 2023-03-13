@@ -26,13 +26,13 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -Wall -Wextra -O2 -lpthread
+CFLAGS := -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -lm
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -o $@ $^
 
 .PHONY: clean
 clean:
