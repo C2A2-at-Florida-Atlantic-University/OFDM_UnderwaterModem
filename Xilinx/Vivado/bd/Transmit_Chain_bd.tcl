@@ -385,7 +385,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Assume_Synchronous_Clk {false} \
    CONFIG.Byte_Size {9} \
-   CONFIG.Coe_File {/mnt/c/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.coe} \
+   CONFIG.Coe_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/coe_samples.coe} \
    CONFIG.EN_SAFETY_CKT {false} \
    CONFIG.Enable_32bit_Address {false} \
    CONFIG.Enable_B {Use_ENB_Pin} \

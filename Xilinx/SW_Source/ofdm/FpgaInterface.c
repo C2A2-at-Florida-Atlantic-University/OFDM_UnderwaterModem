@@ -2,6 +2,8 @@
 // Jared Hermans
 //////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -20,7 +22,17 @@ ReturnStatusType FpgaInterfaceSetup(void)
 {
   ReturnStatusType ReturnStatus;
  
-#ifndef NO_DEVMEM
+#ifdef NO_DEVMEM
+  FpgaVirtualAddr = malloc(2*BUFFER_SPAN);
+  if (FpgaVirtualAddr == NULL)
+  {
+    sprintf(ReturnStatus.ErrString,
+      "FpgaInterfaceSetup ERROR: Could not malloc buffer\n");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    return ReturnStatus;
+  }
+  memset(FpgaVirtualAddr, 0, 2*BUFFER_SPAN);
+#else
   if ((FpgaRegDevice = open("/dev/mem", (O_RDWR | O_SYNC))) == -1)
   {
     sprintf(ReturnStatus.ErrString,
@@ -53,6 +65,34 @@ ReturnStatusType FpgaInterfaceSetup(void)
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
+}
+
+unsigned *FpgaInterfaceClearTxBuffer()
+{
+#ifdef DEBUG
+  printf("FpgaInterfaceClearTxBuffer: Clear TX Buffer\n");
+#endif
+#ifdef NO_DEVMEM
+  memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
+  return FpgaVirtualAddr;
+#else
+  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
+  return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
+#endif
+}
+
+unsigned *FpgaInterfaceClearRxBuffer()
+{
+#ifdef DEBUG
+  printf("FpgaInterfaceClearRxBuffer: Clear RX Buffer\n");
+#endif
+#ifdef NO_DEVMEM
+  memset((unsigned *)(FpgaVirtualAddr+BUFFER_SPAN), 0, BUFFER_SPAN);
+  return (unsigned *)(FpgaVirtualAddr+BUFFER_SPAN);
+#else
+  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0, BUFFER_SPAN);
+  return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
+#endif
 }
 
 void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)

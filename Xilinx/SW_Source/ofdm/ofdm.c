@@ -19,6 +19,8 @@ Calculated_Ofdm_Parameters OfdmCalcParams;
 int main(int argc, char **argv)
 {
   unsigned Selection;
+  unsigned ScanfRet; // To get rid of warnings
+  unsigned FileNumber;
   int TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
   char FileName[20];
   ReturnStatusType ReturnStatus;
@@ -81,7 +83,7 @@ int main(int argc, char **argv)
     printf("5 - Transmit Single OFDM Frame from File\n");
     printf("6 - Write Transmitted Sub-Carriers to File\n");
     printf("=> ");
-    scanf("%d", &Selection);
+    ScanfRet = scanf("%d", &Selection);
     printf("\n");
 
     switch (Selection) {
@@ -90,13 +92,13 @@ int main(int argc, char **argv)
 
       case 1:
         printf("\tEnter number of sub-carriers: ");
-        scanf("%d", &OfdmParams.Nfft);
+        ScanfRet = scanf("%d", &OfdmParams.Nfft);
         printf("\tEnter BandWidth (Sample Frequency) in kHz: ");
-        scanf("%d", &OfdmParams.BandWidth);
+        ScanfRet = scanf("%d", &OfdmParams.BandWidth);
         printf("\tEnter CP length in Samples: ");
-        scanf("%d", &OfdmParams.CpLen);
+        ScanfRet = scanf("%d", &OfdmParams.CpLen);
         printf("\tEnter modulation order: ");
-        scanf("%d", &OfdmParams.ModOrder);
+        ScanfRet = scanf("%d", &OfdmParams.ModOrder);
 
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -114,17 +116,17 @@ int main(int argc, char **argv)
 
       case 2:
         printf("\tEnter Symbol Guard Period in ms: ");
-        scanf("%d", &OfdmTiming.SymbolGuardPeriod);
+        ScanfRet = scanf("%d", &OfdmTiming.SymbolGuardPeriod);
         printf("\tEnter Frame Guard Period in ms: ");
-        scanf("%d", &OfdmTiming.FrameGuardPeriod);
+        ScanfRet = scanf("%d", &OfdmTiming.FrameGuardPeriod);
         printf("\tEnter OFDM Symbols per Frame: ");
-        scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
+        ScanfRet = scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         break;
 
       case 3:
         printf("\tEnter TX Digital Gain (dBFS): ");
-        scanf("%d", &TxGainDb);
+        ScanfRet = scanf("%d", &TxGainDb);
         ReturnStatus = TxModulateDigitalGain(TxGainDb);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -183,7 +185,7 @@ int main(int argc, char **argv)
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
 
         printf("Enter file name: ");
-        scanf("%s", FileName);
+        ScanfRet = scanf("%s", FileName);
         printf("\n");
         ReturnStatus = TxModulateGetFileData(FileName);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -193,7 +195,7 @@ int main(int argc, char **argv)
         }
 
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
-          OfdmParams.Nfft);
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -209,11 +211,25 @@ int main(int argc, char **argv)
         }
         break;
 
+      case 6:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = TxModulateWriteToFile(FileName, FileNumber, 
+          &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+        break;
+
       default:
         printf("Invalid selection\n");
     }
   } while (Selection);
   printf("\n");
 
+  TxModulateClose();
+  printf("%d\n", ScanfRet);
   return 0;
 }

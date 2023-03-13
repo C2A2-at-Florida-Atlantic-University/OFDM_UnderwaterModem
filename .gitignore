@@ -1,9 +1,11 @@
 *.Xil
 *~
+~*
 *.log
 *.jou
 *.str
 *.swp
+*.swo
 *cache
 *gen
 *hw
@@ -13,4 +15,6 @@
 *srcs
 *.xpr
 *.xsa
+*.o
 NA
+Xilinx/SW_Source/ofdm/ofdm

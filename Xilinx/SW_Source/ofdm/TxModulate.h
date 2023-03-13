@@ -7,6 +7,7 @@
 
 #include "ReturnStatus.h"
 #include "rtwtypes.h"
+#include "TransmitChain.h"
 
 #define DEFAULT_DIGITAL_GAIN_DBFS -54
 #define MAX_SAMPLE_VALUE ((1 << 14)-1) // 14 bit IQ
@@ -15,9 +16,14 @@
 #define NFFT_DEBUG_COUNT 16
 
 ReturnStatusType TxModulateGetFileData(char *FileName);
-ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft);
-void TxModulatePrintCrealType(creal_T Data);
+ReturnStatusType TxModulateGetPilotData(unsigned ModOrder);
+ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
+  unsigned OfdmSymbols);
+void             TxModulatePrintCrealType(creal_T Data);
 ReturnStatusType TxModulateDigitalGain(int GainDB);
-uint16_T TxModulateGetScalarGain(void);
+uint16_T         TxModulateGetScalarGain(void);
+ReturnStatusType TxModulateWriteToFile(char *FileName, unsigned FileNumber,
+  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
+void TxModulateClose(void);
 
 #endif

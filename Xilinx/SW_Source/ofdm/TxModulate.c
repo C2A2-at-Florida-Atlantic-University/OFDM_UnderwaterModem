@@ -4,9 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
 #include "TransmitChain.h"
+#include "FpgaInterface.h"
 #include "QamMod.h"
 #include "rtwtypes.h"
 #include "log2.h"
@@ -14,12 +16,16 @@
 
 #define DEBUG
 #define EXTRA_DEBUG
-//#define SAMPLE_DEBUG // Print out some freq domain samples
+#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
-static uint8_T TxOfdmSymbolBinData[MAX_NFFT]; // Message signal {0,M-1}
-static int16_T TxOfdmSymbolModData[MAX_NFFT*2]; // QAM Modulated signal
+static FILE *TxWriteFile; // Frequency domain data
+static uint8_T TxOfdmSymbolBinData[MAX_NFFT*16]; // Message signal {0,M-1}
+static int16_T TxOfdmSymbolModData[MAX_NFFT*2*16]; // QAM Modulated signal
+unsigned *TxBufferPtr = NULL;
 static uint16_T DigitalGain;
+
+static FILE *PilotDataFile; // Pilot code
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
   0x02, 0x01};
@@ -31,19 +37,30 @@ void TxModulatePrintCrealType(creal_T Data)
   printf("\t\t%lf + j%lf\n", Data.re, Data.im);
 }
 
-ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
+ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
+  unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   signed char MessageByte;
   creal_T ModData;
   unsigned NfftCount = 0;
+  unsigned PilotData;
   int i;
+
+  TxBufferPtr = FpgaInterfaceClearTxBuffer();
 
   if (TxMessageFile == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
+    perror("TxModulateFileData");
     sprintf(ReturnStatus.ErrString,
       "TxModulateFileData: Error no TX file exists\n");
+    return ReturnStatus;
+  }
+
+  ReturnStatus = TxModulateGetPilotData(ModOrder);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
     return ReturnStatus;
   }
 
@@ -57,46 +74,56 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
     i = 0;
     while (i < 8/b_log2(ModOrder))
     {
-      switch (ModOrder) {
-        case 2:
-          TxOfdmSymbolBinData[NfftCount] = 
-            ((MessageByte & BIT_MASK_M2[i]) >> (7-i));
-          break;
-
-        case 4:
-          TxOfdmSymbolBinData[NfftCount] = 
-            ((MessageByte & BIT_MASK_M4[i]) >> (6-i*2));
-          break;
-
-        case 16:
-          TxOfdmSymbolBinData[NfftCount] = 
-            ((MessageByte & BIT_MASK_M16[i]) >> (4-i*4));
-          break;
-        
-        default:
+      if (!(NfftCount % 4))
+      {
+        if (fscanf(PilotDataFile, "%d\n", &PilotData) != 1)
+        {
           ReturnStatus.Status = RETURN_STATUS_FAIL;
+          perror("TxModulateFileData");
           sprintf(ReturnStatus.ErrString,
-            "TxModulateFileData: Error: Unsupported Modulation Order\n");
+            "TxModulateFileData: Unexpected end of pilot data\n");
           return ReturnStatus;
+        }
+        //printf("Setting pilot\n");
+        TxOfdmSymbolBinData[NfftCount] = PilotData;
       }
+      else
+      {
+        //printf("Setting data\n");
+        switch (ModOrder) {
+          case 2:
+            TxOfdmSymbolBinData[NfftCount] = 
+              ((MessageByte & BIT_MASK_M2[i]) >> (7-i));
+            break;
 
-      // Print out some digital data after factoring the modulation order
+          case 4:
+            TxOfdmSymbolBinData[NfftCount] = 
+              ((MessageByte & BIT_MASK_M4[i]) >> (6-i*2));
+            break;
+
+          case 16:
+            TxOfdmSymbolBinData[NfftCount] = 
+              ((MessageByte & BIT_MASK_M16[i]) >> (4-i*4));
+            break;
+        
+          default:
+            ReturnStatus.Status = RETURN_STATUS_FAIL;
+            sprintf(ReturnStatus.ErrString,
+              "TxModulateFileData: Error: Unsupported Mod Order\n");
+            return ReturnStatus;
+        }
+        i++;
+      }
 #ifdef SAMPLE_DEBUG
       if (NfftCount < NFFT_DEBUG_COUNT)
       {
-        printf("TxModulateFileData: TxOfdmSymbolBinData[%d] = %d\n",
-          NfftCount, TxOfdmSymbolBinData[NfftCount]);
-        if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
-        {
-          printf("\n");
-        }
+        printf("Data: %d\n", TxOfdmSymbolBinData[NfftCount]);
       }
 #endif
-      i++;
       NfftCount++;
     }
 
-    if (NfftCount == Nfft)
+    if (NfftCount == (Nfft*OfdmSymbols))
     {
       break;
     }
@@ -106,7 +133,16 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
 
   // If there are remaining subcarriers due to message not filling up the 
   // entire OFDM symbol, fill the rest of the data subcarriers with 0
-  while (NfftCount < Nfft)
+#ifdef DEBUG
+  if (NfftCount < (Nfft*OfdmSymbols))
+  {
+    printf("TxModulateFileData: Not enouph input data to fill packet\n");
+    printf("TxModulateFileData: NfftCount = %d, Max = %d\n", NfftCount,
+      Nfft*OfdmSymbols);
+    printf("TxModulateFileData: Filling rest of subcarriers with zero\n");
+  }
+#endif
+  while (NfftCount < (Nfft*OfdmSymbols))
   {
     TxOfdmSymbolBinData[NfftCount] = 0;
     NfftCount++;
@@ -114,7 +150,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
 
   // Modulate
   NfftCount = 0;
-  while (NfftCount < Nfft)
+  while (NfftCount < (Nfft*OfdmSymbols))
   {
     ModData = QamMod(TxOfdmSymbolBinData[NfftCount], ModOrder);
     // Print out some Frequency domain data
@@ -148,6 +184,13 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
     NfftCount++;
   }
 #endif
+ 
+  // Fill buffer with frequency domain data to be sent to FPGA
+  memcpy((void *) TxBufferPtr, (const void *) &TxOfdmSymbolModData,
+    Nfft*OfdmSymbols*4);
+
+  fclose(TxMessageFile);
+  fclose(PilotDataFile);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -156,15 +199,54 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft)
 ReturnStatusType TxModulateGetFileData(char *FileName)
 {
   ReturnStatusType ReturnStatus;
+  char FileNamePath[64];
 
-  TxMessageFile = fopen(FileName, "r");
+  sprintf(FileNamePath, "files/%s.txt", FileName);
+  TxMessageFile = fopen(FileNamePath, "r");
   if (TxMessageFile == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
-      "TxModulateGetFileData: Failed to open %s\n", FileName);
+      "TxModulateGetFileData: Failed to open %s\n", FileNamePath);
     return ReturnStatus;
   }
+#ifdef DEBUG
+  printf("TxModulateGetFileData: Opened File %s\n", FileNamePath);
+#endif
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+ReturnStatusType TxModulateGetPilotData(unsigned ModOrder)
+{
+  ReturnStatusType ReturnStatus;
+  char FileName[1024];
+  //char cwd[1024];
+  
+  //if (getcwd(cwd, sizeof(cwd)) == NULL)
+  //{
+  //  ReturnStatus.Status = RETURN_STATUS_FAIL;
+  //  perror("TxModulateGetPilotData");
+  //  return ReturnStatus;
+  //}
+    
+  //sprintf(FileName, "%s/files/PilotDataM%d.txt", cwd, ModOrder);
+  sprintf(FileName, "files/PilotDataM%d.txt", ModOrder);
+
+  PilotDataFile = fopen(FileName, "r");
+  if (PilotDataFile == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    perror("TxModulateGetPilotData");
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateGetPilotData: Failed to open %s\n", FileName);
+    return ReturnStatus;
+  }
+
+#ifdef DEBUG
+  printf("TxModulateGetPilotData: Opened File %s\n", FileName);
+#endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -203,4 +285,118 @@ ReturnStatusType TxModulateDigitalGain(int GainDB)
 uint16_T TxModulateGetScalarGain(void)
 {
   return DigitalGain;
+}
+
+ReturnStatusType TxModulateWriteToFile(char *FileName,unsigned FileNumber,
+  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols)
+{
+  ReturnStatusType ReturnStatus;
+  char FileNameConverted[64];
+  char FileNameOut[64];
+  char FileNamePath[64];
+  signed char MessageByte;
+  unsigned i;
+
+  sprintf(FileNamePath, "files/%s.txt", FileName);
+  TxMessageFile = fopen(FileNamePath, "r");
+  if (TxMessageFile == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateGetFileData: Failed to open %s\n", FileNamePath);
+    return ReturnStatus;
+  }
+#ifdef DEBUG
+  printf("TxModulateGetFileData: Opened File %s\n", FileNamePath);
+#endif
+  
+  sprintf(FileNameConverted, "files/%sConverted.txt", FileName);
+
+  TxWriteFile = fopen(FileNameConverted, "w");
+  if (TxWriteFile == NULL)
+  {
+    perror("TxModulateWriteToFile");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateWriteToFile: Failed to open %s\n", FileNameConverted);
+    return ReturnStatus;
+  }
+
+  MessageByte = fgetc(TxMessageFile);
+  while (MessageByte != EOF)
+  {
+    i = 0;
+    while (i < 8/b_log2(OfdmParams->ModOrder))
+    {
+      switch (OfdmParams->ModOrder) {
+        case 2:
+          fprintf(TxWriteFile, "%d\n",
+            ((MessageByte & BIT_MASK_M2[i]) >> (7-i)));
+          break;
+
+        case 4:
+          fprintf(TxWriteFile, "%d\n",
+            ((MessageByte & BIT_MASK_M4[i]) >> (6-i*2)));
+          break;
+
+        case 16:
+          fprintf(TxWriteFile, "%d\n",
+            ((MessageByte & BIT_MASK_M16[i]) >> (4-i*4)));
+          break;
+      
+        default:
+          ReturnStatus.Status = RETURN_STATUS_FAIL;
+          sprintf(ReturnStatus.ErrString,
+            "TxModulateFileData: Error: Unsupported Mod Order\n");
+          return ReturnStatus;
+      }
+      i++;
+    }
+    MessageByte = fgetc(TxMessageFile);
+  }
+
+#ifdef DEBUG
+  printf("TxModulateWriteToFile: Wrote to file %s\n", FileNameConverted);
+#endif
+
+  fclose(TxWriteFile);
+  fclose(TxMessageFile);
+
+  sprintf(FileNameOut, "files/TxFreqData%d.txt", FileNumber);
+
+  TxWriteFile = fopen(FileNameOut, "w");
+  if (TxWriteFile == NULL)
+  {
+    perror("TxModulateWriteToFile");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateWriteToFile: Failed to open %s\n", FileNameOut);
+    return ReturnStatus;
+  }
+
+  // Header information
+  fprintf(TxWriteFile,"%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n", OfdmParams->Nfft, 
+    1000*OfdmParams->BandWidth, OfdmParams->CpLen, OfdmParams->ModOrder, 
+    OfdmSymbols, DigitalGain);
+
+  for (unsigned i = 0; i < OfdmParams->Nfft*OfdmSymbols; i++)
+  {
+    fprintf(TxWriteFile, "%d, %d\n",
+      ((int16_T)(*(TxBufferPtr+i))),
+      (int16_T)((((int32_T)(*(TxBufferPtr+i))) & 0xFFFF0000)>>16));
+  }
+
+#ifdef DEBUG
+  printf("TxModulateWriteToFile: Wrote to file %s\n", FileNameOut);
+#endif
+
+  fclose(TxWriteFile);
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+void TxModulateClose(void)
+{
+  free(TxBufferPtr);
 }
