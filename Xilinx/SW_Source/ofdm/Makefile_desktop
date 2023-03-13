@@ -1,3 +1,4 @@
+NO_DEVMEM = NO_DEVMEM
 CC:=gcc
 CROSS_COMPILER:=arm-linux-gnueabihf-
 
@@ -26,7 +27,7 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -Wall -Wextra -O2 -lpthread
+CFLAGS := -D$(NO_DEVMEM) -Wall -Wextra -O2 -lpthread
 
 %.o: %.c $(INCLUDE)
 	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -lm

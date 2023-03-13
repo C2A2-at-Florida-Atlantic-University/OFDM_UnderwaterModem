@@ -13,7 +13,7 @@
 #define DEBUG
 #define READ_DEBUG
 #define WRITE_DEBUG
-#define NO_DEVMEM
+//#define NO_DEVMEM
 
 static int FpgaRegDevice;
 static void *FpgaVirtualAddr;
