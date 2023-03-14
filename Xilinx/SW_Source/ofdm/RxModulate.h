@@ -1,0 +1,14 @@
+//////////////////////////////////////////////////////////////////////////
+// Jared Hermans
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef TX_MODULATE_H_INCLUDED
+#define TX_MODULATE_H_INCLUDED
+
+#include "ReturnStatus.h"
+#include "rtwtypes.h"
+
+ReturnStatusType RxDemodulateBufferData(char *FileName);
+ReturnStatusType 
+
+#endif

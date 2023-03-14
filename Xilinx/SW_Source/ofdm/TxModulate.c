@@ -400,3 +400,8 @@ void TxModulateClose(void)
 {
   free(TxBufferPtr);
 }
+
+unsigned *TxModulateGetTxBuffer()
+{
+  return TxBufferPtr;
+}

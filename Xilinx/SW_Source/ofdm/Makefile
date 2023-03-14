@@ -1,11 +1,11 @@
 NO_DEVMEM = NO_DEVMEM
 CC:=gcc
-CROSS_COMPILER:=arm-linux-gnueabihf-
 
 TARGET:=ofdm
 
 SOURCEDIR:=.
 QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod
+QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod
 BUILDDIR:=./
 INCLUDEDIR:=.
 
@@ -21,7 +21,15 @@ HwInterface.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/QamMod.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/log2.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/getConstellation.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_emxutil.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getGrayMapping.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getSquareConstellation.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_data.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_initialize.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_terminate.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod.c \
 TxModulate.c \
+RxDemodulate.c \
 ofdm.c
 
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
@@ -30,7 +38,7 @@ OBJECTS := $(SOURCES:%.c=%.o)
 CFLAGS := -D$(NO_DEVMEM) -Wall -Wextra -O2 -lpthread
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -lm
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -lm
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ -lm

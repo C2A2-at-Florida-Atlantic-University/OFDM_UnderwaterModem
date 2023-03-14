@@ -8,6 +8,7 @@
 #include "FpgaInterface.h"
 #include "TransmitChain.h"
 #include "TxModulate.h"
+#include "RxDemodulate.h"
 #include "rtwtypes.h"
 
 #define DEBUG
@@ -82,6 +83,8 @@ int main(int argc, char **argv)
     printf("4 - Display OFDM Parameters\n");
     printf("5 - Transmit Single OFDM Frame from File\n");
     printf("6 - Write Transmitted Sub-Carriers to File\n");
+    printf("7 - Demod TX Buffer to File\n");
+    printf("8 - Demod RX Buffer to File\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -216,6 +219,19 @@ int main(int argc, char **argv)
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = TxModulateWriteToFile(FileName, FileNumber, 
           &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+        break;
+
+      case 7:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = RxDemodulateBufferData(true, FileNumber, 
+          OfdmParams.ModOrder, OfdmParams.Nfft, 
+          OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
