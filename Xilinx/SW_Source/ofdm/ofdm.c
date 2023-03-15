@@ -139,6 +139,7 @@ int main(int argc, char **argv)
         break;
 
       case 4:
+        printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
         printf("\tBandwidth:                %d kHz\n", 
           OfdmParams.BandWidth);
@@ -150,11 +151,14 @@ int main(int argc, char **argv)
           OfdmTiming.FrameGuardPeriod);
         printf("\tSymbols per Frame         %d\n",
           OfdmTiming.OfdmSymbolsPerFrame);
+        printf("\n\tTX Digital Gain:          %d dBFS = %d\n",
+          TxGainDb, TxModulateGetScalarGain());
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         OfdmCalcParams = TransmitChainGetParams();
 
         printf("\n");
+        printf("\t------ Calculated Parameters ------\n");
         printf("\tSCS:                      %lf Hz\n", 
           OfdmCalcParams.Scs);
         printf("\tSamples per Symbol:       %d\n", 
@@ -173,8 +177,6 @@ int main(int argc, char **argv)
         printf("\t  Frame Guard Period:     %d\n\n",
           OfdmCalcParams.FrameGuard.FpgaClkSamples);
 
-        printf("\tTX Digital Gain:          %d dBFS = %d\n",
-          TxGainDb, TxModulateGetScalarGain());
         break;
 
       case 5:

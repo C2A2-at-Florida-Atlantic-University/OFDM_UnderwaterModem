@@ -16,13 +16,15 @@
 
 #define DEBUG
 #define EXTRA_DEBUG
-#define SAMPLE_DEBUG // Print out some freq domain samples
+//#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
-static uint8_T TxOfdmSymbolBinData[MAX_NFFT*16]; // Message signal {0,M-1}
-static int16_T TxOfdmSymbolModData[MAX_NFFT*2*16]; // QAM Modulated signal
-unsigned *TxBufferPtr = NULL;
+// Message signal {0,M-1} - pilot density
+static uint8_T TxOfdmSymbolBinData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
+// QAM Modulated signal
+static int16_T TxOfdmSymbolModData[MAX_NFFT*2*MAX_MOD_ORDER];
+unsigned *TxBufferPtr = NULL; // Pointer to TX CMA Buffer
 static uint16_T DigitalGain;
 
 static FILE *PilotDataFile; // Pilot code
@@ -136,10 +138,12 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #ifdef DEBUG
   if (NfftCount < (Nfft*OfdmSymbols))
   {
-    printf("TxModulateFileData: Not enouph input data to fill packet\n");
-    printf("TxModulateFileData: NfftCount = %d, Max = %d\n", NfftCount,
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+    "TxModulateFileData: Not enouph input data to fill packet\n"
+    "TxModulateFileData: NfftCount = %d, Max = %d\n", NfftCount,
       Nfft*OfdmSymbols);
-    printf("TxModulateFileData: Filling rest of subcarriers with zero\n");
+    return ReturnStatus;
   }
 #endif
   while (NfftCount < (Nfft*OfdmSymbols))

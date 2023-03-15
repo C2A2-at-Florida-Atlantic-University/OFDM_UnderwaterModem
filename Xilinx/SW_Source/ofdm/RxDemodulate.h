@@ -13,5 +13,8 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
   unsigned FileNumber, unsigned ModOrder, unsigned Nfft, 
   unsigned OfdmSymbols);
 ReturnStatusType RxDemodulateFileData(char *FileName);
+ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
+  unsigned ModOrder, unsigned Nfft, unsigned OfdmSymbols);
+void RxDemodulatePrintCrealType(creal32_T Data);
 
 #endif

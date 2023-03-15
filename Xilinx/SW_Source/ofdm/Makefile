@@ -21,13 +21,14 @@ HwInterface.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/QamMod.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/log2.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/getConstellation.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_emxutil.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getGrayMapping.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getSquareConstellation.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_data.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_initialize.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_terminate.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_emxutil.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_data.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_log2.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_getSquareConstellation.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_initialize.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_terminate.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_getGrayMapping.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod.c \
 TxModulate.c \
 RxDemodulate.c \
 ofdm.c

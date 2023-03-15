@@ -26,5 +26,6 @@ ReturnStatusType TxModulateWriteToFile(char *FileName, unsigned FileNumber,
   Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
 void TxModulateClose(void);
 unsigned *TxModulateGetTxBuffer(void);
+uint16_T TxModulateGetDigitalGain(void);
 
 #endif
