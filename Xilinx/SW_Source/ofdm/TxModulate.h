@@ -15,14 +15,14 @@
 
 #define NFFT_DEBUG_COUNT 16
 
-ReturnStatusType TxModulateGetFileData(char *FileName);
+ReturnStatusType TxModulateGetFileData(unsigned FileNumber);
 ReturnStatusType TxModulateGetPilotData(unsigned ModOrder);
 ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   unsigned OfdmSymbols);
 void             TxModulatePrintCrealType(creal_T Data);
 ReturnStatusType TxModulateDigitalGain(int GainDB);
 uint16_T         TxModulateGetScalarGain(void);
-ReturnStatusType TxModulateWriteToFile(char *FileName, unsigned FileNumber,
+ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
 void TxModulateClose(void);
 unsigned *TxModulateGetTxBuffer(void);

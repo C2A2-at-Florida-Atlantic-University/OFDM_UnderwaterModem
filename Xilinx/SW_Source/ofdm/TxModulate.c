@@ -200,12 +200,12 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   return ReturnStatus;
 }
 
-ReturnStatusType TxModulateGetFileData(char *FileName)
+ReturnStatusType TxModulateGetFileData(unsigned FileNumber)
 {
   ReturnStatusType ReturnStatus;
   char FileNamePath[64];
 
-  sprintf(FileNamePath, "files/%s.txt", FileName);
+  sprintf(FileNamePath, "files/TxModData%d.txt", FileNumber);
   TxMessageFile = fopen(FileNamePath, "r");
   if (TxMessageFile == NULL)
   {
@@ -291,7 +291,7 @@ uint16_T TxModulateGetScalarGain(void)
   return DigitalGain;
 }
 
-ReturnStatusType TxModulateWriteToFile(char *FileName,unsigned FileNumber,
+ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
@@ -301,7 +301,7 @@ ReturnStatusType TxModulateWriteToFile(char *FileName,unsigned FileNumber,
   signed char MessageByte;
   unsigned i;
 
-  sprintf(FileNamePath, "files/%s.txt", FileName);
+  sprintf(FileNamePath, "files/TxModData%d.txt", FileNumber);
   TxMessageFile = fopen(FileNamePath, "r");
   if (TxMessageFile == NULL)
   {
@@ -314,7 +314,7 @@ ReturnStatusType TxModulateWriteToFile(char *FileName,unsigned FileNumber,
   printf("TxModulateGetFileData: Opened File %s\n", FileNamePath);
 #endif
   
-  sprintf(FileNameConverted, "files/%sConverted.txt", FileName);
+  sprintf(FileNameConverted, "files/TxModData%dConverted.txt", FileNumber);
 
   TxWriteFile = fopen(FileNameConverted, "w");
   if (TxWriteFile == NULL)

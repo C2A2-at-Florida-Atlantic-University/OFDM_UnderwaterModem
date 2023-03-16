@@ -23,7 +23,6 @@ int main(int argc, char **argv)
   unsigned ScanfRet; // To get rid of warnings
   unsigned FileNumber;
   int TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
-  char FileName[20];
   ReturnStatusType ReturnStatus;
 
   if (argc == 1)
@@ -34,11 +33,13 @@ int main(int argc, char **argv)
   }
   else if (argc == 2)
   {
-    if (!(strcmp(argv[1], "TX") && strcmp(argv[1], "Tx") && strcmp(argv[1], "tx")))
+    if (!(strcmp(argv[1], "TX") && strcmp(argv[1], "Tx") && 
+      strcmp(argv[1], "tx")))
     {
       printf("\nSelected TX Control\n\n");
     }
-    else if (!(strcmp(argv[1], "RX") && strcmp(argv[1], "Rx") && strcmp(argv[1], "rx")))
+    else if (!(strcmp(argv[1], "RX") && strcmp(argv[1], "Rx") && 
+      strcmp(argv[1], "rx")))
     {
       printf("\nSelected RX Control\n\n");
     }
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     printf("6 - Write Transmitted Sub-Carriers to File\n");
     printf("7 - Demod TX Buffer to File\n");
     printf("8 - Demod RX Buffer to File\n");
+    printf("9 - Compute SER\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -189,10 +191,10 @@ int main(int argc, char **argv)
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
 
-        printf("Enter file name: ");
-        ScanfRet = scanf("%s", FileName);
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
         printf("\n");
-        ReturnStatus = TxModulateGetFileData(FileName);
+        ReturnStatus = TxModulateGetFileData(FileNumber);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -219,7 +221,7 @@ int main(int argc, char **argv)
       case 6:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = TxModulateWriteToFile(FileName, FileNumber, 
+        ReturnStatus = TxModulateWriteToFile(FileNumber, 
           &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -239,6 +241,12 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+        break;
+
+      case 8:
+        break;
+
+      case 9:
         break;
 
       default:

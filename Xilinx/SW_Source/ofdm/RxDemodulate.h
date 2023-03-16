@@ -16,5 +16,6 @@ ReturnStatusType RxDemodulateFileData(char *FileName);
 ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   unsigned ModOrder, unsigned Nfft, unsigned OfdmSymbols);
 void RxDemodulatePrintCrealType(creal32_T Data);
+ReturnStatusType RxDemodulateWriteToFile(bool open, unsigned FileNumber);
 
 #endif
