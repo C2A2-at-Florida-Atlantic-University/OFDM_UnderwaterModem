@@ -138,7 +138,7 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   return ReturnStatus;
 }
 
-ReturnStatusType RxDemodulateBufferData(bool Loopback, 
+ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback, 
   unsigned FileNumber, unsigned ModOrder, unsigned Nfft, 
   unsigned OfdmSymbols)
 {
@@ -151,36 +151,39 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
   char FileNameOut1[64];
   FILE *RxFreqFile;
   FILE *RxDemodFile;
-  
-  // File containing FFT output data
-  sprintf(FileNameOut, "files/RxFreqData%d.txt", FileNumber);
-
-  RxFreqFile = fopen(FileNameOut, "w");
-  if (RxFreqFile == NULL)
+ 
+  if (DebugMode)
   {
-    perror("RxDemodulateBufferData");
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString,
-      "RxDemodulateBufferData: Failed to open %s\n", FileNameOut);
-    return ReturnStatus;
-  }
-  // Write header information to file
-  fprintf(RxFreqFile, "%d,\n%d,\n%d,\n", Nfft, ModOrder, OfdmSymbols);
+    // File containing FFT output data
+    sprintf(FileNameOut, "files/RxFreqData%d.txt", FileNumber);
 
-  // File containing QAMDEMOD output
-  sprintf(FileNameOut1, "files/RxDemodData%d.txt", FileNumber);
+    RxFreqFile = fopen(FileNameOut, "w");
+    if (RxFreqFile == NULL)
+    {
+      perror("RxDemodulateBufferData");
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Failed to open %s\n", FileNameOut);
+      return ReturnStatus;
+    }
+    // Write header information to file
+    fprintf(RxFreqFile, "%d,\n%d,\n%d,\n", Nfft, ModOrder, OfdmSymbols);
 
-  RxDemodFile = fopen(FileNameOut1, "w");
-  if (RxDemodFile == NULL)
-  {
-    perror("RxDemodulateBufferData");
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString,
-      "RxDemodulateBufferData: Failed to open %s\n", FileNameOut1);
-    return ReturnStatus;
+    // File containing QAMDEMOD output
+    sprintf(FileNameOut1, "files/RxDemodData%d.txt", FileNumber);
+
+    RxDemodFile = fopen(FileNameOut1, "w");
+    if (RxDemodFile == NULL)
+    {
+      perror("RxDemodulateBufferData");
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Failed to open %s\n", FileNameOut1);
+      return ReturnStatus;
+    }
+    // Write header information to file
+    fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
   }
-  // Write header information to file
-  fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
 
   if (Loopback)
   {
@@ -208,12 +211,15 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
         IqData.re = IqData.re/DigitalGain;
         IqData.im = IqData.im/DigitalGain;
       }
-      fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
-        IqData.im);
       PilotData[PilotCount] = IqData;
-      fprintf(RxDemodFile, "%d\n", (unsigned)QamDemod(IqData, 
-        (float)ModOrder));
       PilotCount++;
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
+          IqData.im);
+        //fprintf(RxDemodFile, "%d\n", (unsigned)QamDemod(IqData, 
+        //  (float)ModOrder));
+      }
 #ifdef SAMPLE_DEBUG
       if (i < 16)
       {
@@ -234,6 +240,13 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
         IqData.im = IqData.im/DigitalGain;
       }
       DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile,"%d, %d\n", (int) IqData.re, (int)
+          IqData.im);
+        fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
+          (float)ModOrder));
+      }
 #ifdef SAMPLE_DEBUG
       if (i < 16)
       {

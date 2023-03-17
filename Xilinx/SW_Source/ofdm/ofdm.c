@@ -24,6 +24,8 @@ int main(int argc, char **argv)
   unsigned ScanfRet; // To get rid of warnings
   unsigned FileNumber;
   int TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+  int DebugSelection;
+  bool DebugMode;
   ReturnStatusType ReturnStatus;
 
   if (argc == 1)
@@ -76,18 +78,22 @@ int main(int argc, char **argv)
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
 
+  printf("\nDebug Mode Enabled\n");
+  DebugMode = true;
+
   do {
     printf("\n----- MODEM MENU -----\n");
     printf("0  - Exit\n");
-    printf("1  - Enter OFDM Parameters\n");
-    printf("2  - Enter OFDM Timing Parameters\n");
-    printf("3  - Enter TX Digital Gain (dBFS)\n");
-    printf("4  - Display OFDM Parameters\n");
-    printf("5  - Transmit Single OFDM Frame from File\n");
-    printf("6  - Write Transmitted Sub-Carriers to File\n");
-    printf("7  - Demod TX Buffer to File\n");
-    printf("8  - Demod RX Buffer to File\n");
-    printf("9  - Compute SER\n");
+    printf("1  - Set Global Debug Mode\n");
+    printf("2  - Enter OFDM Parameters\n");
+    printf("3  - Enter OFDM Timing Parameters\n");
+    printf("4  - Enter TX Digital Gain (dBFS)\n");
+    printf("5  - Display OFDM Parameters\n");
+    printf("6  - Transmit Single OFDM Frame from File\n");
+    printf("7  - Write Transmitted Sub-Carriers to File\n");
+    printf("8  - Demod TX Buffer to File\n");
+    printf("9  - Demod RX Buffer to File\n");
+    printf("10 - Compute BER/SER\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -97,6 +103,19 @@ int main(int argc, char **argv)
         break;
 
       case 1:
+        printf("Enter Selection ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          DebugMode = true;
+        }
+        else
+        {
+          DebugMode = false;
+        }
+        break;
+
+      case 2:
         printf("\tEnter number of sub-carriers: ");
         ScanfRet = scanf("%d", &OfdmParams.Nfft);
         printf("\tEnter BandWidth (Sample Frequency) in kHz: ");
@@ -120,7 +139,7 @@ int main(int argc, char **argv)
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         break;
 
-      case 2:
+      case 3:
         printf("\tEnter Symbol Guard Period in ms: ");
         ScanfRet = scanf("%d", &OfdmTiming.SymbolGuardPeriod);
         printf("\tEnter Frame Guard Period in ms: ");
@@ -130,7 +149,7 @@ int main(int argc, char **argv)
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         break;
 
-      case 3:
+      case 4:
         printf("\tEnter TX Digital Gain (dBFS): ");
         ScanfRet = scanf("%d", &TxGainDb);
         ReturnStatus = TxModulateDigitalGain(TxGainDb);
@@ -141,7 +160,7 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 4:
+      case 5:
         printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
         printf("\tBandwidth:                %d kHz\n", 
@@ -182,7 +201,7 @@ int main(int argc, char **argv)
 
         break;
 
-      case 5:
+      case 6:
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -219,7 +238,7 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 6:
+      case 7:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = TxModulateWriteToFile(FileNumber, 
@@ -231,10 +250,10 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 7:
+      case 8:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = RxDemodulateBufferData(true, FileNumber, 
+        ReturnStatus = RxDemodulateBufferData(DebugMode, true, FileNumber, 
           OfdmParams.ModOrder, OfdmParams.Nfft, 
           OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -244,10 +263,10 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 8:
+      case 9:
         break;
 
-      case 9:
+      case 10:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,

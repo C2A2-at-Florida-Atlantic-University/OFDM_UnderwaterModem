@@ -38,9 +38,13 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   char tx, rx;
   unsigned TxSymbol, RxSymbol;
   double CharBer;
-  double SymbolBer;
+  double SymbolBer = 0;
+  double SymbolSer = 0;
   double TotalBer = 0, TotalSer = 0;
   unsigned IndexLoop;
+  unsigned SymbolLoop;
+  unsigned SymbolCount = 0;
+  unsigned NumSymbols = 0;
   unsigned i;
   unsigned fscanfRet;
 
@@ -54,10 +58,12 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   {
     IndexLoop = OfdmSymbols*Nfft*((unsigned)b_log2(ModOrder))
       *DATA_DENSITY/8;
+    SymbolLoop = Nfft*((unsigned)b_log2(ModOrder))*DATA_DENSITY/8;
   }
   else // Symbol error rate
   {
     IndexLoop = OfdmSymbols*Nfft*DATA_DENSITY;
+    SymbolLoop = Nfft*DATA_DENSITY;
     // Throw away header information
     fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
     fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
@@ -87,7 +93,20 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
       rx = fgetc(RxDemodFile);
       CharBer = BerCharCalculation(tx, rx);
       TotalBer = TotalBer + CharBer;
-      TotalBer = TotalBer / ((double)(i+1));
+      if (SymbolCount == SymbolLoop)
+      {
+        SymbolBer = SymbolBer / ((double)(SymbolLoop+1));
+        printf("Ber: OFDM SYMBOL %d BIT ERROR RATE = %lf\n", NumSymbols,
+          SymbolBer);
+        SymbolBer = 0;
+        SymbolCount = 0;
+        NumSymbols++;
+      }
+      else
+      {
+        SymbolCount++;
+        SymbolBer = SymbolBer + CharBer;
+      }
     }
     else // Symbol error Rate
     {
@@ -99,23 +118,46 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
         printf("Ber: TxSymbol = %d, RxSymbol = %d\n", TxSymbol, RxSymbol);
       }
 #endif
+      if (SymbolCount == SymbolLoop) // For Symbol SER
+      {
+        SymbolSer = SymbolSer / ((double)(SymbolLoop+1));
+        printf("Ber: OFDM SYMBOL %d SYMBOL ERROR RATE = %lf\n", 
+          NumSymbols, SymbolSer);
+        SymbolSer = 0;
+        SymbolCount = 0;
+        NumSymbols++;
+        if (TxSymbol != RxSymbol)
+        {
+          SymbolSer++; // For Symbol SER
+        }
+      }
+      else
+      {
+        SymbolCount++;
+        if (TxSymbol != RxSymbol)
+        {
+          SymbolSer++; // For Symbol SER
+        }
+      }
       if (TxSymbol != RxSymbol)
       {
-        TotalSer++;
-        TotalSer = TotalSer / ((double)(i+1));
+        TotalSer++; // For packet SER
       }
     }
   }
+
+  TotalBer = TotalBer / ((double)(i+1));
+  TotalSer = TotalSer / ((double)(i+1));
  
   if (Ber)
   {
     printf("Ber: Looped for %d bits\n", i*8);
-    printf("Ber: Packet Bit Error Rate: %lf\n", TotalBer);
+    printf("Ber: PACKET BIT ERROR RATE: %lf\n", TotalBer);
   }
   else
   {
     printf("Ber: Looped for %d symbols\n", i);
-    printf("Ber: Packet Symbol Error Rate: %lf\n", TotalSer);
+    printf("Ber: PACKET SYMBOL ERROR RATE: %lf\n", TotalSer);
     printf("%d\n", fscanfRet);
   }
 

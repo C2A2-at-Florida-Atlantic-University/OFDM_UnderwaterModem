@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include "rtwtypes.h"
 
-ReturnStatusType RxDemodulateBufferData(bool Loopback,
+ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
   unsigned FileNumber, unsigned ModOrder, unsigned Nfft, 
   unsigned OfdmSymbols);
 ReturnStatusType RxDemodulateFileData(char *FileName);
