@@ -22,6 +22,7 @@ static FILE *RxMessageFile;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
   0x02, 0x01};
+static const int BIT_MASK_M4[4] = {0xC0, 0x30, 0x0C, 0x03};
 
 void RxDemodulatePrintCrealType(creal32_T Data)
 {
@@ -72,8 +73,8 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   }
 
   // Decode {0, M-1} bits into character message
-  for (unsigned DataIndex = 0; DataIndex < 
-    Nfft*OfdmSymbols*DATA_DENSITY/b_log2(ModOrder); DataIndex++)
+  for (unsigned DataIndex = 0; DataIndex < Nfft*OfdmSymbols*DATA_DENSITY;
+    DataIndex++)
   {
     switch (ModOrder) 
     {
@@ -91,8 +92,10 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
         break;
       
       case 4:
-        printf("Hello\n");
-        DataIndex++;
+        if (!(DemodData[DataIndex] == 0))
+        {
+          ch = ch + BIT_MASK_M4[CharCount];
+        }
         break;
 
       case 16:
@@ -115,8 +118,8 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
 #ifdef SAMPLE_DEBUG
       if (DataIndex < 12*8)
       {
-        printf("RxDemodulateRecoverMessage: Decoded character %c\n",
-          ch);
+        printf("RxDemodulateRecoverMessage: Decoded char: %c = 0x%X\n",
+          ch, (signed) ch);
       }
 #endif
       ch = 0;
@@ -130,7 +133,8 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
     }
   }
 
-  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  ReturnStatus = RxDemodulateWriteToFile(false, FileNumber);
+
   return ReturnStatus;
 }
 
@@ -176,7 +180,7 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
     return ReturnStatus;
   }
   // Write header information to file
-  fprintf(RxDemodFile, "%d,\n%d,\n%d,\n", Nfft, ModOrder, OfdmSymbols);
+  fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
 
   if (Loopback)
   {
@@ -207,7 +211,7 @@ ReturnStatusType RxDemodulateBufferData(bool Loopback,
       fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
         IqData.im);
       PilotData[PilotCount] = IqData;
-      fprintf(RxDemodFile, "%d,\n", (unsigned)QamDemod(IqData, 
+      fprintf(RxDemodFile, "%d\n", (unsigned)QamDemod(IqData, 
         (float)ModOrder));
       PilotCount++;
 #ifdef SAMPLE_DEBUG

@@ -31,6 +31,7 @@ HwInterface.c \
 ../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod.c \
 TxModulate.c \
 RxDemodulate.c \
+Ber.c \
 ofdm.c
 
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')

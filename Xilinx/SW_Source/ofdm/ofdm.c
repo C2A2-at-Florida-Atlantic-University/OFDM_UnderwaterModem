@@ -10,6 +10,7 @@
 #include "TxModulate.h"
 #include "RxDemodulate.h"
 #include "rtwtypes.h"
+#include "Ber.h"
 
 #define DEBUG
 
@@ -77,16 +78,16 @@ int main(int argc, char **argv)
 
   do {
     printf("\n----- MODEM MENU -----\n");
-    printf("0 - Exit\n");
-    printf("1 - Enter OFDM Parameters\n");
-    printf("2 - Enter OFDM Timing Parameters\n");
-    printf("3 - Enter TX Digital Gain (dBFS)\n");
-    printf("4 - Display OFDM Parameters\n");
-    printf("5 - Transmit Single OFDM Frame from File\n");
-    printf("6 - Write Transmitted Sub-Carriers to File\n");
-    printf("7 - Demod TX Buffer to File\n");
-    printf("8 - Demod RX Buffer to File\n");
-    printf("9 - Compute SER\n");
+    printf("0  - Exit\n");
+    printf("1  - Enter OFDM Parameters\n");
+    printf("2  - Enter OFDM Timing Parameters\n");
+    printf("3  - Enter TX Digital Gain (dBFS)\n");
+    printf("4  - Display OFDM Parameters\n");
+    printf("5  - Transmit Single OFDM Frame from File\n");
+    printf("6  - Write Transmitted Sub-Carriers to File\n");
+    printf("7  - Demod TX Buffer to File\n");
+    printf("8  - Demod RX Buffer to File\n");
+    printf("9  - Compute SER\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -247,6 +248,17 @@ int main(int argc, char **argv)
         break;
 
       case 9:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+        ReturnStatus = Ber(false, FileNumber, OfdmParams.ModOrder,
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
         break;
 
       default:

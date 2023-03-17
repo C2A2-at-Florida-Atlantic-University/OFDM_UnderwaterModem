@@ -205,7 +205,7 @@ ReturnStatusType TxModulateGetFileData(unsigned FileNumber)
   ReturnStatusType ReturnStatus;
   char FileNamePath[64];
 
-  sprintf(FileNamePath, "files/TxModData%d.txt", FileNumber);
+  sprintf(FileNamePath, "files/TxModMessage%d.txt", FileNumber);
   TxMessageFile = fopen(FileNamePath, "r");
   if (TxMessageFile == NULL)
   {
@@ -301,7 +301,7 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   signed char MessageByte;
   unsigned i;
 
-  sprintf(FileNamePath, "files/TxModData%d.txt", FileNumber);
+  sprintf(FileNamePath, "files/TxModMessage%d.txt", FileNumber);
   TxMessageFile = fopen(FileNamePath, "r");
   if (TxMessageFile == NULL)
   {
@@ -314,7 +314,8 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   printf("TxModulateGetFileData: Opened File %s\n", FileNamePath);
 #endif
   
-  sprintf(FileNameConverted, "files/TxModData%dConverted.txt", FileNumber);
+  sprintf(FileNameConverted, "files/TxModData%d.txt", 
+    FileNumber);
 
   TxWriteFile = fopen(FileNameConverted, "w");
   if (TxWriteFile == NULL)
@@ -325,6 +326,10 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
       "TxModulateWriteToFile: Failed to open %s\n", FileNameConverted);
     return ReturnStatus;
   }
+
+  // Write header information:
+  fprintf(TxWriteFile, "%d\n%d\n%d\n", OfdmParams->Nfft, 
+    OfdmParams->ModOrder, OfdmSymbols);
 
   MessageByte = fgetc(TxMessageFile);
   while (MessageByte != EOF)
