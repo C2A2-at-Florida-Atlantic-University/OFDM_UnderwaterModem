@@ -58,11 +58,12 @@ Calculated_Ofdm_Parameters TransmitChainGetParams(void)
 
 ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
 {
-  unsigned Nfft, BandWidth, ModOrder;
+  unsigned Nfft, BandWidth, ModOrder, CpLen;
   ReturnStatusType ReturnStatus;
 
   Nfft = OfdmParams->Nfft;
   BandWidth = OfdmParams->BandWidth;
+  CpLen = OfdmParams->CpLen;
   ModOrder = OfdmParams->ModOrder;
 
   if (!(Nfft == 128 || Nfft == 256 || Nfft == 512 || Nfft == 1024 ||
@@ -80,6 +81,14 @@ ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
       "\nTransmitChainParamCheck: Not a supported BandWidth value\n");
+    return ReturnStatus;
+  }
+
+  if (CpLen > 4096)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "\nTransmitChainParamCheck: Not a supported CP LEN value\n");
     return ReturnStatus;
   }
 

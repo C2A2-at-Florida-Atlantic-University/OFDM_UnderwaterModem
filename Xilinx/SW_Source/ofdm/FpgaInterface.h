@@ -20,5 +20,6 @@ unsigned *FpgaInterfaceClearRxBuffer(void);
 void FpgaInterfaceRead32(unsigned addr, unsigned *pValue);
 void FpgaInterfaceWrite32(unsigned addr, unsigned value);
 void FpgaInterfaceWrite(unsigned addr, unsigned value, unsigned mask);
+unsigned *FpgaInterfaceGetTxBuffer(void);
 
 #endif

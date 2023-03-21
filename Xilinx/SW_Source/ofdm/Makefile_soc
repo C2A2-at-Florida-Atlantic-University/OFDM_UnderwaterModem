@@ -1,3 +1,7 @@
+NO_DEVMEM = NO_DEVMEM
+# PS_PL_POINT = FFT
+PS_PL_POINT = DUC
+
 CC:=gcc
 CROSS_COMPILER:=arm-linux-gnueabihf-
 
@@ -21,21 +25,23 @@ HwInterface.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/QamMod.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/log2.c \
 ../../../MATLAB/QamModCoder/codegen/lib/QamMod/getConstellation.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_emxutil.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getGrayMapping.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/getSquareConstellation.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_data.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_initialize.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod_terminate.c \
-../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/QamDemod.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_emxutil.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_data.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_log2.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_getSquareConstellation.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_initialize.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_terminate.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_getGrayMapping.c \
+../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod.c \
 TxModulate.c \
 RxDemodulate.c \
+Ber.c \
 ofdm.c
 
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -Wall -Wextra -O2 -lpthread -lm
+CFLAGS := D$(NO_DEVMEM) -D $(PS_PL_POINT) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
 	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR)

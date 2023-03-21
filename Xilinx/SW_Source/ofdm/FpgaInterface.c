@@ -13,7 +13,6 @@
 #define DEBUG
 #define READ_DEBUG
 #define WRITE_DEBUG
-//#define NO_DEVMEM
 
 static int FpgaRegDevice;
 static void *FpgaVirtualAddr;
@@ -67,15 +66,28 @@ ReturnStatusType FpgaInterfaceSetup(void)
   return ReturnStatus;
 }
 
+unsigned *FpgaInterfaceGetTxBuffer()
+{
+#if defined (NO_DEVMEM) || !defined(FFT)
+  printf("FpgaInterfaceGetTxBuffer: NO_DEVMEM or ~FFT defined\n");
+  return FpgaVirtualAddr;
+#else
+  printf("FpgaInterfaceGetTxBuffer: ~NO_DEVMEM or FFT defined\n");
+  return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
+#endif
+}
+
 unsigned *FpgaInterfaceClearTxBuffer()
 {
 #ifdef DEBUG
   printf("FpgaInterfaceClearTxBuffer: Clear TX Buffer\n");
 #endif
-#ifdef NO_DEVMEM
+#if defined (NO_DEVMEM) || !defined(FFT)
+  printf("FpgaInterfaceClearTxBuffer: NO_DEVMEM or ~FFT defined\n");
   memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
+  printf("FpgaInterfaceClearTxBuffer: ~NO_DEVMEM or FFT defined\n");
   memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
@@ -86,10 +98,12 @@ unsigned *FpgaInterfaceClearRxBuffer()
 #ifdef DEBUG
   printf("FpgaInterfaceClearRxBuffer: Clear RX Buffer\n");
 #endif
-#ifdef NO_DEVMEM
+#if defined(NO_DEVMEM) || !defined(FFT)
+  printf("FpgaInterfaceClearRxBuffer: NO_DEVMEM or ~FFT defined\n");
   memset((unsigned *)(FpgaVirtualAddr+BUFFER_SPAN), 0, BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+BUFFER_SPAN);
 #else
+  printf("FpgaInterfaceClearRxBuffer: ~NO_DEVMEM or FFT defined\n");
   memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0, BUFFER_SPAN);
   return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
 #endif

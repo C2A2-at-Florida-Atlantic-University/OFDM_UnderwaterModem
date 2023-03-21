@@ -25,7 +25,8 @@ uint16_T         TxModulateGetScalarGain(void);
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
 void TxModulateClose(void);
-unsigned *TxModulateGetTxBuffer(void);
 uint16_T TxModulateGetDigitalGain(void);
+ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
+  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
 
 #endif

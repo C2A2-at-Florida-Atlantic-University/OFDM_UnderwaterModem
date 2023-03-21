@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
+#include "FpgaInterface.h"
+#include "RxDemodulate.h"
 #include "d_QamDemod.h"
 #include "rtwtypes.h"
 #include "log2.h"
@@ -187,7 +189,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
 
   if (Loopback)
   {
-    TxBufferPtrLoop = TxModulateGetTxBuffer();
+    TxBufferPtrLoop = FpgaInterfaceGetTxBuffer();
     if (TxBufferPtrLoop == NULL)
     {
       perror("RxDemodulateBufferData");

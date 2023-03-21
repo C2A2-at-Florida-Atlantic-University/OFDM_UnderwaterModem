@@ -210,6 +210,7 @@ int main(int argc, char **argv)
         }
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+        OfdmCalcParams = TransmitChainGetParams();
 
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -228,6 +229,17 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+
+#ifdef DUC
+        ReturnStatus = TxModulateIfft(DebugMode, FileNumber, 
+          OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+#endif
 
         ReturnStatus = TransmitChainEnableDl(false, &OfdmParams, 
           &OfdmTiming);

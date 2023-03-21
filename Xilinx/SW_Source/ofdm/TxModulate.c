@@ -10,13 +10,14 @@
 #include "TransmitChain.h"
 #include "FpgaInterface.h"
 #include "QamMod.h"
+#include "c_Ifft.h"
 #include "rtwtypes.h"
 #include "log2.h"
 #include "math.h"
 
 #define DEBUG
 #define EXTRA_DEBUG
-//#define SAMPLE_DEBUG // Print out some freq domain samples
+#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
@@ -188,8 +189,8 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     NfftCount++;
   }
 #endif
- 
-  // Fill buffer with frequency domain data to be sent to FPGA
+
+  // Fill buffer with frequency domain data
   memcpy((void *) TxBufferPtr, (const void *) &TxOfdmSymbolModData,
     Nfft*OfdmSymbols*4);
 
@@ -364,9 +365,7 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
     MessageByte = fgetc(TxMessageFile);
   }
 
-#ifdef DEBUG
   printf("TxModulateWriteToFile: Wrote to file %s\n", FileNameConverted);
-#endif
 
   fclose(TxWriteFile);
   fclose(TxMessageFile);
@@ -405,12 +404,68 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   return ReturnStatus;
 }
 
+ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
+  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
+{
+  ReturnStatusType ReturnStatus;
+  FILE *FftFile;
+  cint16_T IfftInData[MAX_NFFT];
+  emxArray_creal_T *IfftOutArray;
+  char FileName[32];
+  int NfftSize[1];
+  int NfftInt = (int)Nfft;
+
+  IfftOutArray = malloc(sizeof(emxArray_creal_T));
+  memset(IfftOutArray, 0, sizeof(emxArray_creal_T));
+  NfftSize[0] = (int)Nfft;
+  IfftOutArray->size = &NfftInt;
+  IfftOutArray->allocatedSize = Nfft;
+  IfftOutArray->numDimensions = 1;
+  printf("Debug 7\n");
+
+  if (DebugMode)
+  {
+    sprintf(FileName, "files/TxIfftSamples%d.txt", FileNumber);
+    FftFile = fopen(FileName, "w");
+    if (FftFile == NULL)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "TxModulateIfft: Failed to open %s\n", FileName);
+      return ReturnStatus;
+    }
+  }
+
+  for (unsigned i = 0; i < OfdmSymbols; i++)
+  {
+    for (unsigned j = 0; j < Nfft; j++)
+    {
+      if (i == 0 || i == 10)
+        printf("Debug 10\n");
+      IfftInData[i].re = ((int16_T)(*(TxBufferPtr+i)));
+      IfftInData[i].im = 
+        (int16_T)((((int32_T)(*(TxBufferPtr+i)))&0xFFFF0000)>>16);
+    }
+    printf("Degug 11\n");
+    Ifft(IfftInData,NfftSize,Nfft,IfftOutArray);
+    printf("TxModulateIfft: Symbol %d:\n\t%lf+j%lf\n\t%lf+j%lf\n",
+      i,IfftOutArray->data[0].re,IfftOutArray->data[0].im,
+      IfftOutArray->data[1].re,IfftOutArray->data[1].im);
+  }
+
+  if (DebugMode)
+  {
+    printf("TxModulateIfft: Wrote to file %s\n", FileName);
+    fclose(FftFile);
+  }
+
+  free(IfftOutArray);
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
 void TxModulateClose(void)
 {
   free(TxBufferPtr);
-}
-
-unsigned *TxModulateGetTxBuffer()
-{
-  return TxBufferPtr;
 }

@@ -1,4 +1,7 @@
 NO_DEVMEM = NO_DEVMEM
+# PS_PL_POINT = FFT
+PS_PL_POINT = DUC
+
 CC:=gcc
 
 TARGET:=ofdm
@@ -6,6 +9,7 @@ TARGET:=ofdm
 SOURCEDIR:=.
 QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod
 QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod
+IFFTDIR:=../../../MATLAB/Ifft/codegen/lib/Ifft/
 BUILDDIR:=./
 INCLUDEDIR:=.
 
@@ -29,6 +33,13 @@ HwInterface.c \
 ../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod_terminate.c \
 ../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_getGrayMapping.c \
 ../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/d_QamDemod.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_emxutil.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_initialize.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_terminate.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_emxAPI.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_FFTImplementationCallback.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_data.c \
+../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft.c \
 TxModulate.c \
 RxDemodulate.c \
 Ber.c \
@@ -37,10 +48,10 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(NO_DEVMEM) -Wall -Wextra -O2 -lpthread
+CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -lm
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -lm
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ -lm
