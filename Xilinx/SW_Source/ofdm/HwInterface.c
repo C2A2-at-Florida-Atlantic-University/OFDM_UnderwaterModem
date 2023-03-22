@@ -9,7 +9,7 @@
 #include "HwInterface.h"
 #include "FpgaInterface.h"
 
-#define DEBUG
+//#define DEBUG
 
 // Start TX Transmission (will still wait for DMA data)
 void HwInterfaceStartTx(void)

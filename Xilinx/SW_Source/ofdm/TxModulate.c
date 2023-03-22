@@ -414,14 +414,17 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   char FileName[32];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
+  creal_T *IfftOutData;
 
-  IfftOutArray = malloc(sizeof(emxArray_creal_T));
+  IfftOutArray = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
   memset(IfftOutArray, 0, sizeof(emxArray_creal_T));
+  IfftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
+  memset(IfftOutData, 0, sizeof(creal_T)*MAX_NFFT);
   NfftSize[0] = (int)Nfft;
+  IfftOutArray->data = IfftOutData;
   IfftOutArray->size = &NfftInt;
   IfftOutArray->allocatedSize = Nfft;
   IfftOutArray->numDimensions = 1;
-  printf("Debug 7\n");
 
   if (DebugMode)
   {
@@ -441,16 +444,18 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     for (unsigned j = 0; j < Nfft; j++)
     {
       if (i == 0 || i == 10)
-        printf("Debug 10\n");
       IfftInData[i].re = ((int16_T)(*(TxBufferPtr+i)));
       IfftInData[i].im = 
         (int16_T)((((int32_T)(*(TxBufferPtr+i)))&0xFFFF0000)>>16);
     }
-    printf("Degug 11\n");
     Ifft(IfftInData,NfftSize,Nfft,IfftOutArray);
-    printf("TxModulateIfft: Symbol %d:\n\t%lf+j%lf\n\t%lf+j%lf\n",
-      i,IfftOutArray->data[0].re,IfftOutArray->data[0].im,
-      IfftOutArray->data[1].re,IfftOutArray->data[1].im);
+#ifdef SAMPLE_DEBUG
+    for (int k = 0; k < 12; k++)
+    {
+      printf("TxModulateIfft: Symbol %d: Nfft %d: \n\t%lf+j%lf\n",
+        i,k,IfftOutData[k].re,IfftOutData[k].im);
+    }
+#endif
   }
 
   if (DebugMode)
@@ -459,6 +464,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     fclose(FftFile);
   }
 
+  free(IfftOutData);
   free(IfftOutArray);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

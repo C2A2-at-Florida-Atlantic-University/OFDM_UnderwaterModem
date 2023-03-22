@@ -18,6 +18,7 @@ echo
 cd Xilinx/Vivado/bd
 set -x
 sed -i "s|/mnt/c/Projects/FAU-Modem/OFDM|$FAU_OFDM_REPO_PATH|g" Transmit_Chain_bd.tcl
+#sed -i "s|c:/Projects/FAU-Modem/OFDM|$FAU_OFDM_REPO_PATH|g" Transmit_Chain_bd.tcl
 set +x
 echo
 echo "NOTE: Remember to set PetaLinuxPath and PetaLinuxPathPynq environment variables to build PetaLinux projects for FAU-Modem and Pynq-z2"
