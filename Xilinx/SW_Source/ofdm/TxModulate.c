@@ -24,8 +24,15 @@ static FILE *TxWriteFile; // Frequency domain data
 // Message signal {0,M-1} - pilot density
 static uint8_T TxOfdmSymbolBinData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 // QAM Modulated signal
+#ifdef FFT
 static int16_T TxOfdmSymbolModData[MAX_NFFT*2*MAX_MOD_ORDER];
-unsigned *TxBufferPtr = NULL; // Pointer to TX CMA Buffer
+unsigned *IfftBufferPtr = NULL; 
+#endif
+#ifdef DUC
+creal_T *IfftBufferPtr = NULL; // Pointer to IFFT input Buffer
+creal_T *DucBufferPtr = NULL; // Pointer to DUC inuput Buffer
+#endif
+unsigned *TxBufferPtr = NULL; // Pointer to Tx CMA Buffer
 static uint16_T DigitalGain;
 
 static FILE *PilotDataFile; // Pilot code
@@ -50,7 +57,14 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   unsigned PilotData;
   int i;
 
-  TxBufferPtr = FpgaInterfaceClearTxBuffer();
+#ifdef FFT // Use CMA buffer in which DMA will access
+  IfftBufferPtr = FpgaInterfaceClearTxBuffer();
+#endif
+#ifdef DUC
+  IfftBufferPtr = (creal_T *)
+    malloc((MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
+  memset(IfftBufferPtr, 0, (MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
+#endif
 
   if (TxMessageFile == NULL)
   {
@@ -169,8 +183,31 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       }
     }
 #endif
+#ifdef FFT
     TxOfdmSymbolModData[2*NfftCount] = (int16_T)ModData.re*DigitalGain;
-    TxOfdmSymbolModData[(2*NfftCount)+1] = (int16_T)ModData.im*DigitalGain;
+    TxOfdmSymbolModData[(2*NfftCount)+1] = 
+      (int16_T)ModData.im*DigitalGain;
+    if ((int16_T)ModData.re*DigitalGain > U_DAC_ACCURACY || 
+      (int16_T)ModData.im*DigitalGain > U_DAC_ACCURACY)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
+        "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
+      return ReturnStatus;
+    }
+#endif
+#ifdef DUC
+    IfftBufferPtr[NfftCount].re = ModData.re*(double)DigitalGain;
+    IfftBufferPtr[NfftCount].im = ModData.im*(double)DigitalGain;
+    if (IfftBufferPtr[NfftCount].re > U_DAC_ACCURACY || 
+      IfftBufferPtr[NfftCount].im > U_DAC_ACCURACY)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
+        "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
+      return ReturnStatus;
+    }
+#endif
     NfftCount++;
   }
 
@@ -180,8 +217,14 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   printf("TxModulateFileData: Scaled Frequency Domain Data:\n");
   while (NfftCount < NFFT_DEBUG_COUNT)
   {
+#ifdef FFT
     printf("\t\t%d + j%d\n", TxOfdmSymbolModData[2*NfftCount], 
       TxOfdmSymbolModData[(2*NfftCount)+1]);
+#endif
+#ifdef DUC
+    printf("\t\t%lf + j%lf\n", IfftBufferPtr[NfftCount].re,
+      IfftBufferPtr[NfftCount].im);
+#endif
     if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
     {
       printf("\n");
@@ -190,9 +233,11 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   }
 #endif
 
+#ifdef FFT
   // Fill buffer with frequency domain data
-  memcpy((void *) TxBufferPtr, (const void *) &TxOfdmSymbolModData,
+  memcpy((void *) IfftBufferPtr, (const void *) &TxOfdmSymbolModData,
     Nfft*OfdmSymbols*4);
+#endif
 
   fclose(TxMessageFile);
   fclose(PilotDataFile);
@@ -227,16 +272,7 @@ ReturnStatusType TxModulateGetPilotData(unsigned ModOrder)
 {
   ReturnStatusType ReturnStatus;
   char FileName[1024];
-  //char cwd[1024];
   
-  //if (getcwd(cwd, sizeof(cwd)) == NULL)
-  //{
-  //  ReturnStatus.Status = RETURN_STATUS_FAIL;
-  //  perror("TxModulateGetPilotData");
-  //  return ReturnStatus;
-  //}
-    
-  //sprintf(FileName, "%s/files/PilotDataM%d.txt", cwd, ModOrder);
   sprintf(FileName, "files/PilotDataM%d.txt", ModOrder);
 
   PilotDataFile = fopen(FileName, "r");
@@ -389,9 +425,15 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
 
   for (unsigned i = 0; i < OfdmParams->Nfft*OfdmSymbols; i++)
   {
+#ifdef FFT
     fprintf(TxWriteFile, "%d, %d\n",
-      ((int16_T)(*(TxBufferPtr+i))),
-      (int16_T)((((int32_T)(*(TxBufferPtr+i))) & 0xFFFF0000)>>16));
+      ((int16_T)(*(IfftBufferPtr+i))),
+      (int16_T)((((int32_T)(*(IfftBufferPtr+i))) & 0xFFFF0000)>>16));
+#endif
+#ifdef DUC
+    fprintf(TxWriteFile, "%d, %d\n", (int16_t)IfftBufferPtr[i].re,
+      (int16_t)IfftBufferPtr[i].im);
+#endif
   }
 
 #ifdef DEBUG
@@ -408,7 +450,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
-  FILE *FftFile;
+  FILE *IfftFile = NULL;
   cint16_T IfftInData[MAX_NFFT];
   emxArray_creal_T *IfftOutArray;
   char FileName[32];
@@ -416,6 +458,12 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   int NfftInt = (int)Nfft;
   creal_T *IfftOutData;
 
+#ifdef DUC
+  DucBufferPtr = (creal_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+  memset(DucBufferPtr, 0, (CpLen+Nfft)*OfdmSymbols*4);
+#endif
+
+  // Set up structs for Ifft function
   IfftOutArray = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
   memset(IfftOutArray, 0, sizeof(emxArray_creal_T));
   IfftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
@@ -429,39 +477,86 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   if (DebugMode)
   {
     sprintf(FileName, "files/TxIfftSamples%d.txt", FileNumber);
-    FftFile = fopen(FileName, "w");
-    if (FftFile == NULL)
+    IfftFile = fopen(FileName, "w");
+    if (IfftFile == NULL)
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
+    fprintf(IfftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
 
   for (unsigned i = 0; i < OfdmSymbols; i++)
   {
     for (unsigned j = 0; j < Nfft; j++)
     {
-      if (i == 0 || i == 10)
-      IfftInData[i].re = ((int16_T)(*(TxBufferPtr+i)));
-      IfftInData[i].im = 
-        (int16_T)((((int32_T)(*(TxBufferPtr+i)))&0xFFFF0000)>>16);
+#ifdef FFT
+      IfftInData[j].re = ((int16_T)(*(IfftBufferPtr+j+(Nfft*i))));
+      IfftInData[j].im = 
+        (int16_T)
+        ((((int32_T)(*(IfftBufferPtr+j+(Nfft*i))))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+      IfftInData[j].re = IfftBufferPtr[j+(Nfft*i)].re;
+      IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
+#endif
     }
     Ifft(IfftInData,NfftSize,Nfft,IfftOutArray);
-#ifdef SAMPLE_DEBUG
-    for (int k = 0; k < 12; k++)
+    for (unsigned j = 0; j < Nfft; j++)
     {
-      printf("TxModulateIfft: Symbol %d: Nfft %d: \n\t%lf+j%lf\n",
-        i,k,IfftOutData[k].re,IfftOutData[k].im);
-    }
+      // Apply cyclic prefix (CP)
+      if (j > (Nfft - CpLen))
+      {
+        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].re = 
+          IfftOutData[j].re;
+        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].im = 
+          IfftOutData[j].im;
+      }
+      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].re = IfftOutData[j].re;
+      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].im = IfftOutData[j].im;
+
+      // Check for saturation
+      if (IfftOutData[j].re > U_DAC_ACCURACY || 
+        IfftOutData[j].im > U_DAC_ACCURACY)
+      {
+        ReturnStatus.Status = RETURN_STATUS_FAIL;
+        sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
+          "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
+        return ReturnStatus;
+      }
+#ifdef SAMPLE_DEBUG
+      if (i == 0 && j == 0)
+      {
+        printf("\nTxModulateIfft: Time domain data:\n");
+      }
+      if (j < 12 && i == 0)
+      {
+        printf("\tSymbol %d: Nfft %d: \n\t%lf+j%lf\n",
+          i,j,IfftOutData[j].re,IfftOutData[j].im);
+      }
 #endif
+    }
+  }
+
+  // Print IFFT output to file
+  if (DebugMode)
+  {
+    for (unsigned i = 0; i < (Nfft+CpLen)*OfdmSymbols; i++)
+    {
+      fprintf(IfftFile, "%lf, %lf\n", DucBufferPtr[i].re,
+        DucBufferPtr[i].im);
+    }
   }
 
   if (DebugMode)
   {
     printf("TxModulateIfft: Wrote to file %s\n", FileName);
-    fclose(FftFile);
+    if (IfftFile != NULL)
+    {
+      fclose(IfftFile);
+    }
   }
 
   free(IfftOutData);
@@ -471,7 +566,14 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   return ReturnStatus;
 }
 
+#ifndef FFT
+creal_T *TxModulateGetTxBuffer(void)
+{
+  return IfftBufferPtr;
+}
+#endif
+
 void TxModulateClose(void)
 {
-  free(TxBufferPtr);
+  free(IfftBufferPtr);
 }

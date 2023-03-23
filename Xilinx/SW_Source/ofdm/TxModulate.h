@@ -9,7 +9,7 @@
 #include "rtwtypes.h"
 #include "TransmitChain.h"
 
-#define DEFAULT_DIGITAL_GAIN_DBFS -54
+#define DEFAULT_DIGITAL_GAIN_DBFS -25
 #define MAX_SAMPLE_VALUE ((1 << 14)-1) // 14 bit IQ
 #define IFFT_CONJUGATE 0x1
 
@@ -28,5 +28,6 @@ void TxModulateClose(void);
 uint16_T TxModulateGetDigitalGain(void);
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
+creal_T *TxModulateGetTxBuffer(void);
 
 #endif

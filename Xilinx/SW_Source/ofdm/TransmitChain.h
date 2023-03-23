@@ -6,11 +6,16 @@
 
 #include <stdbool.h>
 
+// Fixed parameters
 #define PILOT_DENSITY 1/4 
 #define DATA_DENSITY 3/4
 #define MAX_NFFT 4096
+#define MAX_CP_LEN MAX_NFFT
 #define MAX_MOD_ORDER 16
+#define MAX_OFDM_SYMBOLS 16
+#define U_DAC_ACCURACY 8192 // 14-bit unsigned DAC
 
+// User default parameters
 #define DEFAULT_NFFT 1024
 #define DEFAULT_BANDWIDTH 250 // in kHz
 #define DEFAULT_CP_LEN 256 // in Samples

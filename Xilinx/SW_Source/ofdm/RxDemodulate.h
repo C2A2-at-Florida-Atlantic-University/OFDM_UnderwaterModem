@@ -17,5 +17,8 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   unsigned ModOrder, unsigned Nfft, unsigned OfdmSymbols);
 void RxDemodulatePrintCrealType(creal32_T Data);
 ReturnStatusType RxDemodulateWriteToFile(bool open, unsigned FileNumber);
+ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
+  unsigned FileNumber, unsigned Nfft, unsigned CpLen, 
+  unsigned OfdmSymbols);
 
 #endif

@@ -10,8 +10,13 @@
 #define FPGA_REG_BASE_ADDR  (0x0)
 
 #define TX_BUFFER_BASE 0x1F000000
-#define RX_BUFFER_BASE 0x1F040000
-#define BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols)
+#define RX_BUFFER_BASE 0x1F080000
+#ifdef FFT
+#define BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols max)
+#endif
+#ifdef DUC
+#define BUFFER_SPAN 0x7FFFF // ((4096 carriers + 4096 cp) * 16 symbols max)
+#endif
 
 
 ReturnStatusType FpgaInterfaceSetup(void);

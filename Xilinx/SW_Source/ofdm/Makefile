@@ -1,5 +1,5 @@
 NO_DEVMEM = NO_DEVMEM
-# PS_PL_POINT = FFT
+#PS_PL_POINT = FFT
 PS_PL_POINT = DUC
 
 CC:=gcc
@@ -10,6 +10,7 @@ SOURCEDIR:=.
 QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod
 QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod
 IFFTDIR:=../../../MATLAB/Ifft/codegen/lib/Ifft/
+FFTDIR:=../../../MATLAB/Fft/codegen/lib/Fft/
 BUILDDIR:=./
 INCLUDEDIR:=.
 
@@ -40,6 +41,12 @@ HwInterface.c \
 ../../../MATLAB/Ifft/codegen/lib/Ifft/c_FFTImplementationCallback.c \
 ../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft_data.c \
 ../../../MATLAB/Ifft/codegen/lib/Ifft/c_Ifft.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_emxutil.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_initialize.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_terminate.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_data.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_FFTImplementationCallback.c \
+../../../MATLAB/Fft/codegen/lib/Fft/f_Fft.c \
 TxModulate.c \
 RxDemodulate.c \
 Ber.c \
@@ -51,7 +58,7 @@ OBJECTS := $(SOURCES:%.c=%.o)
 CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -lm
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -lm
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ -lm

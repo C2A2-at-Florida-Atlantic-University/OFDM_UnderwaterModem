@@ -10,9 +10,9 @@
 #include <sys/types.h>
 #include "FpgaInterface.h"
 
-#define DEBUG
-#define READ_DEBUG
-#define WRITE_DEBUG
+//#define DEBUG
+//#define READ_DEBUG
+//#define WRITE_DEBUG
 
 static int FpgaRegDevice;
 static void *FpgaVirtualAddr;

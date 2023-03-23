@@ -11,12 +11,18 @@
 #include "RxDemodulate.h"
 #include "d_QamDemod.h"
 #include "rtwtypes.h"
+#include "f_Fft.h"
 #include "log2.h"
 
 #define DEBUG
 #define SAMPLE_DEBUG
 
+#ifdef FFT
 static unsigned *TxBufferPtrLoop = NULL;
+#endif
+#ifdef DUC
+static creal_T *TxBufferPtrLoop = NULL;
+#endif
 //unsigned *RxBufferPtr = NULL;
 static uint8_T DemodData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
@@ -189,7 +195,12 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
 
   if (Loopback)
   {
+#ifdef FFT
     TxBufferPtrLoop = FpgaInterfaceGetTxBuffer();
+#endif
+#ifdef DUC
+    TxBufferPtrLoop = TxModulateGetTxBuffer();
+#endif
     if (TxBufferPtrLoop == NULL)
     {
       perror("RxDemodulateBufferData");
@@ -205,9 +216,15 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
   {
     if (!(i % 4)) // If currently on a pilot subcarrier
     {
+#ifdef FFT
       IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
       IqData.im = (float)
         (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+      IqData.re = TxBufferPtrLoop[i].re;
+      IqData.im = TxBufferPtrLoop[i].im;
+#endif
       if (Loopback)
       {
         IqData.re = IqData.re/DigitalGain;
@@ -233,9 +250,15 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
     }
     else // Data subcarrier
     {
+#ifdef FFT
       IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
       IqData.im = (float)
         (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+      IqData.re = TxBufferPtrLoop[i].re;
+      IqData.im = TxBufferPtrLoop[i].im;
+#endif
       if (Loopback)
       {
         IqData.re = IqData.re/DigitalGain;
@@ -271,5 +294,73 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
 
   ReturnStatus = RxDemodulateRecoverMessage(FileNumber, ModOrder, Nfft,
     OfdmSymbols);
+  return ReturnStatus;
+}
+
+ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
+  unsigned FileNumber, unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
+{
+  ReturnStatusType ReturnStatus;
+  FILE *FftFile = NULL;
+  char FileName[32];
+  cint16_T *FftInData;
+  creal_T *FftOutData;
+  emxArray_creal_T *FftOutStruct;
+  int NfftSize[1];
+  int NfftInt = (int)Nfft;
+
+  FftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
+  memset(FftOutStruct, 0, sizeof(emxArray_creal_T));
+  FftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
+  memset(FftOutData, 0, sizeof(creal_T)*MAX_NFFT);
+  NfftSize[0] = (int)Nfft;
+  FftOutStruct->data = FftOutData;
+  FftOutStruct->size = &NfftInt;
+  FftOutStruct->allocatedSize = Nfft;
+  FftOutStruct->numDimensions = 1;
+
+#ifdef DUC
+  if (Loopback)
+  {
+    FftInData = (cint16_T *)TxModulateGetTxBuffer();
+  }
+#endif
+
+  if (DebugMode)
+  {
+    sprintf(FileName, "files/RxFftSamples%d.txt", FileNumber);
+    FftFile = fopen(FileName, "w");
+    if (FftFile == NULL)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateFft: Failed to open %s\n", FileName);
+      return ReturnStatus;
+    }
+    fprintf(FftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
+  }
+
+  for (unsigned i = 0; i < OfdmSymbols; i++)
+  {
+    for (unsigned j = 0; j < Nfft+CpLen; j++)
+    {
+
+    }
+    Fft(FftInData,NfftSize,Nfft,FftOutStruct);
+  }
+
+  if (DebugMode)
+  {
+    printf("RxDemodulateFft: Wrote to file %s\n", FileName);
+    if (FftFile != NULL)
+    {
+      fclose(FftFile);
+    }
+  }
+
+  free(FftOutData);
+  free(FftOutStruct);
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
