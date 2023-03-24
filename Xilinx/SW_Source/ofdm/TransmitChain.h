@@ -19,7 +19,7 @@
 #define DEFAULT_NFFT 1024
 #define DEFAULT_BANDWIDTH 250 // in kHz
 #define DEFAULT_CP_LEN 256 // in Samples
-#define DEFAULT_MOD_ORDER 2 // QPSK
+#define DEFAULT_MOD_ORDER 16 // QPSK
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
 #define DEFAULT_FRAME_GUARD_PERIOD 5 // in ms

@@ -93,7 +93,8 @@ int main(int argc, char **argv)
     printf("7  - Write Transmitted Sub-Carriers to File\n");
     printf("8  - Demod TX Buffer to File\n");
     printf("9  - Demod RX Buffer to File\n");
-    printf("10 - Compute BER/SER\n");
+    printf("10 - Demod RX Injection to File\n");
+    printf("11 - Compute BER/SER\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -265,7 +266,8 @@ int main(int argc, char **argv)
       case 8:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = RxDemodulateBufferData(DebugMode, true, FileNumber, 
+        ReturnStatus = RxDemodulateBufferData(DebugMode,
+          RX_DEMODULATE_TX_LOOPBACK, FileNumber, 
           OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
           OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -279,6 +281,15 @@ int main(int argc, char **argv)
         break;
 
       case 10:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = RxDemodulateBufferData(DebugMode, 
+          RX_DEMODULATE_FILE_INJECTION, FileNumber, OfdmParams.ModOrder,
+          OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame);
+        break;
+
+      case 11:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,

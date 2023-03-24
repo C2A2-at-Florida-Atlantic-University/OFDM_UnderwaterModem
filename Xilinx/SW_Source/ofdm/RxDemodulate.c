@@ -31,7 +31,26 @@ static creal_T *FftOutArray;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
   0x02, 0x01};
-static const int BIT_MASK_M4[4] = {0xC0, 0x30, 0x0C, 0x03};
+
+static const int BIT_MASK_M4_1[4] = {0x40, 0x10, 0x04, 0x01};
+static const int BIT_MASK_M4_2[4] = {0x80, 0x20, 0x08, 0x02};
+static const int BIT_MASK_M4_3[4] = {0xC0, 0x30, 0x0C, 0x03};
+
+static const int BIT_MASK_M16_1[2] = {0x10, 0x01};
+static const int BIT_MASK_M16_2[2] = {0x20, 0x02};
+static const int BIT_MASK_M16_3[2] = {0x30, 0x03};
+static const int BIT_MASK_M16_4[2] = {0x40, 0x04};
+static const int BIT_MASK_M16_5[2] = {0x50, 0x05};
+static const int BIT_MASK_M16_6[2] = {0x60, 0x06};
+static const int BIT_MASK_M16_7[2] = {0x70, 0x07};
+static const int BIT_MASK_M16_8[2] = {0x80, 0x08};
+static const int BIT_MASK_M16_9[2] = {0x90, 0x09};
+static const int BIT_MASK_M16_10[2] = {0xA0, 0x0A};
+static const int BIT_MASK_M16_11[2] = {0xB0, 0x0B};
+static const int BIT_MASK_M16_12[2] = {0xC0, 0x0C};
+static const int BIT_MASK_M16_13[2] = {0xD0, 0x0D};
+static const int BIT_MASK_M16_14[2] = {0xE0, 0x0E};
+static const int BIT_MASK_M16_15[2] = {0xF0, 0x0F};
 
 void RxDemodulatePrintCrealType(creal32_T Data)
 {
@@ -85,15 +104,15 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   for (unsigned DataIndex = 0; DataIndex < Nfft*OfdmSymbols*DATA_DENSITY;
     DataIndex++)
   {
-    switch (ModOrder) 
-    {
-      case 2:
 #ifdef SAMPLE_DEBUG
         if (DataIndex < 12*8) 
         {
           printf("DemodData[%d] = %d\n", DataIndex, DemodData[DataIndex]);
         }
 #endif
+    switch (ModOrder) 
+    {
+      case 2:
         if (DemodData[DataIndex] == 1)
         {
           ch = ch + BIT_MASK_M2[CharCount];
@@ -101,15 +120,86 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
         break;
       
       case 4:
-        if (!(DemodData[DataIndex] == 0))
+        switch(DemodData[DataIndex])
         {
-          ch = ch + BIT_MASK_M4[CharCount];
+          case 1:
+            ch = ch + BIT_MASK_M4_1[CharCount];
+            break;
+
+          case 2:
+            ch = ch + BIT_MASK_M4_2[CharCount];
+            break;
+
+          case 3:
+            ch = ch + BIT_MASK_M4_3[CharCount];
+            break;
         }
         break;
 
       case 16:
-        printf("Hello2\n");
-        DataIndex+=3;
+        switch(DemodData[DataIndex])
+        {
+          case 1:
+            ch = ch + BIT_MASK_M16_1[CharCount];
+            break;
+
+          case 2:
+            ch = ch + BIT_MASK_M16_2[CharCount];
+            break;
+
+          case 3:
+            ch = ch + BIT_MASK_M16_3[CharCount];
+            break;
+
+          case 4:
+            ch = ch + BIT_MASK_M16_4[CharCount];
+            break;
+
+          case 5:
+            ch = ch + BIT_MASK_M16_5[CharCount];
+            break;
+
+          case 6:
+            ch = ch + BIT_MASK_M16_6[CharCount];
+            break;
+
+          case 7:
+            ch = ch + BIT_MASK_M16_7[CharCount];
+            break;
+
+          case 8:
+            ch = ch + BIT_MASK_M16_8[CharCount];
+            break;
+
+          case 9:
+            ch = ch + BIT_MASK_M16_9[CharCount];
+            break;
+
+          case 10:
+            ch = ch + BIT_MASK_M16_10[CharCount];
+            break;
+
+          case 11:
+            ch = ch + BIT_MASK_M16_11[CharCount];
+            break;
+
+          case 12:
+            ch = ch + BIT_MASK_M16_12[CharCount];
+            break;
+
+          case 13:
+            ch = ch + BIT_MASK_M16_13[CharCount];
+            break;
+
+          case 14:
+            ch = ch + BIT_MASK_M16_14[CharCount];
+            break;
+
+          case 15:
+            ch = ch + BIT_MASK_M16_15[CharCount];
+            break;
+
+        }
         break;
 
       default:
@@ -147,9 +237,9 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   return ReturnStatus;
 }
 
-ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback, 
-  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, unsigned CpLen,
-  unsigned OfdmSymbols)
+ReturnStatusType RxDemodulateBufferData(bool DebugMode, 
+  unsigned LoopMethod, unsigned FileNumber, unsigned ModOrder, 
+  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   creal32_T IqData;
@@ -194,14 +284,14 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
     fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
   }
 
-  ReturnStatus = RxDemodulateFft(DebugMode, Loopback, FileNumber,
+  ReturnStatus = RxDemodulateFft(DebugMode, LoopMethod, FileNumber,
     Nfft, CpLen, OfdmSymbols);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     return ReturnStatus;
   }
 
-  if (Loopback)
+  if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
   {
 #ifdef FFT
     TxBufferPtrLoop = FpgaInterfaceGetTxBuffer();
@@ -233,12 +323,28 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      if (Loopback)
+      if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
       {
         IqData.re = IqData.re/DigitalGain;
         IqData.im = IqData.im/DigitalGain;
       }
-      PilotData[PilotCount] = IqData;
+/*      else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+      {
+#ifdef SAMPLE_DEBUG
+        if (i == 0)
+        {
+          printf("Time Domain RX File Injection Data:\n");
+        }
+        if (i < 12)
+        {
+          ScanfRet = fscanf(RxInjectFile, "%d, ", &tmp);
+          printf("%d+j", tmp);
+          ScanfRet = fscanf(RxInjectFile, "%d\n", &tmp);
+          printf("%d\n", tmp);
+        }
+      }
+#endif
+*/      PilotData[PilotCount] = IqData;
       PilotCount++;
       if (DebugMode)
       {
@@ -267,7 +373,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      if (Loopback)
+      if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
       {
         IqData.re = IqData.re/DigitalGain;
         IqData.im = IqData.im/DigitalGain;
@@ -305,8 +411,9 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
   return ReturnStatus;
 }
 
-ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
-  unsigned FileNumber, unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
+ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
+  unsigned FileNumber, unsigned Nfft, unsigned CpLen,
+  unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
@@ -317,6 +424,10 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   emxArray_creal_T *FftOutStruct;
   int NfftSize[1];
   int NfftInt = (int)Nfft;
+  char FileNameOut2[64];
+  FILE *RxInjectFile;
+  unsigned ScanfRet;
+  unsigned tmp;
 
   FftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
   memset(FftOutStruct, 0, sizeof(emxArray_creal_T));
@@ -331,9 +442,51 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   FftOutStruct->numDimensions = 1;
 
 #ifdef DUC
-  if (Loopback)
+  if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
   {
     BufferInData = TxModulateGetTxBuffer();
+  }
+  else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+  {
+    sprintf(FileNameOut2, "files/RxFftInjectData%d.txt", FileNumber);
+    RxInjectFile = fopen(FileNameOut2, "r");
+    if (RxInjectFile == NULL)
+    {
+      perror("RxDemodulateBufferData");
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Failed to open %s\n", FileNameOut2);
+      return ReturnStatus;
+    }
+    // Check header information
+    ScanfRet = fscanf(RxInjectFile, "%d,\n", &tmp);
+    if (tmp != Nfft)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Error with header in file %s"
+        "Nfft = %d, Header Nfft = %d\n", FileNameOut2, Nfft, tmp);
+      return ReturnStatus;
+    }
+    ScanfRet = fscanf(RxInjectFile, "%d,\n", &tmp);
+    if (tmp != CpLen)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Error with header in file %s"
+        "CpLen = %d, Header CpLen = %d\n", FileNameOut2, CpLen, tmp);
+      return ReturnStatus;
+    }
+    ScanfRet = fscanf(RxInjectFile, "%d,\n", &tmp);
+    if (tmp != OfdmSymbols)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateBufferData: Error with header in file %s"
+        "OfdmSymbols = %d, Header OfdmSymbols = %d\n", FileNameOut2, 
+        OfdmSymbols, tmp);
+      return ReturnStatus;
+    }
   }
 #endif
 
@@ -411,6 +564,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   free(FftInData);
   free(FftOutData);
   free(FftOutStruct);
+  printf("%d\n", ScanfRet); // Get rid of warnings
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
