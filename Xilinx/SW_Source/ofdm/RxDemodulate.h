@@ -10,7 +10,7 @@
 #include "rtwtypes.h"
 
 ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
-  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, 
+  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, unsigned CpLen,
   unsigned OfdmSymbols);
 ReturnStatusType RxDemodulateFileData(char *FileName);
 ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,

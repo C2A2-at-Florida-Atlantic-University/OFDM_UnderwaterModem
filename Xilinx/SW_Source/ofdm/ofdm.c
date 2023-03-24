@@ -266,7 +266,7 @@ int main(int argc, char **argv)
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = RxDemodulateBufferData(DebugMode, true, FileNumber, 
-          OfdmParams.ModOrder, OfdmParams.Nfft, 
+          OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
           OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {

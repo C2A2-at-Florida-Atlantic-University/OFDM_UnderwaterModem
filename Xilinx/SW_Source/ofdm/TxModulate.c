@@ -26,13 +26,13 @@ static uint8_T TxOfdmSymbolBinData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 // QAM Modulated signal
 #ifdef FFT
 static int16_T TxOfdmSymbolModData[MAX_NFFT*2*MAX_MOD_ORDER];
-unsigned *IfftBufferPtr = NULL; 
+static unsigned *IfftBufferPtr = NULL; 
 #endif
 #ifdef DUC
-creal_T *IfftBufferPtr = NULL; // Pointer to IFFT input Buffer
-creal_T *DucBufferPtr = NULL; // Pointer to DUC inuput Buffer
+static creal_T *IfftBufferPtr = NULL; // Pointer to IFFT input Buffer
+static creal_T *DucBufferPtr = NULL; // Pointer to DUC inuput Buffer
 #endif
-unsigned *TxBufferPtr = NULL; // Pointer to Tx CMA Buffer
+//static unsigned *TxBufferPtr = NULL; // Pointer to Tx CMA Buffer
 static uint16_T DigitalGain;
 
 static FILE *PilotDataFile; // Pilot code
@@ -452,7 +452,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   ReturnStatusType ReturnStatus;
   FILE *IfftFile = NULL;
   cint16_T IfftInData[MAX_NFFT];
-  emxArray_creal_T *IfftOutArray;
+  emxArray_creal_T *IfftOutStruct;
   char FileName[32];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
@@ -464,15 +464,15 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 #endif
 
   // Set up structs for Ifft function
-  IfftOutArray = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
-  memset(IfftOutArray, 0, sizeof(emxArray_creal_T));
+  IfftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
+  memset(IfftOutStruct, 0, sizeof(emxArray_creal_T));
   IfftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
   memset(IfftOutData, 0, sizeof(creal_T)*MAX_NFFT);
   NfftSize[0] = (int)Nfft;
-  IfftOutArray->data = IfftOutData;
-  IfftOutArray->size = &NfftInt;
-  IfftOutArray->allocatedSize = Nfft;
-  IfftOutArray->numDimensions = 1;
+  IfftOutStruct->data = IfftOutData;
+  IfftOutStruct->size = &NfftInt;
+  IfftOutStruct->allocatedSize = Nfft;
+  IfftOutStruct->numDimensions = 1;
 
   if (DebugMode)
   {
@@ -503,11 +503,11 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
 #endif
     }
-    Ifft(IfftInData,NfftSize,Nfft,IfftOutArray);
+    Ifft(IfftInData,NfftSize,Nfft,IfftOutStruct);
     for (unsigned j = 0; j < Nfft; j++)
     {
       // Apply cyclic prefix (CP)
-      if (j > (Nfft - CpLen))
+      if (j >= (Nfft - CpLen))
       {
         DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].re = 
           IfftOutData[j].re;
@@ -560,7 +560,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   }
 
   free(IfftOutData);
-  free(IfftOutArray);
+  free(IfftOutStruct);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -569,7 +569,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 #ifndef FFT
 creal_T *TxModulateGetTxBuffer(void)
 {
-  return IfftBufferPtr;
+  return DucBufferPtr;
 }
 #endif
 

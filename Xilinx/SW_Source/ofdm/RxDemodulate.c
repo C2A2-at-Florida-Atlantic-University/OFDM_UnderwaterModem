@@ -27,6 +27,7 @@ static creal_T *TxBufferPtrLoop = NULL;
 static uint8_T DemodData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
 static FILE *RxMessageFile;
+static creal_T *FftOutArray;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
   0x02, 0x01};
@@ -147,7 +148,7 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
 }
 
 ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback, 
-  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, 
+  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, unsigned CpLen,
   unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
@@ -193,13 +194,20 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
     fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
   }
 
+  ReturnStatus = RxDemodulateFft(DebugMode, Loopback, FileNumber,
+    Nfft, CpLen, OfdmSymbols);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    return ReturnStatus;
+  }
+
   if (Loopback)
   {
 #ifdef FFT
     TxBufferPtrLoop = FpgaInterfaceGetTxBuffer();
 #endif
 #ifdef DUC
-    TxBufferPtrLoop = TxModulateGetTxBuffer();
+    TxBufferPtrLoop = FftOutArray;
 #endif
     if (TxBufferPtrLoop == NULL)
     {
@@ -303,6 +311,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
   char FileName[32];
+  creal_T *BufferInData;
   cint16_T *FftInData;
   creal_T *FftOutData;
   emxArray_creal_T *FftOutStruct;
@@ -313,6 +322,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   memset(FftOutStruct, 0, sizeof(emxArray_creal_T));
   FftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
   memset(FftOutData, 0, sizeof(creal_T)*MAX_NFFT);
+  FftInData = (cint16_T *)malloc(sizeof(cint16_T)*MAX_NFFT);
+  FftOutArray = (creal_T *)malloc(sizeof(creal_T)*Nfft*OfdmSymbols);
   NfftSize[0] = (int)Nfft;
   FftOutStruct->data = FftOutData;
   FftOutStruct->size = &NfftInt;
@@ -322,7 +333,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
 #ifdef DUC
   if (Loopback)
   {
-    FftInData = (cint16_T *)TxModulateGetTxBuffer();
+    BufferInData = TxModulateGetTxBuffer();
   }
 #endif
 
@@ -344,9 +355,48 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
   {
     for (unsigned j = 0; j < Nfft+CpLen; j++)
     {
-
+      // Remove cyclic prefix (CP)
+      if (!(j < CpLen))
+      {
+        FftInData[j-CpLen].re = (int16_t)
+          BufferInData[(i*(CpLen+Nfft))+j].re;
+        FftInData[j-CpLen].im = (int16_t)
+          BufferInData[(i*(CpLen+Nfft))+j].im;
+#ifdef SAMPLE_DEBUG
+        if (i == 0 && j == CpLen)
+        {
+          printf("\nRxDemodulateFft: Time domain data:\n");
+        }
+        if (i == 0 && j < CpLen+12)
+        {
+          printf("\tSymbol %d: Nfft %d:\n\t%d+j%d\n",
+            i, j-CpLen,FftInData[j-CpLen].re,FftInData[j-CpLen].im);
+        }
+#endif
+      }
     }
     Fft(FftInData,NfftSize,Nfft,FftOutStruct);
+    for (unsigned j = 0; j < Nfft; j++)
+    {
+      FftOutArray[(i*Nfft)+j].re = FftOutData[j].re;
+      FftOutArray[(i*Nfft)+j].im = FftOutData[j].im;
+      if (DebugMode)
+      {
+        fprintf(FftFile, "%lf, %lf\n", FftOutData[j].re,
+          FftOutData[j].im);
+#ifdef SAMPLE_DEBUG
+        if (i == 0 && j == 0)
+        {
+          printf("\nRxDemodulateFft: Frequency domain data:\n");
+        }
+        if (i == 0 && j < 12)
+        {
+          printf("\tSymbol %d: Nfft %d:\n\t%lf+j%lf\n",
+            i,j,FftOutData[j].re,FftOutData[j].im);
+        }
+#endif
+      }
+    }
   }
 
   if (DebugMode)
@@ -358,6 +408,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
     }
   }
 
+  free(FftInData);
   free(FftOutData);
   free(FftOutStruct);
 
