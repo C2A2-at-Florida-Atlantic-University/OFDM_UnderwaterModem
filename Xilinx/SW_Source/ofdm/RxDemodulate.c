@@ -164,7 +164,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool Loopback,
   if (DebugMode)
   {
     // File containing FFT output data
-    sprintf(FileNameOut, "files/RxFreqData%d.txt", FileNumber);
+    sprintf(FileNameOut, "files/RxFreqDataNoPilots%d.txt", FileNumber);
 
     RxFreqFile = fopen(FileNameOut, "w");
     if (RxFreqFile == NULL)
@@ -339,7 +339,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool Loopback,
 
   if (DebugMode)
   {
-    sprintf(FileName, "files/RxFftSamples%d.txt", FileNumber);
+    sprintf(FileName, "files/RxFreqData%d.txt", FileNumber);
     FftFile = fopen(FileName, "w");
     if (FftFile == NULL)
     {
