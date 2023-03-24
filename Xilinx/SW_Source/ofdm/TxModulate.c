@@ -63,6 +63,13 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #ifdef DUC
   IfftBufferPtr = (creal_T *)
     malloc((MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
+  if (IfftBufferPtr == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateFileData: Could not malloc IfftBufferPtr\n");
+    return ReturnStatus;
+  }
   memset(IfftBufferPtr, 0, (MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
 #endif
 
@@ -460,13 +467,34 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 
 #ifdef DUC
   DucBufferPtr = (creal_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+  if (DucBufferPtr == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateIfft: Could not malloc DucBufferPtr\n");
+    return ReturnStatus;
+  }
   memset(DucBufferPtr, 0, (CpLen+Nfft)*OfdmSymbols*4);
 #endif
 
   // Set up structs for Ifft function
   IfftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
+  if (IfftOutStruct == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateIfft: Could not malloc IfftOutStruct\n");
+    return ReturnStatus;
+  }
   memset(IfftOutStruct, 0, sizeof(emxArray_creal_T));
   IfftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
+  if (IfftOutData == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateIfft: Could not malloc IfftOutData\n");
+    return ReturnStatus;
+  }
   memset(IfftOutData, 0, sizeof(creal_T)*MAX_NFFT);
   NfftSize[0] = (int)Nfft;
   IfftOutStruct->data = IfftOutData;
@@ -566,12 +594,15 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   return ReturnStatus;
 }
 
-#ifndef FFT
 creal_T *TxModulateGetTxBuffer(void)
 {
   return DucBufferPtr;
 }
-#endif
+
+void TxModulateFreeTxBuffer(void)
+{
+  free(DucBufferPtr);
+}
 
 void TxModulateClose(void)
 {

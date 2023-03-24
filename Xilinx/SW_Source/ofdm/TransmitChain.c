@@ -36,16 +36,21 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
   OfdmCalcParams.NfftScaled = ceil(log2(OfdmParams->Nfft));
 }
 
-ReturnStatusType TransmitChainEnableDl(bool Continuous, 
+ReturnStatusType TransmitChainEnableDl( 
   Ofdm_Parameters_Type *OfdmParams, Ofdm_Timing_Type *OfdmTiming)
 {
   ReturnStatusType ReturnStatus;
- 
+
+#ifdef FFT
   HwInterfaceConfigTxChain(OfdmParams, &OfdmCalcParams, OfdmTiming);
   HwInterfaceConfigFftCore();
   HwInterfaceStartTx();
 
   HwInterfaceStopTx();
+#else // Get rid of compile warnings
+  printf("%d %d\n", OfdmParams->Nfft, OfdmTiming->FrameGuardPeriod);
+#endif
+
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

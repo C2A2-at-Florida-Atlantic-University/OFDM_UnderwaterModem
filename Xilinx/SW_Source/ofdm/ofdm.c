@@ -242,7 +242,7 @@ int main(int argc, char **argv)
         }
 #endif
 
-        ReturnStatus = TransmitChainEnableDl(false, &OfdmParams, 
+        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
           &OfdmTiming);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {

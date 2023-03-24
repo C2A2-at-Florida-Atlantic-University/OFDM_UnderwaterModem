@@ -27,6 +27,7 @@ static creal_T *TxBufferPtrLoop = NULL;
 static uint8_T DemodData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
 static FILE *RxMessageFile;
+static FILE *RxInjectFile;
 static creal_T *FftOutArray;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
@@ -286,6 +287,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
   ReturnStatus = RxDemodulateFft(DebugMode, LoopMethod, FileNumber,
     Nfft, CpLen, OfdmSymbols);
+    printf("Debug1\n");
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     return ReturnStatus;
@@ -299,16 +301,20 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 #ifdef DUC
     TxBufferPtrLoop = FftOutArray;
 #endif
-    if (TxBufferPtrLoop == NULL)
-    {
-      perror("RxDemodulateBufferData");
-      ReturnStatus.Status = RETURN_STATUS_FAIL;
-      sprintf(ReturnStatus.ErrString,
-        "RxDemodulateBufferData: No Data on TX Buffer\n");
-      return ReturnStatus;
-    }
-    DigitalGain = TxModulateGetScalarGain();
   }
+  else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+  {
+    TxBufferPtrLoop = FftOutArray;
+  }
+  if (TxBufferPtrLoop == NULL)
+  {
+    perror("RxDemodulateBufferData");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateBufferData: No Data on TX Buffer\n");
+    return ReturnStatus;
+  }
+  DigitalGain = TxModulateGetScalarGain();
 
   for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
   {
@@ -323,35 +329,14 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
-      {
-        IqData.re = IqData.re/DigitalGain;
-        IqData.im = IqData.im/DigitalGain;
-      }
-/*      else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
-      {
-#ifdef SAMPLE_DEBUG
-        if (i == 0)
-        {
-          printf("Time Domain RX File Injection Data:\n");
-        }
-        if (i < 12)
-        {
-          ScanfRet = fscanf(RxInjectFile, "%d, ", &tmp);
-          printf("%d+j", tmp);
-          ScanfRet = fscanf(RxInjectFile, "%d\n", &tmp);
-          printf("%d\n", tmp);
-        }
-      }
-#endif
-*/      PilotData[PilotCount] = IqData;
+      IqData.re = IqData.re/DigitalGain;
+      IqData.im = IqData.im/DigitalGain;
+      PilotData[PilotCount] = IqData;
       PilotCount++;
       if (DebugMode)
       {
         fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
           IqData.im);
-        //fprintf(RxDemodFile, "%d\n", (unsigned)QamDemod(IqData, 
-        //  (float)ModOrder));
       }
 #ifdef SAMPLE_DEBUG
       if (i < 16)
@@ -373,11 +358,8 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
-      {
-        IqData.re = IqData.re/DigitalGain;
-        IqData.im = IqData.im/DigitalGain;
-      }
+      IqData.re = IqData.re/DigitalGain;
+      IqData.im = IqData.im/DigitalGain;
       DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
       if (DebugMode)
       {
@@ -402,9 +384,30 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     FileNameOut);
   printf("RxDemodulateBufferData: Wrote RX Demod Data to %s\n",
     FileNameOut1);
+  
+  if (DebugMode)
+  {
+    if (RxFreqFile != NULL)
+    {
+      fclose(RxFreqFile);
+    }
+    if (RxDemodFile != NULL)
+    {
+      fclose(RxDemodFile);
+    }
+    if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+    {
+      if (RxInjectFile != NULL)
+      {
+        fclose(RxInjectFile);
+      }
+    }
+  }
 
-  fclose(RxFreqFile);
-  fclose(RxDemodFile);
+  if (FftOutArray != NULL)
+  {
+    free(FftOutArray);
+  }
 
   ReturnStatus = RxDemodulateRecoverMessage(FileNumber, ModOrder, Nfft,
     OfdmSymbols);
@@ -418,23 +421,51 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
   char FileName[32];
-  creal_T *BufferInData;
-  cint16_T *FftInData;
-  creal_T *FftOutData;
-  emxArray_creal_T *FftOutStruct;
+  creal_T *BufferInData = NULL;
+  cint16_T *FftInData = NULL;
+  creal_T *FftOutData = NULL;
+  emxArray_creal_T *FftOutStruct = NULL;
   int NfftSize[1];
   int NfftInt = (int)Nfft;
   char FileNameOut2[64];
-  FILE *RxInjectFile;
   unsigned ScanfRet;
   unsigned tmp;
+  double tmp1,tmp2;
 
   FftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
+  if (FftOutStruct == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateFft: Could not malloc FftOutStruct\n");
+    return ReturnStatus;
+  }
   memset(FftOutStruct, 0, sizeof(emxArray_creal_T));
   FftOutData = (creal_T *)malloc(sizeof(creal_T)*MAX_NFFT);
+  if (FftOutData == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateFft: Could not malloc FftOutData\n");
+    return ReturnStatus;
+  }
   memset(FftOutData, 0, sizeof(creal_T)*MAX_NFFT);
   FftInData = (cint16_T *)malloc(sizeof(cint16_T)*MAX_NFFT);
+  if (FftInData == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateFft: Could not malloc FftInData\n");
+    return ReturnStatus;
+  }
   FftOutArray = (creal_T *)malloc(sizeof(creal_T)*Nfft*OfdmSymbols);
+  if (FftOutArray == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateFft: Could not malloc FftOutArray\n");
+    return ReturnStatus;
+  }
   NfftSize[0] = (int)Nfft;
   FftOutStruct->data = FftOutData;
   FftOutStruct->size = &NfftInt;
@@ -509,12 +540,22 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     for (unsigned j = 0; j < Nfft+CpLen; j++)
     {
       // Remove cyclic prefix (CP)
-      if (!(j < CpLen))
+      if (!(j < CpLen)) // Non CP sample
       {
-        FftInData[j-CpLen].re = (int16_t)
-          BufferInData[(i*(CpLen+Nfft))+j].re;
-        FftInData[j-CpLen].im = (int16_t)
-          BufferInData[(i*(CpLen+Nfft))+j].im;
+        if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
+        {
+          FftInData[j-CpLen].re = (int16_t)
+            BufferInData[(i*(CpLen+Nfft))+j].re;
+          FftInData[j-CpLen].im = (int16_t)
+            BufferInData[(i*(CpLen+Nfft))+j].im;
+        }
+        else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+        {
+          ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
+            &tmp1, &tmp2);
+          FftInData[j-CpLen].re = (int16_t)tmp1;
+          FftInData[j-CpLen].im = (int16_t)tmp2;
+        }
 #ifdef SAMPLE_DEBUG
         if (i == 0 && j == CpLen)
         {
@@ -526,6 +567,14 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
             i, j-CpLen,FftInData[j-CpLen].re,FftInData[j-CpLen].im);
         }
 #endif
+      }
+      else // CP sample
+      {
+        if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+        {
+          ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
+            &tmp1, &tmp2);
+        }
       }
     }
     Fft(FftInData,NfftSize,Nfft,FftOutStruct);
@@ -559,6 +608,11 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     {
       fclose(FftFile);
     }
+  }
+
+  if (BufferInData != NULL)
+  {
+    TxModulateFreeTxBuffer();
   }
 
   free(FftInData);

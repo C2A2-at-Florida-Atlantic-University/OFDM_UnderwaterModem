@@ -10,9 +10,9 @@
 #include <sys/types.h>
 #include "FpgaInterface.h"
 
-//#define DEBUG
-//#define READ_DEBUG
-//#define WRITE_DEBUG
+#define DEBUG
+#define READ_DEBUG
+#define WRITE_DEBUG
 
 static int FpgaRegDevice;
 static void *FpgaVirtualAddr;
@@ -31,6 +31,9 @@ ReturnStatusType FpgaInterfaceSetup(void)
     return ReturnStatus;
   }
   memset(FpgaVirtualAddr, 0, 2*BUFFER_SPAN);
+  // Get rid of warnings:
+  FpgaRegDevice = 0;
+  printf("%d\n",FpgaRegDevice);
 #else
   if ((FpgaRegDevice = open("/dev/mem", (O_RDWR | O_SYNC))) == -1)
   {
@@ -114,14 +117,15 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
 #ifdef READ_DEBUG
   printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
 #endif
-
-  //*pValue = *((unsigned *)(FpgaVirtualAddr+addr));
-
-#ifdef DEBUG
 #ifdef NO_DEVMEM
+  *pValue = 0;
+#ifdef DEBUG
   printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n",
     0xFFFFFFFF, addr);
+#endif
 #else
+  //*pValue = *((unsigned *)(FpgaVirtualAddr+addr));
+#ifdef DEBUG
   printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
 #endif
 #endif
@@ -134,10 +138,17 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value)
     addr);
 #endif
 
-  //*((unsigned *)(FpgaVirtualAddr+addr)) = value;
+#ifdef NO_DEVMEM
+  value = 0;
 
 #ifdef DEBUG
   printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
+#endif
+#else
+  //*((unsigned *)(FpgaVirtualAddr+addr)) = value;
+#ifdef DEBUG
+  printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
+#endif
 #endif
 }
 

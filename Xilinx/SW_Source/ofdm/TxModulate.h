@@ -29,5 +29,6 @@ uint16_T TxModulateGetDigitalGain(void);
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
 creal_T *TxModulateGetTxBuffer(void);
+void TxModulateFreeTxBuffer(void);
 
 #endif

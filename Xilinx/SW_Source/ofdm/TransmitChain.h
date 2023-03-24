@@ -57,7 +57,7 @@ typedef struct {
 extern void TransmitChainCalcParams(Ofdm_Parameters_Type
   *OfdmParams, Ofdm_Timing_Type *OfdmTiming);
 extern Calculated_Ofdm_Parameters TransmitChainGetParams(void);
-extern ReturnStatusType TransmitChainEnableDl(bool Continuous,
+extern ReturnStatusType TransmitChainEnableDl(
   Ofdm_Parameters_Type *OfdmParams, Ofdm_Timing_Type *OfdmTiming);
 extern ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type
   *OfdmParams);
