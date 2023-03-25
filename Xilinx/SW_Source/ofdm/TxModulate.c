@@ -98,7 +98,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     i = 0;
     while (i < 8/b_log2(ModOrder))
     {
-      if (!(NfftCount % 4))
+      if (!(NfftCount % 4)||!((NfftCount+1) % Nfft))
       {
         if (fscanf(PilotDataFile, "%d\n", &PilotData) != 1)
         {

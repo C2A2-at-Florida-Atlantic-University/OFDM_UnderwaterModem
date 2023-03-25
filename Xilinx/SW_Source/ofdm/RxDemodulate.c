@@ -318,7 +318,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
   for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
   {
-    if (!(i % 4)) // If currently on a pilot subcarrier
+    if (!(i % 4)||!((i+1) % Nfft)) // If currently on a pilot subcarrier
     {
 #ifdef FFT
       IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
