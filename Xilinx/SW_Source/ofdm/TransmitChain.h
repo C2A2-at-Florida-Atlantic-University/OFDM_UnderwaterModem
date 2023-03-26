@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 // Fixed parameters
-#define PILOT_DENSITY 1/4 
+#define PILOT_DENSITY 1/4
 #define DATA_DENSITY 3/4
 #define MAX_NFFT 4096
 #define MAX_CP_LEN MAX_NFFT

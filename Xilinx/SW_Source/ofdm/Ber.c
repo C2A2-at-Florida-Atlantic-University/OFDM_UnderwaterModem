@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "ReturnStatus.h"
 #include "Ber.h"
 #include "log2.h"
@@ -11,6 +12,7 @@
 
 #define DEBUG
 #define SAMPLE_DEBUG
+//#define EXTRA_DEBUG
 
 static FILE *TxModFile;
 static FILE *RxDemodFile;
@@ -54,16 +56,23 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
     return ReturnStatus;
   }
 
+  printf("Ber: Actual Data Density: %lf\n",
+    (double)DATA_DENSITY-1.0/(double)Nfft);
   if (Ber)
   {
-    IndexLoop = OfdmSymbols*Nfft*((unsigned)b_log2(ModOrder))
-      *DATA_DENSITY/8;
-    SymbolLoop = Nfft*((unsigned)b_log2(ModOrder))*DATA_DENSITY/8;
+    IndexLoop = (unsigned)floor((double)OfdmSymbols*(double)Nfft*
+      b_log2(ModOrder)*((double)DATA_DENSITY-1.0/(double)Nfft)/8.0);
+    SymbolLoop = (unsigned)floor((double)Nfft*b_log2(ModOrder)
+      *((double)DATA_DENSITY-1.0/(double)Nfft)/8);
+    printf("IndexLoop = %d, SymbolLoop = %d\n",IndexLoop,SymbolLoop);
   }
   else // Symbol error rate
   {
-    IndexLoop = OfdmSymbols*Nfft*DATA_DENSITY;
-    SymbolLoop = Nfft*DATA_DENSITY;
+    IndexLoop = (unsigned)floor((double)OfdmSymbols*(double)Nfft*
+      ((double)DATA_DENSITY-1.0/(double)Nfft));
+    SymbolLoop = (unsigned)floor((double)Nfft*((double)DATA_DENSITY
+      -1.0/(double)Nfft));
+    printf("IndexLoop = %d, SymbolLoop = %d\n",IndexLoop,SymbolLoop);
     // Throw away header information
     fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
     fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
@@ -87,11 +96,17 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   
   for (i = 0; i < IndexLoop; i++)
   {
-    if (Ber)
+    if (Ber) // Bit Error Rate
     {
       tx = fgetc(TxModFile);
       rx = fgetc(RxDemodFile);
       CharBer = BerCharCalculation(tx, rx);
+#ifdef EXTRA_DEBUG
+      if (CharBer != 0x00)
+      {
+        printf("Ber: Bit Error Index %d\n", IndexLoop);
+      }
+#endif
       TotalBer = TotalBer + CharBer;
       if (SymbolCount == SymbolLoop)
       {
@@ -137,6 +152,9 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
         if (TxSymbol != RxSymbol)
         {
           SymbolSer++; // For Symbol SER
+#ifdef EXTRA_DEBUG
+          printf("Ber: Symbol Error Index %d\n", IndexLoop);
+#endif
         }
       }
       if (TxSymbol != RxSymbol)
@@ -146,16 +164,18 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
     }
   }
 
-  TotalBer = TotalBer / ((double)(i+1));
-  TotalSer = TotalSer / ((double)(i+1));
  
   if (Ber)
   {
+    printf("TotalBer: %lf\n", TotalBer);
+    TotalBer = TotalBer / ((double)(i+1));
     printf("Ber: Looped for %d bits\n", i*8);
     printf("Ber: PACKET BIT ERROR RATE: %lf\n", TotalBer);
   }
   else
   {
+    printf("TotalSer: %lf\n",TotalSer);
+    TotalSer = TotalSer / ((double)(i+1));
     printf("Ber: Looped for %d symbols\n", i);
     printf("Ber: PACKET SYMBOL ERROR RATE: %lf\n", TotalSer);
     printf("%d\n", fscanfRet);

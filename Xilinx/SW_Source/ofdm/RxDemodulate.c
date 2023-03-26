@@ -11,6 +11,7 @@
 #include "RxDemodulate.h"
 #include "d_QamDemod.h"
 #include "rtwtypes.h"
+#include "Equalizer.h"
 #include "f_Fft.h"
 #include "log2.h"
 
@@ -244,6 +245,8 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 {
   ReturnStatusType ReturnStatus;
   creal32_T IqData;
+  creal32_T ChEst;
+  creal32_T tmp;
   uint16_T DigitalGain;
   unsigned DataCount = 0;
   unsigned PilotCount = 0;
@@ -254,8 +257,14 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
  
   if (DebugMode)
   {
+    ReturnStatus = EqualizerChFileOpen(FileNumber);
+    if (ReturnStatus.Status == RETURN_STATUS_SUCCESS)
+    {
+      return ReturnStatus;
+    }
+
     // File containing FFT output data
-    sprintf(FileNameOut, "files/RxFreqDataNoPilots%d.txt", FileNumber);
+    sprintf(FileNameOut, "files/RxFreqDataEQ%d.txt", FileNumber);
 
     RxFreqFile = fopen(FileNameOut, "w");
     if (RxFreqFile == NULL)
@@ -315,6 +324,11 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     return ReturnStatus;
   }
   DigitalGain = TxModulateGetScalarGain();
+  ReturnStatus = EqualizerTxPilotOpen(ModOrder);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    return ReturnStatus;
+  }
 
   for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
   {
@@ -329,9 +343,15 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      IqData.re = IqData.re/DigitalGain;
-      IqData.im = IqData.im/DigitalGain;
+      //IqData.re = IqData.re/DigitalGain;
+      //IqData.im = IqData.im/DigitalGain;
       PilotData[PilotCount] = IqData;
+      ReturnStatus = EqualizerChannelEstimate(DebugMode, ModOrder,
+        PilotData[PilotCount], &ChEst, i);
+      if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+      {
+        return ReturnStatus;
+      }
       PilotCount++;
       if (DebugMode)
       {
@@ -358,13 +378,17 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      IqData.re = IqData.re/DigitalGain;
-      IqData.im = IqData.im/DigitalGain;
+      //IqData.re = IqData.re/DigitalGain;
+      //IqData.im = IqData.im/DigitalGain;
+      EqualizerData(ChEst, IqData, &tmp);
+      IqData.re = tmp.re;
+      IqData.im = tmp.im;
+      //IqData.re = IqData.re/DigitalGain;
+      //IqData.im = IqData.im/DigitalGain;
       DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
       if (DebugMode)
       {
-        fprintf(RxFreqFile,"%d, %d\n", (int) IqData.re, (int)
-          IqData.im);
+        fprintf(RxFreqFile,"%lf, %lf\n", IqData.re, IqData.im);
         fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
           (float)ModOrder));
       }
@@ -387,6 +411,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   
   if (DebugMode)
   {
+    EqualizerChFileClose();
     if (RxFreqFile != NULL)
     {
       fclose(RxFreqFile);

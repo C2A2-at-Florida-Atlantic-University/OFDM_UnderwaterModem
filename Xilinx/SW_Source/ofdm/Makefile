@@ -1,3 +1,7 @@
+############################################################################
+# Jared Hermans
+############################################################################
+
 NO_DEVMEM = NO_DEVMEM
 #PS_PL_POINT = FFT
 PS_PL_POINT = DUC
@@ -47,6 +51,7 @@ HwInterface.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_data.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_FFTImplementationCallback.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_Fft.c \
+Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
 Ber.c \
