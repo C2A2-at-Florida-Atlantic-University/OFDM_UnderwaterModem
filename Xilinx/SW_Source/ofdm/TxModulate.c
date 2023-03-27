@@ -48,14 +48,20 @@ void TxModulatePrintCrealType(creal_T Data)
 }
 
 ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
-  unsigned OfdmSymbols)
+  unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams)
 {
   ReturnStatusType ReturnStatus;
   signed char MessageByte;
   creal_T ModData;
+  creal_T ZeroComplex;
   unsigned NfftCount = 0;
+  unsigned NfftZpCount = 0;
+  unsigned ZpIndex = 0;
   unsigned PilotData;
   int i;
+
+  ZeroComplex.re = 0.0;
+  ZeroComplex.im = 0.0;
 
 #ifdef FFT // Use CMA buffer in which DMA will access
   IfftBufferPtr = FpgaInterfaceClearTxBuffer();
@@ -98,7 +104,12 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     i = 0;
     while (i < 8/b_log2(ModOrder))
     {
-      if (!(NfftCount % 4)||!((NfftCount+1) % Nfft))
+      if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+        ZpIndex > OfdmCalcParams->LastPilotCarrier)
+      {
+      }
+      //else if (!(NfftCount % 4)) // No ZP
+      else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%4))
       {
         if (fscanf(PilotDataFile, "%d\n", &PilotData) != 1)
         {
@@ -139,25 +150,52 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
         i++;
       }
 #ifdef SAMPLE_DEBUG
-      if (NfftCount < NFFT_DEBUG_COUNT)
-      {
-        printf("Data: %d\n", TxOfdmSymbolBinData[NfftCount]);
-      }
+      //if (NfftCount < NFFT_DEBUG_COUNT)
+     // {
+        //printf("NfftCount: %d, Data: %d\n", NfftCount,
+        //TxOfdmSymbolBinData[NfftCount]);
+      //}
 #endif
-      NfftCount++;
+      if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+        ZpIndex > OfdmCalcParams->LastPilotCarrier))
+      {
+        NfftCount++;
+        if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
+          OfdmCalcParams->NumPilotCarriers)))
+        {
+          if (!((NfftCount/(OfdmCalcParams->NumDataCarriers +
+          OfdmCalcParams->NumPilotCarriers)) % (8/(int)b_log2(ModOrder))))
+          {
+            MessageByte = fgetc(TxMessageFile);
+            printf("NfftCount %d\n", NfftCount);
+          }
+        }
+      }
+      if (ZpIndex == Nfft-1)
+      {
+        ZpIndex = 0;
+        //MessageByte = fgetc(TxMessageFile);
+      }
+      else
+      {
+        ZpIndex++;
+      }
     }
 
-    if (NfftCount == (Nfft*OfdmSymbols))
+    if (NfftCount >= (Nfft*OfdmSymbols))
     {
       break;
     }
-
-    MessageByte = fgetc(TxMessageFile);
+  
+  if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+      ZpIndex > OfdmCalcParams->LastPilotCarrier))
+    {
+      MessageByte = fgetc(TxMessageFile);
+    }
   }
 
   // If there are remaining subcarriers due to message not filling up the 
   // entire OFDM symbol, fill the rest of the data subcarriers with 0
-#ifdef DEBUG
   if (NfftCount < (Nfft*OfdmSymbols))
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -167,47 +205,57 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       Nfft*OfdmSymbols);
     return ReturnStatus;
   }
-#endif
-  while (NfftCount < (Nfft*OfdmSymbols))
-  {
-    TxOfdmSymbolBinData[NfftCount] = 0;
-    NfftCount++;
-  }
+  //while (NfftCount < (Nfft*OfdmSymbols))
+  //{
+  //  TxOfdmSymbolBinData[NfftCount] = 0;
+  //  NfftCount++;
+  //}
 
   // Modulate
   NfftCount = 0;
-  while (NfftCount < (Nfft*OfdmSymbols))
+  NfftZpCount = 0;
+  ZpIndex = 0;
+  while (NfftZpCount < (Nfft*OfdmSymbols))
   {
-    ModData = QamMod(TxOfdmSymbolBinData[NfftCount], ModOrder);
-    // Print out some Frequency domain data
-#ifdef SAMPLE_DEBUG
-    if (NfftCount < NFFT_DEBUG_COUNT)
+    if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+      ZpIndex > OfdmCalcParams->LastPilotCarrier)
     {
-      TxModulatePrintCrealType(ModData);
-      if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
-      {
-        printf("\n");
-      }
+      ModData = ZeroComplex;
     }
+    else // Pilot or Data subcarrier
+    {
+      ModData = QamMod(TxOfdmSymbolBinData[NfftCount], ModOrder);
+      // Print out some Frequency domain data
+#ifdef SAMPLE_DEBUG
+      if (NfftCount < NFFT_DEBUG_COUNT)
+      {
+        TxModulatePrintCrealType(ModData);
+        if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
+        {
+          printf("\n");
+        }
+      }
 #endif
 #ifdef FFT
-    TxOfdmSymbolModData[2*NfftCount] = (int16_T)ModData.re*DigitalGain;
-    TxOfdmSymbolModData[(2*NfftCount)+1] = 
-      (int16_T)ModData.im*DigitalGain;
-    if ((int16_T)ModData.re*DigitalGain > U_DAC_ACCURACY || 
-      (int16_T)ModData.im*DigitalGain > U_DAC_ACCURACY)
-    {
-      ReturnStatus.Status = RETURN_STATUS_FAIL;
-      sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
-        "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
-      return ReturnStatus;
-    }
+      TxOfdmSymbolModData[2*NfftCount] = (int16_T)ModData.re*DigitalGain;
+      TxOfdmSymbolModData[(2*NfftCount)+1] = 
+        (int16_T)ModData.im*DigitalGain;
+      if ((int16_T)ModData.re*DigitalGain > U_DAC_ACCURACY || 
+        (int16_T)ModData.im*DigitalGain > U_DAC_ACCURACY)
+      {
+        ReturnStatus.Status = RETURN_STATUS_FAIL;
+        sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
+          "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
+        return ReturnStatus;
+      }
 #endif
+      NfftCount++;
+    }
 #ifdef DUC
-    IfftBufferPtr[NfftCount].re = ModData.re*(double)DigitalGain;
-    IfftBufferPtr[NfftCount].im = ModData.im*(double)DigitalGain;
-    if (IfftBufferPtr[NfftCount].re > U_DAC_ACCURACY || 
-      IfftBufferPtr[NfftCount].im > U_DAC_ACCURACY)
+    IfftBufferPtr[NfftZpCount].re = ModData.re*(double)DigitalGain;
+    IfftBufferPtr[NfftZpCount].im = ModData.im*(double)DigitalGain;
+    if (IfftBufferPtr[NfftZpCount].re > U_DAC_ACCURACY || 
+      IfftBufferPtr[NfftZpCount].im > U_DAC_ACCURACY)
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
@@ -215,21 +263,32 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       return ReturnStatus;
     }
 #endif
-    NfftCount++;
+    NfftZpCount++;
+    if (ZpIndex == Nfft-1)
+    {
+      ZpIndex = 0;
+    }
+    else
+    {
+      ZpIndex++;
+    }
   }
 
   // Print out some Frequency domain data after being scaled
 #ifdef SAMPLE_DEBUG
   NfftCount = 0;
   printf("TxModulateFileData: Scaled Frequency Domain Data:\n");
-  while (NfftCount < NFFT_DEBUG_COUNT)
+  while (NfftCount >= OfdmCalcParams->FirstPilotCarrier && 
+    NfftCount < (NFFT_DEBUG_COUNT+OfdmCalcParams->FirstPilotCarrier))
   {
 #ifdef FFT
-    printf("\t\t%d + j%d\n", TxOfdmSymbolModData[2*NfftCount], 
+    printf("\t\tIndex %d: %d + j%d\n", NfftCount,
+      TxOfdmSymbolModData[2*NfftCount], 
       TxOfdmSymbolModData[(2*NfftCount)+1]);
 #endif
 #ifdef DUC
-    printf("\t\t%lf + j%lf\n", IfftBufferPtr[NfftCount].re,
+    printf("\t\tIndex %d: %lf + j%lf\n", NfftCount, 
+      IfftBufferPtr[NfftCount].re,
       IfftBufferPtr[NfftCount].im);
 #endif
     if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
@@ -336,7 +395,8 @@ uint16_T TxModulateGetScalarGain(void)
 }
 
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
-  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols)
+  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols,
+  Calculated_Ofdm_Parameters *OfdmCalcParams)
 {
   ReturnStatusType ReturnStatus;
   char FileNameConverted[64];
@@ -426,9 +486,10 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   }
 
   // Header information
-  fprintf(TxWriteFile,"%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n", OfdmParams->Nfft, 
-    1000*OfdmParams->BandWidth, OfdmParams->CpLen, OfdmParams->ModOrder, 
-    OfdmSymbols, DigitalGain);
+  fprintf(TxWriteFile,"%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d\n", 
+    OfdmParams->Nfft, 1000*OfdmParams->BandWidth, OfdmParams->CpLen, 
+    OfdmParams->ModOrder, OfdmSymbols, DigitalGain,
+    OfdmCalcParams->FirstPilotCarrier, OfdmCalcParams->LastPilotCarrier);
 
   for (unsigned i = 0; i < OfdmParams->Nfft*OfdmSymbols; i++)
   {

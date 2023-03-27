@@ -54,6 +54,7 @@ HwInterface.c \
 Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
+DacChain.c \
 Ber.c \
 ofdm.c
 

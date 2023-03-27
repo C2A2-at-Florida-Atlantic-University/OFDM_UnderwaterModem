@@ -18,12 +18,13 @@
 ReturnStatusType TxModulateGetFileData(unsigned FileNumber);
 ReturnStatusType TxModulateGetPilotData(unsigned ModOrder);
 ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
-  unsigned OfdmSymbols);
+  unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams);
 void             TxModulatePrintCrealType(creal_T Data);
 ReturnStatusType TxModulateDigitalGain(int GainDB);
 uint16_T         TxModulateGetScalarGain(void);
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
-  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
+  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols,
+  Calculated_Ofdm_Parameters *OfdmCalcParams);
 void TxModulateClose(void);
 uint16_T TxModulateGetDigitalGain(void);
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,

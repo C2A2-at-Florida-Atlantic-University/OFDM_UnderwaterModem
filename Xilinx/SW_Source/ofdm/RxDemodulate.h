@@ -15,7 +15,8 @@
 
 ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   unsigned LoopMethod, unsigned FileNumber, unsigned ModOrder, 
-  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
+  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols,
+  Calculated_Ofdm_Parameters *OfdmCalcParams);
 ReturnStatusType RxDemodulateFileData(char *FileName);
 ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   unsigned ModOrder, unsigned Nfft, unsigned OfdmSymbols);

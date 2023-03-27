@@ -9,6 +9,7 @@
 #include "TransmitChain.h"
 #include "TxModulate.h"
 #include "RxDemodulate.h"
+#include "DacChain.h"
 #include "rtwtypes.h"
 #include "Ber.h"
 
@@ -17,13 +18,15 @@
 Ofdm_Parameters_Type OfdmParams;
 Ofdm_Timing_Type OfdmTiming;
 Calculated_Ofdm_Parameters OfdmCalcParams;
+Dac_Parameters_Type DacParams;
 
 int main(int argc, char **argv)
 {
   unsigned Selection;
   unsigned ScanfRet; // To get rid of warnings
   unsigned FileNumber;
-  int TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+  unsigned CenterFreq;
+  int TxGainDb;
   int DebugSelection;
   bool DebugMode;
   ReturnStatusType ReturnStatus;
@@ -60,14 +63,22 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  // Set default values
   OfdmParams.Nfft = DEFAULT_NFFT;
   OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
   OfdmParams.CpLen = DEFAULT_CP_LEN;
+  OfdmParams.ZpDensity = DEFAULT_ZP_DENSITY;
   OfdmParams.ModOrder = DEFAULT_MOD_ORDER;
 
   OfdmTiming.SymbolGuardPeriod = DEFAULT_SYMBOL_GUARD_PERIOD;
   OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
   OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
+
+  TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+
+  CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+  ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
+    CenterFreq);
 
   ReturnStatus = FpgaInterfaceSetup();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -88,13 +99,14 @@ int main(int argc, char **argv)
     printf("2  - Enter OFDM Parameters\n");
     printf("3  - Enter OFDM Timing Parameters\n");
     printf("4  - Enter TX Digital Gain (dBFS)\n");
-    printf("5  - Display OFDM Parameters\n");
-    printf("6  - Transmit Single OFDM Frame from File\n");
-    printf("7  - Write Transmitted Sub-Carriers to File\n");
-    printf("8  - Demod TX Buffer to File\n");
-    printf("9  - Demod RX Buffer to File\n");
-    printf("10 - Demod RX Injection to File\n");
-    printf("11 - Compute BER/SER\n");
+    printf("5  - Enter Center Frequency\n");
+    printf("6  - Display OFDM Parameters\n");
+    printf("7  - Transmit Single OFDM Frame from File\n");
+    printf("8  - Write Transmitted Sub-Carriers to File\n");
+    printf("9  - Demod TX Buffer to File\n");
+    printf("10 - Demod RX Buffer to File\n");
+    printf("11 - Demod RX Injection to File\n");
+    printf("12 - Compute BER/SER\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -162,6 +174,19 @@ int main(int argc, char **argv)
         break;
 
       case 5:
+        printf("\tEnter Center Frequency (kHz): ");
+        ScanfRet = scanf("%d", &CenterFreq);
+        ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
+          CenterFreq);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          printf("Setting default center frequency\n");
+          CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+        }
+        break;
+
+      case 6:
         printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
         printf("\tBandwidth:                %d kHz\n", 
@@ -176,9 +201,11 @@ int main(int argc, char **argv)
           OfdmTiming.OfdmSymbolsPerFrame);
         printf("\n\tTX Digital Gain:          %d dBFS = %d\n",
           TxGainDb, TxModulateGetScalarGain());
+        printf("\n\tCenter Frequency:         %d kHz\n", CenterFreq);
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         OfdmCalcParams = TransmitChainGetParams();
+        DacParams = DacChainGetDacParams();
 
         printf("\n");
         printf("\t------ Calculated Parameters ------\n");
@@ -192,6 +219,20 @@ int main(int argc, char **argv)
           OfdmCalcParams.SymbolDataRate);
         printf("\tFrame Data Rate:          %lf kbit/sec\n",
           OfdmCalcParams.FrameDataRate);
+        printf("\n\tZP Pilot Density:         %d%%\n", 
+          OfdmParams.ZpDensity);
+        printf("\tActual ZP Pilot Density:  %lf%%\n",
+          (double)OfdmParams.Nfft/
+          (double)OfdmCalcParams.FirstPilotCarrier/2.0);
+        printf("\tFirst Pilot Carrier:      %d\n",
+          OfdmCalcParams.FirstPilotCarrier+1);
+        printf("\tLast Pilot Carrier:       %d\n",
+          OfdmCalcParams.LastPilotCarrier+1);
+        printf("\tNumber of Data Carriers:  %d\n",
+          OfdmCalcParams.NumDataCarriers);
+        printf("\tNumber of Pilot Carriers: %d\n",
+          OfdmCalcParams.NumPilotCarriers);
+        printf("\n\tInterpolation Value       %dx\n", DacParams.Interp);
         printf("\n\t100MHz Cycles per:\n");
         printf("\t  Sample:                 %d\n",
           OfdmCalcParams.Symbol.FpgaClkSamples);
@@ -202,7 +243,7 @@ int main(int argc, char **argv)
 
         break;
 
-      case 6:
+      case 7:
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -224,7 +265,8 @@ int main(int argc, char **argv)
         }
 
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,
+          &OfdmCalcParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -235,6 +277,13 @@ int main(int argc, char **argv)
         ReturnStatus = TxModulateIfft(DebugMode, FileNumber, 
           OfdmParams.Nfft, OfdmParams.CpLen,
           OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+
+        ReturnStatus = DacChainUpConversion(DebugMode, FileNumber);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -251,25 +300,11 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 7:
-        printf("Write file number: ");
-        ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = TxModulateWriteToFile(FileNumber, 
-          &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          printf("%s", ReturnStatus.ErrString);
-          break;
-        }
-        break;
-
       case 8:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = RxDemodulateBufferData(DebugMode,
-          RX_DEMODULATE_TX_LOOPBACK, FileNumber, 
-          OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame);
+        ReturnStatus = TxModulateWriteToFile(FileNumber, 
+          &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -278,24 +313,40 @@ int main(int argc, char **argv)
         break;
 
       case 9:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = RxDemodulateBufferData(DebugMode,
+          RX_DEMODULATE_TX_LOOPBACK, FileNumber, 
+          OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
         break;
 
       case 10:
-        printf("Write file number: ");
-        ScanfRet = scanf("%d", &FileNumber);
-        ReturnStatus = RxDemodulateBufferData(DebugMode, 
-          RX_DEMODULATE_FILE_INJECTION, FileNumber, OfdmParams.ModOrder,
-          OfdmParams.Nfft, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame);
         break;
 
       case 11:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = RxDemodulateBufferData(DebugMode, 
+          RX_DEMODULATE_FILE_INJECTION, FileNumber, OfdmParams.ModOrder,
+          OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+        break;
+
+      case 12:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame, 
+          &OfdmCalcParams);
         ReturnStatus = Ber(false, FileNumber, OfdmParams.ModOrder,
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,
+          &OfdmCalcParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);

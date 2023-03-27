@@ -5,6 +5,7 @@
 #define TRANSMIT_CHAIN_H_INCLUDED
 
 #include <stdbool.h>
+#include "ReturnStatus.h"
 
 // Fixed parameters
 #define PILOT_DENSITY 1/4
@@ -19,6 +20,7 @@
 #define DEFAULT_NFFT 1024
 #define DEFAULT_BANDWIDTH 250 // in kHz
 #define DEFAULT_CP_LEN 256 // in Samples
+#define DEFAULT_ZP_DENSITY 10 // in percent
 #define DEFAULT_MOD_ORDER 16 // QPSK
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
@@ -29,6 +31,7 @@ typedef struct {
   unsigned Nfft;
   unsigned BandWidth;
   unsigned CpLen;
+  unsigned ZpDensity;
   unsigned ModOrder;
 } Ofdm_Parameters_Type;
 
@@ -52,6 +55,10 @@ typedef struct {
   double SymbolDataRate;
   double FrameDataRate;
   unsigned NfftScaled;
+  unsigned FirstPilotCarrier;
+  unsigned LastPilotCarrier;
+  unsigned NumDataCarriers;
+  unsigned NumPilotCarriers;
 } Calculated_Ofdm_Parameters;
 
 extern void TransmitChainCalcParams(Ofdm_Parameters_Type

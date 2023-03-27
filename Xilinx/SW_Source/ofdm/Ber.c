@@ -34,7 +34,8 @@ double BerCharCalculation(const char tx, const char rx)
 }
 
 ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
-  unsigned Nfft, unsigned OfdmSymbols)
+  unsigned Nfft, unsigned OfdmSymbols,
+  Calculated_Ofdm_Parameters *OfdmCalcParams)
 {
   ReturnStatusType ReturnStatus;
   char tx, rx;
@@ -56,22 +57,18 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
     return ReturnStatus;
   }
 
-  printf("Ber: Actual Data Density: %lf\n",
-    (double)DATA_DENSITY-1.0/(double)Nfft);
+  printf("Number of OFDM Symbols: %d\n", OfdmSymbols);
   if (Ber)
   {
-    IndexLoop = (unsigned)floor((double)OfdmSymbols*(double)Nfft*
-      b_log2(ModOrder)*((double)DATA_DENSITY-1.0/(double)Nfft)/8.0);
-    SymbolLoop = (unsigned)floor((double)Nfft*b_log2(ModOrder)
-      *((double)DATA_DENSITY-1.0/(double)Nfft)/8);
+    SymbolLoop = OfdmCalcParams->NumDataCarriers*
+      (unsigned)b_log2(ModOrder)/8;
+    IndexLoop = OfdmSymbols*SymbolLoop;
     printf("IndexLoop = %d, SymbolLoop = %d\n",IndexLoop,SymbolLoop);
   }
   else // Symbol error rate
   {
-    IndexLoop = (unsigned)floor((double)OfdmSymbols*(double)Nfft*
-      ((double)DATA_DENSITY-1.0/(double)Nfft));
-    SymbolLoop = (unsigned)floor((double)Nfft*((double)DATA_DENSITY
-      -1.0/(double)Nfft));
+    SymbolLoop = OfdmCalcParams->NumDataCarriers;
+    IndexLoop = OfdmSymbols*SymbolLoop;
     printf("IndexLoop = %d, SymbolLoop = %d\n",IndexLoop,SymbolLoop);
     // Throw away header information
     fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
@@ -164,17 +161,27 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
     }
   }
 
+  if (Ber)
+  {
+    SymbolBer = SymbolBer / ((double)(SymbolLoop+1));
+    printf("Ber: OFDM SYMBOL %d BIT ERROR RATE = %lf\n", NumSymbols,
+      SymbolBer);
+  }
+  else // Symbol error rate
+  {
+    SymbolSer = SymbolSer / ((double)(SymbolLoop+1));
+    printf("Ber: OFDM SYMBOL %d SYMBOL ERROR RATE = %lf\n", 
+      NumSymbols, SymbolSer);
+  }
  
   if (Ber)
   {
-    printf("TotalBer: %lf\n", TotalBer);
     TotalBer = TotalBer / ((double)(i+1));
     printf("Ber: Looped for %d bits\n", i*8);
     printf("Ber: PACKET BIT ERROR RATE: %lf\n", TotalBer);
   }
   else
   {
-    printf("TotalSer: %lf\n",TotalSer);
     TotalSer = TotalSer / ((double)(i+1));
     printf("Ber: Looped for %d symbols\n", i);
     printf("Ber: PACKET SYMBOL ERROR RATE: %lf\n", TotalSer);

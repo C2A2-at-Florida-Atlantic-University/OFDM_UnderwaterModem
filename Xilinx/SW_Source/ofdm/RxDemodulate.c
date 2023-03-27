@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
+#include "TransmitChain.h"
 #include "FpgaInterface.h"
 #include "RxDemodulate.h"
 #include "d_QamDemod.h"
@@ -241,14 +242,16 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
 
 ReturnStatusType RxDemodulateBufferData(bool DebugMode, 
   unsigned LoopMethod, unsigned FileNumber, unsigned ModOrder, 
-  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
+  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols,
+  Calculated_Ofdm_Parameters *OfdmCalcParams)
 {
   ReturnStatusType ReturnStatus;
   creal32_T IqData;
   creal32_T ChEst;
   creal32_T tmp;
-  uint16_T DigitalGain;
+  //uint16_T DigitalGain;
   unsigned DataCount = 0;
+  unsigned ZpIndex = 0;
   unsigned PilotCount = 0;
   char FileNameOut[64];
   char FileNameOut1[64];
@@ -296,7 +299,6 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
   ReturnStatus = RxDemodulateFft(DebugMode, LoopMethod, FileNumber,
     Nfft, CpLen, OfdmSymbols);
-    printf("Debug1\n");
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     return ReturnStatus;
@@ -323,7 +325,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       "RxDemodulateBufferData: No Data on TX Buffer\n");
     return ReturnStatus;
   }
-  DigitalGain = TxModulateGetScalarGain();
+  //DigitalGain = TxModulateGetScalarGain();
   ReturnStatus = EqualizerTxPilotOpen(ModOrder);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
@@ -332,8 +334,15 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
   for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
   {
-    if (!(i % 4)||!((i+1) % Nfft)) // If currently on a pilot subcarrier
+    if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
     {
+      //printf("ZP sub-carrier index %d\n", ZpIndex);
+    }
+    //else if (!((i-ZpIndex) % 4)) // Pilot sub-carrier
+    else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
+    {
+      //printf("Pilot sub-carrier index %d\n", ZpIndex);
 #ifdef FFT
       IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
       IqData.im = (float)
@@ -369,6 +378,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     }
     else // Data subcarrier
     {
+      //printf("Data sub-carrier index %d\n", ZpIndex);
 #ifdef FFT
       IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
       IqData.im = (float)
@@ -378,8 +388,6 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       IqData.re = TxBufferPtrLoop[i].re;
       IqData.im = TxBufferPtrLoop[i].im;
 #endif
-      //IqData.re = IqData.re/DigitalGain;
-      //IqData.im = IqData.im/DigitalGain;
       EqualizerData(ChEst, IqData, &tmp);
       IqData.re = tmp.re;
       IqData.im = tmp.im;
@@ -401,6 +409,14 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       }
 #endif
       DataCount++;
+    }
+    if (ZpIndex == Nfft-1)
+    {
+      ZpIndex = 0;
+    }
+    else
+    {
+      ZpIndex++;
     }
   }
 
