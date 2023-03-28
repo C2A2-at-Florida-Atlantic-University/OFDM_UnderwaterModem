@@ -20,7 +20,7 @@
 #define DEFAULT_NFFT 1024
 #define DEFAULT_BANDWIDTH 250 // in kHz
 #define DEFAULT_CP_LEN 256 // in Samples
-#define DEFAULT_ZP_DENSITY 10 // in percent
+#define DEFAULT_ZP_DENSITY 5 // in percent
 #define DEFAULT_MOD_ORDER 16 // QPSK
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms

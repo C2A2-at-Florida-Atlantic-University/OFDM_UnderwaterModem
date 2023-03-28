@@ -106,7 +106,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     {
       if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex > OfdmCalcParams->LastPilotCarrier)
-      {
+      { // ZP Index
       }
       //else if (!(NfftCount % 4)) // No ZP
       else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%4))
@@ -158,7 +158,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #endif
       if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex > OfdmCalcParams->LastPilotCarrier))
-      {
+      { // Data or Pilot index
         NfftCount++;
         if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
           OfdmCalcParams->NumPilotCarriers)))
@@ -588,8 +588,19 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
         ((((int32_T)(*(IfftBufferPtr+j+(Nfft*i))))&0xFFFF0000)>>16);
 #endif
 #ifdef DUC
-      IfftInData[j].re = IfftBufferPtr[j+(Nfft*i)].re;
-      IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
+      //IfftInData[j].re = IfftBufferPtr[j+(Nfft*i)].re; // Normal
+      //IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
+      //FftShift
+      if (j < Nfft/2)
+      {
+        IfftInData[j+Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
+        IfftInData[j+Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+      }
+      else
+      {
+        IfftInData[j-Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
+        IfftInData[j-Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+      }
 #endif
     }
     Ifft(IfftInData,NfftSize,Nfft,IfftOutStruct);

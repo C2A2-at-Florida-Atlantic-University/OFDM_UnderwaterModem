@@ -5,7 +5,7 @@
  * File: _coder_Fft_info.c
  *
  * MATLAB Coder version            : 5.5
- * C/C++ source code generated on  : 27-Mar-2023 17:41:12
+ * C/C++ source code generated on  : 27-Mar-2023 19:38:11
  */
 
 /* Include Files */
@@ -60,7 +60,7 @@ mxArray *emlrtMexFcnProperties(void)
                 emlrtMxCreateString(
                     "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\Fft\\Fft.mlx"));
   emlrtSetField(xEntryPoints, 0, "TimeStamp",
-                emlrtMxCreateDoubleScalar(738972.736712963));
+                emlrtMxCreateDoubleScalar(738972.81810185185));
   xResult =
       emlrtCreateStructMatrix(1, 1, 7, (const char_T **)&propFieldName[0]);
   emlrtSetField(xResult, 0, "Version",

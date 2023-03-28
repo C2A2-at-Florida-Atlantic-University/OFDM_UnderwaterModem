@@ -137,6 +137,8 @@ int main(int argc, char **argv)
         ScanfRet = scanf("%d", &OfdmParams.CpLen);
         printf("\tEnter modulation order: ");
         ScanfRet = scanf("%d", &OfdmParams.ModOrder);
+        printf("\tEnter ZP Carrier Density: ");
+        ScanfRet = scanf("%d", &OfdmParams.ZpDensity);
 
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -147,6 +149,7 @@ int main(int argc, char **argv)
           OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
           OfdmParams.CpLen = DEFAULT_CP_LEN;
           OfdmParams.ModOrder = DEFAULT_MOD_ORDER;
+          OfdmParams.ZpDensity = DEFAULT_ZP_DENSITY;
         }
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
@@ -192,7 +195,9 @@ int main(int argc, char **argv)
         printf("\tBandwidth:                %d kHz\n", 
           OfdmParams.BandWidth);
         printf("\tCP Length:                %d\n", OfdmParams.CpLen);
-        printf("\tModulation Order:         %d\n\n", OfdmParams.ModOrder);
+        printf("\tModulation Order:         %d\n", OfdmParams.ModOrder);
+        printf("\tZP Pilot Density:         %d%%\n\n", 
+          OfdmParams.ZpDensity);
         printf("\tSymbol Guard Period:      %d ms\n",
           OfdmTiming.SymbolGuardPeriod);
         printf("\tFrame Guard Period:       %d ms\n", 
@@ -219,11 +224,9 @@ int main(int argc, char **argv)
           OfdmCalcParams.SymbolDataRate);
         printf("\tFrame Data Rate:          %lf kbit/sec\n",
           OfdmCalcParams.FrameDataRate);
-        printf("\n\tZP Pilot Density:         %d%%\n", 
-          OfdmParams.ZpDensity);
-        printf("\tActual ZP Pilot Density:  %lf%%\n",
-          (double)OfdmParams.Nfft/
-          (double)OfdmCalcParams.FirstPilotCarrier/2.0);
+        printf("\n\tActual ZP Pilot Density:  %lf%%\n",
+          (double)OfdmParams.Nfft*
+          (double)OfdmCalcParams.FirstPilotCarrier/10000*2.0);
         printf("\tFirst Pilot Carrier:      %d\n",
           OfdmCalcParams.FirstPilotCarrier+1);
         printf("\tLast Pilot Carrier:       %d\n",
@@ -342,11 +345,9 @@ int main(int argc, char **argv)
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame, 
-          &OfdmCalcParams);
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
         ReturnStatus = Ber(false, FileNumber, OfdmParams.ModOrder,
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,
-          &OfdmCalcParams);
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);

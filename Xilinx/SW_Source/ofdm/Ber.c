@@ -34,8 +34,7 @@ double BerCharCalculation(const char tx, const char rx)
 }
 
 ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
-  unsigned Nfft, unsigned OfdmSymbols,
-  Calculated_Ofdm_Parameters *OfdmCalcParams)
+  unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams)
 {
   ReturnStatusType ReturnStatus;
   char tx, rx;

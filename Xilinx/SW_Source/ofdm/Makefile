@@ -15,6 +15,7 @@ QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod
 QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod
 IFFTDIR:=../../../MATLAB/Ifft/codegen/lib/Ifft/
 FFTDIR:=../../../MATLAB/Fft/codegen/lib/Fft/
+FFTSHIFTDIR:=../../../MATLAB/Fftshift/codegen/lib/Fftshift/
 BUILDDIR:=./
 INCLUDEDIR:=.
 
@@ -64,7 +65,7 @@ OBJECTS := $(SOURCES:%.c=%.o)
 CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -lm
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(FFTSHIFTDIR) -lm
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ -lm

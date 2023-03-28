@@ -621,24 +621,39 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     Fft(FftInData,NfftSize,Nfft,FftOutStruct);
     for (unsigned j = 0; j < Nfft; j++)
     {
-      FftOutArray[(i*Nfft)+j].re = FftOutData[j].re;
-      FftOutArray[(i*Nfft)+j].im = FftOutData[j].im;
-      if (DebugMode)
+      //FftOutArray[(i*Nfft)+j].re = FftOutData[j].re; // Normal
+      //FftOutArray[(i*Nfft)+j].im = FftOutData[j].im;
+      // FftShift:
+      if (j < Nfft/2) // FFTSHIFT
       {
-        fprintf(FftFile, "%lf, %lf\n", FftOutData[j].re,
-          FftOutData[j].im);
-#ifdef SAMPLE_DEBUG
-        if (i == 0 && j == 0)
-        {
-          printf("\nRxDemodulateFft: Frequency domain data:\n");
-        }
-        if (i == 0 && j < 12)
-        {
-          printf("\tSymbol %d: Nfft %d:\n\t%lf+j%lf\n",
-            i,j,FftOutData[j].re,FftOutData[j].im);
-        }
-#endif
+        FftOutArray[(i*Nfft)+j+Nfft/2].re = FftOutData[j].re;
+        FftOutArray[(i*Nfft)+j+Nfft/2].im = FftOutData[j].im;
       }
+      else
+      {
+        FftOutArray[(i*Nfft)+j-Nfft/2].re = FftOutData[j].re;
+        FftOutArray[(i*Nfft)+j-Nfft/2].im = FftOutData[j].im;
+      }
+    }
+  }
+
+  if (DebugMode)
+  {
+    for (unsigned i = 0; i < OfdmSymbols*Nfft; i++)
+    {
+      fprintf(FftFile, "%lf, %lf\n", FftOutArray[i].re, 
+        FftOutArray[i].im);
+#ifdef SAMPLE_DEBUG
+      if (i == 0)
+      {
+        printf("\nRxDemodulateFft: Frequency domain data:\n");
+      }
+      if (i < 12)
+      {
+        printf("\tSymbol %d: Nfft %d:\n\t%lf+j%lf\n",
+          0,i,FftOutData[i].re,FftOutData[i].im);
+      }
+#endif
     }
   }
 
