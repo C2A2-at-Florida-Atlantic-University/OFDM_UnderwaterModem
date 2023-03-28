@@ -153,6 +153,15 @@ int main(int argc, char **argv)
         }
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+        ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
+          CenterFreq);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          printf("Setting default center frequency\n");
+          CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+        }
+        DacParams = DacChainGetDacParams();
         break;
 
       case 3:

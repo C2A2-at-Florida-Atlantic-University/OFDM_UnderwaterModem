@@ -158,13 +158,18 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #endif
       if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex > OfdmCalcParams->LastPilotCarrier))
-      { // Data or Pilot index
+      { // If Data or Pilot index
         NfftCount++;
         if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
           OfdmCalcParams->NumPilotCarriers)))
-        {
-          if (!((NfftCount/(OfdmCalcParams->NumDataCarriers +
-          OfdmCalcParams->NumPilotCarriers)) % (8/(int)b_log2(ModOrder))))
+        { // If last data or pilot subcarrier before ending ZP carrier
+          //if (!((NfftCount/(OfdmCalcParams->NumDataCarriers +
+          //OfdmCalcParams->NumPilotCarriers)) % (8/(int)b_log2(ModOrder))))
+          //{ // 
+          //  MessageByte = fgetc(TxMessageFile);
+          //  printf("NfftCount %d\n", NfftCount);
+         // }
+          if (i == 8/b_log2(ModOrder))
           {
             MessageByte = fgetc(TxMessageFile);
             printf("NfftCount %d\n", NfftCount);
