@@ -295,7 +295,9 @@ int main(int argc, char **argv)
           break;
         }
 
-        ReturnStatus = DacChainUpConversion(DebugMode, FileNumber);
+        ReturnStatus = DacChainUpConversion(true, FileNumber,
+          OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
