@@ -342,7 +342,7 @@ ReturnStatusType TxModulateGetFileData(unsigned FileNumber)
 ReturnStatusType TxModulateGetPilotData(unsigned ModOrder)
 {
   ReturnStatusType ReturnStatus;
-  char FileName[1024];
+  char FileName[32];
   
   sprintf(FileName, "files/PilotDataM%d.txt", ModOrder);
 

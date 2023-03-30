@@ -11,11 +11,11 @@ CC:=gcc
 TARGET:=ofdm
 
 SOURCEDIR:=.
-QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod
-QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod
+QAMMODDIR:=../../../MATLAB/QamModCoder/codegen/lib/QamMod/
+QAMDEMODDIR:=../../../MATLAB/QamDemodCoder/codegen/lib/QamDemod/
 IFFTDIR:=../../../MATLAB/Ifft/codegen/lib/Ifft/
 FFTDIR:=../../../MATLAB/Fft/codegen/lib/Fft/
-FFTSHIFTDIR:=../../../MATLAB/Fftshift/codegen/lib/Fftshift/
+INTERPDIR:=../../../MATLAB/Interp/codegen/lib/Interp/
 BUILDDIR:=./
 INCLUDEDIR:=.
 
@@ -52,6 +52,16 @@ HwInterface.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_Fft_data.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_FFTImplementationCallback.c \
 ../../../MATLAB/Fft/codegen/lib/Fft/f_Fft.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp_emxutil.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp_emxAPI.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp_data.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp_initialize.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp_terminate.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_div.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_eml_mtimes_helper.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_inv.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_filter.c \
+../../../MATLAB/Interp/codegen/lib/Interp/g_Interp.c \
 Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
@@ -62,10 +72,10 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread
+CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(FFTSHIFTDIR) -lm
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ -lm

@@ -255,8 +255,8 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   unsigned PilotCount = 0;
   char FileNameOut[64];
   char FileNameOut1[64];
-  FILE *RxFreqFile;
-  FILE *RxDemodFile;
+  FILE *RxFreqFile = NULL;
+  FILE *RxDemodFile = NULL;
  
   if (DebugMode)
   {
@@ -469,7 +469,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   int NfftSize[1];
   int NfftInt = (int)Nfft;
   char FileNameOut2[64];
-  unsigned ScanfRet;
+  unsigned ScanfRet = 0;
   unsigned tmp;
   double tmp1,tmp2;
 

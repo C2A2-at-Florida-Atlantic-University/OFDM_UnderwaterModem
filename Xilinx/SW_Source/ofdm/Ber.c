@@ -48,7 +48,7 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   unsigned SymbolCount = 0;
   unsigned NumSymbols = 0;
   unsigned i;
-  unsigned fscanfRet;
+  unsigned fscanfRet = 0;
 
   ReturnStatus = BerOpenFiles(Ber, FileNumber);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
