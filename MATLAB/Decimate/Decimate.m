@@ -15,15 +15,16 @@ b = fir1(nfilt,1/r);
 % can be eliminated. then do same thing at right end of data sequence.
 nfilt = nfilt+1;
 itemp = 2*idata(1) - idata((nfilt+1):-1:2);
-[itemp,zi]=filter(b,1,itemp,[],1); %#ok
-[odata,zf] = filter(b,1,idata,zi,1);
+[itemp,zi]=filter(b,1,itemp,[],2); %#ok
+b=b.';
+[odata,zf] = filter(b,1,idata,zi,2);
 if m == 1	% row data
     itemp = zeros(1,2*nfilt);
 else	% column data
     itemp = zeros(2*nfilt,1);
 end
 itemp(:) = 2*idata(nd)-idata((nd-1):-1:(nd-2*nfilt));
-itemp = filter(b,1,itemp,zf,1);
+itemp = filter(b,1,itemp,zf,2);
 % finally, select only every r'th point from the interior of the lowpass
 % filtered sequence
 gd = grpdelay(b,1,8);
