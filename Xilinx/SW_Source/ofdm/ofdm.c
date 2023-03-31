@@ -10,7 +10,9 @@
 #include "TxModulate.h"
 #include "RxDemodulate.h"
 #include "DacChain.h"
+#include "AdcChain.h"
 #include "rtwtypes.h"
+#include "DirectDma.h"
 #include "Ber.h"
 
 #define DEBUG
@@ -26,6 +28,7 @@ int main(int argc, char **argv)
   unsigned ScanfRet; // To get rid of warnings
   unsigned FileNumber;
   unsigned CenterFreq;
+  unsigned NumBytes;
   int TxGainDb;
   int DebugSelection;
   bool DebugMode;
@@ -285,7 +288,6 @@ int main(int argc, char **argv)
           break;
         }
 
-#ifdef DUC
         ReturnStatus = TxModulateIfft(DebugMode, FileNumber, 
           OfdmParams.Nfft, OfdmParams.CpLen,
           OfdmTiming.OfdmSymbolsPerFrame);
@@ -296,22 +298,31 @@ int main(int argc, char **argv)
         }
 
         ReturnStatus = DacChainUpConversion(true, FileNumber,
-          OfdmParams.Nfft, OfdmParams.CpLen,
+          OfdmParams.Nfft, OfdmParams.CpLen, OfdmParams.BandWidth,
           OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
           break;
         }
-#endif
 
-        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
-          &OfdmTiming);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          printf("%s", ReturnStatus.ErrString);
-          break;
-        }
+          NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
+            OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
+          printf("Size of DMA transfer: %d\n", NumBytes);
+          ReturnStatus = DirectDmaPsToPl(NumBytes);
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            printf("%s", ReturnStatus.ErrString);
+           }
+           break;
+
+//        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
+//          &OfdmTiming);
+//        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+//        {
+//          printf("%s", ReturnStatus.ErrString);
+//          break;
+//        }
         break;
 
       case 8:
@@ -329,6 +340,15 @@ int main(int argc, char **argv)
       case 9:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
+        ReturnStatus = AdcChainDownConversion(DebugMode, FileNumber,
+          OfdmParams.Nfft, OfdmParams.CpLen, OfdmParams.BandWidth,
+          OfdmTiming.OfdmSymbolsPerFrame);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
+
         ReturnStatus = RxDemodulateBufferData(DebugMode,
           RX_DEMODULATE_TX_LOOPBACK, FileNumber, 
           OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,

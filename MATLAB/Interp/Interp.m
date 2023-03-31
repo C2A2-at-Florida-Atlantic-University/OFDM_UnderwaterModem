@@ -61,8 +61,8 @@ odata(1:r:nn*r) = idata;
 % guarantee a zero slope at beginning of sequence
 od = complex(zeros(2*n*r,1,cName),zeros(2*n*r,1,cName));
 od(1:r:(2*n*r)) = 2*idata(1)-idata((2*n+1):-1:2);
-[od,zi] = filter(b,1,od); %#ok
-[odata,zf] = filter(b,1,odata,zi);
+[od,zi] = filter(b,1,od,[],1); %#ok
+[odata,zf] = filter(b,1,odata,zi,2);
 odata(1:(nn-n)*r) = odata(n*r+1:nn*r);
 
 % make sure right hand points of data have been correctly interpolated and get rid of
@@ -73,7 +73,7 @@ else
 	od = zeros(1,2*n*r,cName);
 end
 od(1:r:(2*n)*r) = 2*idata(nn)-(idata((nn-1):-1:(nn-2*n)));
-od = filter(b,1,od,zf,1);
+od = filter(b,1,od,zf,2);
 odata(nn*r-n*r+1:nn*r) = od(1:n*r);
 y = odata;
 end

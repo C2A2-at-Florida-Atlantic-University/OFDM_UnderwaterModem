@@ -4,14 +4,16 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 #include "TransmitChain.h"
 #include "TxModulate.h"
 #include "DacChain.h"
 #include "g_Interp.h"
 
-#define SAMPLE_DEBUG
+//#define SAMPLE_DEBUG
 
 static Dac_Parameters_Type DacParams;
+static int16_t *DucOutData = NULL; // Buffer going to DAC
 
 ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc)
 {
@@ -53,23 +55,25 @@ Dac_Parameters_Type DacChainGetDacParams(void)
 }
 
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
-  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
+  unsigned Nfft, unsigned CpLen, unsigned Bandwidth, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   char FileName[32];
   FILE *DucFile = NULL;
   creal_T *DucBufferPtr = NULL;
   creal_T *DucInData = NULL; // Buffer going to IQ mixer
-  creal_T *DucOutData = NULL; // Buffer going to IQ mixer
+  creal_T DucIQMix;
   creal_T *DucTmpOut = NULL; // Buffer part of out emxArray struct
   g_emxArray_creal_T *DucInStruct = NULL;
   g_emxArray_creal_T *DucOutStruct = NULL;
   int SizeInt[2];
+  int SizeInt1[2];
+  double t = 0;
 
   DucBufferPtr = TxModulateGetTxBuffer();
 
   DucInData = (creal_T *)
-    malloc((CpLen+Nfft)*OfdmSymbols*16);
+    malloc((CpLen+Nfft)*OfdmSymbols*sizeof(creal_T));
   if (DucInData == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -77,11 +81,11 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
       "DacChainUpConversion: Could not malloc DucInData\n");
     return ReturnStatus;
   }
-  memset(DucInData, 0, (CpLen+Nfft)*OfdmSymbols*16);
+  memset(DucInData, 0, (CpLen+Nfft)*OfdmSymbols*sizeof(creal_T));
 
-  DucOutData = (creal_T *)
+  DucOutData = (int16_t *)
     malloc((CpLen+Nfft)*OfdmSymbols*DacParams.Interp*
-    DacParams.Interp*16);
+    DacParams.Interp*sizeof(creal_T));
   if (DucOutData == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -90,10 +94,10 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
     return ReturnStatus;
   }
   memset(DucOutData, 0, (CpLen+Nfft)*OfdmSymbols*DacParams.Interp*
-    DacParams.Interp*16);
+    DacParams.Interp*sizeof(creal_T));
 
   DucTmpOut = (creal_T *)
-    malloc((CpLen+Nfft)*DacParams.Interp*16);
+    malloc((CpLen+Nfft)*DacParams.Interp*sizeof(creal_T));
   if (DucTmpOut == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -101,7 +105,7 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
       "DacChainUpConversion: Could not malloc DucTmpOut\n");
     return ReturnStatus;
   }
-  memset(DucTmpOut, 0, (CpLen+Nfft)*DacParams.Interp*16);
+  memset(DucTmpOut, 0, (CpLen+Nfft)*DacParams.Interp*sizeof(creal_T));
 
   DucInStruct = (g_emxArray_creal_T *)malloc(sizeof(g_emxArray_creal_T));
   if (DucInStruct == NULL)
@@ -162,8 +166,9 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
 #endif
     }
     ////////////////////////////////////////////////////////////
+    printf("Nfft+CpLen = %d\n", (int)(Nfft+CpLen));
     SizeInt[1] = (int)(Nfft+CpLen);
-    SizeInt[0] = 0;
+    SizeInt[0] = 1;
     //DucInStruct->data = DucBufferPtr;
     DucInStruct->data = DucInData;
     DucInStruct->size = SizeInt;
@@ -171,22 +176,34 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
     DucInStruct->numDimensions = 1;
     ////////////////////////////////////////////////////////////
     memset(DucOutStruct, 0, sizeof(g_emxArray_creal_T));
-    memset(DucTmpOut, 0, (CpLen+Nfft)*DacParams.Interp*16);
+    memset(DucTmpOut, 0, (CpLen+Nfft)*DacParams.Interp*sizeof(creal_T));
     //SizeInt[1] = (int)((Nfft+CpLen)*DacParams.Interp);
-    SizeInt[1] = (int)((Nfft+CpLen));
-    SizeInt[0] = 1;
+    SizeInt1[1] = (int)((Nfft+CpLen));
+    SizeInt1[0] = 1;
     DucOutStruct->data = DucTmpOut;
-    DucOutStruct->size = SizeInt;
+    DucOutStruct->size = SizeInt1;
     DucOutStruct->allocatedSize = (Nfft + CpLen)*DacParams.Interp;
     //DucOutStruct->allocatedSize = (Nfft + CpLen);
     DucOutStruct->numDimensions = 1;
+
+    printf("About to %dx Interpolate %d Symbol\n", DacParams.Interp,i);
     Interp(DucInStruct, (short)DacParams.Interp, DucOutStruct);
     ////////////////////////////////////////////////////////////
     for (unsigned j = 0; j < (Nfft+CpLen)*DacParams.Interp; j++)
     {
+      DucIQMix.re = DucTmpOut[j].re*cos(2*M_PI*(double)DacParams.Fc*t);
+      DucIQMix.im = DucTmpOut[j].im*-1.0*
+        sin(2*M_PI*(double)DacParams.Fc*t);
+      DucOutData[j+(Nfft+CpLen)*DacParams.Interp*i] = (int16_t)
+        (DucIQMix.re + DucIQMix.im);
+      t = t + (1.0/(double)Bandwidth/(double)DacParams.Interp);
       if (DebugMode)
       {
-        fprintf(DucFile, "%lf, %lf\n", DucTmpOut[j].re, DucTmpOut[j].im);
+        // Record DUC output
+        //fprintf(DucFile, "%lf, %lf\n", DucTmpOut[j].re, DucTmpOut[j].im);
+        // Record IQ Mixer output
+        fprintf(DucFile, "%d\n", 
+          DucOutData[j+(Nfft+CpLen)*DacParams.Interp*i]);
 #ifdef SAMPLE_DEBUG
       if (j == 0)
       {
@@ -205,7 +222,6 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
 #endif
       }
     }
-    printf("Interpolated %d Symbols\n", i+1);
   }
 
   if (DucFile != NULL)
@@ -215,11 +231,20 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
   }
 
   free(DucInData);
-  free(DucOutData);
   free(DucTmpOut);
   free(DucInStruct);
   free(DucOutStruct);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
+}
+
+int16_t *DacChainGetDMABuff(void)
+{
+  return DucOutData;
+}
+
+void DacChainClearDMABuff(void)
+{
+  free(DucOutData);
 }

@@ -6,6 +6,7 @@
 
 #include <stdbool.h>
 #include "ReturnStatus.h"
+#include "g_Interp.h"
 
 #define DEFAULT_CENTER_FREQUENCY_KHZ 250
 
@@ -23,7 +24,9 @@ typedef struct {
 
 ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc);
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
-  unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
+  unsigned Nfft, unsigned CpLen, unsigned BandWidth, unsigned OfdmSymbols);
 Dac_Parameters_Type DacChainGetDacParams(void);
+int16_t *DacChainGetDMABuff(void);
+void DacChainClearDMABuff(void);
 
 #endif

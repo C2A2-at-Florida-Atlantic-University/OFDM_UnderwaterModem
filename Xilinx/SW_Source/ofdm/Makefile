@@ -66,7 +66,9 @@ Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
 DacChain.c \
+AdcChain.c \
 Ber.c \
+DirectDma.c \
 ofdm.c
 
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
