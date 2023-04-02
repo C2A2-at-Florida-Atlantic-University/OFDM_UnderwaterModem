@@ -335,11 +335,14 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
   {
     if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+      ZpIndex == (Nfft/2-1) || 
       ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
     {
-      //printf("ZP sub-carrier index %d\n", ZpIndex);
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile, "%d, %d\n", 0, 0);
+      }
     }
-    //else if (!((i-ZpIndex) % 4)) // Pilot sub-carrier
     else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
     {
       //printf("Pilot sub-carrier index %d\n", ZpIndex);

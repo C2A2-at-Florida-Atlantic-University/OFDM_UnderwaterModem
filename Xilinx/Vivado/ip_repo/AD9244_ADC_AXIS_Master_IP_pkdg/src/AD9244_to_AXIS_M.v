@@ -3,8 +3,7 @@
 	module AD9244_to_AXIS_M #
 	(
 		// Parameters of Axi Master Bus Interface M00_AXIS
-		parameter integer C_M00_AXIS_TDATA_WIDTH	= 32,
-		parameter integer C_M00_AXIS_START_COUNT	= 32
+		parameter integer C_M00_AXIS_TDATA_WIDTH	= 16
 	)
 	(
 		// Users to add ports here
@@ -44,7 +43,8 @@
 		.M_AXIS_TDATA(m00_axis_tdata),
 		.M_AXIS_TSTRB(m00_axis_tstrb),
 		.M_AXIS_TLAST(m00_axis_tlast),
-		.M_AXIS_TREADY(m00_axis_tready)
+		//.M_AXIS_TREADY(m00_axis_tready)
+		.M_AXIS_TREADY(1'b1)
 	);
 
 	endmodule

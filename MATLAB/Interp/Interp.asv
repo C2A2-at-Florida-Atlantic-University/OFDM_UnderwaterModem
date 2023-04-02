@@ -1,4 +1,0 @@
-function y=Interp(x,factor)
-%y=interp(x,factor,10,1);
-y=upsample(x,factor);
-end

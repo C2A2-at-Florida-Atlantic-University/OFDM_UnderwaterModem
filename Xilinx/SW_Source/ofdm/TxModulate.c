@@ -105,10 +105,11 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     while (i < 8/b_log2(ModOrder))
     {
       if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+        ZpIndex == (Nfft/2-1) || // ZP carrier at DC
         ZpIndex > OfdmCalcParams->LastPilotCarrier)
       { // ZP Index
       }
-      //else if (!(NfftCount % 4)) // No ZP
+      //else if (!(NfftCount % 4)) // Pilot carrier
       else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%4))
       {
         if (fscanf(PilotDataFile, "%d\n", &PilotData) != 1)
@@ -122,7 +123,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
         //printf("Setting pilot\n");
         TxOfdmSymbolBinData[NfftCount] = PilotData;
       }
-      else
+      else // Data carrier
       {
         //printf("Setting data\n");
         switch (ModOrder) {
@@ -157,29 +158,23 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       //}
 #endif
       if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+        ZpIndex == (Nfft/2-1) || // ZP carrier at DC
         ZpIndex > OfdmCalcParams->LastPilotCarrier))
       { // If Data or Pilot index
         NfftCount++;
-        if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
-          OfdmCalcParams->NumPilotCarriers)))
-        { // If last data or pilot subcarrier before ending ZP carrier
-          //if (!((NfftCount/(OfdmCalcParams->NumDataCarriers +
-          //OfdmCalcParams->NumPilotCarriers)) % (8/(int)b_log2(ModOrder))))
-          //{ // 
-          //  MessageByte = fgetc(TxMessageFile);
-          //  printf("NfftCount %d\n", NfftCount);
-         // }
+//        if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
+//          OfdmCalcParams->NumPilotCarriers)))
+//        { // If last data or pilot subcarrier before ending ZP carrier
           if (i == 8/b_log2(ModOrder))
           {
             MessageByte = fgetc(TxMessageFile);
             printf("NfftCount %d\n", NfftCount);
           }
-        }
+//        }
       }
       if (ZpIndex == Nfft-1)
       {
         ZpIndex = 0;
-        //MessageByte = fgetc(TxMessageFile);
       }
       else
       {
@@ -190,12 +185,6 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     if (NfftCount >= (Nfft*OfdmSymbols))
     {
       break;
-    }
-  
-  if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
-      ZpIndex > OfdmCalcParams->LastPilotCarrier))
-    {
-      MessageByte = fgetc(TxMessageFile);
     }
   }
 
@@ -223,7 +212,8 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   while (NfftZpCount < (Nfft*OfdmSymbols))
   {
     if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
-      ZpIndex > OfdmCalcParams->LastPilotCarrier)
+      ZpIndex == (Nfft/2-1) || // ZP carrier at DC
+      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP carrier
     {
       ModData = ZeroComplex;
     }

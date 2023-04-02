@@ -237,8 +237,8 @@ int main(int argc, char **argv)
         printf("\tFrame Data Rate:          %lf kbit/sec\n",
           OfdmCalcParams.FrameDataRate);
         printf("\n\tActual ZP Pilot Density:  %lf%%\n",
-          (double)OfdmParams.Nfft/
-          (double)OfdmCalcParams.FirstPilotCarrier/2.0);
+          (((double)OfdmCalcParams.FirstPilotCarrier*2.0)+1)/
+          (double)OfdmParams.Nfft*100.0);
         printf("\tFirst Pilot Carrier:      %d\n",
           OfdmCalcParams.FirstPilotCarrier+1);
         printf("\tLast Pilot Carrier:       %d\n",
