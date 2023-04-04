@@ -49,7 +49,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-   create_project project_1 myproj -part xc7z010clg400-1
+   create_project project_1 myproj -part xc7z020clg400-1
 }
 
 
@@ -236,7 +236,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {M_AXIS} \
  ] $aclk
-  set aclk_40M [ create_bd_port -dir I -type clk aclk_40M ]
+  set aclk_40M [ create_bd_port -dir I -type clk -freq_hz 40000000 aclk_40M ]
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set aresetn_40M [ create_bd_port -dir I -type rst aresetn_40M ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
@@ -258,9 +258,9 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100} \
    CONFIG.Filter_Type {Decimation} \
-   CONFIG.Fixed_Or_Initial_Rate {40} \
+   CONFIG.Fixed_Or_Initial_Rate {160} \
    CONFIG.Input_Data_Width {16} \
-   CONFIG.Input_Sample_Frequency {10} \
+   CONFIG.Input_Sample_Frequency {40} \
    CONFIG.Maximum_Rate {1600} \
    CONFIG.Minimum_Rate {4} \
    CONFIG.Number_Of_Channels {2} \

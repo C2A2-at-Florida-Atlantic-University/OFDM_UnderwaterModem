@@ -3,7 +3,7 @@
 #################################################################################################################################################
 
 # Make sure to set environment variable $FAU_OFDM_REPO_PATH to root of this git repo
-# This script will build the OFDM base project for the Pynq-Z2 board (without DAC/ADC interface)
+# This script will build the OFDM base project for the Modem board (without DAC/ADC interface)
 # Run "vivado -mode batch -source build_radio_top.tcl"
 
 set FAU_OFDM_REPO_PATH $::env(FAU_OFDM_REPO_PATH)
