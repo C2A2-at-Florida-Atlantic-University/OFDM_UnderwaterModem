@@ -31,6 +31,9 @@ ReturnStatusType AdcChainDownConversion(bool DebugMode, unsigned
     }
   }
 
+  // Get rid of warning
+  printf("Nfft %d, CpLen %d, BandWidth %d, OfdmSymbols %d\n", Nfft, CpLen,
+    BandWidth, OfdmSymbols);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

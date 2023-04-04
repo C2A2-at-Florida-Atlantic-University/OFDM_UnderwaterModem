@@ -306,12 +306,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
   if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
   {
-#ifdef FFT
-    TxBufferPtrLoop = FpgaInterfaceGetTxBuffer();
-#endif
-#ifdef DUC
     TxBufferPtrLoop = FftOutArray;
-#endif
   }
   else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
   {

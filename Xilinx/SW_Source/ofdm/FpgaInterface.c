@@ -42,12 +42,6 @@ ReturnStatusType FpgaInterfaceSetup(void)
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     return ReturnStatus;
   }
-
-  if (getuid() == 0)
-  {
-    // Process is running as root, drop privileges
-    printf("Process is running as root\n");
-  }
   
   FpgaVirtualAddr = mmap(NULL, FPGA_REG_SPAN, (PROT_READ | PROT_WRITE),
     MAP_SHARED, FpgaRegDevice, FPGA_REG_BASE_ADDR);
@@ -87,11 +81,11 @@ unsigned *FpgaInterfaceClearTxBuffer()
 #endif
 #if defined (NO_DEVMEM) || !defined(FFT)
   printf("FpgaInterfaceClearTxBuffer: NO_DEVMEM or ~FFT defined\n");
-  memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
+  memset(FpgaVirtualAddr, 0, TX_BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
   printf("FpgaInterfaceClearTxBuffer: ~NO_DEVMEM or FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
+  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, TX_BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
@@ -103,11 +97,11 @@ unsigned *FpgaInterfaceClearRxBuffer()
 #endif
 #if defined(NO_DEVMEM) || !defined(FFT)
   printf("FpgaInterfaceClearRxBuffer: NO_DEVMEM or ~FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+BUFFER_SPAN), 0, BUFFER_SPAN);
+  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_SPAN), 0, RX_BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+BUFFER_SPAN);
 #else
   printf("FpgaInterfaceClearRxBuffer: ~NO_DEVMEM or FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0, BUFFER_SPAN);
+  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0, RX_BUFFER_SPAN);
   return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
 #endif
 }
@@ -117,14 +111,11 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
 #ifdef READ_DEBUG
   printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
 #endif
+
 #ifdef NO_DEVMEM
   *pValue = 0;
-#ifdef DEBUG
-  printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n",
-    0xFFFFFFFF, addr);
-#endif
 #else
-  //*pValue = *((unsigned *)(FpgaVirtualAddr+addr));
+  *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
 #ifdef DEBUG
   printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
 #endif
@@ -140,12 +131,8 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value)
 
 #ifdef NO_DEVMEM
   value = 0;
-
-#ifdef DEBUG
-  printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
-#endif
 #else
-  //*((unsigned *)(FpgaVirtualAddr+addr)) = value;
+  *((unsigned *)(FpgaVirtualAddr+addr)) = value;
 #ifdef DEBUG
   printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
 #endif

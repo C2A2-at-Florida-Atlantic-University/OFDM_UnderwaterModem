@@ -11,7 +11,7 @@ use ieee.std_logic_unsigned.all;
 
 entity iq_mixer_rx is
   generic(
-    g_CYCLES_PER_SAMPLE           : integer := 10
+    g_CYCLES_PER_SAMPLE           : std_logic_vector(3 downto 0) := "1010"
   );
   port(
     axis_aclk                     : in  std_logic;
@@ -20,8 +20,8 @@ entity iq_mixer_rx is
     s_axis_tdata                  : in  std_logic_vector(15 downto 0);
     s_axis_tvalid                 : in  std_logic;
     s_axis_tready                 : out std_logic;
-    
-    s_axis_dds_tdata              : in  std_logic_vector(31 downto 0);
+     
+    s_axis_dds_tdata              : in  std_logic_vector(15 downto 0);
     s_axis_dds_tvalid             : in  std_logic;
 
     m_axis_tdata                  : out std_logic_vector(15 downto 0);
@@ -44,20 +44,24 @@ architecture RTL of iq_mixer_rx is
     port(
       CLK                         : in  std_logic;
       A                           : in  std_logic_vector(15 downto 0);
-      B                           : in  std_logic_vector(15 downto 0);
+      B                           : in  std_logic_vector(6 downto 0);
       P                           : out std_logic_vector(15 downto 0)
     );
   end component mult_gen_0;
 
-  signal toggle                   : std_logic             := '0';
-  signal counter                  : std_logic_vector(3 downto 0);
+  constant c_ONES_MASK            : std_logic_vector(5 downto 0) := (others => '1');
+  constant c_ZEROS_MASK           : std_logic_vector(5 downto 0) := (others => '0');
+
+  signal toggle                   : std_logic                    := '0';
+  signal counter                  : std_logic_vector(3 downto 0) := (others => '0');
   signal real_sample              : std_logic_vector(15 downto 0);
   signal out_tvalid               : std_logic;
   signal out_tlast                : std_logic;
+  signal out_tdata                : std_logic_vector(15 downto 0);
   signal i_sample                 : std_logic_vector(15 downto 0);
   signal q_sample                 : std_logic_vector(15 downto 0);
-  signal i_sample_save            : std_logic_vector(15 downto 0);
-  signal q_sample_save            : std_logic_vector(15 downto 0);
+  signal cos_sample               : std_logic_vector(6 downto 0);
+  signal sin_sample               : std_logic_vector(6 downto 0);
 
 begin
 
@@ -66,7 +70,7 @@ begin
     port map(
       CLK                         => axis_aclk,
       A                           => real_sample,
-      B                           => s_axis_dds_tdata(15 downto 0),
+      B                           => cos_sample,
       P                           => i_sample
     );
 
@@ -75,7 +79,7 @@ begin
     port map(
       CLK                         => axis_aclk,
       A                           => real_sample,
-      B                           => s_axis_dds_tdata(31 downto 16),
+      B                           => sin_sample,
       P                           => q_sample
     );
 
@@ -83,14 +87,16 @@ begin
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      if counter = std_logic_vector(unsigned(g_CYCLES_PER_SAMPLE-1)) then
+      if counter = g_CYCLES_PER_SAMPLE-'1' then
         counter                   <= (others => '0');
         s_axis_tready             <= '1';
       else
         s_axis_tready             <= '0';
         counter                   <= counter + '1';
-        if counter = X"0" then
+        if counter = g_CYCLES_PER_SAMPLE-"111" then
           real_sample             <= s_axis_tdata(15 downto 0);
+          cos_sample              <= s_axis_dds_tdata(6 downto 0);
+          sin_sample              <= s_axis_dds_tdata(14 downto 8);
         end if;
       end if;
     end if;
@@ -100,32 +106,24 @@ begin
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      if m_axis_tready = '1' then
-        toggle                    <= not toggle;
+      if counter = g_CYCLES_PER_SAMPLE-"110" then
         out_tvalid                <= '1';
-        if toggle = '1' then
-          out_tlast               <= '1';
-        else
-          out_tlast               <= '0';
-        end if;
+        out_tlast                 <= '0';
+        out_tdata                 <= i_sample;
+      elsif counter = g_CYCLES_PER_SAMPLE-'1' then
+        out_tvalid                <= '1';
+        out_tlast                 <= '1';
+        out_tdata                 <= q_sample;
+      else
+        out_tvalid                <= '0';
+        out_tlast                 <= '0';
+        out_tdata                 <= (others => '0');
       end if;
     end if;
   end process;
 
-  i_sample_save <= i_sample when (out_tvalid = '1' and out_tlast = '0') else (others => '0');
-  q_sample_save <= q_sample when (out_tvalid = '1' and out_tlast = '0') else (others => '0');
- 
-  process(axis_aclk)
-  begin
-    if rising_edge(axis_aclk) then
-      if out_tlast = '0' then
-        m_axis_tdata              <= i_sample_save;
-      else
-        m_axis_tdata              <= q_sample_save;
-      end if;
-      m_axis_tvalid               <= out_tvalid;
-      m_axis_tlast                <= out_tlast;
-    end if;
-  end process;
+  m_axis_tlast                    <= out_tlast;
+  m_axis_tvalid                   <= out_tvalid;
+  m_axis_tdata                    <= out_tdata;
 
 end architecture RTL;

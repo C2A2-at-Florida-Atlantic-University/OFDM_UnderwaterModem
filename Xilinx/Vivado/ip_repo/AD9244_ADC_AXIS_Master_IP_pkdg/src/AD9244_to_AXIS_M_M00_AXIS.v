@@ -31,7 +31,7 @@ wire [14:0] inputData; //14 bits of data + ADC OTR (bit 14)
 reg [31:0] testCounter; 
 reg [7:0] startupDelayCounter;
 reg moduleEnableReg;
-reg tValidReg;
+reg tValidReg = 1'b0;
 
 reg testModeReg;
 reg overRunReg;

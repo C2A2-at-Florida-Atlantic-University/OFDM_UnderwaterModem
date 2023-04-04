@@ -13,6 +13,7 @@
 #include "AdcChain.h"
 #include "rtwtypes.h"
 #include "DirectDma.h"
+#include "HwInterface.h"
 #include "Ber.h"
 
 #define DEBUG
@@ -30,6 +31,7 @@ int main(int argc, char **argv)
   unsigned CenterFreq;
   unsigned NumBytes;
   int TxGainDb;
+  int RxGainDb;
   int DebugSelection;
   bool DebugMode;
   ReturnStatusType ReturnStatus;
@@ -78,6 +80,7 @@ int main(int argc, char **argv)
   OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
 
   TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+  RxGainDb = DEFAULT_RX_GAIN_DB;
 
   CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
   ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
@@ -92,6 +95,28 @@ int main(int argc, char **argv)
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
 
+#ifdef SPI
+  ReturnStatus = HwInterfaceGpioSetup();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    return 1;
+  }
+
+  ReturnStatus = HwInterfaceSpiSetup();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    return 1;
+  }
+  
+  ReturnStatus = HwInterfaceSetVga(RxGainDb);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+  }
+#endif
+
   printf("\nDebug Mode Enabled\n");
   DebugMode = true;
 
@@ -101,7 +126,7 @@ int main(int argc, char **argv)
     printf("1  - Set Global Debug Mode\n");
     printf("2  - Enter OFDM Parameters\n");
     printf("3  - Enter OFDM Timing Parameters\n");
-    printf("4  - Enter TX Digital Gain (dBFS)\n");
+    printf("4  - Enter TX/RX Gain (dBFS)/(dB)\n");
     printf("5  - Enter Center Frequency\n");
     printf("6  - Display OFDM Parameters\n");
     printf("7  - Transmit Single OFDM Frame from File\n");
@@ -180,12 +205,21 @@ int main(int argc, char **argv)
       case 4:
         printf("\tEnter TX Digital Gain (dBFS): ");
         ScanfRet = scanf("%d", &TxGainDb);
+        printf("\tEnter RX Gain (dB): ");
+        ScanfRet = scanf("%d", &RxGainDb);
         ReturnStatus = TxModulateDigitalGain(TxGainDb);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
           TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
         }
+#ifdef SPI
+        ReturnStatus = HwInterfaceSetVga(RxGainDb);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+        }
+#endif
         break;
 
       case 5:
@@ -309,12 +343,14 @@ int main(int argc, char **argv)
           NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
             OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
           printf("Size of DMA transfer: %d\n", NumBytes);
+#ifndef NO_DEVMEM
           ReturnStatus = DirectDmaPsToPl(NumBytes);
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
            }
            break;
+#endif
 
 //        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
 //          &OfdmTiming);

@@ -6,16 +6,25 @@
 
 #include "ReturnStatus.h"
 
-#define FPGA_REG_SPAN (1<<29)
+#define FPGA_REG_SPAN (1<<29) // Entire 512 MB of memory
 #define FPGA_REG_BASE_ADDR  (0x0)
 
 #define TX_BUFFER_BASE 0x1F000000
 #define RX_BUFFER_BASE 0x1F080000
-#ifdef FFT
-#define BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols max)
+
+#ifdef NO_DEVMEM
+#define BUFFER_SPAN 0x3FFFFF
 #endif
+
+#ifdef FFT
+#define RX_BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols max)
+#define TX_BUFFER_SPAN 0x1FFFF // Contains int16 samples
+#endif
+
 #ifdef DUC
-#define BUFFER_SPAN 0x7FFFF // ((4096 carriers + 4096 cp) * 16 symbols max)
+// ((4096 carriers + 4096 cp) * 16 symbols max * 2(int16))
+#define TX_BUFFER_SPAN 0x1FFFF // Contains int16 samples
+#define RX_BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols max)
 #endif
 
 

@@ -4,7 +4,10 @@
 #ifndef HW_INTERFACE_H_INCLUDED
 #define HW_INTERFACE_H_INCLUDED
 
+#include "ReturnStatus.h"
+
 #define FpgaClkRate 100000000 // 100MHz
+#define DEFAULT_RX_GAIN_DB 30 // in dB
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -81,5 +84,10 @@ extern void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
   *OfdmTiming);
 extern void HwInterfaceConfigSymbPlayback(Ofdm_Parameters_Type
   *OfdmParams, Ofdm_Timing_Type *OfdmTiming);
+ReturnStatusType HwInterfaceSpiSetup(void);
+ReturnStatusType HwInterfaceSetVga(int gain);
+void HwInterfaceSetVgaHiLo(unsigned value);
+ReturnStatusType HwInterfaceGpioSetup(void);
+void HwInterfaceSetVgaHiLo(unsigned value);
 
 #endif

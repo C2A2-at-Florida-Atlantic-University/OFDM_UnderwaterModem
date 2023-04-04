@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
-      <ZoomEndTime time="959.426294823 ms"></ZoomEndTime>
-      <Cursor1Time time="87.050300000 ms"></Cursor1Time>
+      <ZoomStartTime time="316.667 ns"></ZoomStartTime>
+      <ZoomEndTime time="3,816.668 ns"></ZoomEndTime>
+      <Cursor1Time time="900.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="220"></NameColumnWidth>
+      <NameColumnWidth column_width="216"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="9" />
@@ -27,7 +27,6 @@
    <wvobject type="group" fp_name="group18">
       <obj_property name="label">M_AXIS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/cic_tb/m_tdata">
          <obj_property name="ElementShortName">m_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">m_tdata[15:0]</obj_property>
@@ -108,6 +107,10 @@
          <obj_property name="ElementShortName">m_tuser[15:0]</obj_property>
          <obj_property name="ObjectShortName">m_tuser[15:0]</obj_property>
       </wvobject>
+      <wvobject type="logic" fp_name="/cic_tb/DUT/cic_i/cic_compiler_0/m_axis_data_tlast">
+         <obj_property name="ElementShortName">m_axis_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tlast</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject type="logic" fp_name="/cic_tb/m_tvalid">
       <obj_property name="ElementShortName">m_tvalid</obj_property>
@@ -116,7 +119,6 @@
    <wvobject type="group" fp_name="group16">
       <obj_property name="label">S_AXIS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/cic_tb/s_tdata">
          <obj_property name="ElementShortName">s_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">s_tdata[15:0]</obj_property>

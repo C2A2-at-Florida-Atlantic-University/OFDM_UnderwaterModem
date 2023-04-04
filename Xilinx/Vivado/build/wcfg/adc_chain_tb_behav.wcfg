@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="adc_chain_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="adc_chain_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="3,458.667 ns"></ZoomStartTime>
+      <ZoomEndTime time="4,906.668 ns"></ZoomEndTime>
+      <Cursor1Time time="3,770.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="182"></NameColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="11" />
+   <wvobject type="logic" fp_name="/adc_chain_tb/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_chain_tb/adc_aclk">
+      <obj_property name="ElementShortName">adc_aclk</obj_property>
+      <obj_property name="ObjectShortName">adc_aclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_chain_tb/r_nRst">
+      <obj_property name="ElementShortName">r_nRst</obj_property>
+      <obj_property name="ObjectShortName">r_nRst</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_chain_tb/adc_aresetn">
+      <obj_property name="ElementShortName">adc_aresetn</obj_property>
+      <obj_property name="ObjectShortName">adc_aresetn</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/adc_chain_tb/Fc_scaled">
+      <obj_property name="ElementShortName">Fc_scaled[31:0]</obj_property>
+      <obj_property name="ObjectShortName">Fc_scaled[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/adc_chain_tb/decimate_ratio">
+      <obj_property name="ElementShortName">decimate_ratio[15:0]</obj_property>
+      <obj_property name="ObjectShortName">decimate_ratio[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group23">
+      <obj_property name="label">ADC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/adc_chain_tb/adc_status">
+         <obj_property name="ElementShortName">adc_status[31:0]</obj_property>
+         <obj_property name="ObjectShortName">adc_status[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/ClockToADC">
+         <obj_property name="ElementShortName">ClockToADC</obj_property>
+         <obj_property name="ObjectShortName">ClockToADC</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/ADCdata">
+         <obj_property name="ElementShortName">ADCdata[15:0]</obj_property>
+         <obj_property name="ObjectShortName">ADCdata[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/data">
+         <obj_property name="ElementShortName">data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">data[15:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+      </wvobject>
+      <wvobject type="vbus" fp_name="vbus40">
+         <obj_property name="label">Real Samples</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[15]">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[14]">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[13]">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[12]">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[11]">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[10]">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[9]">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[8]">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[7]">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[6]">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[5]">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[4]">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[3]">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[2]">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[1]">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/data[0]">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/ADC_control">
+         <obj_property name="ElementShortName">ADC_control[3:0]</obj_property>
+         <obj_property name="ObjectShortName">ADC_control[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group80">
+      <obj_property name="label">FIFO</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="group" fp_name="group78">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_aresetn">
+            <obj_property name="ElementShortName">s_axis_aresetn</obj_property>
+            <obj_property name="ObjectShortName">s_axis_aresetn</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_aclk">
+            <obj_property name="ElementShortName">s_axis_aclk</obj_property>
+            <obj_property name="ObjectShortName">s_axis_aclk</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tvalid">
+            <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tready">
+            <obj_property name="ElementShortName">s_axis_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tready</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata">
+            <obj_property name="ElementShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="vbus" fp_name="vbus1964">
+            <obj_property name="label">real</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[15]">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[14]">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[13]">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[12]">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[11]">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[10]">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[9]">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[8]">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[7]">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[6]">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[5]">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[4]">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[3]">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[2]">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[1]">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/s_axis_tdata[0]">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group79">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_aclk">
+            <obj_property name="ElementShortName">m_axis_aclk</obj_property>
+            <obj_property name="ObjectShortName">m_axis_aclk</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tvalid">
+            <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tready">
+            <obj_property name="ElementShortName">m_axis_tready</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata">
+            <obj_property name="ElementShortName">m_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="vbus" fp_name="vbus2014">
+            <obj_property name="label">real</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[15]">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[14]">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[13]">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[12]">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[11]">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[10]">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[9]">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[8]">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[7]">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[6]">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[5]">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[4]">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[3]">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[2]">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[1]">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/axis_data_fifo_0/m_axis_tdata[0]">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group988">
+      <obj_property name="label">IQ_MIXER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="group" fp_name="group985">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_tdata">
+            <obj_property name="ElementShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_tvalid">
+            <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_tready">
+            <obj_property name="ElementShortName">s_axis_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tready</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group986">
+         <obj_property name="label">S_AXIS_DDS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata">
+            <obj_property name="ElementShortName">s_axis_dds_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="vbus" fp_name="vbus205">
+            <obj_property name="label">sin</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[14]">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[13]">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[12]">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[11]">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[10]">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[9]">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[8]">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject type="vbus" fp_name="vbus189">
+            <obj_property name="label">cos</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[6]">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[5]">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[4]">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[3]">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[2]">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[1]">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tdata[0]">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/s_axis_dds_tvalid">
+            <obj_property name="ElementShortName">s_axis_dds_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group987">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/m_axis_tdata">
+            <obj_property name="ElementShortName">m_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/m_axis_tvalid">
+            <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/m_axis_tlast">
+            <obj_property name="ElementShortName">m_axis_tlast</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tlast</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/m_axis_tready">
+            <obj_property name="ElementShortName">m_axis_tready</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/toggle">
+         <obj_property name="ElementShortName">toggle</obj_property>
+         <obj_property name="ObjectShortName">toggle</obj_property>
+      </wvobject>
+      <wvobject type="group" fp_name="group2034">
+         <obj_property name="label">Mult_real</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_real_inst/A">
+            <obj_property name="ElementShortName">A[15:0]</obj_property>
+            <obj_property name="ObjectShortName">A[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+            <obj_property name="AnalogYRangeMin">-407</obj_property>
+            <obj_property name="AnalogYRRangeMax">1020</obj_property>
+            <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_real_inst/B">
+            <obj_property name="ElementShortName">B[6:0]</obj_property>
+            <obj_property name="ObjectShortName">B[6:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_real_inst/P">
+            <obj_property name="ElementShortName">P[15:0]</obj_property>
+            <obj_property name="ObjectShortName">P[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+            <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
+            <obj_property name="AnalogYRangeMin">-32768.000000</obj_property>
+            <obj_property name="AnalogYRRangeMax">32768.000000</obj_property>
+            <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_LINEAR</obj_property>
+            <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
+            <obj_property name="AnalogHorizLine">0.000000</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group2038">
+         <obj_property name="label">Mult_Imaginary</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_imaginary_inst/A">
+            <obj_property name="ElementShortName">A[15:0]</obj_property>
+            <obj_property name="ObjectShortName">A[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+            <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
+            <obj_property name="AnalogYRangeMin">-520</obj_property>
+            <obj_property name="AnalogYRRangeMax">895</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_imaginary_inst/B">
+            <obj_property name="ElementShortName">B[6:0]</obj_property>
+            <obj_property name="ObjectShortName">B[6:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mult_gen_imaginary_inst/P">
+            <obj_property name="ElementShortName">P[15:0]</obj_property>
+            <obj_property name="ObjectShortName">P[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+            <obj_property name="AnalogYRangeType">ANALOG_YRANGETYPE_FIXED</obj_property>
+            <obj_property name="AnalogYRangeMin">-32768.000000</obj_property>
+            <obj_property name="AnalogYRRangeMax">32768.000000</obj_property>
+            <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_LINEAR</obj_property>
+            <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
+            <obj_property name="AnalogHorizLine">0.000000</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/iq_mix_out_i">
+         <obj_property name="ElementShortName">iq_mix_out_i[15:0]</obj_property>
+         <obj_property name="ObjectShortName">iq_mix_out_i[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/iq_mix_out_q">
+         <obj_property name="ElementShortName">iq_mix_out_q[15:0]</obj_property>
+         <obj_property name="ObjectShortName">iq_mix_out_q[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/counter">
+         <obj_property name="ElementShortName">counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/sin_sample">
+         <obj_property name="ElementShortName">sin_sample[6:0]</obj_property>
+         <obj_property name="ObjectShortName">sin_sample[6:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/cos_sample">
+         <obj_property name="ElementShortName">cos_sample[6:0]</obj_property>
+         <obj_property name="ObjectShortName">cos_sample[6:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group975">
+      <obj_property name="label">CIC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="group" fp_name="group972">
+         <obj_property name="label">S_CONFIG</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_config_tdata">
+            <obj_property name="ElementShortName">s_axis_config_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_config_tvalid">
+            <obj_property name="ElementShortName">s_axis_config_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_config_tready">
+            <obj_property name="ElementShortName">s_axis_config_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_config_tready</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group973">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_data_tdata">
+            <obj_property name="ElementShortName">s_axis_data_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_data_tvalid">
+            <obj_property name="ElementShortName">s_axis_data_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_data_tready">
+            <obj_property name="ElementShortName">s_axis_data_tready</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tready</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/s_axis_data_tlast">
+            <obj_property name="ElementShortName">s_axis_data_tlast</obj_property>
+            <obj_property name="ObjectShortName">s_axis_data_tlast</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group974">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/m_axis_data_tdata">
+            <obj_property name="ElementShortName">m_axis_data_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tdata[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/m_axis_data_tuser">
+            <obj_property name="ElementShortName">m_axis_data_tuser[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tuser[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/m_axis_data_tvalid">
+            <obj_property name="ElementShortName">m_axis_data_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tvalid</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/m_axis_data_tlast">
+            <obj_property name="ElementShortName">m_axis_data_tlast</obj_property>
+            <obj_property name="ObjectShortName">m_axis_data_tlast</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group57">
+      <obj_property name="label">DDC Out</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/adc_chain_tb/m_tdata">
+         <obj_property name="ElementShortName">m_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="vbus" fp_name="vbus107">
+         <obj_property name="label">i</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[15]">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[14]">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[13]">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[12]">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[11]">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[10]">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[9]">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[8]">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[7]">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[6]">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[5]">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[4]">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[3]">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[2]">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[1]">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[0]">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="vbus" fp_name="vbus90">
+         <obj_property name="label">q</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[31]">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[30]">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[29]">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[28]">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[27]">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[26]">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[25]">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[24]">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[23]">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[22]">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[21]">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[20]">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[19]">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[18]">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[17]">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/adc_chain_tb/m_tdata[16]">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/m_tvalid">
+         <obj_property name="ElementShortName">m_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_tvalid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/i_ddc_out">
+         <obj_property name="ElementShortName">i_ddc_out[15:0]</obj_property>
+         <obj_property name="ObjectShortName">i_ddc_out[15:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/adc_chain_tb/q_ddc_out">
+         <obj_property name="ElementShortName">q_ddc_out[15:0]</obj_property>
+         <obj_property name="ObjectShortName">q_ddc_out[15:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

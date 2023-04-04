@@ -9,7 +9,7 @@ use ieee.std_logic_1164.all;
 
 entity decimator_config is
   generic(
-    g_PRECISION                   : integer := 32
+    g_PRECISION                   : integer := 16
   );
   port(
     axis_aclk                     : in  std_logic;
@@ -18,7 +18,7 @@ entity decimator_config is
 
     m_axis_tdata                  : out std_logic_vector(15 downto 0);
     m_axis_tvalid                 : out std_logic;
-    m_axis_tlast                  : out std_logic
+    m_axis_tready                 : in  std_logic
   );
 end entity decimator_config;
 
@@ -39,7 +39,7 @@ begin
   P_REG_FREQ : process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      if m_axis_tvalid = '1' then
+      if m_axis_tready = '1' then
         r_decimate_ratio            <= i_decimate_ratio;
       end if;
     end if;
