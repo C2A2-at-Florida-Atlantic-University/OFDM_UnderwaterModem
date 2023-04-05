@@ -21,6 +21,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   ReturnStatusType ReturnStatus;
   unsigned LoopCount;
   unsigned BytesRemaining;
+  unsigned DmaInterrupt;
   int16_t *DucBufferPtr;
   void *FpgaVirtBuff;
 /*
@@ -82,7 +83,6 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     }
     while (1)
     {
-      unsigned DmaInterrupt;
       FpgaInterfaceRead32(DMA_BASE_ADDR+DMA_STATUS_OFFSET, &DmaInterrupt);
       if ((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0)
       {
@@ -112,18 +112,68 @@ void DirectDmaPlToPsInit(unsigned start) // Enable PL to PS
     DMA_IOC_IRQ_MASK+start);
 }
 
-ReturnStatusType DirectDmaPlToPs(unsigned Bytes, unsigned *ActualBytes)
+ReturnStatusType DirectDmaPlToPs(void)
 {
   ReturnStatusType ReturnStatus;
-  //unsigned 
+  unsigned BufferSelect = 0;  // Select between 2 buffers
+  unsigned DmaInterrupt;
+  unsigned ActualBytes;
 
-  if (Bytes >= RX_BUFFER_SPAN)
+  DirectDmaPlToPsInit(1); // Start DMA s2mm
+
+  // While DMA is filling up one buffer, the other one can 
+  // be used for processing
+  // 
+  // There is a DMA interrupt for s2mm upon AXI TLAST regardless of 
+  // whether or not DMAS_LENGTH register has reached zero. As a result,
+  // we have to keep restarting the DMA transfer.
+  while (1)
   {
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString,
-      "DirectDmaPlToPs: Error: Number of bytes %d too large for"
-      "CMA buffer\n", Bytes);
-    return ReturnStatus;
+    // Write physical address of DMA buffer location in memory
+    if (BufferSelect)
+    {
+      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET, 
+        RX_BUFFER_BASE1);
+      BufferSelect = !BufferSelect;
+    }
+    else // BufferSelect = 0
+    {
+      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET,
+        RX_BUFFER_BASE0);
+      BufferSelect = !BufferSelect;
+    }
+
+    // As soon as length register is written to, the DMA transaction starts
+    FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET,
+      TX_BUFFER_SPAN);
+
+    // Wait for buffer to fill or for tlast to be asserted
+    while (1)
+    {
+      FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_STATUS_OFFSET, &DmaInterrupt);
+      if ((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0)
+      {
+        printf("DirectDmaPsToPl: DMAS Transaction loop %d complete\n", 0);
+        // Clear Interrupt
+        FpgaInterfaceWrite(DMA_BASE_ADDR+DMAS_STATUS_OFFSET,
+          DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK);
+        break;
+      }
+    }
+
+    // Actual number of bytes is written back onto buffer length reg
+    FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET, &ActualBytes);
+    if (ActualBytes != TX_BUFFER_SPAN)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "DirectDmaPlToPs: DMA ERROR: "
+      "Number of bytes read does not match expected number of bytes\n");
+      return ReturnStatus;
+    }
+
+#ifdef DEBUG
+    printf("\t\tDirectDmaPlToPs: Wrote to buffer %d\n", !BufferSelect);
+#endif
   }
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

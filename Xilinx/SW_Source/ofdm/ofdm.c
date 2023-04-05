@@ -135,6 +135,8 @@ int main(int argc, char **argv)
     printf("10 - Demod RX Buffer to File\n");
     printf("11 - Demod RX Injection to File\n");
     printf("12 - Compute BER/SER\n");
+    printf("13 - Start S2MM DMA\n");
+    printf("14 - Stop S2MM DMA\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -421,6 +423,15 @@ int main(int argc, char **argv)
           break;
         }
         break;
+
+      case 13:
+        ReturnStatus = DirectDmaPlToPs();
+        if (ReturnStatus.Status = RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          DirectDmaPlToPsInit(0);
+          break;
+        }
 
       default:
         printf("Invalid selection\n");

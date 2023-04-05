@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="cic_tx_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="cic_tx_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,100.001 ns"></ZoomEndTime>
+      <Cursor1Time time="1,100.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="205"></NameColumnWidth>
+      <ValueColumnWidth column_width="93"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/cic_tx_tb/r_clk" type="logic">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/m_tdata" type="array">
+      <obj_property name="ElementShortName">m_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_tdata" type="array">
+      <obj_property name="ElementShortName">s_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_config_tdata" type="array">
+      <obj_property name="ElementShortName">s_config_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_config_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/m_tvalid" type="logic">
+      <obj_property name="ElementShortName">m_tvalid</obj_property>
+      <obj_property name="ObjectShortName">m_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_config_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_config_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_config_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_tready" type="logic">
+      <obj_property name="ElementShortName">s_tready</obj_property>
+      <obj_property name="ObjectShortName">s_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_config_tready" type="logic">
+      <obj_property name="ElementShortName">s_config_tready</obj_property>
+      <obj_property name="ObjectShortName">s_config_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/s_tlast" type="logic">
+      <obj_property name="ElementShortName">s_tlast</obj_property>
+      <obj_property name="ObjectShortName">s_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/m_tlast" type="logic">
+      <obj_property name="ElementShortName">m_tlast</obj_property>
+      <obj_property name="ObjectShortName">m_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/m_tuser" type="array">
+      <obj_property name="ElementShortName">m_tuser[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_tuser[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/i_duc_data" type="array">
+      <obj_property name="ElementShortName">i_duc_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">i_duc_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/q_duc_data" type="array">
+      <obj_property name="ElementShortName">q_duc_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">q_duc_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/i_duc_out" type="array">
+      <obj_property name="ElementShortName">i_duc_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">i_duc_out[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/q_duc_out" type="array">
+      <obj_property name="ElementShortName">q_duc_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">q_duc_out[15:0]</obj_property>
+   </wvobject>
+</wave_config>

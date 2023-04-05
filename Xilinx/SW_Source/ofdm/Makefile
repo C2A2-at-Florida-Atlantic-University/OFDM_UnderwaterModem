@@ -2,12 +2,13 @@
 # Jared Hermans
 ############################################################################
 
-NO_DEVMEM = NO_DEVMEM
-#PS_PL_POINT = FFT
+MEM_ACCESS = DEVMEM
+# PS_PL_POINT = FFT
 PS_PL_POINT = DUC
-SPI = SPI
+SPI_ACCESS = SPI
 
 CC:=gcc
+CROSS_COMPILER:=arm-linux-gnueabihf-
 
 TARGET:=ofdm
 
@@ -66,8 +67,8 @@ HwInterface.c \
 Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
-DacChain.c \
 AdcChain.c \
+DacChain.c \
 Ber.c \
 DirectDma.c \
 ofdm.c
@@ -75,13 +76,13 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -D$(SPI) -Wall -Wextra -O2 -lpthread -lm
+CFLAGS := -D$(MEM_ACCESS) -D$(PS_PL_POINT) -D$(SPI_ACCESS) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -o $@ $^ -lm
 
 .PHONY: clean
 clean:

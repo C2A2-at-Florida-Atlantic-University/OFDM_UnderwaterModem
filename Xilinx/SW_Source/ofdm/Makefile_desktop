@@ -5,6 +5,8 @@
 NO_DEVMEM = NO_DEVMEM
 #PS_PL_POINT = FFT
 PS_PL_POINT = DUC
+#SPI = SPI
+SPI = NO_SPI
 
 CC:=gcc
 
@@ -66,13 +68,15 @@ Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
 DacChain.c \
+AdcChain.c \
 Ber.c \
+DirectDma.c \
 ofdm.c
 
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -Wall -Wextra -O2 -lpthread -lm
+CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -D$(SPI) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
 	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)

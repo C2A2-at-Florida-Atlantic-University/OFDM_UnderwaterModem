@@ -10,14 +10,14 @@
 #define FPGA_REG_BASE_ADDR  (0x0)
 
 #define TX_BUFFER_BASE 0x1F000000
-#define RX_BUFFER_BASE 0x1F080000
+#define RX_BUFFER_BASE0 0x1F020000
+#define RX_BUFFER_BASE1 0x1F040000
 
 #ifdef NO_DEVMEM
 #define BUFFER_SPAN 0x3FFFFF
 #endif
 
 #ifdef FFT
-#define RX_BUFFER_SPAN 0x3FFFF // (4096 carriers * 16 symbols max)
 #define TX_BUFFER_SPAN 0x1FFFF // Contains int16 samples
 #endif
 

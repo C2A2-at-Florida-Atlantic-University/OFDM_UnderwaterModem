@@ -26,6 +26,6 @@
 void DirectDmaPsToPlInit(unsigned start);
 ReturnStatusType DirectDmaPsToPl(unsigned Bytes);
 void DirectDmaPlToPsInit(unsigned start);
-ReturnStatusType DirectDmaPlToPs(unsigned Bytes, unsigned *ActualBytes);
+ReturnStatusType DirectDmaPlToPs(void);
 
 #endif
