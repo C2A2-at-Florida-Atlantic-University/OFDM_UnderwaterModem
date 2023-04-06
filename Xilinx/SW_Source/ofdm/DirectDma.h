@@ -25,7 +25,9 @@
 
 void DirectDmaPsToPlInit(unsigned start);
 ReturnStatusType DirectDmaPsToPl(unsigned Bytes);
+ReturnStatusType DirectDmaPlToPsThread(void);
 void DirectDmaPlToPsInit(unsigned start);
-ReturnStatusType DirectDmaPlToPs(void);
+void *DirectDmaPlToPs(void *arg);
+void DirectDmaPlToPsThreadCancel(void);
 
 #endif

@@ -7,7 +7,7 @@
 # Run "vivado -mode batch -source build_radio_top_v2.tcl"
 
 set FAU_OFDM_REPO_PATH $::env(FAU_OFDM_REPO_PATH)
-create_project -force radio_top_v2 radio_top_v2 -part xc7z020clg400-1
+create_project -force radio_top_v2 radio_top_v2 -part xc7z010clg400-1
 # BD Wrapper has to be verilog or else simulation crashes
 set_property target_language Verilog [current_project]
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules

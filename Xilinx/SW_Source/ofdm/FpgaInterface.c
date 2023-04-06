@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -65,11 +66,11 @@ ReturnStatusType FpgaInterfaceSetup(void)
 
 unsigned *FpgaInterfaceGetTxBuffer()
 {
-#if defined (NO_DEVMEM) || !defined(FFT)
-  printf("FpgaInterfaceGetTxBuffer: NO_DEVMEM or ~FFT defined\n");
+#ifdef NO_DEVMEM
+  printf("FpgaInterfaceGetTxBuffer: NO_DEVMEM defined\n");
   return FpgaVirtualAddr;
 #else
-  printf("FpgaInterfaceGetTxBuffer: ~NO_DEVMEM or FFT defined\n");
+  printf("FpgaInterfaceGetTxBuffer: Returning CMA area\n");
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
@@ -79,12 +80,13 @@ unsigned *FpgaInterfaceClearTxBuffer()
 #ifdef DEBUG
   printf("FpgaInterfaceClearTxBuffer: Clear TX Buffer\n");
 #endif
-#if defined (NO_DEVMEM) || !defined(FFT)
-  printf("FpgaInterfaceClearTxBuffer: NO_DEVMEM or ~FFT defined\n");
+
+#ifdef NO_DEVMEM
+  printf("FpgaInterfaceClearTxBuffer: NO_DEVMEM defined\n");
   memset(FpgaVirtualAddr, 0, TX_BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
-  printf("FpgaInterfaceClearTxBuffer: ~NO_DEVMEM or FFT defined\n");
+  printf("FpgaInterfaceClearTxBuffer: Clearing CMA area\n");
   memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, TX_BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
@@ -97,19 +99,22 @@ unsigned *FpgaInterfaceClearRxBuffer()
 #endif
 #if defined(NO_DEVMEM) || !defined(FFT)
   printf("FpgaInterfaceClearRxBuffer: NO_DEVMEM or ~FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_SPAN), 0, RX_BUFFER_SPAN);
-  return (unsigned *)(FpgaVirtualAddr+BUFFER_SPAN);
+  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_SPAN), 0, TX_BUFFER_SPAN);
+  return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_SPAN);
 #else
   printf("FpgaInterfaceClearRxBuffer: ~NO_DEVMEM or FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0, RX_BUFFER_SPAN);
-  return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
+  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, TX_BUFFER_SPAN);
+  return(unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
 
-void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
+void FpgaInterfaceRead32(unsigned addr, unsigned *pValue, bool mute)
 {
 #ifdef READ_DEBUG
-  printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
+  if (!mute)
+  {
+    printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
+  }
 #endif
 
 #ifdef NO_DEVMEM
@@ -117,16 +122,22 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue)
 #else
   *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
 #ifdef DEBUG
-  printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
+  if (!mute)
+  {
+    printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
+  }
 #endif
 #endif
 }
 
-void FpgaInterfaceWrite32(unsigned addr, unsigned value)
+void FpgaInterfaceWrite32(unsigned addr, unsigned value, bool mute)
 {
 #ifdef WRITE_DEBUG
-  printf("\tFpgaInterfaceWrite32: About to write 0x%X to 0x%X\n", value,
-    addr);
+  if (!mute)
+  {
+    printf("\tFpgaInterfaceWrite32: About to write 0x%X to 0x%X\n", value,
+      addr);
+  }
 #endif
 
 #ifdef NO_DEVMEM
@@ -134,31 +145,31 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value)
 #else
   *((unsigned *)(FpgaVirtualAddr+addr)) = value;
 #ifdef DEBUG
-  printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
+  if (!mute)
+  {
+    printf("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X\n", value, addr);
+  }
 #endif
 #endif
 }
 
-void FpgaInterfaceWrite(unsigned addr, unsigned value, unsigned mask)
+void FpgaInterfaceWrite(unsigned addr, unsigned value, unsigned mask,
+  bool mute)
 {
   unsigned RegValue;
 
-#if defined (WRITE_DEBUG) || defined (READ_DEBUG)
-  printf("\tFpgaInterfaceWrite: Mask = 0x%X\n", mask);
-#endif
-
   if (mask == 0xFFFFFFFF)
   {
-    FpgaInterfaceWrite32(addr, value);
+    FpgaInterfaceWrite32(addr, value, mute);
   }
   else
   {
-    FpgaInterfaceRead32(addr, &RegValue);
+    FpgaInterfaceRead32(addr, &RegValue, mute);
 #ifdef NO_DEVMEM
     RegValue = 0xFFFFFFFF; // Debug value
 #endif
     RegValue &= (~mask);
     RegValue |= (value & mask);
-    FpgaInterfaceWrite32(addr, RegValue);
+    FpgaInterfaceWrite32(addr, RegValue, mute);
   }
 }

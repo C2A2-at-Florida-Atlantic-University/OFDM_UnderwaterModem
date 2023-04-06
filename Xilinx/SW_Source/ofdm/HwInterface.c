@@ -21,6 +21,40 @@
 
 static int SpiFile;  // /dev/spidev1 file
 static int GpioFile; // /sys/class/gpio/* file
+static bool GlobalMute = false;
+
+void HwInterfaceEnableDac(void)
+{
+  unsigned RegValue;
+  RegValue = ENABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue, 
+    DAC_CONTROL_MASK, GlobalMute);
+}
+
+void HwInterfaceDisableDac(void)
+{
+  unsigned RegValue;
+  RegValue = DISABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue,
+    DAC_CONTROL_MASK, GlobalMute);
+}
+
+void HwInterfaceEnableAdc(void)
+{
+  unsigned RegValue;
+  RegValue = (ADC_ENABLE+ADC_CLEAR_OVERRUN+ADC_CLEAR_OTR) << 
+    ADC_CONTROL_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
+    ADC_CONTROL_MASK, GlobalMute);
+}
+
+void HwInterfaceDisableAdc(void)
+{
+  unsigned RegValue;
+  RegValue = ADC_DISABLE << ADC_CONTROL_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
+    ADC_CONTROL_MASK, GlobalMute);
+}
 
 ReturnStatusType HwInterfaceSetVga(int gain)
 {
@@ -125,15 +159,23 @@ ReturnStatusType HwInterfaceGpioSetup(void)
   // MIO20 = GPIO20 + 866 = 886; because /sys/class/gpio/gpiochip866
   // - may be different on your board
   RetVal = write(GpioFile, "886", 4);
+  if (RetVal == -1)
+  {
+    perror("HwInterfaceGpioSetup:");
+    printf("WARNING: Could not set GPIO20 through "
+    "/sys/class/gpio/export\n");
+  }
   close(GpioFile);
   // Set MIO20 pin to be an output
   GpioFile = open("/sys/class/gpio/gpio886/direction", O_WRONLY);
-  if (GpioFile == -1 || RetVal == -1)
+  if (GpioFile == -1)
   {
+    perror("HwInterfaceGpioSetup");
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
       "HwInterfaceGpioSetup: ERROR: Could not open "
-      "\"/sys/class/gpio/gpio886/direction\"...\n");
+      "\"/sys/class/gpio/gpio886/direction\"... RetVal = %d, "
+      "GpioFile = %d\n", RetVal, GpioFile);
     return ReturnStatus;
   }
 
@@ -253,7 +295,7 @@ void HwInterfaceStartTx(void)
 #ifdef DEBUG
   printf("HwInterfaceStartTx: Tx Chain configured and waiting\n");
 #endif
-  FpgaInterfaceWrite(DL_EN_REG, RegValue, DL_EN_REG_MASK);
+  FpgaInterfaceWrite(DL_EN_REG, RegValue, DL_EN_REG_MASK, GlobalMute);
 }
 
 // Stop TX Transmission 
@@ -266,7 +308,7 @@ void HwInterfaceStopTx(void)
 #ifdef DEBUG
   printf("HwInterfaceStopTx: Tx Chain stopped\n");
 #endif
-  FpgaInterfaceWrite(DL_EN_REG, RegValue, DL_EN_REG_MASK);
+  FpgaInterfaceWrite(DL_EN_REG, RegValue, DL_EN_REG_MASK, GlobalMute);
 }
 
 // Configure config_fft register
@@ -279,7 +321,8 @@ void HwInterfaceConfigFftCore(void)
 #ifdef DEBUG
   printf("HwInterfaceConfigFftCore: Rising edge on FFT config\n");
 #endif
-  FpgaInterfaceWrite(CONFIG_FFT_CORE_REG, RegValue, CONFIG_FFT_CORE_MASK);
+  FpgaInterfaceWrite(CONFIG_FFT_CORE_REG, RegValue, CONFIG_FFT_CORE_MASK,
+    GlobalMute);
   usleep(1000); // Give some time for core to configure
 
   RegValue = 0 << CONFIG_FFT_CORE_OFFSET;
@@ -287,7 +330,8 @@ void HwInterfaceConfigFftCore(void)
 #ifdef DEBUG
   printf("HwInterfaceConfigFftCore: Falling edge on FFT config\n");
 #endif
-  FpgaInterfaceWrite(CONFIG_FFT_CORE_REG, RegValue, CONFIG_FFT_CORE_MASK);
+  FpgaInterfaceWrite(CONFIG_FFT_CORE_REG, RegValue, CONFIG_FFT_CORE_MASK,
+    GlobalMute);
 }
 
 // Configure SpiFile_cycles, nfft, cp_len, nfft symbols, inv,
@@ -308,7 +352,7 @@ void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
 #ifdef DEBUG
   printf("HwInterfaceConfigTxChain: Configuring SpiFile_cycles + nfft reg\n");
 #endif
-  FpgaInterfaceWrite(FS_CYCLES_REG, RegValue, mask);
+  FpgaInterfaceWrite(FS_CYCLES_REG, RegValue, mask, GlobalMute);
 
   // Configure CP_LEN, NFFT_SCALED and OFDM_SYMBOLS
   RegValue = OfdmParams->CpLen << CP_LEN_REG_OFFSET;
@@ -322,14 +366,15 @@ void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
   printf("HwInterfaceConfigTxChain: Configuring cp_len, nfft_sc, ");
   printf(" and symbols reg\n");
 #endif
-  FpgaInterfaceWrite(CP_LEN_REG, RegValue, mask);
+  FpgaInterfaceWrite(CP_LEN_REG, RegValue, mask, GlobalMute);
 
   // Configure IFFT/FFT control
   RegValue = 1 << SEL_IFFT_FFT_REG_OFFSET;
 #ifdef DEBUG
   printf("HwInterfaceConfigTxChain: Configuring IFFT/FFT select reg\n");
 #endif
-  FpgaInterfaceWrite(SEL_IFFT_FFT_REG, RegValue, SEL_IFFT_FFT_REG_MASK);
+  FpgaInterfaceWrite(SEL_IFFT_FFT_REG, RegValue, SEL_IFFT_FFT_REG_MASK, 
+    GlobalMute);
 
   // Enable/Disable conjugate at output of IFFT
   RegValue = IFFT_CONJUGATE << NEGATIVE_FREQ_REG_OFFSET;
@@ -337,7 +382,8 @@ void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
 #ifdef DEBUG
   printf("HwInterfaceConfigTxChain: Configuring IFFT conjugate reg\n");
 #endif
-  FpgaInterfaceWrite(NEGATIVE_FREQ_REG, RegValue, NEGATIVE_FREQ_REG_MASK);
+  FpgaInterfaceWrite(NEGATIVE_FREQ_REG, RegValue, NEGATIVE_FREQ_REG_MASK,
+    GlobalMute);
 
   // Configure Non-Continuous Transmission
   RegValue = 0 << PLAYBACK_CONTINUOUS_REG_OFFSET;
@@ -346,7 +392,7 @@ void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
   printf("HwInterfaceConfigTxChain: Configuring continuous reg\n");
 #endif
   FpgaInterfaceWrite(PLAYBACK_CONTINUOUS_REG, RegValue, 
-    PLAYBACK_CONTINUOUS_REG_MASK);
+    PLAYBACK_CONTINUOUS_REG_MASK, GlobalMute);
 
   // Configure Non Playback mode
   RegValue = 0 << PLAYBACK_EN_REG_OFFSET;
@@ -354,5 +400,6 @@ void HwInterfaceConfigTxChain(Ofdm_Parameters_Type *OfdmParams,
 #ifdef DEBUG
   printf("HwInterfaceConfigTxChain: Configuring in normal mode reg\n");
 #endif
-  FpgaInterfaceWrite(PLAYBACK_EN_REG, RegValue, PLAYBACK_EN_REG_MASK);
+  FpgaInterfaceWrite(PLAYBACK_EN_REG, RegValue, PLAYBACK_EN_REG_MASK,
+    GlobalMute);
 }

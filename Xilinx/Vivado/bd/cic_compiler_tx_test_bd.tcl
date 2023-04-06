@@ -225,15 +225,17 @@ proc create_root_design { parentCell } {
   set cic_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler_0 ]
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
-   CONFIG.Fixed_Or_Initial_Rate {40} \
+   CONFIG.Fixed_Or_Initial_Rate {10} \
    CONFIG.Input_Data_Width {16} \
-   CONFIG.Input_Sample_Frequency {10} \
+   CONFIG.Input_Sample_Frequency {1} \
    CONFIG.Maximum_Rate {400} \
-   CONFIG.Minimum_Rate {4} \
+   CONFIG.Minimum_Rate {10} \
    CONFIG.Number_Of_Channels {2} \
    CONFIG.Number_Of_Stages {2} \
-   CONFIG.Output_Data_Width {16} \
+   CONFIG.Output_Data_Width {25} \
    CONFIG.Quantization {Truncation} \
+   CONFIG.RateSpecification {Frequency_Specification} \
+   CONFIG.SamplePeriod {10} \
    CONFIG.Sample_Rate_Changes {Programmable} \
  ] $cic_compiler_0
 

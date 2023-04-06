@@ -344,14 +344,17 @@ int main(int argc, char **argv)
 
           NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
             OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
-          printf("Size of DMA transfer: %d\n", NumBytes);
 #ifndef NO_DEVMEM
+          HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes);
+          HwInterfaceDisableDac();
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
            }
            break;
+#else
+          printf("Size of DMA transfer: %d\n", NumBytes);
 #endif
 
 //        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
@@ -425,13 +428,16 @@ int main(int argc, char **argv)
         break;
 
       case 13:
-        ReturnStatus = DirectDmaPlToPs();
-        if (ReturnStatus.Status = RETURN_STATUS_FAIL)
+        ReturnStatus = DirectDmaPlToPsThread();
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
-          DirectDmaPlToPsInit(0);
-          break;
         }
+        break;
+
+      case 14:
+        DirectDmaPlToPsThreadCancel();
+        break;
 
       default:
         printf("Invalid selection\n");

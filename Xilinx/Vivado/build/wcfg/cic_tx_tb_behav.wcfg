@@ -12,69 +12,158 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,100.001 ns"></ZoomEndTime>
-      <Cursor1Time time="1,100.000 ns"></Cursor1Time>
+      <ZoomEndTime time="1,080.001 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="205"></NameColumnWidth>
-      <ValueColumnWidth column_width="93"></ValueColumnWidth>
+      <ValueColumnWidth column_width="89"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="16" />
+   <WVObjectSize size="8" />
    <wvobject fp_name="/cic_tx_tb/r_clk" type="logic">
       <obj_property name="ElementShortName">r_clk</obj_property>
       <obj_property name="ObjectShortName">r_clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/cic_tx_tb/m_tdata" type="array">
-      <obj_property name="ElementShortName">m_tdata[15:0]</obj_property>
-      <obj_property name="ObjectShortName">m_tdata[15:0]</obj_property>
+   <wvobject fp_name="group17" type="group">
+      <obj_property name="label">S_AXIS_CONFIG</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/cic_tx_tb/s_config_tdata" type="array">
+         <obj_property name="ElementShortName">s_config_tdata[15:0]</obj_property>
+         <obj_property name="ObjectShortName">s_config_tdata[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/s_config_tvalid" type="logic">
+         <obj_property name="ElementShortName">s_config_tvalid</obj_property>
+         <obj_property name="ObjectShortName">s_config_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/s_config_tready" type="logic">
+         <obj_property name="ElementShortName">s_config_tready</obj_property>
+         <obj_property name="ObjectShortName">s_config_tready</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_tdata" type="array">
-      <obj_property name="ElementShortName">s_tdata[15:0]</obj_property>
-      <obj_property name="ObjectShortName">s_tdata[15:0]</obj_property>
+   <wvobject fp_name="group18" type="group">
+      <obj_property name="label">S_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/cic_tx_tb/s_tdata" type="array">
+         <obj_property name="ElementShortName">s_tdata[15:0]</obj_property>
+         <obj_property name="ObjectShortName">s_tdata[15:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus36" type="vbus">
+         <obj_property name="label">cic_in</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[15]" type="logic">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[14]" type="logic">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[13]" type="logic">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[12]" type="logic">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[11]" type="logic">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[10]" type="logic">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[9]" type="logic">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[8]" type="logic">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[7]" type="logic">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[6]" type="logic">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[5]" type="logic">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[4]" type="logic">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[3]" type="logic">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[2]" type="logic">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[1]" type="logic">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cic_tx_tb/s_tdata[0]" type="logic">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/s_tvalid" type="logic">
+         <obj_property name="ElementShortName">s_tvalid</obj_property>
+         <obj_property name="ObjectShortName">s_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/s_tready" type="logic">
+         <obj_property name="ElementShortName">s_tready</obj_property>
+         <obj_property name="ObjectShortName">s_tready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/s_tlast" type="logic">
+         <obj_property name="ElementShortName">s_tlast</obj_property>
+         <obj_property name="ObjectShortName">s_tlast</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_config_tdata" type="array">
-      <obj_property name="ElementShortName">s_config_tdata[15:0]</obj_property>
-      <obj_property name="ObjectShortName">s_config_tdata[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/m_tvalid" type="logic">
-      <obj_property name="ElementShortName">m_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_config_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_config_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_config_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_tready" type="logic">
-      <obj_property name="ElementShortName">s_tready</obj_property>
-      <obj_property name="ObjectShortName">s_tready</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_config_tready" type="logic">
-      <obj_property name="ElementShortName">s_config_tready</obj_property>
-      <obj_property name="ObjectShortName">s_config_tready</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/s_tlast" type="logic">
-      <obj_property name="ElementShortName">s_tlast</obj_property>
-      <obj_property name="ObjectShortName">s_tlast</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/m_tlast" type="logic">
-      <obj_property name="ElementShortName">m_tlast</obj_property>
-      <obj_property name="ObjectShortName">m_tlast</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cic_tx_tb/m_tuser" type="array">
-      <obj_property name="ElementShortName">m_tuser[15:0]</obj_property>
-      <obj_property name="ObjectShortName">m_tuser[15:0]</obj_property>
+   <wvobject fp_name="group19" type="group">
+      <obj_property name="label">M_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/cic_tx_tb/m_tvalid" type="logic">
+         <obj_property name="ElementShortName">m_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/m_tdata" type="array">
+         <obj_property name="ElementShortName">m_tdata[15:0]</obj_property>
+         <obj_property name="ObjectShortName">m_tdata[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/m_tlast" type="logic">
+         <obj_property name="ElementShortName">m_tlast</obj_property>
+         <obj_property name="ObjectShortName">m_tlast</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cic_tx_tb/m_tuser" type="array">
+         <obj_property name="ElementShortName">m_tuser[15:0]</obj_property>
+         <obj_property name="ObjectShortName">m_tuser[15:0]</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="/cic_tx_tb/i_duc_data" type="array">
       <obj_property name="ElementShortName">i_duc_data[15:0]</obj_property>
       <obj_property name="ObjectShortName">i_duc_data[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/cic_tx_tb/q_duc_data" type="array">
       <obj_property name="ElementShortName">q_duc_data[15:0]</obj_property>
       <obj_property name="ObjectShortName">q_duc_data[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/cic_tx_tb/i_duc_out" type="array">
       <obj_property name="ElementShortName">i_duc_out[15:0]</obj_property>

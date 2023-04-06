@@ -168,7 +168,6 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
           if (i == 8/b_log2(ModOrder))
           {
             MessageByte = fgetc(TxMessageFile);
-            printf("NfftCount %d\n", NfftCount);
           }
 //        }
       }
@@ -514,6 +513,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 {
   ReturnStatusType ReturnStatus;
   FILE *IfftFile = NULL;
+  FILE *IfftFileInt = NULL;
   cint16_T IfftInData[MAX_NFFT];
   emxArray_creal_T *IfftOutStruct;
   char FileName[32];
@@ -560,6 +560,16 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 
   if (DebugMode)
   {
+    sprintf(FileName, "files/TxIfftSamplesInt%d.txt", FileNumber);
+    IfftFileInt = fopen(FileName, "w");
+    if (IfftFileInt == NULL)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "TxModulateIfft: Failed to open %s\n", FileName);
+      return ReturnStatus;
+    }
+    fprintf(IfftFileInt, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName, "files/TxIfftSamples%d.txt", FileNumber);
     IfftFile = fopen(FileName, "w");
     if (IfftFile == NULL)
@@ -642,12 +652,18 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     {
       fprintf(IfftFile, "%lf, %lf\n", DucBufferPtr[i].re,
         DucBufferPtr[i].im);
+      fprintf(IfftFileInt, "%d, %d\n", (int)DucBufferPtr[i].re,
+        (int)DucBufferPtr[i].im);
     }
   }
 
   if (DebugMode)
   {
     printf("TxModulateIfft: Wrote to file %s\n", FileName);
+    if (IfftFileInt != NULL)
+    {
+      fclose(IfftFileInt);
+    }
     if (IfftFile != NULL)
     {
       fclose(IfftFile);

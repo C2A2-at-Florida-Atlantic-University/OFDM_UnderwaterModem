@@ -9,6 +9,29 @@
 #define FpgaClkRate 100000000 // 100MHz
 #define DEFAULT_RX_GAIN_DB 30 // in dB
 
+#define GPIO_0_BASE_ADDR 0x40010000
+#define GPIO_1_BASE_ADDR 0x40010200
+
+#define FC_SCALED_OFFSET 0x0
+#define FC_SCALED_MASK 0xFFFFFFFF
+
+#define DECIMATE_RADIO_OFFSET 0x8
+#define DECIMATE_RADIO_MASK 0x0000FFFF
+
+#define DAC_CONTROL_OFFSET 0x8
+#define DAC_CONTROL_MASK_OFFSET 16
+#define DAC_CONTROL_MASK 0x000F0000
+#define ENABLE_DAC_PWR_AMP 0x3
+#define DISABLE_DAC_PWR_AMP 0x0
+
+#define ADC_CONTROL_OFFSET 0x8
+#define ADC_CONTROL_MASK_OFFSET 20
+#define ADC_CONTROL_MASK 0x00F00000
+#define ADC_CLEAR_OTR 0x4
+#define ADC_CLEAR_OVERRUN 0x2
+#define ADC_ENABLE 0x1
+#define ADC_DISABLE 0x0
+
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
 // CP_LEN_REG, and NFFT_REG
@@ -89,5 +112,9 @@ ReturnStatusType HwInterfaceSetVga(int gain);
 void HwInterfaceSetVgaHiLo(unsigned value);
 ReturnStatusType HwInterfaceGpioSetup(void);
 void HwInterfaceSetVgaHiLo(unsigned value);
+void HwInterfaceEnableDac(void);
+void HwInterfaceDisableDac(void);
+void HwInterfaceEnableAdc(void);
+void HwInterfaceDisableAdc(void);
 
 #endif
