@@ -27,7 +27,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   unsigned LoopCount;
   unsigned BytesRemaining;
   unsigned DmaInterrupt;
-  int16_t *DucBufferPtr;
+  int16_t *BufferPtr;
   void *FpgaVirtBuff;
 /*
   if (Bytes >= (unsigned)pow(2,DMA_BUFFER_WIDTH_VAL)-1)
@@ -58,7 +58,11 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     BytesRemaining, BytesRemaining);
 
   // Get pointers to buffers
-  DucBufferPtr = DacChainGetDMABuff();
+#ifdef DUC
+  BufferPtr = TxModulateGetTxBuffer();
+#ifdef DAC
+  BufferPtr = DacChainGetDMABuff();
+#endif
   FpgaVirtBuff = FpgaInterfaceGetTxBuffer();
 
   DirectDmaPsToPlInit(1); // Start DMA
@@ -75,7 +79,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     {
       // Copy data to physically contiguous memory (CMA) location
       memcpy((void *)(FpgaVirtBuff+i*BytesRemaining*2), 
-        (const void *)(DucBufferPtr+i*BytesRemaining*2), BytesRemaining);
+        (const void *)(BufferPtr+i*BytesRemaining*2), BytesRemaining);
       FpgaInterfaceWrite32(DMA_BASE_ADDR+DMA_LENGTH_OFFSET,
         BytesRemaining, GlobalMute);
     }
@@ -83,7 +87,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     {
       // Copy data to physically contiguous memory (CMA) location
       memcpy((void *)(FpgaVirtBuff+i*TX_BUFFER_SPAN*2), 
-        (const void *)(DucBufferPtr+i*TX_BUFFER_SPAN*2), BytesRemaining);
+        (const void *)(BufferPtr+i*TX_BUFFER_SPAN*2), BytesRemaining);
       FpgaInterfaceWrite32(DMA_BASE_ADDR+DMA_LENGTH_OFFSET,
         TX_BUFFER_SPAN, GlobalMute);
     }
@@ -106,7 +110,12 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
 
   // free
   FpgaInterfaceClearTxBuffer();
+#ifdef DUC
+  TxModulateClose();
+#endif
+#ifdef DAC
   DacChainClearDMABuff();
+#endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

@@ -1,55 +1,82 @@
 //---------------------------------------------------------------
 // Jared Hermans
 //---------------------------------------------------------------
-`timescale 1 ns / 1 ps
+`timescale 1 ns / 1 ns
 
 module dac_chain_tb();
 
+  localparam                        FC                = 250000.0;
   localparam                        CLOCK_PERIOD      = 10; // 100 MHz
   localparam                        CLOCK_CYCLE       = CLOCK_PERIOD/2;
 
+  localparam                        CLOCK_PERIOD_DAC  = 100; // 10 MHz
+  localparam                        CLOCK_CYCLE_DAC   = CLOCK_PERIOD_DAC/2;
+
+  localparam                        CLK_FREQ          = 100000000.0;
+  localparam                        DT                = 1.0/FC;
+
+  parameter real PI = 3.14159265358979323846;
+
   int                               fd;
-  int                               fd_info;
-  int                               fd_filt_in;
+  int                               fd_write;
+  int                               i;
+  int                               j;
+
 
   logic                             r_clk;
   logic                             r_nRst;
+  logic                             dac_aclk;
+  logic                             dac_aresetn;
 
-  int                               ofdm_symbols;
-  int                               sample_rate;
-  int                               nfft;
-  logic [15:0]                      cp_len;
-  int                               fs_cycles;
-  int                               interp_cycles;
-  logic [4:0]                       nfft_scale;
-  logic                             dl_en;
+  logic [15:0]                      Interp_ratio;
+  logic [3:0]                       DAC_control;
 
-  logic [31:0]                      in_axis_tdata     = '0;
-  logic                             in_axis_tlast     = 1'b0;
-  logic                             in_axis_tvalid    = 1'b0;
-  logic                             in_axis_tready;
+  logic [15:0]                      dds_tdata;
+  logic                             dds_tvalid;
 
-  logic [15:0]                      input_data_i,input_data_q;
-  logic [15:0]                      filt_in_tdata_i,filt_in_tdata_q;
+  logic [31:0]                       i_cosine,i_sine;
+
+  logic [31:0]                      s_tdata;
+  logic                             s_tvalid;
+  logic                             s_tready;
+  logic [3:0]                       s_tkeep;
+  logic                             s_tlast;
+
+  logic [13:0]                      DAC_data;
+  logic [31:0]                      tmp;
+
+  logic [15:0]                      i_duc_data,q_duc_data;
+
+  real                              time_val;
 
 //---------------------------------------------------------------
 // DUT
 //---------------------------------------------------------------
   DAC_Chain_wrapper DUT (
+    .ClockToDAC                     (),
+    .DAC_control                    (DAC_control),
+    .DAC_data                       (DAC_data),
+    .DAC_sleep                      (DAC_sleep),
+    .Interp_ratio                   (Interp_ratio),
+    .PA_enable                      (PA_enable),
+
     .aclk                           (r_clk),
     .aresetn                        (r_nRst),
+    .aclk_10M                       (dac_aclk),
+    .aresetn_10M                    (dac_aresetn),
 
-    .dl_en_0                        (dl_en),
-    .interp_cycles_0                (interp_cycles),
+    .S_AXIS_DDS_tdata               (dds_tdata),
+    .S_AXIS_DDS_tvalid              (dds_tvalid),
 
-    .S_AXIS_tdata                   (in_axis_tdata),
-    .S_AXIS_tlast                   (in_axis_tlast),
-    .S_AXIS_tvalid                  (in_axis_tvalid),
-    .S_AXIS_tready                  (in_axis_tready)
+    .S_AXIS_tdata                   (s_tdata),
+    .S_AXIS_tkeep                   (s_tkeep),
+    .S_AXIS_tlast                   (s_tlast),
+    .S_AXIS_tvalid                  (s_tvalid),
+    .S_AXIS_tready                  (s_tready)
   );
 
 //---------------------------------------------------------------
-// Drive Clock
+// Drive 100M Clock
 //---------------------------------------------------------------
   initial begin
     r_clk                           = 1'b1;
@@ -59,106 +86,129 @@ module dac_chain_tb();
   end
 
 //---------------------------------------------------------------
-// Scoreboard Interpolation filter input
+// Drive DAC Clock
 //---------------------------------------------------------------
   initial begin
-    fd_filt_in = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/dac_chain_filt_in.txt","w");
-    if (fd_filt_in) $display("File was opened successfully: %0d ",fd_filt_in);
-    else begin
-      $display("File was NOT opened successfully: %0d",fd_filt_in);
-      $stop;
+    dac_aclk                        = 1'b1;
+    forever begin
+      #CLOCK_CYCLE_DAC dac_aclk     = ~dac_aclk;
     end
-
-    #(CLOCK_CYCLE*9);
-    filt_in_tdata_i                 <= DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[15:0];
-    filt_in_tdata_q                 <= DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[31:16];
-    #CLOCK_CYCLE;
-    filt_in_tdata_i                 <= DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[15:0];
-    filt_in_tdata_q                 <= DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[31:16];
-    #CLOCK_CYCLE;
-    for (int i = 0; i < (ofdm_symbols*interp_cycles*(nfft+cp_len)); i++) begin
-      while (~filt_in_tvalid) begin
-        #CLOCK_CYCLE;
-      end
-      filt_in_tdata_i               = DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[15:0];
-      filt_in_tdata_q               = DUT.DAC_Chain_i.dac_resampler_0.m_axis_tdata[31:16];
-      $fdisplay(fd_filt_in,"%d, %d",$signed(filt_in_tdata_i),$signed(filt_in_tdata_q));
-      #(CLOCK_CYCLE*2);
-    end
-
   end
 
-  assign filt_in_tvalid             = DUT.DAC_Chain_i.dac_resampler_0.m_axis_tvalid;
+//---------------------------------------------------------------
+// sin cos function
+//---------------------------------------------------------------
+  function logic signed [31:0] cosine(input signed [31:0] x);
+    localparam N = 12;  // Number of terms in the Taylor series
+    logic signed [31:0] numerator;
+    logic signed [31:0] denominator;
+    logic signed [31:0] term;
+    logic sign;
+    int i;
+    logic signed [31:0] cos_x;
+
+    // Compute the Taylor series approximation of cos(x)
+    numerator = 1;
+    denominator = 1;
+    sign = 1;
+    cos_x = 0;
+    for (i = 0; i < N; i++) begin
+      term = numerator / denominator;
+      cos_x += sign * term;
+      numerator *= -x * x;
+      denominator *= (2 * i + 1) * (2 * i + 2);
+      sign *= -1;
+    end
+
+    return cos_x;
+  endfunction
+
+  function logic signed [31:0] sine(input signed [31:0] x);
+    localparam N = 12;  // Number of terms in the Taylor series
+    logic signed [31:0] numerator;
+    logic signed [31:0] denominator;
+    logic signed [31:0] term;
+    logic sign;
+    int i;
+    logic signed [31:0] sin_x;
+
+    // Compute the Taylor series approximation of sin(x)
+    numerator = x;
+    denominator = 1;
+    sign = 1;
+    sin_x = 0;
+    for (i = 0; i < N-1; i++) begin
+      term = numerator / denominator;
+      sin_x += sign * term;
+      numerator *= -x * x;
+      denominator *= (2 * i + 2) * (2 * i + 3);
+      sign *= -1;
+    end
+
+    return sin_x;
+  endfunction
+
+//---------------------------------------------------------------
+// Drive cos + jsin
+//---------------------------------------------------------------
+  initial begin
+    for (j = 0; j < 17408000; j++) begin
+      time_val = j*DT; // Update time value
+      tmp = 2.0*PI*FC*time_val;
+      i_sine = -1*sine(tmp);
+      i_cosine = cosine(2*PI*FC*time_val);
+      dds_tdata = {1'b0,i_sine[31:25],1'b0,i_cosine[31:25]};
+      dds_tvalid = 1'b1;
+      #CLOCK_PERIOD;
+    end
+  end
 
 //---------------------------------------------------------------
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
-    fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/transmit_chain_ifft_sim_out.txt","r");
-    //fd = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/ifft_matlab_out.txt","r");
+    fd = $fopen("../../../../../../../SW_Source/ofdm/files/TxIfftSamplesInt1.txt","r");
     if (fd) $display("File was opened successfully: %0d ",fd);
     else begin
       $display("File was NOT opened successfully: %0d",fd);
       $stop;
     end
 
-    fd_info = $fopen("c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/sim/info.txt","r");
-    if (fd_info) $display("File was opened successfully: %0d ",fd_info);
-    else begin
-      $display("File was NOT opened successfully: %0d",fd_info);
-      $stop;
-    end
-
-    $fscanf(fd_info,"%d, %d, %d, %d, %d",ofdm_symbols,sample_rate,nfft,cp_len,interp_cycles);
-    $display("Number of OFDM symbols: %d",ofdm_symbols);
-    fs_cycles                       = $floor(100000000/sample_rate);
-    $display("Sample_rate: %dsps = %d 100MHz clock cycles per sample",sample_rate,fs_cycles);
-    $display("nFFT = %d",nfft);
-    nfft_scale                      = $clog2(nfft);
-    $display("nFFT scaled = %d",nfft_scale);
-    $display("cp_len = %d",cp_len);
-    $display("Interpolation factor = %d",interp_cycles);
-
     r_nRst                          <= 1'b0;
-    in_axis_tvalid                  <= 1'b0;
-    in_axis_tlast                   <= 1'b0;
-    dl_en                           <= 1'b0;
-    #(5*CLOCK_PERIOD);
+    dac_aresetn                     <= 1'b0;
+
+    s_tdata                         <= '0;
+    s_tvalid                        <= 1'b0;
+    s_tlast                         <= 1'b0;
+    s_tkeep                         <= 4'b111;
+    Interp_ratio                    <= 16'd10;
+    DAC_control                     <= 4'b0000;
+
+    // Ignore header information
+    $fscanf(fd, "%d,", tmp);
+    $fscanf(fd, "%d,", tmp);
+    $fscanf(fd, "%d,", tmp);
+    
+    #(CLOCK_PERIOD_DAC*50);
     r_nRst                          <= 1'b1;
-    #(5*CLOCK_PERIOD);
-    dl_en                           <= 1'b1;
-    #(5*CLOCK_PERIOD);
+    dac_aresetn                     <= 1'b1;
+    #(CLOCK_PERIOD_DAC*5);
+    //Interp_ratio                    <= 16'd40;
+    #(CLOCK_PERIOD_DAC*10);
+    DAC_control                     <= 4'b0011;
 
-    #CLOCK_PERIOD;
-
-    for (int i = 0; i < (ofdm_symbols*(nfft+cp_len)); i++) begin
-      $fscanf(fd,"%d, %d",input_data_i,input_data_q);
-      in_axis_tdata                 <= {input_data_q,input_data_i};
-      in_axis_tvalid                <= 1'b1;
-      //$display("i = %d, %d + j%d",i,$signed(input_data_i),$signed(input_data_q));
-      if (!((i+1)%(nfft+cp_len))&&(i!=0)) begin
-        in_axis_tlast               <= 1'b1;
-        //#CLOCK_PERIOD;
-        //in_axis_tlast               <= 1'b0;
-        //in_axis_tvalid              <= 1'b0;
-        //#(CLOCK_PERIOD*499);
-        //#CLOCK_PERIOD;
+    for (i = 0; i < 30464; i++) begin
+      $fscanf(fd, "%d, %d", i_duc_data, q_duc_data);
+      s_tvalid                      <= 1'b1;
+      while (!s_tready) begin
+        s_tdata                     <= {q_duc_data,i_duc_data};
+        #CLOCK_PERIOD;
       end
-      if (!(i%nfft)&&(i!=0))
-        in_axis_tlast               <= 1'b0;
-      #(CLOCK_PERIOD);
-      in_axis_tlast                 <= 1'b0;
-      in_axis_tvalid                <= 1'b0;
-      #(CLOCK_PERIOD*(fs_cycles-1));
+      #CLOCK_PERIOD;
     end
 
-    in_axis_tlast                   <= 1'b0;
-    in_axis_tvalid                  <= 1'b0;
-
-    #(7*nfft*fs_cycles*CLOCK_PERIOD);
+    #(CLOCK_PERIOD_DAC*100);
     $fclose(fd);
-    $fclose(fd_info);
-    $fclose(fd_filt_in);
     $stop;
   end
 

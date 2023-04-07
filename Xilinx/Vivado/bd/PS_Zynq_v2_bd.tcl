@@ -42,7 +42,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-   create_project project_1 myproj -part xc7z020clg400-1
+   create_project project_1 myproj -part xc7z010clg400-1
 }
 
 
@@ -201,9 +201,11 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir I -from 31 -to 0 ADCstatus
   create_bd_pin -dir O -from 3 -to 0 DACcontrol
   create_bd_pin -dir O -from 31 -to 0 Fc_scaled
+  create_bd_pin -dir O -from 15 -to 0 Interp_ratio
   create_bd_pin -dir I -type clk aclk_100M
   create_bd_pin -dir I -type rst aresetn_100M
   create_bd_pin -dir O -from 15 -to 0 decimate_ratio
+  create_bd_pin -dir O -from 0 -to 0 dma_loopback
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_0 ]
@@ -220,6 +222,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set axi_gpio_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_1 ]
   set_property -dict [ list \
    CONFIG.C_ALL_INPUTS {1} \
+   CONFIG.C_ALL_OUTPUTS_2 {1} \
+   CONFIG.C_GPIO2_WIDTH {17} \
+   CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_1
 
   # Create instance: delimiter_0, and set properties
@@ -232,6 +237,13 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.OUT2_WIDTH {4} \
  ] $delimiter_0
 
+  # Create instance: delimiter_1, and set properties
+  set delimiter_1 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_1 ]
+  set_property -dict [ list \
+   CONFIG.IN0_WIDTH {17} \
+   CONFIG.OUT0_WIDTH {16} \
+ ] $delimiter_1
+
   # Create interface connections
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M02_AXI [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
@@ -239,9 +251,12 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create port connections
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins delimiter_0/IN0]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins Fc_scaled] [get_bd_pins axi_gpio_0/gpio_io_o]
+  connect_bd_net -net axi_gpio_1_gpio2_io_o [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins delimiter_1/IN0]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
   connect_bd_net -net delimiter_0_OUT2 [get_bd_pins ADCcontrol] [get_bd_pins delimiter_0/OUT2]
+  connect_bd_net -net delimiter_1_OUT0 [get_bd_pins Interp_ratio] [get_bd_pins delimiter_1/OUT0]
+  connect_bd_net -net delimiter_1_OUT1 [get_bd_pins dma_loopback] [get_bd_pins delimiter_1/OUT1]
   connect_bd_net -net gpio_io_i_0_1 [get_bd_pins ADCstatus] [get_bd_pins axi_gpio_1/gpio_io_i]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk]
@@ -432,6 +447,7 @@ proc create_root_design { parentCell } {
   set ADCstatus [ create_bd_port -dir I -from 31 -to 0 ADCstatus ]
   set DACcontrol [ create_bd_port -dir O -from 3 -to 0 DACcontrol ]
   set Fc_scaled [ create_bd_port -dir O -from 31 -to 0 Fc_scaled ]
+  set Interp_ratio [ create_bd_port -dir O -from 15 -to 0 Interp_ratio ]
   set aclk_100M [ create_bd_port -dir O -type clk aclk_100M ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {S_AXI_DMA_HP0:S_AXI_DMA_HP1:M_AXI_DMA} \
@@ -442,6 +458,7 @@ proc create_root_design { parentCell } {
   set aresetn_10M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_10M ]
   set aresetn_40M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_40M ]
   set decimate_ratio [ create_bd_port -dir O -from 15 -to 0 decimate_ratio ]
+  set dma_loopback [ create_bd_port -dir O -from 0 -to 0 dma_loopback ]
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect axi_interconnect_0 ]
@@ -1285,6 +1302,8 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_ports aclk_100M] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_0/S01_ACLK] [get_bd_pins proc_sys_reset/aclk_100M] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins regs/aclk_100M] [get_bd_pins smartconnect_0/aclk]
   connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_ports aclk_40M] [get_bd_pins proc_sys_reset/aclk_40M] [get_bd_pins processing_system7_0/FCLK_CLK2]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins proc_sys_reset/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
+  connect_bd_net -net regs_OUT0_0 [get_bd_ports Interp_ratio] [get_bd_pins regs/Interp_ratio]
+  connect_bd_net -net regs_OUT1_0 [get_bd_ports dma_loopback] [get_bd_pins regs/dma_loopback]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI_DMA/Reg] -force

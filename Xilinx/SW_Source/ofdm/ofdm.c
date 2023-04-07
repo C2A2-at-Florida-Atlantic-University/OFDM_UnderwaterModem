@@ -333,6 +333,7 @@ int main(int argc, char **argv)
           break;
         }
 
+#ifdef DAC
         ReturnStatus = DacChainUpConversion(true, FileNumber,
           OfdmParams.Nfft, OfdmParams.CpLen, OfdmParams.BandWidth,
           OfdmTiming.OfdmSymbolsPerFrame);
@@ -341,9 +342,13 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+        NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
+          OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
+#else
+        NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
+          OfdmTiming.OfdmSymbolsPerFrame*4;
+#endif
 
-          NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
-            OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
 #ifndef NO_DEVMEM
           HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes);
@@ -354,7 +359,7 @@ int main(int argc, char **argv)
            }
            break;
 #else
-          printf("Size of DMA transfer: %d\n", NumBytes);
+          printf("Skipped DMA transfer of : %d Bytes\n", NumBytes);
 #endif
 
 //        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 

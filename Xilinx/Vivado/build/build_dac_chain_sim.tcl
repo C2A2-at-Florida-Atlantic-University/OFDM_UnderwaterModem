@@ -7,8 +7,7 @@
 # Run "vivado -mode batch -source build_dac_chain_sim.tcl"
 
 set FAU_OFDM_REPO_PATH $::env(FAU_OFDM_REPO_PATH)
-create_project dac_chain dac_chain -part xc7z010clg400-1
-#set_property board_part xilinx.com:zcu111:part0:1.4 [current_project]
+create_project -force dac_chain dac_chain -part xc7z010clg400-1
 # BD Wrapper has to be verilog or else simulation crashes
 set_property target_language Verilog [current_project]
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
@@ -25,5 +24,8 @@ generate_target -force -verbose -quiet {synthesis} [get_ips]
 update_compile_order -fileset sources_1
 set_property top dac_chain_tb [get_filesets sim_1]
 set_property top_lib xil_defaultlib [get_filesets sim_1]
+set_property -name {xsim.simulate.runtime} -value {} -objects [get_filesets sim_1]
+add_files -fileset sim_1 -norecurse $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/wcfg/dac_chain_tb_behav.wcfg
+set_property xsim.view $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/wcfg/dac_chain_tb_behav.wcfg [get_filesets sim_1]
 update_compile_order -fileset sim_1
 start_gui

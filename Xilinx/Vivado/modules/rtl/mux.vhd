@@ -10,7 +10,8 @@ use ieee.std_logic_1164.all;
 
 entity mux is
   generic(
-    g_TDATA_WIDTH                 : integer := 32
+    g_TDATA_WIDTH                 : integer := 32;
+    g_USE_REGISTER                : boolean := false
   );
   port(
     axis_aclk                     : in  std_logic;
@@ -46,28 +47,34 @@ architecture RTL of mux is
 
 begin
 
-  -- Drop 16 bits of IQ data
- -- in_tdata                        <= s_axis0_tdata(239 downto 224) & s_axis0_tdata(207 downto 192) &
- --                                    s_axis0_tdata(175 downto 160) & s_axis0_tdata(143 downto 128) &
- --                                    s_axis0_tdata(111 downto 96 ) & s_axis0_tdata(79  downto 64 ) &
- --                                    s_axis0_tdata(47  downto 32 ) & s_axis0_tdata(15  downto 0  );
- 
-  P_MUX : process(axis_aclk)
-  begin
-    if rising_edge(axis_aclk) then
-      if i_select = '0' then
-        m_axis_tdata              <= s_axis0_tdata;
-        m_axis_tvalid             <= s_axis0_tvalid;
-        m_axis_tlast              <= s_axis0_tlast;
-      else
-        m_axis_tdata              <= s_axis1_tdata;
-        m_axis_tvalid             <= s_axis1_tvalid;
-        m_axis_tlast              <= s_axis1_tlast;
-      end if;
-    end if;
-  end process P_MUX;
+  gen_combinatorial : if not g_USE_REGISTER generate
+    m_axis_tdata                  <= s_axis0_tdata  when i_select = '0' else s_axis1_tdata;
+    m_axis_tvalid                 <= s_axis0_tvalid when i_select = '0' else s_axis1_tvalid;
+    m_axis_tlast                  <= s_axis0_tlast  when i_select = '0' else s_axis1_tlast;
+    
+    s_axis0_tready                <= m_axis_tready  when i_select = '0' else '0';
+    s_axis1_tready                <= m_axis_tready  when i_select = '1' else '0';
+  end generate gen_combinatorial;
 
-  s_axis0_tready                  <= m_axis_tready;
-  s_axis1_tready                  <= m_axis_tready;
+  gen_sequential : if g_USE_REGISTER generate
+    P_MUX : process(axis_aclk)
+    begin
+      if rising_edge(axis_aclk) then
+        if i_select = '0' then
+          m_axis_tdata              <= s_axis0_tdata;
+          m_axis_tvalid             <= s_axis0_tvalid;
+          m_axis_tlast              <= s_axis0_tlast;
+        else
+          m_axis_tdata              <= s_axis1_tdata;
+          m_axis_tvalid             <= s_axis1_tvalid;
+          m_axis_tlast              <= s_axis1_tlast;
+        end if;
+      end if;
+    end process P_MUX;
+
+    s_axis0_tready                <= m_axis_tready;
+    s_axis1_tready                <= m_axis_tready;
+
+  end generate gen_sequential;
 
 end architecture RTL;

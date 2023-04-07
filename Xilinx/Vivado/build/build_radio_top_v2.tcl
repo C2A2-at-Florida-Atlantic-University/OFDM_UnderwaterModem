@@ -29,7 +29,7 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/constraints
 add_files -fileset constrs_1 -norecurse SDUAMconstraints.xdc
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2
 
-if (1) {
+if (0) {
   launch_runs synth_1 -jobs 24
   wait_on_run synth_1
   launch_runs impl_1 -to_step write_bitstream

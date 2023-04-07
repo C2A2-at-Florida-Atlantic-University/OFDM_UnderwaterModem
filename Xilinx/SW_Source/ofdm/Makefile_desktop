@@ -2,11 +2,13 @@
 # Jared Hermans
 ############################################################################
 
-NO_DEVMEM = NO_DEVMEM
-#PS_PL_POINT = FFT
+# MEM_ACCESS = NO_DEVMEM so program will not have access to system files
+#              or HW.
+MEM_ACCESS = NO_DEVMEM 
+
+# PS_PL_POINT = FFT
 PS_PL_POINT = DUC
-#SPI = SPI
-SPI = NO_SPI
+SPI_ACCESS = NO_SPI
 
 CC:=gcc
 
@@ -76,13 +78,13 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(NO_DEVMEM) -D$(PS_PL_POINT) -D$(SPI) -Wall -Wextra -O2 -lpthread -lm
+CFLAGS := -D$(MEM_ACCESS) -D$(PS_PL_POINT) -D$(SPI_ACCESS) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
 	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+	$(CC) $(CFLAGS) -o $@ $^ -lm -lpthread
 
 .PHONY: clean
 clean:

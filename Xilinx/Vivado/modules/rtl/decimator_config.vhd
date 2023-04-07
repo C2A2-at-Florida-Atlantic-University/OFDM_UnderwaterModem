@@ -16,8 +16,8 @@ entity decimator_config is
 
     i_decimate_ratio              : in  std_logic_vector(g_PRECISION-1 downto 0);
 
-    m_axis_tdata                  : out std_logic_vector(15 downto 0);
-    m_axis_tvalid                 : out std_logic;
+    m_axis_tdata                  : out std_logic_vector(15 downto 0) := (others => '0');
+    m_axis_tvalid                 : out std_logic := '0';
     m_axis_tready                 : in  std_logic
   );
 end entity decimator_config;
@@ -31,7 +31,7 @@ architecture RTL of decimator_config is
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
     signal is "ASSOCIATED_BUSIF axis_aclk:m_axis, FREQ_HZ 100000000";
 
-  signal r_decimate_ratio            : std_logic_vector(g_PRECISION-1 downto 0);
+  signal r_decimate_ratio            : std_logic_vector(g_PRECISION-1 downto 0) := (others => '0');
 
 begin
 

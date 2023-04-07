@@ -25,8 +25,9 @@ set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
    puts ""
-   common::send_gid_msg -ssname BD::TCL -id 2040 -severity "WARNING" "This script was generated using Vivado <$scripts_vivado_version> without IP versions in the create_bd_cell commands, but is now being run in <$current_vivado_version> of Vivado. There may have been major IP version changes between Vivado <$scripts_vivado_version> and <$current_vivado_version>, which could impact the parameter settings of the IPs."
+   catch {common::send_gid_msg -ssname BD::TCL -id 2041 -severity "ERROR" "This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."}
 
+   return 1
 }
 
 ################################################################
@@ -39,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# dma_tlast_gen
+# dma_tlast_gen, mux
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -136,8 +137,9 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:axi_dma:*\
-xilinx.com:ip:system_ila:*\
+user.org:user:AXIS_Splitter:1.0\
+xilinx.com:ip:axi_dma:7.1\
+xilinx.com:ip:system_ila:1.1\
 "
 
    set list_ips_missing ""
@@ -164,6 +166,7 @@ set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 dma_tlast_gen\
+mux\
 "
 
    set list_mods_missing ""
@@ -290,6 +293,9 @@ proc create_root_design { parentCell } {
    CONFIG.LOCK_PROPAGATE {0} \
  ] $ADC_Chain_0
 
+  # Create instance: AXIS_Splitter_0, and set properties
+  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter:1.0 AXIS_Splitter_0 ]
+
   # Create instance: DAC_Chain_0, and set properties
   set DAC_Chain_0 [ create_bd_cell -type container -reference DAC_Chain DAC_Chain_0 ]
   set_property -dict [ list \
@@ -313,12 +319,12 @@ proc create_root_design { parentCell } {
  ] $PS_Zynq_0
 
   # Create instance: axi_dma_0, and set properties
-  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma axi_dma_0 ]
+  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
   set_property -dict [ list \
    CONFIG.c_include_sg {0} \
-   CONFIG.c_m_axis_mm2s_tdata_width {16} \
-   CONFIG.c_mm2s_burst_size {256} \
-   CONFIG.c_s2mm_burst_size {256} \
+   CONFIG.c_m_axis_mm2s_tdata_width {32} \
+   CONFIG.c_mm2s_burst_size {2} \
+   CONFIG.c_s2mm_burst_size {2} \
    CONFIG.c_sg_include_stscntrl_strm {0} \
    CONFIG.c_sg_length_width {26} \
  ] $axi_dma_0
@@ -334,8 +340,19 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: mux_0, and set properties
+  set block_name mux
+  set block_cell_name mux_0
+  if { [catch {set mux_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $mux_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: system_ila_data, and set properties
-  set system_ila_data [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_data ]
+  set system_ila_data [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila:1.1 system_ila_data ]
   set_property -dict [ list \
    CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
    CONFIG.C_ADV_TRIGGER {false} \
@@ -357,31 +374,37 @@ proc create_root_design { parentCell } {
 
   # Create interface connections
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins dma_tlast_gen_0/s_axis]
+  connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS_DDS [get_bd_intf_pins ADC_Chain_0/M_AXIS_DDS] [get_bd_intf_pins DAC_Chain_0/S_AXIS_DDS]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins mux_0/s_axis1]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins DAC_Chain_0/S_AXIS]
   connect_bd_intf_net -intf_net PS_Zynq_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins PS_Zynq_0/DDR]
   connect_bd_intf_net -intf_net PS_Zynq_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins PS_Zynq_0/FIXED_IO]
   connect_bd_intf_net -intf_net PS_Zynq_0_M_AXI_DMA [get_bd_intf_pins PS_Zynq_0/M_AXI_DMA] [get_bd_intf_pins axi_dma_0/S_AXI_LITE]
-  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins DAC_Chain_0/S_AXIS] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S]
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S]
 connect_bd_intf_net -intf_net [get_bd_intf_nets axi_dma_0_M_AXIS_MM2S] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins system_ila_data/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins PS_Zynq_0/S_AXI_DMA_HP1] [get_bd_intf_pins axi_dma_0/M_AXI_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins PS_Zynq_0/S_AXI_DMA_HP0] [get_bd_intf_pins axi_dma_0/M_AXI_S2MM]
-  connect_bd_intf_net -intf_net dma_tlast_gen_0_m_axis [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins dma_tlast_gen_0/m_axis]
+  connect_bd_intf_net -intf_net dma_tlast_gen_0_m_axis [get_bd_intf_pins dma_tlast_gen_0/m_axis] [get_bd_intf_pins mux_0/s_axis0]
+  connect_bd_intf_net -intf_net mux_0_m_axis [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins mux_0/m_axis]
 
   # Create port connections
   connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
   connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus] [get_bd_pins system_ila_data/probe5]
   connect_bd_net -net ADCdata_0_1 [get_bd_ports ADCdata] [get_bd_pins ADC_Chain_0/ADCdata]
-  connect_bd_net -net DAC_Chain_0_ClockToDAC_0 [get_bd_ports DACclock] [get_bd_pins DAC_Chain_0/ClockToDAC_0]
-  connect_bd_net -net DAC_Chain_0_DAC_data_0 [get_bd_ports DACdata] [get_bd_pins DAC_Chain_0/DAC_data_0]
-  connect_bd_net -net DAC_Chain_0_DAC_sleep_0 [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep_0]
-  connect_bd_net -net DAC_Chain_0_PA_enable_0 [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable_0]
+  connect_bd_net -net DAC_Chain_0_ClockToDAC_0 [get_bd_ports DACclock] [get_bd_pins DAC_Chain_0/ClockToDAC]
+  connect_bd_net -net DAC_Chain_0_DAC_data_0 [get_bd_ports DACdata] [get_bd_pins DAC_Chain_0/DAC_data]
+  connect_bd_net -net DAC_Chain_0_DAC_sleep_0 [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep]
+  connect_bd_net -net DAC_Chain_0_PA_enable_0 [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable]
   connect_bd_net -net PS_Zynq_0_ADCcontrol [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol] [get_bd_pins system_ila_data/probe4]
   connect_bd_net -net PS_Zynq_0_DACcontrol [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol] [get_bd_pins system_ila_data/probe3]
   connect_bd_net -net PS_Zynq_0_Fc_scaled [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/Fc_scaled] [get_bd_pins system_ila_data/probe1]
-  connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins DAC_Chain_0/aclk] [get_bd_pins PS_Zynq_0/aclk_100M] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins dma_tlast_gen_0/axis_aclk] [get_bd_pins system_ila_data/clk]
+  connect_bd_net -net PS_Zynq_0_Interp_ratio [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
+  connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins DAC_Chain_0/aclk] [get_bd_pins PS_Zynq_0/aclk_100M] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins dma_tlast_gen_0/axis_aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins system_ila_data/clk]
   connect_bd_net -net PS_Zynq_0_aclk_40M [get_bd_pins ADC_Chain_0/aclk_40M] [get_bd_pins PS_Zynq_0/aclk_40M]
-  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins dma_tlast_gen_0/axis_aresetn] [get_bd_pins system_ila_data/resetn]
+  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins dma_tlast_gen_0/axis_aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins system_ila_data/resetn]
   connect_bd_net -net PS_Zynq_0_aresetn_40M [get_bd_pins ADC_Chain_0/aresetn_40M] [get_bd_pins PS_Zynq_0/aresetn_40M]
   connect_bd_net -net PS_Zynq_0_decimate_ratio [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio] [get_bd_pins system_ila_data/probe2]
+  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins PS_Zynq_0/dma_loopback] [get_bd_pins mux_0/i_select]
   connect_bd_net -net aclk_10M_1 [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
   connect_bd_net -net aresetn_10M_1 [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
   connect_bd_net -net dma_tlast_gen_0_o_div [get_bd_pins dma_tlast_gen_0/o_div] [get_bd_pins system_ila_data/probe0]
