@@ -1,0 +1,86 @@
+[
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   QamDemod_data.c -o build/win64/QamDemod_data.o",
+    "file": "QamDemod_data.c",
+    "output": "build/win64/QamDemod_data.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   rt_nonfinite.c -o build/win64/rt_nonfinite.o",
+    "file": "rt_nonfinite.c",
+    "output": "build/win64/rt_nonfinite.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   QamDemod_initialize.c -o build/win64/QamDemod_initialize.o",
+    "file": "QamDemod_initialize.c",
+    "output": "build/win64/QamDemod_initialize.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   QamDemod_terminate.c -o build/win64/QamDemod_terminate.o",
+    "file": "QamDemod_terminate.c",
+    "output": "build/win64/QamDemod_terminate.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   QamDemod.c -o build/win64/QamDemod.o",
+    "file": "QamDemod.c",
+    "output": "build/win64/QamDemod.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   log2.c -o build/win64/log2.o",
+    "file": "log2.c",
+    "output": "build/win64/log2.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   getGrayMapping.c -o build/win64/getGrayMapping.o",
+    "file": "getGrayMapping.c",
+    "output": "build/win64/getGrayMapping.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   sameSizeBinaryOp.c -o build/win64/sameSizeBinaryOp.o",
+    "file": "sameSizeBinaryOp.c",
+    "output": "build/win64/sameSizeBinaryOp.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   interface/_coder_QamDemod_api.c -o build/win64/_coder_QamDemod_api.o",
+    "file": "interface/_coder_QamDemod_api.c",
+    "output": "build/win64/_coder_QamDemod_api.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   interface/_coder_QamDemod_mex.c -o build/win64/_coder_QamDemod_mex.o",
+    "file": "interface/_coder_QamDemod_mex.c",
+    "output": "build/win64/_coder_QamDemod_mex.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   eml_int_forloop_overflow_check.c -o build/win64/eml_int_forloop_overflow_check.o",
+    "file": "eml_int_forloop_overflow_check.c",
+    "output": "build/win64/eml_int_forloop_overflow_check.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   QamDemod_emxutil.c -o build/win64/QamDemod_emxutil.o",
+    "file": "QamDemod_emxutil.c",
+    "output": "build/win64/QamDemod_emxutil.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   interface/_coder_QamDemod_info.c -o build/win64/_coder_QamDemod_info.o",
+    "file": "interface/_coder_QamDemod_info.c",
+    "output": "build/win64/_coder_QamDemod_info.o"
+  },
+  {
+    "directory": "C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2022b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\" -I \"C:\\Projects\\FAU-Modem\\OFDM\\MATLAB\\QamDemodCoder\\codegen\\mex\\QamDemod\\interface\" -I \"C:\\Program Files\\MATLAB\\R2022b\\extern\\include\" -I \".\" -DMODEL=QamDemod_mex -D__USE_MINGW_ANSI_STDIO=1   \"C:/Program Files/MATLAB/R2022b/extern/version/c_mexapi_version.c\" -o build/win64/c_mexapi_version.o",
+    "file": "C:/Program Files/MATLAB/R2022b/extern/version/c_mexapi_version.c",
+    "output": "build/win64/c_mexapi_version.o"
+  }
+]
