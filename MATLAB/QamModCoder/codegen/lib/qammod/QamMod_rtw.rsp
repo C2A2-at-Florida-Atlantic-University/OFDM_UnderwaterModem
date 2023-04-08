@@ -1,9 +1,0 @@
-QamMod_data.obj
-rt_nonfinite.obj
-rtGetNaN.obj
-rtGetInf.obj
-QamMod_initialize.obj
-QamMod_terminate.obj
-QamMod.obj
-log2.obj
-getConstellation.obj
