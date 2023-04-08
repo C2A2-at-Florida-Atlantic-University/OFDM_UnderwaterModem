@@ -5,4 +5,4 @@
 
 ## Directories
 * ***MATLAB***: MATLAB design, analysis and joint RTL/MATLAB verification scripts
-* ***Xilinx***: Vivado FPGA projects, PetaLinux projects and OFDM application source code
+* ***Xilinx***: Vivado FPGA projects, PetaLinux projects and OFDM application source code. Must use Vitis and PetaLinux 2021.2 and Vivado 2022.1
