@@ -110,23 +110,19 @@ unsigned *FpgaInterfaceClearRxBuffer()
 
 void FpgaInterfaceRead32(unsigned addr, unsigned *pValue, bool mute)
 {
-#ifdef READ_DEBUG
   if (!mute)
   {
     printf("\tFpgaInterfaceRead32: About to read from addr 0x%X\n", addr);
   }
-#endif
 
 #ifdef NO_DEVMEM
   *pValue = 0;
 #else
   *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
-#ifdef DEBUG
   if (!mute)
   {
     printf("\tFpgaInterfaceRead32: Read 0x%X from 0x%X\n", *pValue, addr);
   }
-#endif
 #endif
 }
 

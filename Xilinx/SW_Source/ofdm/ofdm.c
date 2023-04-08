@@ -30,10 +30,12 @@ int main(int argc, char **argv)
   unsigned FileNumber;
   unsigned CenterFreq;
   unsigned NumBytes;
+  unsigned DmaLoopSel;
   int TxGainDb;
   int RxGainDb;
   int DebugSelection;
   bool DebugMode;
+  bool GlobalMute;
   ReturnStatusType ReturnStatus;
 
   if (argc == 1)
@@ -93,6 +95,14 @@ int main(int argc, char **argv)
     return 1;
   }
 
+#ifndef NO_DEVMEM
+  HwInterfaceSetGlobalMute(true);
+  DirectDmaSetGlobalMute(true);
+  HwInterfaceDmaLoopback(0); // Disable DMA loopback by default
+  HwInterfaceDisableDac();
+  HwInterfaceDisableAdc();
+#endif
+
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
 
 #ifdef SPI
@@ -123,7 +133,7 @@ int main(int argc, char **argv)
   do {
     printf("\n----- MODEM MENU -----\n");
     printf("0  - Exit\n");
-    printf("1  - Set Global Debug Mode\n");
+    printf("1  - Set Debug Features\n");
     printf("2  - Enter OFDM Parameters\n");
     printf("3  - Enter OFDM Timing Parameters\n");
     printf("4  - Enter TX/RX Gain (dBFS)/(dB)\n");
@@ -137,6 +147,7 @@ int main(int argc, char **argv)
     printf("12 - Compute BER/SER\n");
     printf("13 - Start S2MM DMA\n");
     printf("14 - Stop S2MM DMA\n");
+    printf("15 - Enable/Disable DMA loopback\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -146,6 +157,7 @@ int main(int argc, char **argv)
         break;
 
       case 1:
+        printf("Set Glogal File Debug Mode (Save samples to file)\n");
         printf("Enter Selection ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DebugSelection);
         if (DebugSelection == 1)
@@ -156,6 +168,19 @@ int main(int argc, char **argv)
         {
           DebugMode = false;
         }
+        printf("Enable/Disable FPGA register read/write debug\n");
+        printf("Enter Selection ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          GlobalMute = false;
+        }
+        else
+        {
+          GlobalMute = true;
+        }
+        HwInterfaceSetGlobalMute(GlobalMute);
+        DirectDmaSetGlobalMute(GlobalMute);
         break;
 
       case 2:
@@ -350,6 +375,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifndef NO_DEVMEM
+          HwInterfaceConfigureDucInterpRatio(DacParams.Interp);
           HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes);
           HwInterfaceDisableDac();
@@ -444,13 +470,21 @@ int main(int argc, char **argv)
         DirectDmaPlToPsThreadCancel();
         break;
 
+      case 15:
+        printf("Enable/Disable DMA loopback (1/0): ");
+        ScanfRet = scanf("%d", &DmaLoopSel);
+        if (!(DmaLoopSel == 0 || DmaLoopSel == 1))
+        {
+          printf("Error: Select proper value\n");
+          break;
+        }
+        HwInterfaceDmaLoopback(DmaLoopSel);
+        break;
+
       default:
         printf("Invalid selection\n");
     }
   } while (Selection);
-  printf("\n");
-
-  TxModulateClose();
   printf("%d\n", ScanfRet);
   return 0;
 }

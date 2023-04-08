@@ -5,6 +5,7 @@
 #define HW_INTERFACE_H_INCLUDED
 
 #include "ReturnStatus.h"
+#include <stdbool.h>
 
 #define FpgaClkRate 100000000 // 100MHz
 #define DEFAULT_RX_GAIN_DB 30 // in dB
@@ -31,6 +32,16 @@
 #define ADC_CLEAR_OVERRUN 0x2
 #define ADC_ENABLE 0x1
 #define ADC_DISABLE 0x0
+
+#define ADC_STATUS_OFFSET 0x0
+#define ADC_STATUS_MASK 0xFFFFFFFF
+
+#define DUC_INTERP_RATIO_OFFSET 0x8
+#define DUC_INTERP_RATIO_MASK 0x0000FFFF
+
+#define DMA_LOOPBACK_OFFSET 0x8
+#define DMA_LOOPBACK_MASK_OFFSET 16
+#define DMA_LOOPBACK_MASK 0x00010000
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -116,5 +127,9 @@ void HwInterfaceEnableDac(void);
 void HwInterfaceDisableDac(void);
 void HwInterfaceEnableAdc(void);
 void HwInterfaceDisableAdc(void);
+unsigned HwInterfaceReturnAdcStatus(void);
+void HwInterfaceConfigureDucInterpRatio(unsigned Ratio);
+void HwInterfaceDmaLoopback(unsigned Enable);
+void HwInterfaceSetGlobalMute(bool GlobalMuteSelect);
 
 #endif

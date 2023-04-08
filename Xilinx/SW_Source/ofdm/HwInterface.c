@@ -21,7 +21,12 @@
 
 static int SpiFile;  // /dev/spidev1 file
 static int GpioFile; // /sys/class/gpio/* file
-static bool GlobalMute = false;
+static bool GlobalMute;
+
+void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
+{
+  GlobalMute = GlobalMuteSelect;
+}
 
 void HwInterfaceEnableDac(void)
 {
@@ -54,6 +59,29 @@ void HwInterfaceDisableAdc(void)
   RegValue = ADC_DISABLE << ADC_CONTROL_MASK_OFFSET;
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
     ADC_CONTROL_MASK, GlobalMute);
+}
+
+unsigned HwInterfaceReturnAdcStatus(void)
+{
+  unsigned RegValue;
+  FpgaInterfaceRead32(GPIO_1_BASE_ADDR+ADC_STATUS_OFFSET, &RegValue,
+    GlobalMute);
+  return RegValue;
+}
+
+void HwInterfaceConfigureDucInterpRatio(unsigned Ratio)
+{
+  unsigned RegValue = Ratio;
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DUC_INTERP_RATIO_OFFSET,
+    RegValue, DUC_INTERP_RATIO_MASK, GlobalMute);
+}
+
+void HwInterfaceDmaLoopback(unsigned Enable)
+{
+  unsigned RegValue = Enable;
+  RegValue = RegValue << DMA_LOOPBACK_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, RegValue,
+    DMA_LOOPBACK_MASK, GlobalMute);
 }
 
 ReturnStatusType HwInterfaceSetVga(int gain)

@@ -25,9 +25,8 @@ set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
    puts ""
-   catch {common::send_gid_msg -ssname BD::TCL -id 2041 -severity "ERROR" "This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."}
+   common::send_gid_msg -ssname BD::TCL -id 2040 -severity "WARNING" "This script was generated using Vivado <$scripts_vivado_version> without IP versions in the create_bd_cell commands, but is now being run in <$current_vivado_version> of Vivado. There may have been major IP version changes between Vivado <$scripts_vivado_version> and <$current_vivado_version>, which could impact the parameter settings of the IPs."
 
-   return 1
 }
 
 ################################################################
@@ -137,9 +136,9 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-user.org:user:AXIS_Splitter:1.0\
-xilinx.com:ip:axi_dma:7.1\
-xilinx.com:ip:system_ila:1.1\
+user.org:user:AXIS_Splitter:*\
+xilinx.com:ip:axi_dma:*\
+xilinx.com:ip:system_ila:*\
 "
 
    set list_ips_missing ""
@@ -294,7 +293,7 @@ proc create_root_design { parentCell } {
  ] $ADC_Chain_0
 
   # Create instance: AXIS_Splitter_0, and set properties
-  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter:1.0 AXIS_Splitter_0 ]
+  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
 
   # Create instance: DAC_Chain_0, and set properties
   set DAC_Chain_0 [ create_bd_cell -type container -reference DAC_Chain DAC_Chain_0 ]
@@ -319,7 +318,7 @@ proc create_root_design { parentCell } {
  ] $PS_Zynq_0
 
   # Create instance: axi_dma_0, and set properties
-  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
+  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma axi_dma_0 ]
   set_property -dict [ list \
    CONFIG.c_include_sg {0} \
    CONFIG.c_m_axis_mm2s_tdata_width {32} \
@@ -352,7 +351,7 @@ proc create_root_design { parentCell } {
    }
   
   # Create instance: system_ila_data, and set properties
-  set system_ila_data [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila:1.1 system_ila_data ]
+  set system_ila_data [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_data ]
   set_property -dict [ list \
    CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
    CONFIG.C_ADV_TRIGGER {false} \
@@ -375,8 +374,8 @@ proc create_root_design { parentCell } {
   # Create interface connections
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins dma_tlast_gen_0/s_axis]
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS_DDS [get_bd_intf_pins ADC_Chain_0/M_AXIS_DDS] [get_bd_intf_pins DAC_Chain_0/S_AXIS_DDS]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins mux_0/s_axis1]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins DAC_Chain_0/S_AXIS]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins DAC_Chain_0/S_AXIS]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins mux_0/s_axis1]
   connect_bd_intf_net -intf_net PS_Zynq_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins PS_Zynq_0/DDR]
   connect_bd_intf_net -intf_net PS_Zynq_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins PS_Zynq_0/FIXED_IO]
   connect_bd_intf_net -intf_net PS_Zynq_0_M_AXI_DMA [get_bd_intf_pins PS_Zynq_0/M_AXI_DMA] [get_bd_intf_pins axi_dma_0/S_AXI_LITE]

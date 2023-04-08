@@ -4,6 +4,8 @@
 #ifndef DIRECT_DMA_H_INCLUDED
 #define DIRECT_DMA_H_INCLUDED
 
+#include <stdbool.h>
+
 // PS to PL control and status registers
 #define DMA_BASE_ADDR 0x40000000 // Same as DMA_CONTROL_REGISTER
 #define DMA_STATUS_OFFSET 0x00000004
@@ -29,5 +31,6 @@ ReturnStatusType DirectDmaPlToPsThread(void);
 void DirectDmaPlToPsInit(unsigned start);
 void *DirectDmaPlToPs(void *arg);
 void DirectDmaPlToPsThreadCancel(void);
+void DirectDmaSetGlobalMute(bool GlobalMuteSelect);
 
 #endif

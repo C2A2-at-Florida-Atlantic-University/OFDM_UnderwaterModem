@@ -9,11 +9,17 @@
 #include "DirectDma.h"
 #include "DacChain.h"
 #include "FpgaInterface.h"
+#include "TxModulate.h"
 #include "rtwtypes.h"
 
 static pthread_t DmaThread;
 static int pthreadState;
-static bool GlobalMute = true;
+static bool GlobalMute;
+
+void DirectDmaSetGlobalMute(bool GlobalMuteSelect)
+{
+  GlobalMute = GlobalMuteSelect;
+}
 
 void DirectDmaPsToPlInit(unsigned start) // Enable or Disable PS to PL DMA
 {
@@ -27,7 +33,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   unsigned LoopCount;
   unsigned BytesRemaining;
   unsigned DmaInterrupt;
-  int16_t *BufferPtr;
+  int32_T *BufferPtr;
   void *FpgaVirtBuff;
 /*
   if (Bytes >= (unsigned)pow(2,DMA_BUFFER_WIDTH_VAL)-1)
@@ -60,6 +66,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   // Get pointers to buffers
 #ifdef DUC
   BufferPtr = TxModulateGetTxBuffer();
+#endif
 #ifdef DAC
   BufferPtr = DacChainGetDMABuff();
 #endif
@@ -199,7 +206,7 @@ void *DirectDmaPlToPs(void *arg)
         true);
       if ((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0)
       {
-        printf("DirectDmaPsToPl: DMAS Transaction loop %d complete\n", 0);
+        //printf("DirectDmaPsToPl: DMAS Transaction loop %d complete\n", 0);
         // Clear Interrupt
         FpgaInterfaceWrite(DMA_BASE_ADDR+DMAS_STATUS_OFFSET,
           DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);

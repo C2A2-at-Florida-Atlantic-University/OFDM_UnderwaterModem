@@ -30,6 +30,9 @@ static unsigned *IfftBufferPtr = NULL;
 #endif
 #ifdef DUC
 static creal_T *IfftBufferPtr = NULL; // Pointer to IFFT input Buffer
+static int32_T *DucBufferPtr = NULL;
+#endif
+#ifdef DAC
 static creal_T *DucBufferPtr = NULL; // Pointer to DUC inuput Buffer
 #endif
 //static unsigned *TxBufferPtr = NULL; // Pointer to Tx CMA Buffer
@@ -522,7 +525,11 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   creal_T *IfftOutData;
 
 #ifdef DUC
+  DucBufferPtr = (int32_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+#endif
+#ifdef DAC
   DucBufferPtr = (creal_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+#endif
   if (DucBufferPtr == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -530,8 +537,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       "TxModulateIfft: Could not malloc DucBufferPtr\n");
     return ReturnStatus;
   }
-  memset(DucBufferPtr, 0, (CpLen+Nfft)*OfdmSymbols*4);
-#endif
+  memset(DucBufferPtr, 0, (CpLen+Nfft)*OfdmSymbols*16);
 
   // Set up structs for Ifft function
   IfftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
@@ -614,13 +620,27 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       // Apply cyclic prefix (CP)
       if (j >= (Nfft - CpLen))
       {
+#ifdef DUC
+        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)] = 
+          ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
+          ((int16_T)IfftOutData[j].re);
+#endif
+#ifdef DAC
         DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].re = 
           IfftOutData[j].re;
         DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].im = 
           IfftOutData[j].im;
+#endif
       }
+#ifdef DUC
+      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen] = 
+        ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
+        ((int16_T)IfftOutData[j].re);
+#endif
+#ifdef DAC
       DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].re = IfftOutData[j].re;
       DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].im = IfftOutData[j].im;
+#endif
 
       // Check for saturation
       if (IfftOutData[j].re > U_DAC_ACCURACY || 
@@ -650,10 +670,20 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   {
     for (unsigned i = 0; i < (Nfft+CpLen)*OfdmSymbols; i++)
     {
+#ifdef DUC
+      fprintf(IfftFile, "%lf, %lf\n", 
+        (double)(DucBufferPtr[i]&0x0000FFFF),
+        (double)((((int32_T)DucBufferPtr[i])&0xFFFF0000)>>16));
+      fprintf(IfftFileInt, "%d, %d\n", 
+        (int16_T)(DucBufferPtr[i]&0x0000FFFF),
+        (int16_T)((((int32_T)DucBufferPtr[i])&0xFFFF0000)>>16));
+#endif
+#ifdef DAC
       fprintf(IfftFile, "%lf, %lf\n", DucBufferPtr[i].re,
         DucBufferPtr[i].im);
       fprintf(IfftFileInt, "%d, %d\n", (int)DucBufferPtr[i].re,
         (int)DucBufferPtr[i].im);
+#endif
     }
   }
 
@@ -677,7 +707,12 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   return ReturnStatus;
 }
 
+#ifdef DUC
+int32_T *TxModulateGetTxBuffer(void)
+#endif
+#ifdef DAC
 creal_T *TxModulateGetTxBuffer(void)
+#endif
 {
   return DucBufferPtr;
 }

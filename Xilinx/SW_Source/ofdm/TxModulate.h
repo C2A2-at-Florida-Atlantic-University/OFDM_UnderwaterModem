@@ -29,7 +29,12 @@ void TxModulateClose(void);
 uint16_T TxModulateGetDigitalGain(void);
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
+#ifdef DUC
+int32_T *TxModulateGetTxBuffer(void);
+#endif
+#ifdef DAC
 creal_T *TxModulateGetTxBuffer(void);
+#endif
 void TxModulateFreeTxBuffer(void);
 
 #endif

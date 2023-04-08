@@ -460,7 +460,12 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
   char FileName[32];
+#ifdef DUC
+  int32_T *BufferInData = NULL;
+#endif
+#ifdef DAC
   creal_T *BufferInData = NULL;
+#endif
   cint16_T *FftInData = NULL;
   creal_T *FftOutData = NULL;
   emxArray_creal_T *FftOutStruct = NULL;
@@ -511,7 +516,6 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   FftOutStruct->allocatedSize = Nfft;
   FftOutStruct->numDimensions = 1;
 
-#ifdef DUC
   if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
   {
     BufferInData = TxModulateGetTxBuffer();
@@ -558,7 +562,6 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
       return ReturnStatus;
     }
   }
-#endif
 
   if (DebugMode)
   {
@@ -583,10 +586,18 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
       {
         if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
         {
+#ifdef DUC
+          FftInData[j-CpLen].re = (int16_t)
+            (BufferInData[(i*(CpLen+Nfft))+j]&0x0000FFFF);
+          FftInData[j-CpLen].im = (int16_t)
+            ((BufferInData[(i*(CpLen+Nfft))+j]&0xFFFF0000)>>16);
+#endif
+#ifdef DAC
           FftInData[j-CpLen].re = (int16_t)
             BufferInData[(i*(CpLen+Nfft))+j].re;
           FftInData[j-CpLen].im = (int16_t)
             BufferInData[(i*(CpLen+Nfft))+j].im;
+#endif
         }
         else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
         {

@@ -54,6 +54,7 @@ Dac_Parameters_Type DacChainGetDacParams(void)
   return DacParams;
 }
 
+#ifdef DAC
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned Bandwidth, unsigned OfdmSymbols)
 {
@@ -234,10 +235,10 @@ ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
   free(DucTmpOut);
   free(DucInStruct);
   free(DucOutStruct);
-
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
+#endif // ifdef DAC
 
 int16_t *DacChainGetDMABuff(void)
 {

@@ -13,6 +13,8 @@
 *sim
 *runs
 *srcs
+*tmp
+*.zip
 *.xpr
 *.xsa
 *.o
