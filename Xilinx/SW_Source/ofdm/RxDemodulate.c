@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
 #include "TransmitChain.h"
@@ -13,6 +14,7 @@
 #include "d_QamDemod.h"
 #include "rtwtypes.h"
 #include "Equalizer.h"
+#include "DirectDma.h"
 #include "f_Fft.h"
 #include "log2.h"
 
@@ -31,6 +33,8 @@ static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
 static FILE *RxMessageFile;
 static FILE *RxInjectFile;
 static creal_T *FftOutArray;
+static pthread_t DemodThread;
+static int pthreadState;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
   0x02, 0x01};
@@ -462,6 +466,11 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   char FileName[32];
 #ifdef DUC
   int32_T *BufferInData = NULL;
+  int BufferSelect;
+  bool BuffReadStatus0;
+  bool BuffReadStatus1;
+  bool BuffReadStatus2;
+  bool CurrentReadStatus;
 #endif
 #ifdef DAC
   creal_T *BufferInData = NULL;
@@ -516,7 +525,39 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   FftOutStruct->allocatedSize = Nfft;
   FftOutStruct->numDimensions = 1;
 
-  if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
+  if (LoopMethod == RX_DEMODULATE_DMA_BUFF) // Running as pthread
+  {
+    while (1)
+    {
+      if (pthreadState == 1)
+      {
+        ReturnStatus.Status = RETURN_STATUS_FAIL;
+        sprintf(ReturnStatus.ErrString, "RxDemodulateFft: "
+          "pthreadState end\n");
+        return ReturnStatus;
+      }
+
+      BufferSelect = DirectDmaBuffReadStatus(&BuffReadStatus0, 
+        &BuffReadStatus1, &BuffReadStatus2);
+      switch (BufferSelect) {
+        case (RX_BUFFER_0):
+          CurrentReadStatus = BuffReadStatus0;
+          break;
+        case (RX_BUFFER_1):
+          CurrentReadStatus = BuffReadStatus1;
+          break;
+        case (RX_BUFFER_2):
+          CurrentReadStatus = BuffReadStatus2;
+          break;
+      }
+      if (CurrentReadStatus)
+      {
+        break;
+      }
+    }
+    BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer(BufferSelect);
+  }
+  else if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
   {
     BufferInData = TxModulateGetTxBuffer();
   }
@@ -687,4 +728,62 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
+}
+
+void RxDemodulateCancelThread(void)
+{
+  pthreadState = 1; // pthread stop state
+  pthread_join(DemodThread, NULL);
+}
+
+ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
+  unsigned FileNumber, unsigned ModOrder, unsigned Nfft, unsigned
+  CpLen, unsigned OfdmSymbols, Calculated_Ofdm_Parameters
+  *OfdmCalcParams)
+{
+  ReturnStatusType ReturnStatus;
+  int RetVal;
+  struct thread_args args;
+
+  args.DebugMode = DebugMode;
+  args.FileNumber = FileNumber;
+  args.ModOrder = ModOrder;
+  args.Nfft = Nfft;
+  args.CpLen = CpLen;
+  args.OfdmSymbols = OfdmSymbols;
+  args.OfdmCalcParams = OfdmCalcParams;
+
+  pthreadState = 0; // pthread normal statue
+
+  RetVal = pthread_create(&DemodThread, NULL, RxDemodulateThread,
+    &args);
+  if (RetVal != 0)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, "RxDemodulateCreateThread: "
+      " ERROR: Failed to create thread for demodulation\n");
+    return ReturnStatus;
+  }
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+void *RxDemodulateThread(void *arg)
+{
+  ReturnStatusType ReturnStatus;
+  struct thread_args *args = (struct thread_args *) arg;
+
+  ReturnStatus = RxDemodulateBufferData(args->DebugMode, 
+    RX_DEMODULATE_DMA_BUFF, args->FileNumber, args->ModOrder, 
+    args->Nfft, args->CpLen, args->OfdmSymbols, args->OfdmCalcParams);
+
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    printf("RxDemodulateThread: Exiting Thread\n");
+    return NULL;
+  }
+
+  printf("RxDemodulateThread: Exiting Thread\n");
+  return NULL;
 }

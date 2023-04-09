@@ -32,5 +32,8 @@ void DirectDmaPlToPsInit(unsigned start);
 void *DirectDmaPlToPs(void *arg);
 void DirectDmaPlToPsThreadCancel(void);
 void DirectDmaSetGlobalMute(bool GlobalMuteSelect);
+void DirectDmaSetNumBytesForLoopback(unsigned Bytes);
+int DirectDmaBuffReadStatus(bool *Status0, bool *Status1, bool
+  *Status2);
 
 #endif

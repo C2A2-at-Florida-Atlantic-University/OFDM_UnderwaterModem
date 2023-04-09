@@ -22,6 +22,7 @@ Ofdm_Parameters_Type OfdmParams;
 Ofdm_Timing_Type OfdmTiming;
 Calculated_Ofdm_Parameters OfdmCalcParams;
 Dac_Parameters_Type DacParams;
+FILE *OfdmInfoFile;
 
 int main(int argc, char **argv)
 {
@@ -31,11 +32,13 @@ int main(int argc, char **argv)
   unsigned CenterFreq;
   unsigned NumBytes;
   unsigned DmaLoopSel;
+  unsigned ScalarGain;
   int TxGainDb;
   int RxGainDb;
   int DebugSelection;
   bool DebugMode;
   bool GlobalMute;
+  char FileName[32];
   ReturnStatusType ReturnStatus;
 
   if (argc == 1)
@@ -101,6 +104,8 @@ int main(int argc, char **argv)
   HwInterfaceDmaLoopback(0); // Disable DMA loopback by default
   HwInterfaceDisableDac();
   HwInterfaceDisableAdc();
+  DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
+    OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
 #endif
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
@@ -217,6 +222,8 @@ int main(int argc, char **argv)
           CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
         }
         DacParams = DacChainGetDacParams();
+        DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
+          OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
         break;
 
       case 3:
@@ -227,6 +234,8 @@ int main(int argc, char **argv)
         printf("\tEnter OFDM Symbols per Frame: ");
         ScanfRet = scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+        DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
+          OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
         break;
 
       case 4:
@@ -329,6 +338,8 @@ int main(int argc, char **argv)
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         OfdmCalcParams = TransmitChainGetParams();
+        DacParams = DacChainGetDacParams();
+        ScalarGain = TxModulateGetScalarGain();
 
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -339,6 +350,20 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+
+        sprintf(FileName, "files/OfdmInfo%d.txt", FileNumber);
+        OfdmInfoFile = fopen(FileName,"w");
+        if (OfdmInfoFile == NULL)
+        {
+          printf("Failed to write to OfdmInfoFile\n");
+          break;
+        }
+        fprintf(OfdmInfoFile, "%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,"
+          "\n%d,\n%d,%d\n",
+          OfdmParams.Nfft, OfdmParams.BandWidth, OfdmParams.CpLen,
+          OfdmParams.ModOrder, OfdmParams.ZpDensity,
+          OfdmTiming.SymbolGuardPeriod, OfdmTiming.FrameGuardPeriod,
+          OfdmTiming.OfdmSymbolsPerFrame, DacParams.Fc, ScalarGain);
 
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
           OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,
@@ -412,6 +437,7 @@ int main(int argc, char **argv)
       case 9:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
+#ifdef DAC
         ReturnStatus = AdcChainDownConversion(DebugMode, FileNumber,
           OfdmParams.Nfft, OfdmParams.CpLen, OfdmParams.BandWidth,
           OfdmTiming.OfdmSymbolsPerFrame);
@@ -420,6 +446,7 @@ int main(int argc, char **argv)
           printf("%s", ReturnStatus.ErrString);
           break;
         }
+#endif
 
         ReturnStatus = RxDemodulateBufferData(DebugMode,
           RX_DEMODULATE_TX_LOOPBACK, FileNumber, 

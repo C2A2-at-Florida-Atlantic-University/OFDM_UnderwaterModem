@@ -28,8 +28,8 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
   OfdmCalcParams.LastPilotCarrier = OfdmParams->Nfft-
     OfdmCalcParams.FirstPilotCarrier-1;
   OfdmCalcParams.NumDataCarriers = ((unsigned)floor((double)
-    (OfdmCalcParams.LastPilotCarrier-OfdmCalcParams.FirstPilotCarrier+1)*
-    3.0/4.0))-1;
+    (OfdmCalcParams.LastPilotCarrier-
+    OfdmCalcParams.FirstPilotCarrier+1)*3.0/4.0))-1;
   OfdmCalcParams.NumPilotCarriers = OfdmParams->Nfft-
     OfdmCalcParams.NumDataCarriers-(2*OfdmCalcParams.FirstPilotCarrier);
   OfdmCalcParams.SymbolDataRate = 

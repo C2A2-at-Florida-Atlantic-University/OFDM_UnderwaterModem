@@ -10,11 +10,40 @@
 #include "DacChain.h"
 #include "FpgaInterface.h"
 #include "TxModulate.h"
+#include "HwInterface.h"
 #include "rtwtypes.h"
 
 static pthread_t DmaThread;
 static int pthreadState;
 static bool GlobalMute;
+static bool BuffReadStatus0 = false;
+static bool BuffReadStatus1 = false;
+static bool BuffReadStatus2 = false;
+static unsigned BufferSelect;
+static unsigned LoopBackBytes;
+
+int DirectDmaBuffReadStatus(bool *Status0, bool *Status1, bool
+  *Status2)
+{
+  *Status0 = BuffReadStatus0;
+  *Status1 = BuffReadStatus1;
+  *Status2 = BuffReadStatus2;
+  switch (BufferSelect) {
+    case (RX_BUFFER_1):
+      return RX_BUFFER_0;
+    case (RX_BUFFER_2):
+      return RX_BUFFER_1;
+    case (RX_BUFFER_0):
+      return RX_BUFFER_2;
+    default:
+      return -1;
+  }
+}
+
+void DirectDmaSetNumBytesForLoopback(unsigned Bytes)
+{
+  LoopBackBytes = Bytes;
+}
 
 void DirectDmaSetGlobalMute(bool GlobalMuteSelect)
 {
@@ -45,10 +74,10 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     return ReturnStatus;
   }
 */
-  if (Bytes >= TX_BUFFER_SPAN)
+  if (Bytes >= BUFFER_SPAN)
   {
-    LoopCount = (unsigned)ceil((double)Bytes/(double)TX_BUFFER_SPAN);
-    BytesRemaining = Bytes%TX_BUFFER_SPAN;
+    LoopCount = (unsigned)ceil((double)Bytes/(double)BUFFER_SPAN);
+    BytesRemaining = Bytes%BUFFER_SPAN;
   }
   else
   {
@@ -59,7 +88,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   printf("DirectDmaPsToPl: Requested %d  = 0x%X byte DMA transaction\n",
     Bytes, Bytes);
   printf("DirectDmaPsToPl: Breaking into %d DMA transactions of <= "
-    "%d = 0x%X Bytes\n", LoopCount, TX_BUFFER_SPAN, TX_BUFFER_SPAN);
+    "%d = 0x%X Bytes\n", LoopCount, BUFFER_SPAN, BUFFER_SPAN);
   printf("DirectDmaPsToPl: Last DMA transaction: %d  = 0x%X bytes\n",
     BytesRemaining, BytesRemaining);
 
@@ -93,18 +122,18 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     else
     {
       // Copy data to physically contiguous memory (CMA) location
-      memcpy((void *)(FpgaVirtBuff+i*TX_BUFFER_SPAN*2), 
-        (const void *)(BufferPtr+i*TX_BUFFER_SPAN*2), BytesRemaining);
+      memcpy((void *)(FpgaVirtBuff+i*BUFFER_SPAN*2), 
+        (const void *)(BufferPtr+i*BUFFER_SPAN*2), BytesRemaining);
       FpgaInterfaceWrite32(DMA_BASE_ADDR+DMA_LENGTH_OFFSET,
-        TX_BUFFER_SPAN, GlobalMute);
+        BUFFER_SPAN, GlobalMute);
     }
     while (1)
     {
-      FpgaInterfaceRead32(DMA_BASE_ADDR+DMA_STATUS_OFFSET, &DmaInterrupt,
-        true);
+      FpgaInterfaceRead32(DMA_BASE_ADDR+DMA_STATUS_OFFSET, 
+        &DmaInterrupt, true);
       if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
       {
-        printf("DirectDmaPsToPl: DMA Transaction loop %d complete\n", i);
+        printf("DirectDmaPsToPl: DMA Transaction loop%d complete\n", i);
         // Clear Interrupt
         FpgaInterfaceWrite(DMA_BASE_ADDR+DMA_STATUS_OFFSET,
           DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);
@@ -167,11 +196,12 @@ void DirectDmaPlToPsInit(unsigned start) // Enable PL to PS
 
 void *DirectDmaPlToPs(void *arg)
 {
-  unsigned BufferSelect = 0;  // Select between 2 buffers
   unsigned DmaInterrupt;
   unsigned ActualBytes;
+  unsigned RegValue;
 
   DirectDmaPlToPsInit(1); // Start DMA s2mm
+  BufferSelect = RX_BUFFER_0;
 
   // While DMA is filling up one buffer, the other one can 
   // be used for processing
@@ -182,31 +212,64 @@ void *DirectDmaPlToPs(void *arg)
   while (1)
   {
     // Write physical address of DMA buffer location in memory
-    if (BufferSelect)
-    {
-      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET, 
-        RX_BUFFER_BASE1, GlobalMute);
-      BufferSelect = !BufferSelect;
-    }
-    else // BufferSelect = 0
-    {
-      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET,
-        RX_BUFFER_BASE0, GlobalMute);
-      BufferSelect = !BufferSelect;
-    }
+    // Switch between 3 buffers
+    switch (BufferSelect) {
+      case (RX_BUFFER_0):
+        FpgaInterfaceClearRxBuffer(RX_BUFFER_0);
+        FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET, 
+          RX_BUFFER_BASE0, GlobalMute);
+        BuffReadStatus0 = false;
+        BufferSelect = RX_BUFFER_1;
+        break;
 
-    // As soon as length register is written to, the DMA transaction starts
-    FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET,
-      TX_BUFFER_SPAN, GlobalMute);
+      case (RX_BUFFER_1):
+        FpgaInterfaceClearRxBuffer(RX_BUFFER_1);
+        FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET, 
+          RX_BUFFER_BASE1, GlobalMute);
+        BuffReadStatus1 = false;
+        BufferSelect = RX_BUFFER_2;
+        break;
+
+      case (RX_BUFFER_2):
+        FpgaInterfaceClearRxBuffer(RX_BUFFER_2);
+        FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_DEST_OFFSET, 
+          RX_BUFFER_BASE2, GlobalMute);
+        BuffReadStatus2 = false;
+        BufferSelect = RX_BUFFER_0;
+        break;
+
+      default :
+        printf("DirectDmaPsToPl: Invalid RX Buffer\n");
+        return NULL;
+    }
+        
+    // Read if transfer was a mm2s => s2mm loopback
+    FpgaInterfaceRead32(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, 
+      &RegValue, GlobalMute);
+    RegValue &= DMA_LOOPBACK_MASK;
+    if (RegValue)
+    {
+      printf("DirectDmaPlToPs: DMA loopback detected, programming %d "
+        "byte transaction\n", LoopBackBytes);
+      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET,
+        LoopBackBytes, GlobalMute);
+    // As soon as length register is written to, the DMA transaction 
+    // starts
+    }
+    else
+    {
+      FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET,
+        BUFFER_SPAN, GlobalMute);
+    }
 
     // Wait for buffer to fill or for tlast to be asserted
     while (1)
     {
-      FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_STATUS_OFFSET, &DmaInterrupt,
-        true);
-      if ((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0)
+      FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_STATUS_OFFSET, 
+        &DmaInterrupt, true);
+      if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
       {
-        //printf("DirectDmaPsToPl: DMAS Transaction loop %d complete\n", 0);
+        //printf("DirectDmaPsToPl: DMAS loop %d complete\n", 0);
         // Clear Interrupt
         FpgaInterfaceWrite(DMA_BASE_ADDR+DMAS_STATUS_OFFSET,
           DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);
@@ -214,10 +277,35 @@ void *DirectDmaPlToPs(void *arg)
       }
     }
 
+    switch (BufferSelect) {
+      case (RX_BUFFER_1):
+        BuffReadStatus0 = true;
+        break;
+      case (RX_BUFFER_2):
+        BuffReadStatus1 = true;
+        break;
+      case (RX_BUFFER_0):
+        BuffReadStatus2 = true;
+        break;
+      default:
+        printf("DirectDmaPlToPs: Buffer Invalid\n");
+        return NULL;
+    }
+
+    // Read if transfer was a mm2s => s2mm loopback
+    FpgaInterfaceRead32(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, 
+      &RegValue, GlobalMute);
+    RegValue &= DMA_LOOPBACK_MASK;
+    if (RegValue)
+    {
+      printf("DirectDmaPlToPs: DMA Loopback complete. Exiting thread\n");
+      return NULL;
+    }
+
     // Actual number of bytes is written back onto buffer length reg
     FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET, &ActualBytes,
       GlobalMute);
-    if (ActualBytes != TX_BUFFER_SPAN)
+    if (ActualBytes != BUFFER_SPAN)
     {
       printf("DirectDmaPlToPs: DMA ERROR: "
       "Number of bytes read does not match expected number of bytes\n");
@@ -225,7 +313,8 @@ void *DirectDmaPlToPs(void *arg)
     }
 
 #ifdef DEBUG
-    printf("\t\tDirectDmaPlToPs: Wrote to buffer %d\n", !BufferSelect);
+    printf("\t\tDirectDmaPlToPs: Wrote to buffer, Current buffer %d\n",
+      BufferSelect);
 #endif
 
     // Check if should continue pthread

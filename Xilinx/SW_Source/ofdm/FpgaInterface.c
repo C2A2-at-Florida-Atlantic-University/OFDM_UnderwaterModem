@@ -83,28 +83,53 @@ unsigned *FpgaInterfaceClearTxBuffer()
 
 #ifdef NO_DEVMEM
   printf("FpgaInterfaceClearTxBuffer: NO_DEVMEM defined\n");
-  memset(FpgaVirtualAddr, 0, TX_BUFFER_SPAN);
+  memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
   printf("FpgaInterfaceClearTxBuffer: Clearing CMA area\n");
-  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, TX_BUFFER_SPAN);
+  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
 
-unsigned *FpgaInterfaceClearRxBuffer()
+unsigned *FpgaInterfaceGetRxBuffer(unsigned RxBufferSelect)
 {
-#ifdef DEBUG
-  printf("FpgaInterfaceClearRxBuffer: Clear RX Buffer\n");
-#endif
-#if defined(NO_DEVMEM) || !defined(FFT)
-  printf("FpgaInterfaceClearRxBuffer: NO_DEVMEM or ~FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_SPAN), 0, TX_BUFFER_SPAN);
-  return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_SPAN);
+  switch (RxBufferSelect) {
+    case (RX_BUFFER_0):
+      return (unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE0);
+    case (RX_BUFFER_1):
+      return (unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE1);
+    case (RX_BUFFER_2):
+      return (unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE2);
+  }
+  return NULL;
+}
+
+unsigned *FpgaInterfaceClearRxBuffer(unsigned RxBufferSelect)
+{
+#ifdef NO_DEVEM
+  printf("FpgaInterfaceClearRxBuffer: NO_DEVMEM defined\n");
+  memset((unsigned *)(FpgaVirtualAddr+BUFFER_SPAN), 0, BUFFER_SPAN);
+  return (unsigned *)(FpgaVirtualAddr+BUFFER_SPAN);
 #else
-  printf("FpgaInterfaceClearRxBuffer: ~NO_DEVMEM or FFT defined\n");
-  memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, TX_BUFFER_SPAN);
-  return(unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
+  printf("FpgaInterfaceClearRxBuffer: Clearing CMA RX %d area\n",
+    RxBufferSelect);
+  switch (RxBufferSelect) {
+    case (RX_BUFFER_0):
+      memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE0), 0,
+        BUFFER_SPAN);
+      return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE0);
+    case (RX_BUFFER_1):
+      memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE1), 0,
+        BUFFER_SPAN);
+      return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE1);
+    case (RX_BUFFER_2):
+      memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE2), 0,
+        BUFFER_SPAN);
+      return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE2);
+    default:
+      return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE0);
+  }
 #endif
 }
 
