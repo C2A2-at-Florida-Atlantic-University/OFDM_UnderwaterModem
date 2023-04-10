@@ -16,8 +16,7 @@
 #include "math.h"
 
 #define DEBUG
-#define EXTRA_DEBUG
-#define SAMPLE_DEBUG // Print out some freq domain samples
+//#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
@@ -469,7 +468,6 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
 
   fclose(TxWriteFile);
   fclose(TxMessageFile);
-
   sprintf(FileNameOut, "files/TxFreqData%d.txt", FileNumber);
 
   TxWriteFile = fopen(FileNameOut, "w");
@@ -488,6 +486,7 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
     OfdmParams->ModOrder, OfdmSymbols, DigitalGain,
     OfdmCalcParams->FirstPilotCarrier, OfdmCalcParams->LastPilotCarrier);
 
+#ifdef NO_DEVMEM
   for (unsigned i = 0; i < OfdmParams->Nfft*OfdmSymbols; i++)
   {
 #ifdef FFT
@@ -500,13 +499,13 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
       (int16_t)IfftBufferPtr[i].im);
 #endif
   }
+#endif
 
 #ifdef DEBUG
   printf("TxModulateWriteToFile: Wrote to file %s\n", FileNameOut);
 #endif
 
   fclose(TxWriteFile);
-
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }

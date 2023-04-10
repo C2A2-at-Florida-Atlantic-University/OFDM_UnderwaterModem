@@ -182,7 +182,9 @@ ReturnStatusType DirectDmaPlToPsThread(void)
 void DirectDmaPlToPsThreadCancel(void)
 {
   pthreadState = 1; // pthread stop state
+  printf("DirectDmaToPsThreadCancel: Closing Pthread\n");
   pthread_join(DmaThread, NULL);
+  printf("DirectDmaToPsThreadCancel: Pthread closed\n");
 }
   
 
@@ -239,7 +241,7 @@ void *DirectDmaPlToPs(void *arg)
         break;
 
       default :
-        printf("DirectDmaPsToPl: Invalid RX Buffer\n");
+        printf("DirectDmaPsToPl: Invalid RX Buffer. Exiting thread\n");
         return NULL;
     }
         
@@ -288,7 +290,7 @@ void *DirectDmaPlToPs(void *arg)
         BuffReadStatus2 = true;
         break;
       default:
-        printf("DirectDmaPlToPs: Buffer Invalid\n");
+        printf("DirectDmaPlToPs: Buffer Invalid. Exiting thread\n");
         return NULL;
     }
 
@@ -308,7 +310,8 @@ void *DirectDmaPlToPs(void *arg)
     if (ActualBytes != BUFFER_SPAN)
     {
       printf("DirectDmaPlToPs: DMA ERROR: "
-      "Number of bytes read does not match expected number of bytes\n");
+      "Number of bytes read does not match expected number of "
+      "bytes, pthread closing ...\n");
       return NULL;
     }
 
@@ -327,5 +330,6 @@ void *DirectDmaPlToPs(void *arg)
 
   DirectDmaPlToPsInit(0);
 
+  printf("DirectDmaPlToPs: PL to PS transaction finished\n");
   return NULL;
 }

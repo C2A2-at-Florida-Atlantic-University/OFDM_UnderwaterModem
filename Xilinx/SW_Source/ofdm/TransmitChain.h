@@ -25,7 +25,7 @@
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
 #define DEFAULT_FRAME_GUARD_PERIOD 5 // in ms
-#define DEFAULT_SYMBOlS_PER_FRAME 1
+#define DEFAULT_SYMBOlS_PER_FRAME 2
 
 typedef struct {
   unsigned Nfft;

@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <stdbool.h>
 #include "ReturnStatus.h"
 #include "FpgaInterface.h"
@@ -33,6 +34,7 @@ int main(int argc, char **argv)
   unsigned NumBytes;
   unsigned DmaLoopSel;
   unsigned ScalarGain;
+  unsigned RxThread;
   int TxGainDb;
   int RxGainDb;
   int DebugSelection;
@@ -136,6 +138,7 @@ int main(int argc, char **argv)
   DebugMode = true;
 
   do {
+    usleep(1000); // Give some time for prints from threads
     printf("\n----- MODEM MENU -----\n");
     printf("0  - Exit\n");
     printf("1  - Set Debug Features\n");
@@ -147,7 +150,7 @@ int main(int argc, char **argv)
     printf("7  - Transmit Single OFDM Frame from File\n");
     printf("8  - Write Transmitted Sub-Carriers to File\n");
     printf("9  - Demod TX Buffer to File\n");
-    printf("10 - Demod RX Buffer to File\n");
+    printf("10 - Start/Stop RX Demod Thread\n");
     printf("11 - Demod RX Injection to File\n");
     printf("12 - Compute BER/SER\n");
     printf("13 - Start S2MM DMA\n");
@@ -359,7 +362,7 @@ int main(int argc, char **argv)
           break;
         }
         fprintf(OfdmInfoFile, "%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,"
-          "\n%d,\n%d,%d\n",
+          "\n%d,\n%d,\n%d\n",
           OfdmParams.Nfft, OfdmParams.BandWidth, OfdmParams.CpLen,
           OfdmParams.ModOrder, OfdmParams.ZpDensity,
           OfdmTiming.SymbolGuardPeriod, OfdmTiming.FrameGuardPeriod,
@@ -460,6 +463,24 @@ int main(int argc, char **argv)
         break;
 
       case 10:
+        printf("Write file number: ");
+        ScanfRet = scanf("%d", &FileNumber);
+        printf("Enter Thread Selection ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &RxThread);
+        if (RxThread == 1)
+        {
+          ReturnStatus = RxDemodulateCreateThread(DebugMode, FileNumber,
+            OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
+            OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            printf("%s", ReturnStatus.ErrString);
+          }
+        }
+        else
+        {
+          RxDemodulateCancelThread();
+        }
         break;
 
       case 11:

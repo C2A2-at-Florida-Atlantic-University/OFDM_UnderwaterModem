@@ -20,6 +20,10 @@
 
 #define DEBUG
 #define SAMPLE_DEBUG
+//#define SYMBOL_DEBUG
+//#define TIME_SAMPLE_DEBUG
+//#define FREQ_SAMPLE_DEBUG
+//#define EQ_SAMPLE_DEBUG
 
 #ifdef FFT
 static unsigned *TxBufferPtrLoop = NULL;
@@ -111,7 +115,7 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   for (unsigned DataIndex = 0; DataIndex < Nfft*OfdmSymbols*DATA_DENSITY;
     DataIndex++)
   {
-#ifdef SAMPLE_DEBUG
+#ifdef SYMBOL_DEBUG
         if (DataIndex < 12*8) 
         {
           printf("DemodData[%d] = %d\n", DataIndex, DemodData[DataIndex]);
@@ -308,14 +312,8 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     return ReturnStatus;
   }
 
-  if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
-  {
-    TxBufferPtrLoop = FftOutArray;
-  }
-  else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
-  {
-    TxBufferPtrLoop = FftOutArray;
-  }
+  TxBufferPtrLoop = FftOutArray;
+
   if (TxBufferPtrLoop == NULL)
   {
     perror("RxDemodulateBufferData");
@@ -402,7 +400,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
         fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
           (float)ModOrder));
       }
-#ifdef SAMPLE_DEBUG
+#ifdef EQ_SAMPLE_DEBUG
       if (i < 16)
       {
         RxDemodulatePrintCrealType(IqData);
@@ -625,7 +623,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
       // Remove cyclic prefix (CP)
       if (!(j < CpLen)) // Non CP sample
       {
-        if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK)
+        if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK ||
+          LoopMethod == RX_DEMODULATE_DMA_BUFF)
         {
 #ifdef DUC
           FftInData[j-CpLen].re = (int16_t)
@@ -647,7 +646,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
           FftInData[j-CpLen].re = (int16_t)tmp1;
           FftInData[j-CpLen].im = (int16_t)tmp2;
         }
-#ifdef SAMPLE_DEBUG
+#ifdef TIME_SAMPLE_DEBUG
         if (i == 0 && j == CpLen)
         {
           printf("\nRxDemodulateFft: Time domain data:\n");
@@ -693,7 +692,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     {
       fprintf(FftFile, "%lf, %lf\n", FftOutArray[i].re, 
         FftOutArray[i].im);
-#ifdef SAMPLE_DEBUG
+#ifdef FREQ_SAMPLE_DEBUG
       if (i == 0)
       {
         printf("\nRxDemodulateFft: Frequency domain data:\n");
@@ -764,6 +763,7 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
       " ERROR: Failed to create thread for demodulation\n");
     return ReturnStatus;
   }
+  printf("RxDemodulateCreateThread: Started Demod Thread\n");
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
@@ -780,10 +780,10 @@ void *RxDemodulateThread(void *arg)
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     printf("%s", ReturnStatus.ErrString);
-    printf("RxDemodulateThread: Exiting Thread\n");
+    printf("RxDemodulateThread: FAIL: Exiting Thread\n");
     return NULL;
   }
 
-  printf("RxDemodulateThread: Exiting Thread\n");
+  printf("RxDemodulateThread: SUCCESS: Exiting Thread\n");
   return NULL;
 }
