@@ -20,6 +20,7 @@
 
 #define DMA_RESET 0x4
 #define DMA_IOC_IRQ_MASK 0x00001000
+#define DMA_CLEAR 0x00000000
 
 #define DMA_BUFFER_WIDTH_VAL 26 // Configured in DMA GUI
 
@@ -35,5 +36,9 @@ void DirectDmaSetGlobalMute(bool GlobalMuteSelect);
 void DirectDmaSetNumBytesForLoopback(unsigned Bytes);
 int DirectDmaBuffReadStatus(bool *Status0, bool *Status1, bool
   *Status2);
+void DirectDmaMm2sIrqClear(void);
+void DirectDmaS2mmIrqClear(void);
+void DirectDmaMm2sStatus(void);
+void DirectDmaS2mmStatus(void);
 
 #endif

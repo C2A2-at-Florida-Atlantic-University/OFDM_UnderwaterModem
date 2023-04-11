@@ -100,12 +100,16 @@ int main(int argc, char **argv)
     return 1;
   }
 
-#ifndef NO_DEVMEM
-  HwInterfaceSetGlobalMute(true);
-  DirectDmaSetGlobalMute(true);
-  HwInterfaceDmaLoopback(0); // Disable DMA loopback by default
-  HwInterfaceDisableDac();
-  HwInterfaceDisableAdc();
+#ifndef NO_DEVMEM                  // HW specific functions
+  HwInterfaceSetGlobalMute(true);  // mute FPGA reg access prints
+  DirectDmaSetGlobalMute(true);    // mute FPGA reg access prints
+  DirectDmaMm2sIrqClear();         // Clear IRQ for mm2s DMA
+  DirectDmaS2mmIrqClear();         // Clear IRQ for s2mm DMA
+  //DirectDmaMm2sStatus();           // DMA mm2s status
+  //DirectDmaS2mmStatus();           // DMA s2mm status
+  HwInterfaceDmaLoopback(0);       // Disable DMA loopback 
+  HwInterfaceDisableDac();         // Disable DAC and PA
+  HwInterfaceDisableAdc();         // Disable ADC
   DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
     OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
 #endif
@@ -533,6 +537,13 @@ int main(int argc, char **argv)
         printf("Invalid selection\n");
     }
   } while (Selection);
+
+  // Cleanup
   printf("%d\n", ScanfRet);
+  DirectDmaPlToPsThreadCancel();
+  RxDemodulateCancelThread();
+  //DirectDmaMm2sStatus();
+  //DirectDmaS2mmStatus();
+
   return 0;
 }

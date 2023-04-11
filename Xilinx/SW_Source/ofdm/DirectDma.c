@@ -22,6 +22,33 @@ static bool BuffReadStatus2 = false;
 static unsigned BufferSelect;
 static unsigned LoopBackBytes;
 
+void DirectDmaMm2sIrqClear(void)
+{
+  FpgaInterfaceWrite(DMA_BASE_ADDR, DMA_CLEAR,
+    DMA_IOC_IRQ_MASK, GlobalMute);
+}
+
+void DirectDmaS2mmIrqClear(void)
+{
+  FpgaInterfaceWrite(DMA_BASE_ADDR+DMAS_CONTROL_OFFSET, 
+    DMA_CLEAR, DMA_IOC_IRQ_MASK, GlobalMute);
+}
+
+void DirectDmaMm2sStatus(void)
+{
+  unsigned RegVal;
+  FpgaInterfaceRead32(DMA_BASE_ADDR, &RegVal, GlobalMute);
+  printf("DirectDmaMm2sStatus: Status: 0x%X\n", RegVal);
+}
+
+void DirectDmaS2mmStatus(void)
+{
+  unsigned RegVal;
+  FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_STATUS_OFFSET, &RegVal, 
+    GlobalMute);
+  printf("DirectDmaS2mmStatus: Status: 0x%X\n", RegVal);
+}
+
 int DirectDmaBuffReadStatus(bool *Status0, bool *Status1, bool
   *Status2)
 {
@@ -101,6 +128,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
 #endif
   FpgaVirtBuff = FpgaInterfaceGetTxBuffer();
 
+  DirectDmaMm2sIrqClear();
   DirectDmaPsToPlInit(1); // Start DMA
 
   for (unsigned i = 0; i < LoopCount; i++)
@@ -143,6 +171,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   }
 
   DirectDmaPsToPlInit(0); // Stop DMA
+  DirectDmaMm2sIrqClear();
 
   // free
   FpgaInterfaceClearTxBuffer();
@@ -202,6 +231,7 @@ void *DirectDmaPlToPs(void *arg)
   unsigned ActualBytes;
   unsigned RegValue;
 
+  DirectDmaS2mmIrqClear();
   DirectDmaPlToPsInit(1); // Start DMA s2mm
   BufferSelect = RX_BUFFER_0;
 
@@ -329,6 +359,7 @@ void *DirectDmaPlToPs(void *arg)
   }
 
   DirectDmaPlToPsInit(0);
+  DirectDmaS2mmIrqClear();
 
   printf("DirectDmaPlToPs: PL to PS transaction finished\n");
   return NULL;
