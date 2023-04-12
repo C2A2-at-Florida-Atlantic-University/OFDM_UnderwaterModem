@@ -40,5 +40,6 @@ void DirectDmaMm2sIrqClear(void);
 void DirectDmaS2mmIrqClear(void);
 void DirectDmaMm2sStatus(void);
 void DirectDmaS2mmStatus(void);
+ReturnStatusType DirectDmaCheckThreadRunning(void);
 
 #endif

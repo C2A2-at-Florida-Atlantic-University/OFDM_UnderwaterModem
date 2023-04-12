@@ -9,6 +9,7 @@ add_files -fileset sim_1 sim/dac_chain_tb.sv
 add_files -fileset sim_1 sim/cic_tb.sv
 add_files -fileset sim_1 sim/cic_tx_tb.sv
 add_files -fileset sim_1 sim/adc_chain_tb.sv
+add_files -fileset sim_1 sim/synchronizer_tb.sv
 
 # Add instantiated IQ
 import_ip ip/mult_gen_0.xci

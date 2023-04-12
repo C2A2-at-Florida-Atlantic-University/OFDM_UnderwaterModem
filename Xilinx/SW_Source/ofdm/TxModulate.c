@@ -21,7 +21,8 @@
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
 // Message signal {0,M-1} - pilot density
-static uint8_T TxOfdmSymbolBinData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
+static uint8_T 
+  TxOfdmSymbolBinData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY*4];
 // QAM Modulated signal
 #ifdef FFT
 static int16_T TxOfdmSymbolModData[MAX_NFFT*2*MAX_MOD_ORDER];
@@ -70,7 +71,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #endif
 #ifdef DUC
   IfftBufferPtr = (creal_T *)
-    malloc((MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
+    malloc((MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*16);
   if (IfftBufferPtr == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -78,7 +79,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       "TxModulateFileData: Could not malloc IfftBufferPtr\n");
     return ReturnStatus;
   }
-  memset(IfftBufferPtr, 0, (MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*4);
+  memset(IfftBufferPtr, 0, (MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*16);
 #endif
 
   if (TxMessageFile == NULL)
@@ -153,25 +154,21 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
         i++;
       }
 #ifdef SAMPLE_DEBUG
-      //if (NfftCount < NFFT_DEBUG_COUNT)
-     // {
-        //printf("NfftCount: %d, Data: %d\n", NfftCount,
-        //TxOfdmSymbolBinData[NfftCount]);
-      //}
+      if (NfftCount < NFFT_DEBUG_COUNT)
+      {
+        printf("NfftCount: %d, Data: %d\n", NfftCount,
+        TxOfdmSymbolBinData[NfftCount]);
+      }
 #endif
       if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex == (Nfft/2-1) || // ZP carrier at DC
         ZpIndex > OfdmCalcParams->LastPilotCarrier))
       { // If Data or Pilot index
         NfftCount++;
-//        if (!(NfftCount % (OfdmCalcParams->NumDataCarriers +
-//          OfdmCalcParams->NumPilotCarriers)))
-//        { // If last data or pilot subcarrier before ending ZP carrier
           if (i == 8/b_log2(ModOrder))
           {
             MessageByte = fgetc(TxMessageFile);
           }
-//        }
       }
       if (ZpIndex == Nfft-1)
       {

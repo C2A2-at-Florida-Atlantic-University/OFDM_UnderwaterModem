@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <signal.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
 #include "TransmitChain.h"
@@ -37,7 +38,7 @@ static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
 static FILE *RxMessageFile;
 static FILE *RxInjectFile;
 static creal_T *FftOutArray;
-static pthread_t DemodThread;
+static pthread_t DemodThread = (pthread_t)NULL;
 static int pthreadState;
 
 static const int BIT_MASK_M2[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 
@@ -729,10 +730,41 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   return ReturnStatus;
 }
 
+ReturnStatusType RxDemodulateCheckThreadRunning(void)
+{
+  ReturnStatusType ReturnStatus;
+  if (DemodThread != (pthread_t)NULL)
+  {
+    if (pthread_kill(DemodThread,0) == 0)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "RxDemodulateCheckThreadRunning: "
+        "RX Demodulation Thread running\n");
+      return ReturnStatus;
+    }
+    else
+    {
+      printf("RxDemodulateCheckThreadRunning: RX Demodulation Thread "
+        "not Running\n");
+    }
+  }
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
 void RxDemodulateCancelThread(void)
 {
-  pthreadState = 1; // pthread stop state
-  pthread_join(DemodThread, NULL);
+  ReturnStatusType ReturnStatus;
+  ReturnStatus = RxDemodulateCheckThreadRunning();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    pthreadState = 1; // pthread stop state
+    pthread_join(DemodThread, NULL);
+  }
+  else
+  {
+    printf("RxDemodulateCancelThread: Pthread already stopped\n");
+  }
 }
 
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
@@ -751,6 +783,15 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   args.CpLen = CpLen;
   args.OfdmSymbols = OfdmSymbols;
   args.OfdmCalcParams = OfdmCalcParams;
+
+  ReturnStatus = RxDemodulateCheckThreadRunning();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    sprintf(ReturnStatus.ErrString, "RxDemodulateCreateThread: "
+      "ERROR: RX Demodulation Thread already running\n");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+  }
 
   pthreadState = 0; // pthread normal statue
 

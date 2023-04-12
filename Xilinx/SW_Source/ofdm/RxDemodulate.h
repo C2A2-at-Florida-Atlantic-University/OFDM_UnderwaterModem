@@ -42,5 +42,6 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode, unsigned
 void *RxDemodulateThread(void *arg);
 void RxDemodulateCancelThread(void);
 int32_T *RxDemodulateGetCurrentDmaBuffer(void);
+ReturnStatusType RxDemodulateCheckThreadRunning(void);
 
 #endif

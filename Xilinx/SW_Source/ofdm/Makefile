@@ -4,13 +4,14 @@
 
 # MEM_ACCESS = NO_DEVMEM so program will not have access to system files
 #              or HW.
-MEM_ACCESS = NO_DEVMEM 
+MEM_ACCESS = DEVMEM 
 
 # PS_PL_POINT = FFT
-PS_PL_POINT = DUC
-SPI_ACCESS = NO_SPI
+PS_PL_POINT = DUC # IFFT in PS, DUC in PL
+SPI_ACCESS = SPI
 
 CC:=gcc
+CROSS_COMPILER:=arm-linux-gnueabihf-
 
 TARGET:=ofdm
 
@@ -69,8 +70,8 @@ HwInterface.c \
 Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
-DacChain.c \
 AdcChain.c \
+DacChain.c \
 Ber.c \
 DirectDma.c \
 ofdm.c
@@ -81,10 +82,10 @@ OBJECTS := $(SOURCES:%.c=%.o)
 CFLAGS := -D$(MEM_ACCESS) -D$(PS_PL_POINT) -D$(SPI_ACCESS) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm -lpthread
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -o $@ $^ -lm
 
 .PHONY: clean
 clean:

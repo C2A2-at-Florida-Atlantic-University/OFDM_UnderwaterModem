@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
+#include <signal.h>
 #include <math.h>
 #include "DirectDma.h"
 #include "DacChain.h"
@@ -13,7 +14,7 @@
 #include "HwInterface.h"
 #include "rtwtypes.h"
 
-static pthread_t DmaThread;
+static pthread_t DmaThread = (pthread_t)NULL;
 static int pthreadState;
 static bool GlobalMute;
 static bool BuffReadStatus0 = false;
@@ -186,11 +187,41 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   return ReturnStatus;
 }
 
+ReturnStatusType DirectDmaCheckThreadRunning(void)
+{
+  ReturnStatusType ReturnStatus;
+  if (DmaThread != (pthread_t)NULL)
+  {
+    if (pthread_kill(DmaThread,0) == 0)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "DirectDmaCheckThreadRunning: "
+        "S2MM Thread running\n");
+      return ReturnStatus;
+    }
+    else
+    {
+      printf("DirectDmacheckThreadRunning: S2MM Thread stopped\n");
+    }
+  }
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
 ReturnStatusType DirectDmaPlToPsThread(void)
 {
   ReturnStatusType ReturnStatus;
   int RetVal;
   int Single = 0; // Change to 1 for a single DMA transaction
+
+  ReturnStatus = DirectDmaCheckThreadRunning();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+    sprintf(ReturnStatus.ErrString, "DirectDmaPlToPsThread: "
+      "ERROR: S2MM Thread already running\n");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+  }
 
   pthreadState = 0; // pthread normal state
 
@@ -204,16 +235,29 @@ ReturnStatusType DirectDmaPlToPsThread(void)
       "DMA transaction. pthread_create returned %d\n", RetVal);
     return ReturnStatus;
   }
+  else
+  {
+    printf("DirectDmaPlToPsThread: Started S2MM Thread\n");
+  }
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
 
 void DirectDmaPlToPsThreadCancel(void)
 {
-  pthreadState = 1; // pthread stop state
-  printf("DirectDmaToPsThreadCancel: Closing Pthread\n");
-  pthread_join(DmaThread, NULL);
-  printf("DirectDmaToPsThreadCancel: Pthread closed\n");
+  ReturnStatusType ReturnStatus;
+  ReturnStatus = DirectDmaCheckThreadRunning();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    pthreadState = 1; // pthread stop state
+    printf("DirectDmaPlToPsThreadCancel: Closing Pthread\n");
+    pthread_join(DmaThread, NULL);
+    printf("DirectDmaPlToPsThreadCancel: Pthread closed\n");
+  }
+  else
+  {
+    printf("DirectDmaPlToPsThreadCancel: Pthread already stopped\n");
+  }
 }
   
 
