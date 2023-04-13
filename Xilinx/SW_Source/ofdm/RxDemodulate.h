@@ -22,12 +22,13 @@ struct thread_args {
   unsigned CpLen;
   unsigned OfdmSymbols;
   Calculated_Ofdm_Parameters *OfdmCalcParams;
+  bool SwSync;
 };
 
 ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   unsigned LoopMethod, unsigned FileNumber, unsigned ModOrder, 
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols,
-  Calculated_Ofdm_Parameters *OfdmCalcParams);
+  Calculated_Ofdm_Parameters *OfdmCalcParams, bool SwSync);
 ReturnStatusType RxDemodulateFileData(char *FileName);
 ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
   unsigned ModOrder, unsigned Nfft, unsigned OfdmSymbols);
@@ -38,7 +39,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   unsigned OfdmSymbols);
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode, unsigned
   FileNumber, unsigned ModOrder, unsigned Nfft, unsigned CpLen,
-  unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams);
+  unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams,
+  bool SwSync);
 void *RxDemodulateThread(void *arg);
 void RxDemodulateCancelThread(void);
 int32_T *RxDemodulateGetCurrentDmaBuffer(void);

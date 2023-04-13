@@ -268,7 +268,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_250k_q.coe} \
+   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
@@ -288,7 +288,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_250k_i.coe} \
+   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
@@ -346,7 +346,10 @@ proc create_root_design { parentCell } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+   CONFIG.g_ILA {true} \
+ ] $synchronizer_0
+
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
 

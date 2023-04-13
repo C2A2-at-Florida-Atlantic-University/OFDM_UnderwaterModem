@@ -84,6 +84,22 @@ void HwInterfaceDmaLoopback(unsigned Enable)
     DMA_LOOPBACK_MASK, GlobalMute);
 }
 
+void HwInterfaceConfigureSynchronizer(unsigned Nfft, unsigned CpLen,
+  unsigned OfdmSymbols, unsigned Threshold)
+{
+  unsigned RegValue;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft, NFFT_MASK,
+    GlobalMute);
+  RegValue = CpLen << CP_LEN_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+CP_LEN_OFFSET, RegValue,
+    CP_LEN_MASK, GlobalMute);
+  RegValue = OfdmSymbols << OFDM_SYMBOLS_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+OFDM_SYMBOLS_OFFSET, RegValue,
+    OFDM_SYMBOLS_MASK, GlobalMute);
+  FpgaInterfaceWrite32(GPIO_2_BASE_ADDR+SYNC_THRESHOLD_OFFSET,
+    Threshold, GlobalMute);
+}
+
 ReturnStatusType HwInterfaceSetVga(int gain)
 {
   ReturnStatusType ReturnStatus;

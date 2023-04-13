@@ -14,10 +14,9 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
 source ADC_Chain_bd.tcl
-set_property generate_synth_checkpoint false [get_files  $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2/radio_top_v2.srcs/sources_1/ip/mult_gen_0/mult_gen_0.xci]
-generate_target all [get_files  $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2/radio_top_v2.srcs/sources_1/ip/mult_gen_0/mult_gen_0.xci]
 source DAC_Chain_bd.tcl
 source PS_Zynq_v2_bd.tcl
+source Ofdm_Sync_250k_bd.tcl
 source Radio_Top_v2_bd.tcl
 update_compile_order -fileset sources_1
 make_wrapper -files [get_files $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2/radio_top_v2.srcs/sources_1/bd/Radio_Top_v2/Radio_Top_v2.bd] -top
@@ -29,7 +28,7 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/constraints
 add_files -fileset constrs_1 -norecurse SDUAMconstraints.xdc
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2
 
-if (1) {
+if (0) {
   launch_runs synth_1 -jobs 24
   wait_on_run synth_1
   launch_runs impl_1 -to_step write_bitstream

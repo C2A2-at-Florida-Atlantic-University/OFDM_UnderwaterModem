@@ -252,7 +252,7 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
 ReturnStatusType RxDemodulateBufferData(bool DebugMode, 
   unsigned LoopMethod, unsigned FileNumber, unsigned ModOrder, 
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols,
-  Calculated_Ofdm_Parameters *OfdmCalcParams)
+  Calculated_Ofdm_Parameters *OfdmCalcParams, bool SwSync)
 {
   ReturnStatusType ReturnStatus;
   creal32_T IqData;
@@ -262,10 +262,17 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   unsigned DataCount = 0;
   unsigned ZpIndex = 0;
   unsigned PilotCount = 0;
+  unsigned LoopCount;
   char FileNameOut[64];
   char FileNameOut1[64];
   FILE *RxFreqFile = NULL;
   FILE *RxDemodFile = NULL;
+
+  if (SwSync)
+  {
+    printf("RxDemodulateBufferData: WARNING: Full OFDM synchronization"
+      "not implemented in SW, will remove first symbol of packet\n");
+  }
  
   if (DebugMode)
   {
@@ -330,96 +337,111 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     return ReturnStatus;
   }
 
-  for (unsigned i = 0; i < OfdmSymbols*Nfft; i++) 
+  if (SwSync)
   {
-    if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
-      ZpIndex == (Nfft/2-1) || 
-      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
+    LoopCount = (OfdmSymbols+1)*Nfft;
+  }
+  else
+  {
+    LoopCount = OfdmSymbols*Nfft;
+  }
+
+  for (unsigned i = 0; i < LoopCount; i++) 
+  {
+    if (i < Nfft) // Implement SW synchronizer here
     {
-      if (DebugMode)
-      {
-        fprintf(RxFreqFile, "%d, %d\n", 0, 0);
-      }
-    }
-    else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
-    {
-      //printf("Pilot sub-carrier index %d\n", ZpIndex);
-#ifdef FFT
-      IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
-      IqData.im = (float)
-        (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
-#endif
-#ifdef DUC
-      IqData.re = TxBufferPtrLoop[i].re;
-      IqData.im = TxBufferPtrLoop[i].im;
-#endif
-      //IqData.re = IqData.re/DigitalGain;
-      //IqData.im = IqData.im/DigitalGain;
-      PilotData[PilotCount] = IqData;
-      ReturnStatus = EqualizerChannelEstimate(DebugMode, ModOrder,
-        PilotData[PilotCount], &ChEst, i);
-      if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-      {
-        return ReturnStatus;
-      }
-      PilotCount++;
-      if (DebugMode)
-      {
-        fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
-          IqData.im);
-      }
-#ifdef SAMPLE_DEBUG
-      if (i < 16)
-      {
-        printf("Pilot index %d removed: %d + j%d = bit %d\n", i,
-          (int)IqData.re, (int)IqData.im, 
-          (unsigned)QamDemod(IqData, (float)ModOrder));
-      }
-#endif
-    }
-    else // Data subcarrier
-    {
-      //printf("Data sub-carrier index %d\n", ZpIndex);
-#ifdef FFT
-      IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
-      IqData.im = (float)
-        (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
-#endif
-#ifdef DUC
-      IqData.re = TxBufferPtrLoop[i].re;
-      IqData.im = TxBufferPtrLoop[i].im;
-#endif
-      EqualizerData(ChEst, IqData, &tmp);
-      IqData.re = tmp.re;
-      IqData.im = tmp.im;
-      //IqData.re = IqData.re/DigitalGain;
-      //IqData.im = IqData.im/DigitalGain;
-      DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
-      if (DebugMode)
-      {
-        fprintf(RxFreqFile,"%lf, %lf\n", IqData.re, IqData.im);
-        fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
-          (float)ModOrder));
-      }
-#ifdef EQ_SAMPLE_DEBUG
-      if (i < 16)
-      {
-        RxDemodulatePrintCrealType(IqData);
-        printf("\tDemodData[%d] = %d\n", i,
-          DemodData[DataCount]);
-      }
-#endif
-      DataCount++;
-    }
-    if (ZpIndex == Nfft-1)
-    {
-      ZpIndex = 0;
     }
     else
     {
-      ZpIndex++;
-    }
-  }
+      if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+        ZpIndex == (Nfft/2-1) || 
+        ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
+      {
+        if (DebugMode)
+        {
+          fprintf(RxFreqFile, "%d, %d\n", 0, 0);
+        }
+      }
+      else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
+      {
+        //printf("Pilot sub-carrier index %d\n", ZpIndex);
+#ifdef FFT
+        IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
+        IqData.im = (float)
+          (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+        IqData.re = TxBufferPtrLoop[i].re;
+        IqData.im = TxBufferPtrLoop[i].im;
+#endif
+        //IqData.re = IqData.re/DigitalGain;
+        //IqData.im = IqData.im/DigitalGain;
+        PilotData[PilotCount] = IqData;
+        ReturnStatus = EqualizerChannelEstimate(DebugMode, ModOrder,
+          PilotData[PilotCount], &ChEst, i);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          return ReturnStatus;
+        }
+        PilotCount++;
+        if (DebugMode)
+        {
+          fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
+            IqData.im);
+        }
+#ifdef SAMPLE_DEBUG
+        if (i < 16)
+        {
+          printf("Pilot index %d removed: %d + j%d = bit %d\n", i,
+            (int)IqData.re, (int)IqData.im, 
+            (unsigned)QamDemod(IqData, (float)ModOrder));
+        }
+#endif
+      }
+      else // Data subcarrier
+      {
+        //printf("Data sub-carrier index %d\n", ZpIndex);
+#ifdef FFT
+        IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
+        IqData.im = (float)
+          (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+        IqData.re = TxBufferPtrLoop[i].re;
+        IqData.im = TxBufferPtrLoop[i].im;
+#endif
+        EqualizerData(ChEst, IqData, &tmp);
+        IqData.re = tmp.re;
+        IqData.im = tmp.im;
+        //IqData.re = IqData.re/DigitalGain;
+        //IqData.im = IqData.im/DigitalGain;
+        DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
+        if (DebugMode)
+        {
+          fprintf(RxFreqFile,"%lf, %lf\n", IqData.re, IqData.im);
+          fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
+            (float)ModOrder));
+        }
+#ifdef EQ_SAMPLE_DEBUG
+        if (i < 16)
+        {
+          RxDemodulatePrintCrealType(IqData);
+          printf("\tDemodData[%d] = %d\n", i,
+            DemodData[DataCount]);
+        }
+#endif
+        DataCount++;
+      }
+      if (ZpIndex == Nfft-1)
+      {
+        ZpIndex = 0;
+      }
+      else
+      {
+        ZpIndex++;
+      }
+    } // else (HW synchronizer)
+  } // for
 
   printf("RxDemodulateBufferData: Wrote RX Freq Domain Data to %s\n",
     FileNameOut);
@@ -770,7 +792,7 @@ void RxDemodulateCancelThread(void)
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   unsigned FileNumber, unsigned ModOrder, unsigned Nfft, unsigned
   CpLen, unsigned OfdmSymbols, Calculated_Ofdm_Parameters
-  *OfdmCalcParams)
+  *OfdmCalcParams, bool SwSync)
 {
   ReturnStatusType ReturnStatus;
   int RetVal;
@@ -783,6 +805,7 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   args.CpLen = CpLen;
   args.OfdmSymbols = OfdmSymbols;
   args.OfdmCalcParams = OfdmCalcParams;
+  args.SwSync = SwSync;
 
   ReturnStatus = RxDemodulateCheckThreadRunning();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -816,7 +839,8 @@ void *RxDemodulateThread(void *arg)
 
   ReturnStatus = RxDemodulateBufferData(args->DebugMode, 
     RX_DEMODULATE_DMA_BUFF, args->FileNumber, args->ModOrder, 
-    args->Nfft, args->CpLen, args->OfdmSymbols, args->OfdmCalcParams);
+    args->Nfft, args->CpLen, args->OfdmSymbols, args->OfdmCalcParams,
+    args->SwSync);
 
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {

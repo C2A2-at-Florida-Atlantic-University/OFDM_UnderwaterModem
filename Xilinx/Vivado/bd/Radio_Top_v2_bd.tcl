@@ -39,14 +39,14 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# dma_tlast_gen, mux
+# mux, mux
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
 
 # The design that will be created by this Tcl script contains the following 
 # block design container source references:
-# ADC_Chain, DAC_Chain, PS_Zynq
+# ADC_Chain, DAC_Chain, Ofdm_Sync_250k, PS_Zynq
 
 # Please add the sources before sourcing this Tcl script.
 
@@ -136,9 +136,10 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:axi_dma:*\
 xilinx.com:ip:system_ila:*\
+user.org:user:AXIS_Splitter:*\
+xilinx.com:ip:util_vector_logic:*\
 "
 
    set list_ips_missing ""
@@ -164,7 +165,7 @@ xilinx.com:ip:system_ila:*\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
-dma_tlast_gen\
+mux\
 mux\
 "
 
@@ -188,7 +189,7 @@ mux\
 # CHECK Block Design Container Sources
 ##################################################################
 set bCheckSources 1
-set list_bdc_active "ADC_Chain, DAC_Chain, PS_Zynq"
+set list_bdc_active "ADC_Chain, DAC_Chain, Ofdm_Sync_250k, PS_Zynq"
 
 array set map_bdc_missing {}
 set map_bdc_missing(ACTIVE) ""
@@ -198,6 +199,7 @@ if { $bCheckSources == 1 } {
    set list_check_srcs "\ 
 ADC_Chain \
 DAC_Chain \
+Ofdm_Sync_250k \
 PS_Zynq \
 "
 
@@ -233,6 +235,118 @@ if { $bCheckIPsPassed != 1 } {
 # DESIGN PROCs
 ##################################################################
 
+
+# Hierarchical cell: Loopback
+proc create_hier_cell_Loopback { parentCell nameHier } {
+
+  variable script_folder
+
+  if { $parentCell eq "" || $nameHier eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_Loopback() - Empty argument(s)!"}
+     return
+  }
+
+  # Get object for parentCell
+  set parentObj [get_bd_cells $parentCell]
+  if { $parentObj == "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
+     return
+  }
+
+  # Make sure parentObj is hier blk
+  set parentType [get_property TYPE $parentObj]
+  if { $parentType ne "hier" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     return
+  }
+
+  # Save current instance; Restore later
+  set oldCurInst [current_bd_instance .]
+
+  # Set parent object as current
+  current_bd_instance $parentObj
+
+  # Create cell and set as current instance
+  set hier_obj [create_bd_cell -type hier $nameHier]
+  current_bd_instance $hier_obj
+
+  # Create interface pins
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 M00_AXIS
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S00_AXIS
+
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m_axis
+
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m_axis1
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis0
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis2
+
+
+  # Create pins
+  create_bd_pin -dir I -type clk axis_aclk
+  create_bd_pin -dir I -type rst axis_aresetn
+  create_bd_pin -dir I tready_select
+  create_bd_pin -dir I tready_select1
+
+  # Create instance: AXIS_Splitter_0, and set properties
+  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
+
+  # Create instance: AXIS_Splitter_1, and set properties
+  set AXIS_Splitter_1 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_1 ]
+
+  # Create instance: mux_0, and set properties
+  set block_name mux
+  set block_cell_name mux_0
+  if { [catch {set mux_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $mux_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: mux_2, and set properties
+  set block_name mux
+  set block_cell_name mux_2
+  if { [catch {set mux_2 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $mux_2 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: util_vector_logic_0, and set properties
+  set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic util_vector_logic_0 ]
+  set_property -dict [ list \
+   CONFIG.C_OPERATION {or} \
+   CONFIG.C_SIZE {0} \
+   CONFIG.LOGO_FILE {data/sym_orgate.png} \
+ ] $util_vector_logic_0
+
+  # Create interface connections
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins M00_AXIS] [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins AXIS_Splitter_1/S00_AXIS]
+  connect_bd_intf_net -intf_net AXIS_Splitter_1_M00_AXIS [get_bd_intf_pins AXIS_Splitter_1/M00_AXIS] [get_bd_intf_pins mux_0/s_axis1]
+  connect_bd_intf_net -intf_net AXIS_Splitter_1_M01_AXIS [get_bd_intf_pins AXIS_Splitter_1/M01_AXIS] [get_bd_intf_pins mux_2/s_axis1]
+  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins s_axis2] [get_bd_intf_pins mux_2/s_axis0]
+  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins m_axis1] [get_bd_intf_pins mux_2/m_axis]
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins S00_AXIS] [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS]
+  connect_bd_intf_net -intf_net dma_tlast_gen_0_m_axis [get_bd_intf_pins s_axis0] [get_bd_intf_pins mux_0/s_axis0]
+  connect_bd_intf_net -intf_net mux_0_m_axis [get_bd_intf_pins m_axis] [get_bd_intf_pins mux_0/m_axis]
+
+  # Create port connections
+  connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins axis_aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins mux_2/axis_aclk]
+  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins axis_aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins mux_2/axis_aresetn]
+  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins tready_select] [get_bd_pins mux_0/i_select] [get_bd_pins util_vector_logic_0/Op1]
+  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins tready_select1] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins mux_2/i_select] [get_bd_pins util_vector_logic_0/Op2]
+  connect_bd_net -net util_vector_logic_0_Res [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins util_vector_logic_0/Res]
+
+  # Restore current instance
+  current_bd_instance $oldCurInst
+}
 
 
 # Procedure to create entire design; Provide argument to make
@@ -292,9 +406,6 @@ proc create_root_design { parentCell } {
    CONFIG.LOCK_PROPAGATE {0} \
  ] $ADC_Chain_0
 
-  # Create instance: AXIS_Splitter_0, and set properties
-  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
-
   # Create instance: DAC_Chain_0, and set properties
   set DAC_Chain_0 [ create_bd_cell -type container -reference DAC_Chain DAC_Chain_0 ]
   set_property -dict [ list \
@@ -305,6 +416,20 @@ proc create_root_design { parentCell } {
    CONFIG.LIST_SYNTH_BD {DAC_Chain.bd} \
    CONFIG.LOCK_PROPAGATE {0} \
  ] $DAC_Chain_0
+
+  # Create instance: Loopback
+  create_hier_cell_Loopback [current_bd_instance .] Loopback
+
+  # Create instance: Ofdm_Sync_250k_0, and set properties
+  set Ofdm_Sync_250k_0 [ create_bd_cell -type container -reference Ofdm_Sync_250k Ofdm_Sync_250k_0 ]
+  set_property -dict [ list \
+   CONFIG.ACTIVE_SIM_BD {Ofdm_Sync_250k.bd} \
+   CONFIG.ACTIVE_SYNTH_BD {Ofdm_Sync_250k.bd} \
+   CONFIG.ENABLE_DFX {0} \
+   CONFIG.LIST_SIM_BD {Ofdm_Sync_250k.bd} \
+   CONFIG.LIST_SYNTH_BD {Ofdm_Sync_250k.bd} \
+   CONFIG.LOCK_PROPAGATE {0} \
+ ] $Ofdm_Sync_250k_0
 
   # Create instance: PS_Zynq_0, and set properties
   set PS_Zynq_0 [ create_bd_cell -type container -reference PS_Zynq PS_Zynq_0 ]
@@ -328,28 +453,6 @@ proc create_root_design { parentCell } {
    CONFIG.c_sg_length_width {26} \
  ] $axi_dma_0
 
-  # Create instance: dma_tlast_gen_0, and set properties
-  set block_name dma_tlast_gen
-  set block_cell_name dma_tlast_gen_0
-  if { [catch {set dma_tlast_gen_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $dma_tlast_gen_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
-  # Create instance: mux_0, and set properties
-  set block_name mux
-  set block_cell_name mux_0
-  if { [catch {set mux_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $mux_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
   # Create instance: system_ila_data, and set properties
   set system_ila_data [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_data ]
   set_property -dict [ list \
@@ -357,56 +460,61 @@ proc create_root_design { parentCell } {
    CONFIG.C_ADV_TRIGGER {false} \
    CONFIG.C_DATA_DEPTH {1024} \
    CONFIG.C_EN_STRG_QUAL {1} \
-   CONFIG.C_MON_TYPE {MIX} \
-   CONFIG.C_NUM_MONITOR_SLOTS {1} \
-   CONFIG.C_NUM_OF_PROBES {6} \
+   CONFIG.C_MON_TYPE {INTERFACE} \
+   CONFIG.C_NUM_MONITOR_SLOTS {2} \
+   CONFIG.C_NUM_OF_PROBES {1} \
    CONFIG.C_PROBE0_MU_CNT {2} \
    CONFIG.C_PROBE1_MU_CNT {2} \
    CONFIG.C_PROBE2_MU_CNT {2} \
    CONFIG.C_PROBE3_MU_CNT {2} \
    CONFIG.C_PROBE4_MU_CNT {2} \
    CONFIG.C_PROBE5_MU_CNT {2} \
-   CONFIG.C_SLOT {0} \
+   CONFIG.C_SLOT {1} \
    CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
    CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
  ] $system_ila_data
 
   # Create interface connections
-  connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins dma_tlast_gen_0/s_axis]
+  connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins Loopback/s_axis2]
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS_DDS [get_bd_intf_pins ADC_Chain_0/M_AXIS_DDS] [get_bd_intf_pins DAC_Chain_0/S_AXIS_DDS]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins DAC_Chain_0/S_AXIS]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins mux_0/s_axis1]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins DAC_Chain_0/S_AXIS] [get_bd_intf_pins Loopback/M00_AXIS]
   connect_bd_intf_net -intf_net PS_Zynq_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins PS_Zynq_0/DDR]
   connect_bd_intf_net -intf_net PS_Zynq_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins PS_Zynq_0/FIXED_IO]
   connect_bd_intf_net -intf_net PS_Zynq_0_M_AXI_DMA [get_bd_intf_pins PS_Zynq_0/M_AXI_DMA] [get_bd_intf_pins axi_dma_0/S_AXI_LITE]
-  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S]
+  connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_pins Loopback/m_axis1] [get_bd_intf_pins Ofdm_Sync_250k_0/S_AXIS]
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins Loopback/S00_AXIS] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S]
 connect_bd_intf_net -intf_net [get_bd_intf_nets axi_dma_0_M_AXIS_MM2S] [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins system_ila_data/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins PS_Zynq_0/S_AXI_DMA_HP1] [get_bd_intf_pins axi_dma_0/M_AXI_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins PS_Zynq_0/S_AXI_DMA_HP0] [get_bd_intf_pins axi_dma_0/M_AXI_S2MM]
-  connect_bd_intf_net -intf_net dma_tlast_gen_0_m_axis [get_bd_intf_pins dma_tlast_gen_0/m_axis] [get_bd_intf_pins mux_0/s_axis0]
-  connect_bd_intf_net -intf_net mux_0_m_axis [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins mux_0/m_axis]
+  connect_bd_intf_net -intf_net mux_1_m_axis [get_bd_intf_pins Loopback/m_axis] [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM]
+connect_bd_intf_net -intf_net [get_bd_intf_nets mux_1_m_axis] [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins system_ila_data/SLOT_1_AXIS]
+  connect_bd_intf_net -intf_net s_axis0_1 [get_bd_intf_pins Loopback/s_axis0] [get_bd_intf_pins Ofdm_Sync_250k_0/M_AXIS]
 
   # Create port connections
   connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
-  connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus] [get_bd_pins system_ila_data/probe5]
+  connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus]
   connect_bd_net -net ADCdata_0_1 [get_bd_ports ADCdata] [get_bd_pins ADC_Chain_0/ADCdata]
   connect_bd_net -net DAC_Chain_0_ClockToDAC_0 [get_bd_ports DACclock] [get_bd_pins DAC_Chain_0/ClockToDAC]
   connect_bd_net -net DAC_Chain_0_DAC_data_0 [get_bd_ports DACdata] [get_bd_pins DAC_Chain_0/DAC_data]
   connect_bd_net -net DAC_Chain_0_DAC_sleep_0 [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep]
   connect_bd_net -net DAC_Chain_0_PA_enable_0 [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable]
-  connect_bd_net -net PS_Zynq_0_ADCcontrol [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol] [get_bd_pins system_ila_data/probe4]
-  connect_bd_net -net PS_Zynq_0_DACcontrol [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol] [get_bd_pins system_ila_data/probe3]
-  connect_bd_net -net PS_Zynq_0_Fc_scaled [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/Fc_scaled] [get_bd_pins system_ila_data/probe1]
+  connect_bd_net -net PS_Zynq_0_ADCcontrol [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol]
+  connect_bd_net -net PS_Zynq_0_DACcontrol [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol]
+  connect_bd_net -net PS_Zynq_0_Fc_scaled [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/Fc_scaled]
   connect_bd_net -net PS_Zynq_0_Interp_ratio [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
-  connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins DAC_Chain_0/aclk] [get_bd_pins PS_Zynq_0/aclk_100M] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins dma_tlast_gen_0/axis_aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins system_ila_data/clk]
+  connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins DAC_Chain_0/aclk] [get_bd_pins Loopback/axis_aclk] [get_bd_pins Ofdm_Sync_250k_0/aclk] [get_bd_pins PS_Zynq_0/aclk_100M] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins system_ila_data/clk]
   connect_bd_net -net PS_Zynq_0_aclk_40M [get_bd_pins ADC_Chain_0/aclk_40M] [get_bd_pins PS_Zynq_0/aclk_40M]
-  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins dma_tlast_gen_0/axis_aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins system_ila_data/resetn]
+  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins Loopback/axis_aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins system_ila_data/resetn]
   connect_bd_net -net PS_Zynq_0_aresetn_40M [get_bd_pins ADC_Chain_0/aresetn_40M] [get_bd_pins PS_Zynq_0/aresetn_40M]
-  connect_bd_net -net PS_Zynq_0_decimate_ratio [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio] [get_bd_pins system_ila_data/probe2]
-  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins PS_Zynq_0/dma_loopback] [get_bd_pins mux_0/i_select]
+  connect_bd_net -net PS_Zynq_0_cp_len [get_bd_pins Ofdm_Sync_250k_0/i_cp_len] [get_bd_pins PS_Zynq_0/cp_len]
+  connect_bd_net -net PS_Zynq_0_decimate_ratio [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio]
+  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins Loopback/tready_select] [get_bd_pins PS_Zynq_0/dma_loopback]
+  connect_bd_net -net PS_Zynq_0_nfft [get_bd_pins Ofdm_Sync_250k_0/i_nfft] [get_bd_pins PS_Zynq_0/nfft]
+  connect_bd_net -net PS_Zynq_0_symbols [get_bd_pins Ofdm_Sync_250k_0/i_symbols] [get_bd_pins PS_Zynq_0/symbols]
+  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins Loopback/tready_select1] [get_bd_pins PS_Zynq_0/sync_loopback]
+  connect_bd_net -net PS_Zynq_0_threshold [get_bd_pins Ofdm_Sync_250k_0/i_threshold] [get_bd_pins PS_Zynq_0/threshold]
   connect_bd_net -net aclk_10M_1 [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
   connect_bd_net -net aresetn_10M_1 [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
-  connect_bd_net -net dma_tlast_gen_0_o_div [get_bd_pins dma_tlast_gen_0/o_div] [get_bd_pins system_ila_data/probe0]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] -force

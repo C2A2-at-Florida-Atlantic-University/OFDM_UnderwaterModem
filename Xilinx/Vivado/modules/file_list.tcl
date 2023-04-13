@@ -13,7 +13,10 @@ add_files -fileset sim_1 sim/synchronizer_tb.sv
 
 # Add instantiated IQ
 import_ip ip/mult_gen_0.xci
+import_ip ip/ila_0.xci
 upgrade_ip [get_ips {*}]
+set_property generate_synth_checkpoint 0 [get_files mult_gen_0.xci]
+set_property generate_synth_checkpoint 0 [get_files ila_0.xci]
 
 # Add ip repo
 set_property  ip_repo_paths  $FAU_OFDM_REPO_PATH/Xilinx/Vivado/ip_repo [current_project]

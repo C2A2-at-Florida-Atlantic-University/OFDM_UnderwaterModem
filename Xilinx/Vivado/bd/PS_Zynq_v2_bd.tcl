@@ -195,6 +195,8 @@ proc create_hier_cell_regs { parentCell nameHier } {
 
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI1
 
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI2
+
 
   # Create pins
   create_bd_pin -dir O -from 3 -to 0 ADCcontrol
@@ -204,8 +206,13 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 15 -to 0 Interp_ratio
   create_bd_pin -dir I -type clk aclk_100M
   create_bd_pin -dir I -type rst aresetn_100M
+  create_bd_pin -dir O -from 11 -to 0 cp_len
   create_bd_pin -dir O -from 15 -to 0 decimate_ratio
   create_bd_pin -dir O -from 0 -to 0 dma_loopback
+  create_bd_pin -dir O -from 11 -to 0 nfft
+  create_bd_pin -dir O -from 3 -to 0 symbols
+  create_bd_pin -dir O -from 0 -to 0 sync_loopback
+  create_bd_pin -dir O -from 31 -to 0 threshold
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_0 ]
@@ -223,9 +230,22 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set_property -dict [ list \
    CONFIG.C_ALL_INPUTS {1} \
    CONFIG.C_ALL_OUTPUTS_2 {1} \
-   CONFIG.C_GPIO2_WIDTH {17} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x00020028} \
+   CONFIG.C_GPIO2_WIDTH {21} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_1
+
+  # Create instance: axi_gpio_2, and set properties
+  set axi_gpio_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_2 ]
+  set_property -dict [ list \
+   CONFIG.C_ALL_INPUTS {0} \
+   CONFIG.C_ALL_OUTPUTS {1} \
+   CONFIG.C_ALL_OUTPUTS_2 {1} \
+   CONFIG.C_DOUT_DEFAULT {0x0002D464} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x00100400} \
+   CONFIG.C_GPIO2_WIDTH {25} \
+   CONFIG.C_IS_DUAL {1} \
+ ] $axi_gpio_2
 
   # Create instance: delimiter_0, and set properties
   set delimiter_0 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_0 ]
@@ -240,11 +260,24 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: delimiter_1, and set properties
   set delimiter_1 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_1 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {17} \
+   CONFIG.IN0_WIDTH {21} \
+   CONFIG.NUM_OUTPUTS {3} \
    CONFIG.OUT0_WIDTH {16} \
+   CONFIG.OUT2_WIDTH {4} \
  ] $delimiter_1
 
+  # Create instance: delimiter_2, and set properties
+  set delimiter_2 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_2 ]
+  set_property -dict [ list \
+   CONFIG.IN0_WIDTH {25} \
+   CONFIG.NUM_OUTPUTS {3} \
+   CONFIG.OUT0_WIDTH {12} \
+   CONFIG.OUT1_WIDTH {12} \
+   CONFIG.OUT2_WIDTH {1} \
+ ] $delimiter_2
+
   # Create interface connections
+  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins S_AXI2] [get_bd_intf_pins axi_gpio_2/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M02_AXI [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
 
@@ -252,14 +285,20 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins delimiter_0/IN0]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins Fc_scaled] [get_bd_pins axi_gpio_0/gpio_io_o]
   connect_bd_net -net axi_gpio_1_gpio2_io_o [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins delimiter_1/IN0]
+  connect_bd_net -net axi_gpio_2_gpio2_io_o [get_bd_pins axi_gpio_2/gpio2_io_o] [get_bd_pins delimiter_2/IN0]
+  connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins threshold] [get_bd_pins axi_gpio_2/gpio_io_o]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
   connect_bd_net -net delimiter_0_OUT2 [get_bd_pins ADCcontrol] [get_bd_pins delimiter_0/OUT2]
   connect_bd_net -net delimiter_1_OUT0 [get_bd_pins Interp_ratio] [get_bd_pins delimiter_1/OUT0]
   connect_bd_net -net delimiter_1_OUT1 [get_bd_pins dma_loopback] [get_bd_pins delimiter_1/OUT1]
+  connect_bd_net -net delimiter_1_OUT2 [get_bd_pins symbols] [get_bd_pins delimiter_1/OUT2]
+  connect_bd_net -net delimiter_2_OUT0 [get_bd_pins nfft] [get_bd_pins delimiter_2/OUT0]
+  connect_bd_net -net delimiter_2_OUT1 [get_bd_pins cp_len] [get_bd_pins delimiter_2/OUT1]
+  connect_bd_net -net delimiter_2_OUT2 [get_bd_pins sync_loopback] [get_bd_pins delimiter_2/OUT2]
   connect_bd_net -net gpio_io_i_0_1 [get_bd_pins ADCstatus] [get_bd_pins axi_gpio_1/gpio_io_i]
-  connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn]
-  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk]
+  connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn]
+  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -311,24 +350,24 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
   create_bd_pin -dir I -type rst ext_reset_in
   create_bd_pin -dir O -from 0 -to 0 -type rst interconnect_aresetn_100M
 
-  # Create instance: proc_sys_reset_0, and set properties
-  set proc_sys_reset_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0 ]
-
   # Create instance: proc_sys_reset_100M, and set properties
   set proc_sys_reset_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_100M ]
 
   # Create instance: proc_sys_reset_10M, and set properties
   set proc_sys_reset_10M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_10M ]
 
+  # Create instance: proc_sys_reset_40M, and set properties
+  set proc_sys_reset_40M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_40M ]
+
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins interconnect_aresetn_100M] [get_bd_pins proc_sys_reset_100M/interconnect_aresetn]
-  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins aresetn_40M] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
+  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins aresetn_40M] [get_bd_pins proc_sys_reset_40M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins proc_sys_reset_100M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_10M_peripheral_aresetn [get_bd_pins aresetn_10M] [get_bd_pins proc_sys_reset_10M/peripheral_aresetn]
   connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins aclk_10M] [get_bd_pins proc_sys_reset_10M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins proc_sys_reset_100M/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins aclk_40M] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins proc_sys_reset_100M/ext_reset_in] [get_bd_pins proc_sys_reset_10M/ext_reset_in]
+  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins aclk_40M] [get_bd_pins proc_sys_reset_40M/slowest_sync_clk]
+  connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_100M/ext_reset_in] [get_bd_pins proc_sys_reset_10M/ext_reset_in] [get_bd_pins proc_sys_reset_40M/ext_reset_in]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -457,8 +496,13 @@ proc create_root_design { parentCell } {
   set aresetn_100M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_100M ]
   set aresetn_10M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_10M ]
   set aresetn_40M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_40M ]
+  set cp_len [ create_bd_port -dir O -from 11 -to 0 cp_len ]
   set decimate_ratio [ create_bd_port -dir O -from 15 -to 0 decimate_ratio ]
   set dma_loopback [ create_bd_port -dir O -from 0 -to 0 dma_loopback ]
+  set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
+  set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
+  set sync_loopback [ create_bd_port -dir O -from 0 -to 0 sync_loopback ]
+  set threshold [ create_bd_port -dir O -from 31 -to 0 threshold ]
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect axi_interconnect_0 ]
@@ -1273,7 +1317,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   # Create instance: smartconnect_0, and set properties
   set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect smartconnect_0 ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {3} \
+   CONFIG.NUM_MI {4} \
    CONFIG.NUM_SI {1} \
  ] $smartconnect_0
 
@@ -1287,6 +1331,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_ports M_AXI_DMA] [get_bd_intf_pins smartconnect_0/M00_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins regs/S_AXI] [get_bd_intf_pins smartconnect_0/M01_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M02_AXI [get_bd_intf_pins regs/S_AXI1] [get_bd_intf_pins smartconnect_0/M02_AXI]
+  connect_bd_intf_net -intf_net smartconnect_0_M03_AXI [get_bd_intf_pins regs/S_AXI2] [get_bd_intf_pins smartconnect_0/M03_AXI]
 
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_0/S01_ARESETN] [get_bd_pins proc_sys_reset/interconnect_aresetn_100M] [get_bd_pins smartconnect_0/aresetn]
@@ -1303,12 +1348,18 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_ports aclk_40M] [get_bd_pins proc_sys_reset/aclk_40M] [get_bd_pins processing_system7_0/FCLK_CLK2]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins proc_sys_reset/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
   connect_bd_net -net regs_OUT0_0 [get_bd_ports Interp_ratio] [get_bd_pins regs/Interp_ratio]
+  connect_bd_net -net regs_OUT0_1 [get_bd_ports nfft] [get_bd_pins regs/nfft]
   connect_bd_net -net regs_OUT1_0 [get_bd_ports dma_loopback] [get_bd_pins regs/dma_loopback]
+  connect_bd_net -net regs_OUT1_1 [get_bd_ports cp_len] [get_bd_pins regs/cp_len]
+  connect_bd_net -net regs_OUT2_0 [get_bd_ports symbols] [get_bd_pins regs/symbols]
+  connect_bd_net -net regs_OUT2_1 [get_bd_ports sync_loopback] [get_bd_pins regs/sync_loopback]
+  connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI_DMA/Reg] -force
   assign_bd_address -offset 0x40010000 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x40010200 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_1/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010100 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_1/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010200 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_2/S_AXI/Reg] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP0] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP1] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
 

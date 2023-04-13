@@ -35,11 +35,13 @@ int main(int argc, char **argv)
   unsigned DmaLoopSel;
   unsigned ScalarGain;
   unsigned RxThread;
+  unsigned SyncThreshold;
   int TxGainDb;
   int RxGainDb;
   int DebugSelection;
   bool DebugMode;
   bool GlobalMute;
+  bool SwSynchronization;
   char FileName[32];
   ReturnStatusType ReturnStatus;
 
@@ -89,7 +91,12 @@ int main(int argc, char **argv)
   TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
   RxGainDb = DEFAULT_RX_GAIN_DB;
 
+  SyncThreshold = DEFAULT_SYNC_THRESHOLD;
+
   CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+
+  SwSynchronization = false;
+
   ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
     CenterFreq);
 
@@ -112,6 +119,8 @@ int main(int argc, char **argv)
   HwInterfaceDisableAdc();         // Disable ADC
   DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
     OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
+  HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, OfdmParams.CpLen,
+    OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold);
 #endif
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
@@ -150,16 +159,18 @@ int main(int argc, char **argv)
     printf("3  - Enter OFDM Timing Parameters\n");
     printf("4  - Enter TX/RX Gain (dBFS)/(dB)\n");
     printf("5  - Enter Center Frequency\n");
-    printf("6  - Display OFDM Parameters\n");
-    printf("7  - Transmit Single OFDM Frame from File\n");
-    printf("8  - Write Transmitted Sub-Carriers to File\n");
-    printf("9  - Demod TX Buffer to File\n");
-    printf("10 - Start/Stop RX Demod Thread\n");
-    printf("11 - Demod RX Injection to File\n");
-    printf("12 - Compute BER/SER\n");
-    printf("13 - Start S2MM DMA\n");
-    printf("14 - Stop S2MM DMA\n");
-    printf("15 - Enable/Disable DMA loopback\n");
+    printf("6  - Enter Synchronizer Threshold\n");
+    printf("7  - Display OFDM Parameters\n");
+    printf("8  - Transmit Single OFDM Frame from File\n");
+    printf("9  - Write Transmitted Sub-Carriers to File\n");
+    printf("10 - Demod TX Buffer to File\n");
+    printf("11 - Start/Stop RX Demod Thread\n");
+    printf("12 - Demod RX Injection to File\n");
+    printf("13 - Compute BER/SER\n");
+    printf("14 - Start S2MM DMA\n");
+    printf("15 - Stop S2MM DMA\n");
+    printf("16 - Enable/Disable DMA loopback\n");
+    printf("17 - Enable/Disable SW synchronization\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -279,6 +290,14 @@ int main(int argc, char **argv)
         break;
 
       case 6:
+        printf("\tEnter Synchronizer Threshold: ");
+        ScanfRet = scanf("%x", &SyncThreshold);
+        HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
+          OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
+          SyncThreshold);
+        break;
+
+      case 7:
         printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
         printf("\tBandwidth:                %d kHz\n", 
@@ -335,7 +354,7 @@ int main(int argc, char **argv)
 
         break;
 
-      case 7:
+      case 8:
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -408,6 +427,9 @@ int main(int argc, char **argv)
 
 #ifndef NO_DEVMEM
           HwInterfaceConfigureDucInterpRatio(DacParams.Interp);
+          HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
+            OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
+            SyncThreshold);
           HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes);
           HwInterfaceDisableDac();
@@ -429,7 +451,7 @@ int main(int argc, char **argv)
 //        }
         break;
 
-      case 8:
+      case 9:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = TxModulateWriteToFile(FileNumber, 
@@ -441,7 +463,7 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 9:
+      case 10:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
 #ifdef DAC
@@ -454,11 +476,17 @@ int main(int argc, char **argv)
           break;
         }
 #endif
+#ifndef NO_DEVMEM
+        HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
+          OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
+          SyncThreshold);
+#endif
 
         ReturnStatus = RxDemodulateBufferData(DebugMode,
           RX_DEMODULATE_TX_LOOPBACK, FileNumber, 
           OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams,
+          SwSynchronization);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -466,16 +494,22 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 10:
+      case 11:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         printf("Enter Thread Selection ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &RxThread);
+#ifndef NO_DEVMEM
+        HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
+          OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
+          SyncThreshold);
+#endif
         if (RxThread == 1)
         {
           ReturnStatus = RxDemodulateCreateThread(DebugMode, FileNumber,
             OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
-            OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+            OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams,
+            SwSynchronization);
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
@@ -487,16 +521,22 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 11:
+      case 12:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
+#ifndef NO_DEVMEM
+        HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
+          OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
+          SyncThreshold);
+#endif
         ReturnStatus = RxDemodulateBufferData(DebugMode, 
           RX_DEMODULATE_FILE_INJECTION, FileNumber, OfdmParams.ModOrder,
           OfdmParams.Nfft, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams,
+          SwSynchronization);
         break;
 
-      case 12:
+      case 13:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = Ber(true, FileNumber, OfdmParams.ModOrder,
@@ -510,7 +550,7 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 13:
+      case 14:
         ReturnStatus = DirectDmaPlToPsThread();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -518,11 +558,11 @@ int main(int argc, char **argv)
         }
         break;
 
-      case 14:
+      case 15:
         DirectDmaPlToPsThreadCancel();
         break;
 
-      case 15:
+      case 16:
         printf("Enable/Disable DMA loopback (1/0): ");
         ScanfRet = scanf("%d", &DmaLoopSel);
         if (!(DmaLoopSel == 0 || DmaLoopSel == 1))
@@ -531,6 +571,19 @@ int main(int argc, char **argv)
           break;
         }
         HwInterfaceDmaLoopback(DmaLoopSel);
+        break;
+
+      case 17:
+        printf("Enter Selection ('0'-Off / '1'-On ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          SwSynchronization = false;
+        }
+        else
+        {
+          SwSynchronization = true;
+        }
         break;
 
       default:

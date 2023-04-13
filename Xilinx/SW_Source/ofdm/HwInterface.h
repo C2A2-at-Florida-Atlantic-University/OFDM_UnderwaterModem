@@ -11,7 +11,8 @@
 #define DEFAULT_RX_GAIN_DB 30 // in dB
 
 #define GPIO_0_BASE_ADDR 0x40010000
-#define GPIO_1_BASE_ADDR 0x40010200
+#define GPIO_1_BASE_ADDR 0x40010100
+#define GPIO_2_BASE_ADDR 0x40010200
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -42,6 +43,24 @@
 #define DMA_LOOPBACK_OFFSET 0x8
 #define DMA_LOOPBACK_MASK_OFFSET 16
 #define DMA_LOOPBACK_MASK 0x00010000
+
+#define OFDM_SYMBOLS_OFFSET 0x8
+#define OFDM_SYMBOLS_MASK_OFFSET 17
+#define OFDM_SYMBOLS_MASK 0x001E0000
+
+#define SYNC_THRESHOLD_OFFSET 0x0
+#define SYNC_THRESHOLD_MASK 0xFFFFFFFF
+
+#define NFFT_OFFSET 0x8
+#define NFFT_MASK 0x00000FFF
+
+#define CP_LEN_OFFSET 0x8
+#define CP_LEN_MASK_OFFSET 12
+#define CP_LEN_MASK 0x00FFF000
+
+#define SYNC_LOOPBACK_OFFSET 0x8
+#define SYNC_LOOPBACK_MASK_OFFSET 24
+#define SYNC_LOOPBACK_MASK 0x01000000
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -131,5 +150,7 @@ unsigned HwInterfaceReturnAdcStatus(void);
 void HwInterfaceConfigureDucInterpRatio(unsigned Ratio);
 void HwInterfaceDmaLoopback(unsigned Enable);
 void HwInterfaceSetGlobalMute(bool GlobalMuteSelect);
+void HwInterfaceConfigureSynchronizer(unsigned nfft, unsigned CpLen,
+  unsigned OfdmSymbols, unsigned Threshold);
 
 #endif

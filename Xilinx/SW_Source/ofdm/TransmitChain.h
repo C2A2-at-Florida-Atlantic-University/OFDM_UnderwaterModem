@@ -17,15 +17,17 @@
 #define U_DAC_ACCURACY 8192 // 14-bit unsigned DAC
 
 // User default parameters
-#define DEFAULT_NFFT 256
+#define DEFAULT_NFFT 4096
 #define DEFAULT_BANDWIDTH 250 // in kHz
-#define DEFAULT_CP_LEN 32 // in Samples
+#define DEFAULT_CP_LEN 256 // in Samples
 #define DEFAULT_ZP_DENSITY 50 // in percent
 #define DEFAULT_MOD_ORDER 16 // QPSK
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
 #define DEFAULT_FRAME_GUARD_PERIOD 5 // in ms
-#define DEFAULT_SYMBOlS_PER_FRAME 2
+#define DEFAULT_SYMBOlS_PER_FRAME 5
+
+#define DEFAULT_SYNC_THRESHOLD 0x0002D464
 
 typedef struct {
   unsigned Nfft;

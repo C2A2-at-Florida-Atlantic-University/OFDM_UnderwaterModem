@@ -513,18 +513,20 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   ReturnStatusType ReturnStatus;
   FILE *IfftFile = NULL;
   FILE *IfftFileInt = NULL;
+  FILE *ZcFile = NULL;
   cint16_T IfftInData[MAX_NFFT];
   emxArray_creal_T *IfftOutStruct;
-  char FileName[32];
+  char FileName[64];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
+  double tmp_i, tmp_q;
   creal_T *IfftOutData;
 
 #ifdef DUC
-  DucBufferPtr = (int32_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+  DucBufferPtr = (int32_T *)malloc((CpLen+Nfft)*(OfdmSymbols+1)*16);
 #endif
 #ifdef DAC
-  DucBufferPtr = (creal_T *)malloc((CpLen+Nfft)*OfdmSymbols*16);
+  DucBufferPtr = (creal_T *)malloc((CpLen+Nfft)*(OfdmSymbols+1)*16);
 #endif
   if (DucBufferPtr == NULL)
   {
@@ -533,7 +535,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       "TxModulateIfft: Could not malloc DucBufferPtr\n");
     return ReturnStatus;
   }
-  memset(DucBufferPtr, 0, (CpLen+Nfft)*OfdmSymbols*16);
+  memset(DucBufferPtr, 0, (CpLen+Nfft)*(OfdmSymbols+1)*16);
 
   // Set up structs for Ifft function
   IfftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
@@ -583,60 +585,92 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     }
     fprintf(IfftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
-
-  for (unsigned i = 0; i < OfdmSymbols; i++)
+  sprintf(FileName, "files/zc_seq_time_%d_nfft_%d_ZC_13_root.txt",
+    Nfft, Nfft/2);
+  ZcFile = fopen(FileName, "w");
+  if (ZcFile == NULL)
   {
-    for (unsigned j = 0; j < Nfft; j++)
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "TxModulateIfft: Failed to open %s\n", FileName);
+    return ReturnStatus;
+  }
+
+  for (unsigned i = 0; i < OfdmSymbols+1; i++)
+  {
+    if (i == 0) // Synchronization symbol
     {
-#ifdef FFT
-      IfftInData[j].re = ((int16_T)(*(IfftBufferPtr+j+(Nfft*i))));
-      IfftInData[j].im = 
-        (int16_T)
-        ((((int32_T)(*(IfftBufferPtr+j+(Nfft*i))))&0xFFFF0000)>>16);
-#endif
-#ifdef DUC
-      //IfftInData[j].re = IfftBufferPtr[j+(Nfft*i)].re; // Normal
-      //IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
-      //FftShift
-      if (j < Nfft/2)
-      {
-        IfftInData[j+Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
-        IfftInData[j+Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
-      }
-      else
-      {
-        IfftInData[j-Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
-        IfftInData[j-Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
-      }
-#endif
     }
+    else // Data symbols
+    {
+      for (unsigned j = 0; j < Nfft; j++)
+      {
+#ifdef FFT
+        IfftInData[j].re = ((int16_T)(*(IfftBufferPtr+j+(Nfft*i))));
+        IfftInData[j].im = 
+          (int16_T)
+          ((((int32_T)(*(IfftBufferPtr+j+(Nfft*i))))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+        //IfftInData[j].re = IfftBufferPtr[j+(Nfft*i)].re; // Normal
+        //IfftInData[j].im = IfftBufferPtr[j+(Nfft*i)].im;
+        //FftShift
+        if (j < Nfft/2)
+        {
+          IfftInData[j+Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
+          IfftInData[j+Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+        }
+        else
+        {
+          IfftInData[j-Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
+          IfftInData[j-Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+        }
+#endif
+      }
     Ifft(IfftInData,NfftSize,Nfft,IfftOutStruct);
+    }
     for (unsigned j = 0; j < Nfft; j++)
     {
-      // Apply cyclic prefix (CP)
-      if (j >= (Nfft - CpLen))
+      if (i == 0) // Synchronization symbol
       {
+        // Instead of putting the CP at the beginning of the 
+        // synchronization symbol, put a guard period (same
+        // length as CP) at the end of the synchronization symbol
+        if (j < (CpLen))
+        {
+          DucBufferPtr[j+Nfft] = 0x00000000;
+        }
+        fscanf(ZcFile,"%lf, %lf\n", &tmp_i, &tmp_q);
+        DucBufferPtr[j] = ((((int32_T)tmp_q)<<16)&0xFFFF0000)+
+          (int16_T)tmp_i;
+      }
+      else // Data symbols
+      {
+        // Apply cyclic prefix (CP)
+        if (j >= (Nfft - CpLen))
+        {
 #ifdef DUC
-        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)] = 
+          DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)] = 
+            ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
+            ((int16_T)IfftOutData[j].re);
+#endif
+#ifdef DAC
+          DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].re = 
+            IfftOutData[j].re;
+          DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].im = 
+            IfftOutData[j].im;
+#endif
+        }
+#ifdef DUC
+        DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen] = 
           ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
           ((int16_T)IfftOutData[j].re);
 #endif
 #ifdef DAC
-        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].re = 
-          IfftOutData[j].re;
-        DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)].im = 
-          IfftOutData[j].im;
+        DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].re = IfftOutData[j].re;
+        DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].im = IfftOutData[j].im;
 #endif
       }
-#ifdef DUC
-      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen] = 
-        ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
-        ((int16_T)IfftOutData[j].re);
-#endif
-#ifdef DAC
-      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].re = IfftOutData[j].re;
-      DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen].im = IfftOutData[j].im;
-#endif
 
       // Check for saturation
       if (IfftOutData[j].re > U_DAC_ACCURACY || 
@@ -644,7 +678,8 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       {
         ReturnStatus.Status = RETURN_STATUS_FAIL;
         sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
-          "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
+          "Signal Saturation with Scalar Gain of %d, "
+          "symbol %d, sample %d\n", DigitalGain, i, j);
         return ReturnStatus;
       }
 #ifdef SAMPLE_DEBUG
@@ -664,7 +699,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   // Print IFFT output to file
   if (DebugMode)
   {
-    for (unsigned i = 0; i < (Nfft+CpLen)*OfdmSymbols; i++)
+    for (unsigned i = 0; i < (Nfft+CpLen)*(OfdmSymbols+1); i++)
     {
 #ifdef DUC
       fprintf(IfftFile, "%lf, %lf\n", 
@@ -694,6 +729,10 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     {
       fclose(IfftFile);
     }
+  }
+  if (ZcFile != NULL)
+  {
+    fclose(ZcFile);
   }
 
   free(IfftOutData);
