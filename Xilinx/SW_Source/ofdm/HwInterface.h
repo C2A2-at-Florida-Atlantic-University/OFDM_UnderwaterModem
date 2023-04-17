@@ -11,8 +11,8 @@
 #define DEFAULT_RX_GAIN_DB 30 // in dB
 
 #define GPIO_0_BASE_ADDR 0x40010000
-#define GPIO_1_BASE_ADDR 0x40010100
-#define GPIO_2_BASE_ADDR 0x40010200
+#define GPIO_1_BASE_ADDR 0x40010200
+#define GPIO_2_BASE_ADDR 0x40010400
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -34,17 +34,17 @@
 #define ADC_ENABLE 0x1
 #define ADC_DISABLE 0x0
 
-#define ADC_STATUS_OFFSET 0x0
+#define ADC_STATUS_OFFSET 0x8
 #define ADC_STATUS_MASK 0xFFFFFFFF
 
-#define DUC_INTERP_RATIO_OFFSET 0x8
+#define DUC_INTERP_RATIO_OFFSET 0x0
 #define DUC_INTERP_RATIO_MASK 0x0000FFFF
 
-#define DMA_LOOPBACK_OFFSET 0x8
+#define DMA_LOOPBACK_OFFSET 0x0
 #define DMA_LOOPBACK_MASK_OFFSET 16
 #define DMA_LOOPBACK_MASK 0x00010000
 
-#define OFDM_SYMBOLS_OFFSET 0x8
+#define OFDM_SYMBOLS_OFFSET 0x0
 #define OFDM_SYMBOLS_MASK_OFFSET 17
 #define OFDM_SYMBOLS_MASK 0x001E0000
 
@@ -149,6 +149,7 @@ void HwInterfaceDisableAdc(void);
 unsigned HwInterfaceReturnAdcStatus(void);
 void HwInterfaceConfigureDucInterpRatio(unsigned Ratio);
 void HwInterfaceDmaLoopback(unsigned Enable);
+void HwInterfaceSyncLoopback(unsigned Enable);
 void HwInterfaceSetGlobalMute(bool GlobalMuteSelect);
 void HwInterfaceConfigureSynchronizer(unsigned nfft, unsigned CpLen,
   unsigned OfdmSymbols, unsigned Threshold);

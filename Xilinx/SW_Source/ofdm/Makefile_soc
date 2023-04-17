@@ -9,6 +9,7 @@ MEM_ACCESS = DEVMEM
 # PS_PL_POINT = FFT
 PS_PL_POINT = DUC # IFFT in PS, DUC in PL
 SPI_ACCESS = SPI
+HW_VER = V2
 
 CC:=gcc
 CROSS_COMPILER:=arm-linux-gnueabihf-
@@ -79,7 +80,7 @@ ofdm.c
 INCLUDE := $(shell find $(SOURCEDIR) -name '*.h')
 OBJECTS := $(SOURCES:%.c=%.o)
 
-CFLAGS := -D$(MEM_ACCESS) -D$(PS_PL_POINT) -D$(SPI_ACCESS) -Wall -Wextra -O2 -lpthread -lm
+CFLAGS := -D $(HW_VER) -D$(MEM_ACCESS) -D$(PS_PL_POINT) -D$(SPI_ACCESS) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
 	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR) -I $(INTERPDIR)

@@ -19,6 +19,9 @@ entity synchronizer is
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
 
+    s_axis_abs_ila_tdata          : in  std_logic_vector(63 downto 0);
+    s_axis_abs_ila_tvalid         : in  std_logic;
+
     m_axis_tdata                  : out std_logic_vector(31 downto 0);
     m_axis_tvalid                 : out std_logic;
     m_axis_tlast                  : out std_logic;
@@ -41,12 +44,12 @@ architecture RTL of synchronizer is
   
   attribute X_INTERFACE_INFO      of axis_aclk    : signal is "xilinx.com:signal:clock:1.0 axis_aclk CLK";
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
-    signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:m_axis, FREQ_HZ 100000000";
+    signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:s_axis_abs_ila:m_axis, FREQ_HZ 100000000";
 
   component ila_0 is
     port(
       clk                         : in  std_logic;
-      probe0                      : in  std_logic_vector(54 downto 0)
+      probe0                      : in  std_logic_vector(87 downto 0)
     );
   end component ila_0;
 
@@ -60,7 +63,7 @@ architecture RTL of synchronizer is
   signal w_axis_tlast             : std_logic;
   signal w_axis_tvalid            : std_logic;
 
-  signal probe0                   : std_logic_vector(54 downto 0);
+  signal probe0                   : std_logic_vector(87 downto 0);
 
 begin
 
@@ -124,9 +127,10 @@ begin
   m_axis_tvalid                     <= w_axis_tvalid;
   m_axis_tlast                      <= w_axis_tlast;
 
-  ila_gan : if g_ILA generate
+  ila_gen : if g_ILA generate
   
-    probe0                          <= w_axis_tlast & w_axis_tvalid &
+    probe0                          <= s_axis_abs_ila_tvalid & s_axis_abs_ila_tdata(31 downto 0) &
+                                       w_axis_tlast & w_axis_tvalid &
                                        symbol_counter & nfft_cp_counter & r_frame_done & 
                                        r_max_sync & i_max_sync & s_axis_tvalid & s_axis_tdata;
 
@@ -135,6 +139,7 @@ begin
         clk                         => axis_aclk,
         probe0                      => probe0
       );
+
   end generate;
 
 end architecture RTL;

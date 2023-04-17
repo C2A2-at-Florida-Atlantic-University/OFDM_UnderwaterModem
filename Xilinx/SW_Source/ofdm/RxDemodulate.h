@@ -36,7 +36,7 @@ void RxDemodulatePrintCrealType(creal32_T Data);
 ReturnStatusType RxDemodulateWriteToFile(bool open, unsigned FileNumber);
 ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   unsigned FileNumber, unsigned Nfft, unsigned CpLen, 
-  unsigned OfdmSymbols);
+  unsigned OfdmSymbols, bool SwSync);
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode, unsigned
   FileNumber, unsigned ModOrder, unsigned Nfft, unsigned CpLen,
   unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams,

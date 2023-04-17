@@ -84,6 +84,14 @@ void HwInterfaceDmaLoopback(unsigned Enable)
     DMA_LOOPBACK_MASK, GlobalMute);
 }
 
+void HwInterfaceSyncLoopback(unsigned Enable)
+{
+  unsigned RegValue = Enable;
+  RegValue = RegValue << SYNC_LOOPBACK_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_LOOPBACK_OFFSET,
+    RegValue, SYNC_LOOPBACK_MASK, GlobalMute);
+}
+
 void HwInterfaceConfigureSynchronizer(unsigned Nfft, unsigned CpLen,
   unsigned OfdmSymbols, unsigned Threshold)
 {

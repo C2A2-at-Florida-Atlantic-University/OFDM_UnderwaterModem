@@ -228,10 +228,13 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: axi_gpio_1, and set properties
   set axi_gpio_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_1 ]
   set_property -dict [ list \
-   CONFIG.C_ALL_INPUTS {1} \
-   CONFIG.C_ALL_OUTPUTS_2 {1} \
-   CONFIG.C_DOUT_DEFAULT_2 {0x00020028} \
-   CONFIG.C_GPIO2_WIDTH {21} \
+   CONFIG.C_ALL_INPUTS_2 {1} \
+   CONFIG.C_ALL_OUTPUTS {1} \
+   CONFIG.C_ALL_OUTPUTS_2 {0} \
+   CONFIG.C_DOUT_DEFAULT {0x00020028} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x00000028} \
+   CONFIG.C_GPIO2_WIDTH {32} \
+   CONFIG.C_GPIO_WIDTH {21} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_1
 
@@ -278,13 +281,14 @@ proc create_hier_cell_regs { parentCell nameHier } {
 
   # Create interface connections
   connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins S_AXI2] [get_bd_intf_pins axi_gpio_2/S_AXI]
+  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
-  connect_bd_intf_net -intf_net smartconnect_0_M02_AXI [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
 
   # Create port connections
+  connect_bd_net -net ADCstatus_1 [get_bd_pins ADCstatus] [get_bd_pins axi_gpio_1/gpio2_io_i]
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins delimiter_0/IN0]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins Fc_scaled] [get_bd_pins axi_gpio_0/gpio_io_o]
-  connect_bd_net -net axi_gpio_1_gpio2_io_o [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins delimiter_1/IN0]
+  connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_pins axi_gpio_1/gpio_io_o] [get_bd_pins delimiter_1/IN0]
   connect_bd_net -net axi_gpio_2_gpio2_io_o [get_bd_pins axi_gpio_2/gpio2_io_o] [get_bd_pins delimiter_2/IN0]
   connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins threshold] [get_bd_pins axi_gpio_2/gpio_io_o]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
@@ -296,7 +300,6 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_2_OUT0 [get_bd_pins nfft] [get_bd_pins delimiter_2/OUT0]
   connect_bd_net -net delimiter_2_OUT1 [get_bd_pins cp_len] [get_bd_pins delimiter_2/OUT1]
   connect_bd_net -net delimiter_2_OUT2 [get_bd_pins sync_loopback] [get_bd_pins delimiter_2/OUT2]
-  connect_bd_net -net gpio_io_i_0_1 [get_bd_pins ADCstatus] [get_bd_pins axi_gpio_1/gpio_io_i]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk]
 
@@ -1357,9 +1360,9 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI_DMA/Reg] -force
-  assign_bd_address -offset 0x40010000 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x40010100 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_1/S_AXI/Reg] -force
-  assign_bd_address -offset 0x40010200 -range 0x00000080 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_2/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010000 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_0/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010200 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_1/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010400 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_2/S_AXI/Reg] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP0] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP1] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
 

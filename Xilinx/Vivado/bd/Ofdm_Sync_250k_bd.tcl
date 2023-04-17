@@ -253,6 +253,12 @@ proc create_root_design { parentCell } {
   # Create instance: AXIS_Splitter_0, and set properties
   set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
 
+  # Create instance: AXIS_Splitter_1, and set properties
+  set AXIS_Splitter_1 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_1 ]
+  set_property -dict [ list \
+   CONFIG.AXIS_TDATA_WIDTH {64} \
+ ] $AXIS_Splitter_1
+
   # Create instance: cordic_0, and set properties
   set cordic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:cordic cordic_0 ]
   set_property -dict [ list \
@@ -268,7 +274,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
+   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
@@ -288,7 +294,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
+   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
@@ -356,8 +362,10 @@ proc create_root_design { parentCell } {
   # Create interface connections
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins synchronizer_0/s_axis]
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins iq_split_0/s_axis]
+  connect_bd_intf_net -intf_net AXIS_Splitter_1_M00_AXIS [get_bd_intf_pins AXIS_Splitter_1/M00_AXIS] [get_bd_intf_pins max_thresh_0/s_axis]
+  connect_bd_intf_net -intf_net AXIS_Splitter_1_M01_AXIS [get_bd_intf_pins AXIS_Splitter_1/M01_AXIS] [get_bd_intf_pins synchronizer_0/s_axis_abs_ila]
   connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS]
-  connect_bd_intf_net -intf_net cordic_0_M_AXIS_DOUT [get_bd_intf_pins cordic_0/M_AXIS_DOUT] [get_bd_intf_pins max_thresh_0/s_axis]
+  connect_bd_intf_net -intf_net cordic_0_M_AXIS_DOUT [get_bd_intf_pins AXIS_Splitter_1/S00_AXIS] [get_bd_intf_pins cordic_0/M_AXIS_DOUT]
   connect_bd_intf_net -intf_net fir_compiler_imag_M_AXIS_DATA [get_bd_intf_pins fir_compiler_imag/M_AXIS_DATA] [get_bd_intf_pins iq_concat_0/s_axis_imag]
   connect_bd_intf_net -intf_net fir_compiler_real_M_AXIS_DATA [get_bd_intf_pins fir_compiler_real/M_AXIS_DATA] [get_bd_intf_pins iq_concat_0/s_axis_real]
   connect_bd_intf_net -intf_net iq_concat_0_m_axis [get_bd_intf_pins cordic_0/S_AXIS_CARTESIAN] [get_bd_intf_pins iq_concat_0/m_axis]
@@ -366,13 +374,13 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net synchronizer_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins synchronizer_0/m_axis]
 
   # Create port connections
-  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
+  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
   connect_bd_net -net i_cp_len_0_1 [get_bd_ports i_cp_len] [get_bd_pins synchronizer_0/i_cp_len]
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins synchronizer_0/i_nfft]
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]
   connect_bd_net -net i_threshold_0_1 [get_bd_ports i_threshold] [get_bd_pins max_thresh_0/i_threshold]
   connect_bd_net -net max_thresh_0_o_max_detected [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
 

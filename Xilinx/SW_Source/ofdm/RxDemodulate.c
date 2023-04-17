@@ -21,10 +21,10 @@
 
 #define DEBUG
 #define SAMPLE_DEBUG
-//#define SYMBOL_DEBUG
-//#define TIME_SAMPLE_DEBUG
-//#define FREQ_SAMPLE_DEBUG
-//#define EQ_SAMPLE_DEBUG
+#define SYMBOL_DEBUG
+#define TIME_SAMPLE_DEBUG
+#define FREQ_SAMPLE_DEBUG
+#define EQ_SAMPLE_DEBUG
 
 #ifdef FFT
 static unsigned *TxBufferPtrLoop = NULL;
@@ -262,7 +262,6 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   unsigned DataCount = 0;
   unsigned ZpIndex = 0;
   unsigned PilotCount = 0;
-  unsigned LoopCount;
   char FileNameOut[64];
   char FileNameOut1[64];
   FILE *RxFreqFile = NULL;
@@ -314,7 +313,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   }
 
   ReturnStatus = RxDemodulateFft(DebugMode, LoopMethod, FileNumber,
-    Nfft, CpLen, OfdmSymbols);
+    Nfft, CpLen, OfdmSymbols, SwSync);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     return ReturnStatus;
@@ -336,18 +335,16 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   {
     return ReturnStatus;
   }
+  printf("Debug1\n");
 
-  if (SwSync)
+  for (unsigned i = 0; i < Nfft*OfdmSymbols; i++) 
   {
-    LoopCount = (OfdmSymbols+1)*Nfft;
-  }
-  else
-  {
-    LoopCount = OfdmSymbols*Nfft;
-  }
-
-  for (unsigned i = 0; i < LoopCount; i++) 
-  {
+#ifdef DEBUG
+    if (!(i % Nfft))
+    {
+      printf("Symbol index %d\n", i/Nfft);
+    }
+#endif
     if (i < Nfft) // Implement SW synchronizer here
     {
     }
@@ -480,7 +477,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 
 ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   unsigned FileNumber, unsigned Nfft, unsigned CpLen,
-  unsigned OfdmSymbols)
+  unsigned OfdmSymbols, bool SwSync)
 {
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
@@ -503,6 +500,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
   int NfftInt = (int)Nfft;
   char FileNameOut2[64];
   unsigned ScanfRet = 0;
+  unsigned LoopCount;
+  unsigned i2;
   unsigned tmp;
   double tmp1,tmp2;
 
@@ -639,72 +638,99 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     fprintf(FftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
 
-  for (unsigned i = 0; i < OfdmSymbols; i++)
+  if (SwSync)
   {
-    for (unsigned j = 0; j < Nfft+CpLen; j++)
+    LoopCount = OfdmSymbols+1;
+  }
+  else
+  {
+    LoopCount = OfdmSymbols;
+  }
+
+  for (unsigned i = 0; i < LoopCount; i++)
+  {
+    if (i == 0) // Synchronization symbol
     {
-      // Remove cyclic prefix (CP)
-      if (!(j < CpLen)) // Non CP sample
-      {
-        if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK ||
-          LoopMethod == RX_DEMODULATE_DMA_BUFF)
-        {
 #ifdef DUC
-          FftInData[j-CpLen].re = (int16_t)
-            (BufferInData[(i*(CpLen+Nfft))+j]&0x0000FFFF);
-          FftInData[j-CpLen].im = (int16_t)
-            ((BufferInData[(i*(CpLen+Nfft))+j]&0xFFFF0000)>>16);
 #endif
 #ifdef DAC
-          FftInData[j-CpLen].re = (int16_t)
-            BufferInData[(i*(CpLen+Nfft))+j].re;
-          FftInData[j-CpLen].im = (int16_t)
-            BufferInData[(i*(CpLen+Nfft))+j].im;
 #endif
-        }
-        else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
-        {
-          ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
-            &tmp1, &tmp2);
-          FftInData[j-CpLen].re = (int16_t)tmp1;
-          FftInData[j-CpLen].im = (int16_t)tmp2;
-        }
-#ifdef TIME_SAMPLE_DEBUG
-        if (i == 0 && j == CpLen)
-        {
-          printf("\nRxDemodulateFft: Time domain data:\n");
-        }
-        if (i == 0 && j < CpLen+12)
-        {
-          printf("\tSymbol %d: Nfft %d:\n\t%d+j%d\n",
-            i, j-CpLen,FftInData[j-CpLen].re,FftInData[j-CpLen].im);
-        }
-#endif
-      }
-      else // CP sample
-      {
-        if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
-        {
-          ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
-            &tmp1, &tmp2);
-        }
-      }
     }
-    Fft(FftInData,NfftSize,Nfft,FftOutStruct);
-    for (unsigned j = 0; j < Nfft; j++)
+    else
     {
-      //FftOutArray[(i*Nfft)+j].re = FftOutData[j].re; // Normal
-      //FftOutArray[(i*Nfft)+j].im = FftOutData[j].im;
-      // FftShift:
-      if (j < Nfft/2) // FFTSHIFT
+      for (unsigned j = 0; j < Nfft+CpLen; j++)
       {
-        FftOutArray[(i*Nfft)+j+Nfft/2].re = FftOutData[j].re;
-        FftOutArray[(i*Nfft)+j+Nfft/2].im = FftOutData[j].im;
+        // Remove cyclic prefix (CP)
+        if (!(j < CpLen)) // Non CP sample
+        {
+          if (LoopMethod == RX_DEMODULATE_TX_LOOPBACK ||
+            LoopMethod == RX_DEMODULATE_DMA_BUFF)
+          {
+#ifdef DUC
+            FftInData[j-CpLen].re = (int16_t)
+              (BufferInData[(i*(CpLen+Nfft))+j]&0x0000FFFF);
+            FftInData[j-CpLen].im = (int16_t)
+              ((BufferInData[(i*(CpLen+Nfft))+j]&0xFFFF0000)>>16);
+#endif
+#ifdef DAC
+            FftInData[j-CpLen].re = (int16_t)
+              BufferInData[(i*(CpLen+Nfft))+j].re;
+            FftInData[j-CpLen].im = (int16_t)
+              BufferInData[(i*(CpLen+Nfft))+j].im;
+#endif
+          }
+          else if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+          {
+            ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
+              &tmp1, &tmp2);
+            FftInData[j-CpLen].re = (int16_t)tmp1;
+            FftInData[j-CpLen].im = (int16_t)tmp2;
+          }
+#ifdef TIME_SAMPLE_DEBUG
+          if (i == 1 && j == CpLen)
+          {
+            printf("\nRxDemodulateFft: Time domain data:\n");
+          }
+          if (i == 1 && j < CpLen+12)
+          {
+            printf("\tSymbol %d: Nfft %d:\n\t%d+j%d\n",
+              i, j-CpLen,FftInData[j-CpLen].re,FftInData[j-CpLen].im);
+          }
+#endif
+        }
+        else // CP sample
+        {
+          if (LoopMethod == RX_DEMODULATE_FILE_INJECTION)
+          {
+            ScanfRet = fscanf(RxInjectFile, "%lf, %lf\n", 
+              &tmp1, &tmp2);
+          }
+        }
       }
-      else
+      Fft(FftInData,NfftSize,Nfft,FftOutStruct);
+      for (unsigned j = 0; j < Nfft; j++)
       {
-        FftOutArray[(i*Nfft)+j-Nfft/2].re = FftOutData[j].re;
-        FftOutArray[(i*Nfft)+j-Nfft/2].im = FftOutData[j].im;
+        //FftOutArray[(i*Nfft)+j].re = FftOutData[j].re; // Normal
+        //FftOutArray[(i*Nfft)+j].im = FftOutData[j].im;
+        // FftShift:
+        if (SwSync)
+        {
+          i2 = i-1;
+        }
+        else
+        {
+          i2 = i;
+        }
+        if (j < Nfft/2) // FFTSHIFT
+        {
+          FftOutArray[(i2*Nfft)+j+Nfft/2].re = FftOutData[j].re;
+          FftOutArray[(i2*Nfft)+j+Nfft/2].im = FftOutData[j].im;
+        }
+        else
+        {
+          FftOutArray[(i2*Nfft)+j-Nfft/2].re = FftOutData[j].re;
+          FftOutArray[(i2*Nfft)+j-Nfft/2].im = FftOutData[j].im;
+        }
       }
     }
   }

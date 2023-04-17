@@ -110,10 +110,12 @@ int main(int argc, char **argv)
 #ifndef NO_DEVMEM                  // HW specific functions
   HwInterfaceSetGlobalMute(true);  // mute FPGA reg access prints
   DirectDmaSetGlobalMute(true);    // mute FPGA reg access prints
+  DirectDmaPsToPlInit(0);          // Reset mm2s DMA
+  DirectDmaPlToPsInit(0);          // Reset s2mm DMA
   DirectDmaMm2sIrqClear();         // Clear IRQ for mm2s DMA
   DirectDmaS2mmIrqClear();         // Clear IRQ for s2mm DMA
-  //DirectDmaMm2sStatus();           // DMA mm2s status
-  //DirectDmaS2mmStatus();           // DMA s2mm status
+  DirectDmaMm2sStatus();           // DMA mm2s status
+  DirectDmaS2mmStatus();           // DMA s2mm status
   HwInterfaceDmaLoopback(0);       // Disable DMA loopback 
   HwInterfaceDisableDac();         // Disable DAC and PA
   HwInterfaceDisableAdc();         // Disable ADC
@@ -170,7 +172,7 @@ int main(int argc, char **argv)
     printf("14 - Start S2MM DMA\n");
     printf("15 - Stop S2MM DMA\n");
     printf("16 - Enable/Disable DMA loopback\n");
-    printf("17 - Enable/Disable SW synchronization\n");
+    printf("17 - Enable/Disable SW Synchronization\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -315,6 +317,8 @@ int main(int argc, char **argv)
         printf("\n\tTX Digital Gain:          %d dBFS = %d\n",
           TxGainDb, TxModulateGetScalarGain());
         printf("\n\tCenter Frequency:         %d kHz\n", CenterFreq);
+        printf("\n\tSynchronizer Threshold    0x%X = %d\n",
+          SyncThreshold, SyncThreshold);
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         OfdmCalcParams = TransmitChainGetParams();
@@ -422,7 +426,7 @@ int main(int argc, char **argv)
           OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
 #else
         NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
-          OfdmTiming.OfdmSymbolsPerFrame*4;
+          (OfdmTiming.OfdmSymbolsPerFrame+1)*4;
 #endif
 
 #ifndef NO_DEVMEM
@@ -563,26 +567,25 @@ int main(int argc, char **argv)
         break;
 
       case 16:
-        printf("Enable/Disable DMA loopback (1/0): ");
+        printf("Enable/Disable DMA loopback ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DmaLoopSel);
-        if (!(DmaLoopSel == 0 || DmaLoopSel == 1))
-        {
-          printf("Error: Select proper value\n");
-          break;
-        }
         HwInterfaceDmaLoopback(DmaLoopSel);
+        printf("Enable/Disable Synchronizer Loopback "
+          "('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DmaLoopSel);
+        HwInterfaceSyncLoopback(DmaLoopSel);
         break;
 
       case 17:
-        printf("Enter Selection ('0'-Off / '1'-On ");
+        printf("Enter Selection ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DebugSelection);
         if (DebugSelection == 1)
         {
-          SwSynchronization = false;
+          SwSynchronization = true;
         }
         else
         {
-          SwSynchronization = true;
+          SwSynchronization = false;
         }
         break;
 
@@ -595,8 +598,8 @@ int main(int argc, char **argv)
   printf("%d\n", ScanfRet);
   DirectDmaPlToPsThreadCancel();
   RxDemodulateCancelThread();
-  //DirectDmaMm2sStatus();
-  //DirectDmaS2mmStatus();
+  DirectDmaMm2sStatus();
+  DirectDmaS2mmStatus();
 
   return 0;
 }

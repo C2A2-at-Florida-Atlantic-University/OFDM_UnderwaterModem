@@ -287,8 +287,8 @@ proc create_hier_cell_Loopback { parentCell nameHier } {
   # Create pins
   create_bd_pin -dir I -type clk axis_aclk
   create_bd_pin -dir I -type rst axis_aresetn
-  create_bd_pin -dir I tready_select
-  create_bd_pin -dir I tready_select1
+  create_bd_pin -dir I dma_loopback
+  create_bd_pin -dir I sync_loopback
 
   # Create instance: AXIS_Splitter_0, and set properties
   set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
@@ -322,7 +322,7 @@ proc create_hier_cell_Loopback { parentCell nameHier } {
   set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic util_vector_logic_0 ]
   set_property -dict [ list \
    CONFIG.C_OPERATION {or} \
-   CONFIG.C_SIZE {0} \
+   CONFIG.C_SIZE {1} \
    CONFIG.LOGO_FILE {data/sym_orgate.png} \
  ] $util_vector_logic_0
 
@@ -340,8 +340,8 @@ proc create_hier_cell_Loopback { parentCell nameHier } {
   # Create port connections
   connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins axis_aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins mux_2/axis_aclk]
   connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins axis_aresetn] [get_bd_pins mux_0/axis_aresetn] [get_bd_pins mux_2/axis_aresetn]
-  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins tready_select] [get_bd_pins mux_0/i_select] [get_bd_pins util_vector_logic_0/Op1]
-  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins tready_select1] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins mux_2/i_select] [get_bd_pins util_vector_logic_0/Op2]
+  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins dma_loopback] [get_bd_pins mux_0/i_select] [get_bd_pins util_vector_logic_0/Op1]
+  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins sync_loopback] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins mux_2/i_select] [get_bd_pins util_vector_logic_0/Op2]
   connect_bd_net -net util_vector_logic_0_Res [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins util_vector_logic_0/Res]
 
   # Restore current instance
@@ -460,9 +460,9 @@ proc create_root_design { parentCell } {
    CONFIG.C_ADV_TRIGGER {false} \
    CONFIG.C_DATA_DEPTH {1024} \
    CONFIG.C_EN_STRG_QUAL {1} \
-   CONFIG.C_MON_TYPE {INTERFACE} \
+   CONFIG.C_MON_TYPE {MIX} \
    CONFIG.C_NUM_MONITOR_SLOTS {2} \
-   CONFIG.C_NUM_OF_PROBES {1} \
+   CONFIG.C_NUM_OF_PROBES {2} \
    CONFIG.C_PROBE0_MU_CNT {2} \
    CONFIG.C_PROBE1_MU_CNT {2} \
    CONFIG.C_PROBE2_MU_CNT {2} \
@@ -508,10 +508,10 @@ connect_bd_intf_net -intf_net [get_bd_intf_nets mux_1_m_axis] [get_bd_intf_pins 
   connect_bd_net -net PS_Zynq_0_aresetn_40M [get_bd_pins ADC_Chain_0/aresetn_40M] [get_bd_pins PS_Zynq_0/aresetn_40M]
   connect_bd_net -net PS_Zynq_0_cp_len [get_bd_pins Ofdm_Sync_250k_0/i_cp_len] [get_bd_pins PS_Zynq_0/cp_len]
   connect_bd_net -net PS_Zynq_0_decimate_ratio [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio]
-  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins Loopback/tready_select] [get_bd_pins PS_Zynq_0/dma_loopback]
+  connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins Loopback/dma_loopback] [get_bd_pins PS_Zynq_0/dma_loopback] [get_bd_pins system_ila_data/probe0]
   connect_bd_net -net PS_Zynq_0_nfft [get_bd_pins Ofdm_Sync_250k_0/i_nfft] [get_bd_pins PS_Zynq_0/nfft]
   connect_bd_net -net PS_Zynq_0_symbols [get_bd_pins Ofdm_Sync_250k_0/i_symbols] [get_bd_pins PS_Zynq_0/symbols]
-  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins Loopback/tready_select1] [get_bd_pins PS_Zynq_0/sync_loopback]
+  connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins Loopback/sync_loopback] [get_bd_pins PS_Zynq_0/sync_loopback] [get_bd_pins system_ila_data/probe1]
   connect_bd_net -net PS_Zynq_0_threshold [get_bd_pins Ofdm_Sync_250k_0/i_threshold] [get_bd_pins PS_Zynq_0/threshold]
   connect_bd_net -net aclk_10M_1 [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
   connect_bd_net -net aresetn_10M_1 [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
