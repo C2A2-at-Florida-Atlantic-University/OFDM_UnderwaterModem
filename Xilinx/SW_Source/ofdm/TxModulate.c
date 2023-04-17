@@ -109,7 +109,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     {
       if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex == (Nfft/2-1) || // ZP carrier at DC
-        ZpIndex > OfdmCalcParams->LastPilotCarrier)
+        ZpIndex >= OfdmCalcParams->LastPilotCarrier)
       { // ZP Index
       }
       //else if (!(NfftCount % 4)) // Pilot carrier
@@ -153,7 +153,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
         }
         i++;
       }
-#ifdef SAMPLE_DEBUG
+#ifdef SAMPLE_DEBUG2
       if (NfftCount < NFFT_DEBUG_COUNT)
       {
         printf("NfftCount: %d, Data: %d\n", NfftCount,
@@ -162,7 +162,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #endif
       if (!(ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
         ZpIndex == (Nfft/2-1) || // ZP carrier at DC
-        ZpIndex > OfdmCalcParams->LastPilotCarrier))
+        ZpIndex >= OfdmCalcParams->LastPilotCarrier))
       { // If Data or Pilot index
         NfftCount++;
           if (i == 8/b_log2(ModOrder))
@@ -186,8 +186,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     }
   }
 
-  // If there are remaining subcarriers due to message not filling up the 
-  // entire OFDM symbol, fill the rest of the data subcarriers with 0
+  // Return Error if remaining subcarriers after packing with data
   if (NfftCount < (Nfft*OfdmSymbols))
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -197,6 +196,8 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       Nfft*OfdmSymbols);
     return ReturnStatus;
   }
+  // If there are remaining subcarriers due to message not filling up the 
+  // entire OFDM symbol, fill the rest of the data subcarriers with 0
   //while (NfftCount < (Nfft*OfdmSymbols))
   //{
   //  TxOfdmSymbolBinData[NfftCount] = 0;
@@ -211,9 +212,23 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   {
     if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
       ZpIndex == (Nfft/2-1) || // ZP carrier at DC
-      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP carrier
+      ZpIndex >= OfdmCalcParams->LastPilotCarrier) // ZP carrier
     {
       ModData = ZeroComplex;
+      if (ZpIndex == (Nfft/2-1) && NfftZpCount < Nfft)
+      {
+        if ((NfftCount+1)%4 == 0)
+        {
+          printf("TxModulateFileData: WARNING: DC sub-carrier "
+          "is pilot\n");
+        }
+        else
+        {
+          printf("TxModulateFileData: DC sub-carrier is data\n");
+        }
+        printf("ZpIndex = %d, NfftCount = %d, NfftZpCount = %d\n",
+          ZpIndex, NfftCount, NfftZpCount);
+      }
     }
     else // Pilot or Data subcarrier
     {
@@ -221,7 +236,11 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       // Print out some Frequency domain data
 #ifdef SAMPLE_DEBUG
       if (NfftCount < NFFT_DEBUG_COUNT)
-      {
+      { 
+        if (NfftCount == 0)
+        {
+          printf("TxModulateFileData: QamMod pilot or data carrier\n");
+        }
         TxModulatePrintCrealType(ModData);
         if ((NfftCount+1)%(8/(int)b_log2(ModOrder)) == 0)
         {
@@ -245,6 +264,11 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       NfftCount++;
     }
 #ifdef DUC
+    if (NfftZpCount < Nfft/2+2)
+    {
+      //printf("NfftZpCount %d, %lf +j %lf\n", NfftZpCount,
+      //  ModData.re*(double)DigitalGain, ModData.im*(double)DigitalGain);
+    }
     IfftBufferPtr[NfftZpCount].re = ModData.re*(double)DigitalGain;
     IfftBufferPtr[NfftZpCount].im = ModData.im*(double)DigitalGain;
     if (IfftBufferPtr[NfftZpCount].re > U_DAC_ACCURACY || 
@@ -303,7 +327,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
-}
+} // ReturnStatusType TxModulateFileData
 
 ReturnStatusType TxModulateGetFileData(unsigned FileNumber)
 {
@@ -393,7 +417,6 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
 {
   ReturnStatusType ReturnStatus;
   char FileNameConverted[64];
-  char FileNameOut[64];
   char FileNamePath[64];
   signed char MessageByte;
   unsigned i;
@@ -465,47 +488,10 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
 
   fclose(TxWriteFile);
   fclose(TxMessageFile);
-  sprintf(FileNameOut, "files/TxFreqData%d.txt", FileNumber);
 
-  TxWriteFile = fopen(FileNameOut, "w");
-  if (TxWriteFile == NULL)
-  {
-    perror("TxModulateWriteToFile");
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString,
-      "TxModulateWriteToFile: Failed to open %s\n", FileNameOut);
-    return ReturnStatus;
-  }
-
-  // Header information
-  fprintf(TxWriteFile,"%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d\n", 
-    OfdmParams->Nfft, 1000*OfdmParams->BandWidth, OfdmParams->CpLen, 
-    OfdmParams->ModOrder, OfdmSymbols, DigitalGain,
-    OfdmCalcParams->FirstPilotCarrier, OfdmCalcParams->LastPilotCarrier);
-
-#ifdef NO_DEVMEM
-  for (unsigned i = 0; i < OfdmParams->Nfft*OfdmSymbols; i++)
-  {
-#ifdef FFT
-    fprintf(TxWriteFile, "%d, %d\n",
-      ((int16_T)(*(IfftBufferPtr+i))),
-      (int16_T)((((int32_T)(*(IfftBufferPtr+i))) & 0xFFFF0000)>>16));
-#endif
-#ifdef DUC
-    fprintf(TxWriteFile, "%d, %d\n", (int16_t)IfftBufferPtr[i].re,
-      (int16_t)IfftBufferPtr[i].im);
-#endif
-  }
-#endif
-
-#ifdef DEBUG
-  printf("TxModulateWriteToFile: Wrote to file %s\n", FileNameOut);
-#endif
-
-  fclose(TxWriteFile);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
-}
+} // ReturnStatusType TxModulateWriteToFile()
 
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols)
@@ -514,12 +500,14 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   FILE *IfftFile = NULL;
   FILE *IfftFileInt = NULL;
   FILE *ZcFile = NULL;
+  FILE *TxWriteFile = NULL;
   cint16_T IfftInData[MAX_NFFT];
   emxArray_creal_T *IfftOutStruct;
   char FileName[64];
+  char FileNameZc[64];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
-  double tmp_i, tmp_q;
+  unsigned tmp_i, tmp_q;
   unsigned ScanfRet;
   creal_T *IfftOutData;
 
@@ -585,17 +573,29 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       return ReturnStatus;
     }
     fprintf(IfftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
+    sprintf(FileName, "files/TxFreqData%d.txt", FileNumber);
+    TxWriteFile = fopen(FileName, "w");
+    if (TxWriteFile == NULL)
+    {
+      perror("TxModulateWriteToFile");
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "TxModulateWriteToFile: Failed to open %s\n", FileName);
+      return ReturnStatus;
+    }
+    fprintf(TxWriteFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
-  sprintf(FileName, "files/zc_seq_time_%d_nfft_%d_ZC_13_root.txt",
+  sprintf(FileNameZc, "files/zc_seq_time_%d_nfft_%d_ZC_13_root.txt",
     Nfft, Nfft/2);
-  ZcFile = fopen(FileName, "w");
+  ZcFile = fopen(FileNameZc, "r");
   if (ZcFile == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
-      "TxModulateIfft: Failed to open %s\n", FileName);
+      "TxModulateIfft: Failed to open %s\n", FileNameZc);
     return ReturnStatus;
   }
+  printf("TxModulateIfft: Opened file %s\n", FileNameZc);
 
   for (unsigned i = 0; i < OfdmSymbols+1; i++)
   {
@@ -618,13 +618,19 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
         //FftShift
         if (j < Nfft/2)
         {
-          IfftInData[j+Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
-          IfftInData[j+Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+          IfftInData[j+Nfft/2].re = IfftBufferPtr[j+(Nfft*(i-1))].re;
+          IfftInData[j+Nfft/2].im = IfftBufferPtr[j+(Nfft*(i-1))].im;
         }
         else
         {
-          IfftInData[j-Nfft/2].re = IfftBufferPtr[j+(Nfft*i)].re;
-          IfftInData[j-Nfft/2].im = IfftBufferPtr[j+(Nfft*i)].im;
+          IfftInData[j-Nfft/2].re = IfftBufferPtr[j+(Nfft*(i-1))].re;
+          IfftInData[j-Nfft/2].im = IfftBufferPtr[j+(Nfft*(i-1))].im;
+        }
+        if (DebugMode)
+        {
+          fprintf(TxWriteFile, "%lf, %lf\n",
+            IfftBufferPtr[j+(Nfft*(i-1))].re,
+            IfftBufferPtr[j+(Nfft*(i-1))].im);
         }
 #endif
       }
@@ -641,7 +647,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
         {
           DucBufferPtr[j+Nfft] = 0x00000000;
         }
-        ScanfRet = fscanf(ZcFile,"%lf, %lf\n", &tmp_i, &tmp_q);
+        ScanfRet = fscanf(ZcFile,"%d, %d\n", &tmp_i, &tmp_q);
         DucBufferPtr[j] = ((((int32_T)tmp_q)<<16)&0xFFFF0000)+
           (int16_T)tmp_i;
       }
@@ -688,7 +694,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       {
         printf("\nTxModulateIfft: Time domain data:\n");
       }
-      if (j < 12 && i == 0)
+      if (j < 12 && i == 1)
       {
         printf("\tSymbol %d: Nfft %d: \n\t%lf+j%lf\n",
           i,j,IfftOutData[j].re,IfftOutData[j].im);
@@ -703,9 +709,9 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
     for (unsigned i = 0; i < (Nfft+CpLen)*(OfdmSymbols+1); i++)
     {
 #ifdef DUC
-      fprintf(IfftFile, "%lf, %lf\n", 
-        (double)(DucBufferPtr[i]&0x0000FFFF),
-        (double)((((int32_T)DucBufferPtr[i])&0xFFFF0000)>>16));
+      fprintf(IfftFile, "%d, %d\n", 
+        (int16_T)(DucBufferPtr[i]&0x0000FFFF),
+        (int16_T)((((int32_T)DucBufferPtr[i])&0xFFFF0000)>>16));
       fprintf(IfftFileInt, "%d, %d\n", 
         (int16_T)(DucBufferPtr[i]&0x0000FFFF),
         (int16_T)((((int32_T)DucBufferPtr[i])&0xFFFF0000)>>16));
@@ -743,7 +749,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
-}
+} // ReturnStatusType TxMOdulateIfft
 
 #ifdef DUC
 int32_T *TxModulateGetTxBuffer(void)

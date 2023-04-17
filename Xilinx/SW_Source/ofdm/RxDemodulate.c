@@ -20,11 +20,11 @@
 #include "log2.h"
 
 #define DEBUG
-#define SAMPLE_DEBUG
-#define SYMBOL_DEBUG
-#define TIME_SAMPLE_DEBUG
-#define FREQ_SAMPLE_DEBUG
-#define EQ_SAMPLE_DEBUG
+//#define SAMPLE_DEBUG
+//#define SYMBOL_DEBUG
+//#define TIME_SAMPLE_DEBUG
+//#define FREQ_SAMPLE_DEBUG
+//#define EQ_SAMPLE_DEBUG
 
 #ifdef FFT
 static unsigned *TxBufferPtrLoop = NULL;
@@ -335,7 +335,6 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
   {
     return ReturnStatus;
   }
-  printf("Debug1\n");
 
   for (unsigned i = 0; i < Nfft*OfdmSymbols; i++) 
   {
@@ -345,99 +344,93 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
       printf("Symbol index %d\n", i/Nfft);
     }
 #endif
-    if (i < Nfft) // Implement SW synchronizer here
+    if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
+      ZpIndex == (Nfft/2-1) || 
+      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
     {
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile, "%d, %d\n", 0, 0);
+      }
+    }
+    else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
+    { // Pilot sub-carrier
+      //printf("Pilot sub-carrier index %d\n", ZpIndex);
+#ifdef FFT
+      IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
+      IqData.im = (float)
+        (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+      IqData.re = TxBufferPtrLoop[i].re;
+      IqData.im = TxBufferPtrLoop[i].im;
+#endif
+      //IqData.re = IqData.re/DigitalGain;
+      //IqData.im = IqData.im/DigitalGain;
+      PilotData[PilotCount] = IqData;
+      ReturnStatus = EqualizerChannelEstimate(DebugMode, ModOrder,
+        PilotData[PilotCount], &ChEst, i);
+      if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+      {
+        return ReturnStatus;
+      }
+      PilotCount++;
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
+          IqData.im);
+      }
+#ifdef SAMPLE_DEBUG
+      if (i < 16)
+      {
+        printf("Pilot index %d removed: %d + j%d = bit %d\n", i,
+          (int)IqData.re, (int)IqData.im, 
+          (unsigned)QamDemod(IqData, (float)ModOrder));
+      }
+#endif
+    }
+    else // Data subcarrier
+    {
+      //printf("Data sub-carrier index %d\n", ZpIndex);
+#ifdef FFT
+      IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
+      IqData.im = (float)
+        (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
+#endif
+#ifdef DUC
+      IqData.re = TxBufferPtrLoop[i].re;
+      IqData.im = TxBufferPtrLoop[i].im;
+#endif
+      EqualizerData(ChEst, IqData, &tmp);
+      IqData.re = tmp.re;
+      IqData.im = tmp.im;
+      //IqData.re = IqData.re/DigitalGain;
+      //IqData.im = IqData.im/DigitalGain;
+      DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
+      if (DebugMode)
+      {
+        fprintf(RxFreqFile,"%lf, %lf\n", IqData.re, IqData.im);
+        fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
+          (float)ModOrder));
+      }
+#ifdef EQ_SAMPLE_DEBUG
+      if (i < 16)
+      {
+        RxDemodulatePrintCrealType(IqData);
+        printf("\tDemodData[%d] = %d\n", i,
+          DemodData[DataCount]);
+      }
+#endif
+        DataCount++;
+    }
+    if (ZpIndex == Nfft-1)
+    {
+      ZpIndex = 0;
     }
     else
     {
-      if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
-        ZpIndex == (Nfft/2-1) || 
-        ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
-      {
-        if (DebugMode)
-        {
-          fprintf(RxFreqFile, "%d, %d\n", 0, 0);
-        }
-      }
-      else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
-      {
-        //printf("Pilot sub-carrier index %d\n", ZpIndex);
-#ifdef FFT
-        IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
-        IqData.im = (float)
-          (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
-#endif
-#ifdef DUC
-        IqData.re = TxBufferPtrLoop[i].re;
-        IqData.im = TxBufferPtrLoop[i].im;
-#endif
-        //IqData.re = IqData.re/DigitalGain;
-        //IqData.im = IqData.im/DigitalGain;
-        PilotData[PilotCount] = IqData;
-        ReturnStatus = EqualizerChannelEstimate(DebugMode, ModOrder,
-          PilotData[PilotCount], &ChEst, i);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          return ReturnStatus;
-        }
-        PilotCount++;
-        if (DebugMode)
-        {
-          fprintf(RxFreqFile, "%d, %d\n", (int) IqData.re, (int)
-            IqData.im);
-        }
-#ifdef SAMPLE_DEBUG
-        if (i < 16)
-        {
-          printf("Pilot index %d removed: %d + j%d = bit %d\n", i,
-            (int)IqData.re, (int)IqData.im, 
-            (unsigned)QamDemod(IqData, (float)ModOrder));
-        }
-#endif
-      }
-      else // Data subcarrier
-      {
-        //printf("Data sub-carrier index %d\n", ZpIndex);
-#ifdef FFT
-        IqData.re = (float)((int16_T)(*(TxBufferPtrLoop+i)));
-        IqData.im = (float)
-          (int16_T)((((int32_T)(*(TxBufferPtrLoop+i)))&0xFFFF0000)>>16);
-#endif
-#ifdef DUC
-        IqData.re = TxBufferPtrLoop[i].re;
-        IqData.im = TxBufferPtrLoop[i].im;
-#endif
-        EqualizerData(ChEst, IqData, &tmp);
-        IqData.re = tmp.re;
-        IqData.im = tmp.im;
-        //IqData.re = IqData.re/DigitalGain;
-        //IqData.im = IqData.im/DigitalGain;
-        DemodData[DataCount] = (uint8_T)QamDemod(IqData, (float)ModOrder);
-        if (DebugMode)
-        {
-          fprintf(RxFreqFile,"%lf, %lf\n", IqData.re, IqData.im);
-          fprintf(RxDemodFile, "%d\n", (unsigned) QamDemod(IqData,
-            (float)ModOrder));
-        }
-#ifdef EQ_SAMPLE_DEBUG
-        if (i < 16)
-        {
-          RxDemodulatePrintCrealType(IqData);
-          printf("\tDemodData[%d] = %d\n", i,
-            DemodData[DataCount]);
-        }
-#endif
-        DataCount++;
-      }
-      if (ZpIndex == Nfft-1)
-      {
-        ZpIndex = 0;
-      }
-      else
-      {
-        ZpIndex++;
-      }
-    } // else (HW synchronizer)
+      ZpIndex++;
+    }
   } // for
 
   printf("RxDemodulateBufferData: Wrote RX Freq Domain Data to %s\n",

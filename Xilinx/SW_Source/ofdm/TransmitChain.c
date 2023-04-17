@@ -23,8 +23,8 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
     (double)OfdmCalcParams.Symbol.Samples;
   OfdmCalcParams.Symbol.FpgaClkSamples = FpgaClkRate/
     OfdmParams->BandWidth/1000;
-  OfdmCalcParams.FirstPilotCarrier = OfdmParams->Nfft*
-    OfdmParams->ZpDensity/100/2;
+  OfdmCalcParams.FirstPilotCarrier = ceil((double)OfdmParams->Nfft*
+    (double)OfdmParams->ZpDensity/100.0/2.0)-1;
   OfdmCalcParams.LastPilotCarrier = OfdmParams->Nfft-
     OfdmCalcParams.FirstPilotCarrier-1;
   OfdmCalcParams.NumDataCarriers = ((unsigned)floor((double)

@@ -342,7 +342,7 @@ int main(int argc, char **argv)
         printf("\tFirst Pilot Carrier:      %d\n",
           OfdmCalcParams.FirstPilotCarrier+1);
         printf("\tLast Pilot Carrier:       %d\n",
-          OfdmCalcParams.LastPilotCarrier+1);
+          OfdmCalcParams.LastPilotCarrier);
         printf("\tNumber of Data Carriers:  %d\n",
           OfdmCalcParams.NumDataCarriers);
         printf("\tNumber of Pilot Carriers: %d\n",
