@@ -13,9 +13,11 @@ entity iq_concat is
 
     s_axis_real_tdata             : in  std_logic_vector(31 downto 0);
     s_axis_real_tvalid            : in  std_logic;
+    s_axis_real_tready            : out std_logic;
 
     s_axis_imag_tdata             : in  std_logic_vector(31 downto 0);
     s_axis_imag_tvalid            : in  std_logic;
+    s_axis_imag_tready            : out std_logic;
 
     m_axis_tdata                  : out std_logic_vector(63 downto 0);
     m_axis_tvalid                 : out std_logic
@@ -40,5 +42,8 @@ begin
       m_axis_tvalid               <= s_axis_imag_tvalid and s_axis_real_tvalid;
     end if;
   end process;
+
+  s_axis_real_tready              <= '1';
+  s_axis_imag_tready              <= '1';
 
 end architecture RTL;

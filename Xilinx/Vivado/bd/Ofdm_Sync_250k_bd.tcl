@@ -230,7 +230,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.HAS_TKEEP {0} \
    CONFIG.HAS_TLAST {0} \
-   CONFIG.HAS_TREADY {0} \
+   CONFIG.HAS_TREADY {1} \
    CONFIG.HAS_TSTRB {0} \
    CONFIG.LAYERED_METADATA {undef} \
    CONFIG.TDATA_NUM_BYTES {4} \
@@ -282,7 +282,9 @@ proc create_root_design { parentCell } {
    CONFIG.Coefficient_Width {16} \
    CONFIG.ColumnConfig {11} \
    CONFIG.Data_Fractional_Bits {0} \
+   CONFIG.Data_Width {16} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
    CONFIG.Quantization {Integer_Coefficients} \
@@ -302,7 +304,9 @@ proc create_root_design { parentCell } {
    CONFIG.Coefficient_Width {16} \
    CONFIG.ColumnConfig {11} \
    CONFIG.Data_Fractional_Bits {0} \
+   CONFIG.Data_Width {16} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
    CONFIG.Quantization {Integer_Coefficients} \

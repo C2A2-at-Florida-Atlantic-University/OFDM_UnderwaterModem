@@ -13,12 +13,15 @@ entity iq_split is
 
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
+    s_axis_tready                 : out std_logic;
 
     m_axis_real_tdata             : out std_logic_vector(15 downto 0);
     m_axis_real_tvalid            : out std_logic;
+    m_axis_real_tready            : in  std_logic;
 
     m_axis_imag_tdata             : out std_logic_vector(15 downto 0);
-    m_axis_imag_tvalid            : out std_logic
+    m_axis_imag_tvalid            : out std_logic;
+    m_axis_imag_tready            : in  std_logic
   );
 end entity iq_split;
 
@@ -43,5 +46,7 @@ begin
       m_axis_imag_tvalid          <= s_axis_tvalid;
     end if;
   end process;
+
+  s_axis_tready                   <= m_axis_real_tready and m_axis_imag_tready;
 
 end architecture RTL;
