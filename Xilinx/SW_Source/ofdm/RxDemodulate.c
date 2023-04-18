@@ -35,8 +35,8 @@ static creal_T *TxBufferPtrLoop = NULL;
 //unsigned *RxBufferPtr = NULL;
 static uint8_T DemodData[MAX_NFFT*MAX_MOD_ORDER*DATA_DENSITY];
 static creal32_T PilotData[MAX_NFFT*MAX_MOD_ORDER*PILOT_DENSITY];
-static FILE *RxMessageFile;
-static FILE *RxInjectFile;
+static FILE *RxMessageFile = NULL;
+static FILE *RxInjectFile = NULL;
 static creal_T *FftOutArray;
 static pthread_t DemodThread = (pthread_t)NULL;
 static int pthreadState;
@@ -346,7 +346,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
 #endif
     if (ZpIndex < (OfdmCalcParams->FirstPilotCarrier) ||
       ZpIndex == (Nfft/2-1) || 
-      ZpIndex > OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
+      ZpIndex >= OfdmCalcParams->LastPilotCarrier) // ZP sub-carrer
     {
       if (DebugMode)
       {
@@ -474,7 +474,9 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
 {
   ReturnStatusType ReturnStatus;
   FILE *FftFile = NULL;
+  FILE *TimeFile = NULL;
   char FileName[32];
+  char FileName2[32];
 #ifdef DUC
   int32_T *BufferInData = NULL;
   int BufferSelect;
@@ -583,7 +585,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
       perror("RxDemodulateBufferData");
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString,
-        "RxDemodulateBufferData: Failed to open %s\n", FileNameOut2);
+        "RxDemodulateFft: Failed to open %s\n", FileNameOut2);
       return ReturnStatus;
     }
     // Check header information
@@ -592,8 +594,9 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString,
-        "RxDemodulateBufferData: Error with header in file %s"
+        "RxDemodulateFft: Error with header in file %s"
         "Nfft = %d, Header Nfft = %d\n", FileNameOut2, Nfft, tmp);
+      fclose(RxInjectFile);
       return ReturnStatus;
     }
     ScanfRet = fscanf(RxInjectFile, "%d,\n", &tmp);
@@ -601,8 +604,9 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString,
-        "RxDemodulateBufferData: Error with header in file %s"
+        "RxDemodulateFft: Error with header in file %s"
         "CpLen = %d, Header CpLen = %d\n", FileNameOut2, CpLen, tmp);
+      fclose(RxInjectFile);
       return ReturnStatus;
     }
     ScanfRet = fscanf(RxInjectFile, "%d,\n", &tmp);
@@ -610,9 +614,10 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString,
-        "RxDemodulateBufferData: Error with header in file %s"
+        "RxDemodulateFft: Error with header in file %s"
         "OfdmSymbols = %d, Header OfdmSymbols = %d\n", FileNameOut2, 
         OfdmSymbols, tmp);
+      fclose(RxInjectFile);
       return ReturnStatus;
     }
   }
@@ -629,6 +634,15 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
       return ReturnStatus;
     }
     fprintf(FftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
+    sprintf(FileName2, "files/RxFftSamples%d.txt", FileNumber);
+    TimeFile = fopen(FileName2, "w");
+    if (TimeFile == NULL)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "RxDemodulateFft: Failed to open %s\n", FileName2);
+      return ReturnStatus;
+    }
   }
 
   if (SwSync)
@@ -664,6 +678,13 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
               (BufferInData[(i*(CpLen+Nfft))+j]&0x0000FFFF);
             FftInData[j-CpLen].im = (int16_t)
               ((BufferInData[(i*(CpLen+Nfft))+j]&0xFFFF0000)>>16);
+            if (DebugMode)
+            {
+              fprintf(TimeFile, "%d, %d\n",
+                (int16_t)(BufferInData[(i*(CpLen+Nfft))+j]&0x0000FFFF),
+                (int16_t)
+                ((BufferInData[(i*(CpLen+Nfft))+j]&0xFFFF0000)>>16));
+            }
 #endif
 #ifdef DAC
             FftInData[j-CpLen].re = (int16_t)
@@ -678,6 +699,11 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
               &tmp1, &tmp2);
             FftInData[j-CpLen].re = (int16_t)tmp1;
             FftInData[j-CpLen].im = (int16_t)tmp2;
+            if (DebugMode)
+            {
+              fprintf(TimeFile, "%d, %d\n", (int16_t)tmp1,
+                (int16_t)tmp2);
+            }
           }
 #ifdef TIME_SAMPLE_DEBUG
           if (i == 1 && j == CpLen)
@@ -754,6 +780,11 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
     if (FftFile != NULL)
     {
       fclose(FftFile);
+    }
+    printf("RxDemodulateFft: wrote to file %s\n", FileName2);
+    if (TimeFile != NULL)
+    {
+      fclose(TimeFile);
     }
   }
 
