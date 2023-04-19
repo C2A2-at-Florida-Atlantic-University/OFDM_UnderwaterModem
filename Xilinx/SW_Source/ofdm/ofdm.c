@@ -459,7 +459,7 @@ int main(int argc, char **argv)
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
         ReturnStatus = TxModulateWriteToFile(FileNumber, 
-          &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+          &OfdmParams, OfdmTiming.OfdmSymbolsPerFrame);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);

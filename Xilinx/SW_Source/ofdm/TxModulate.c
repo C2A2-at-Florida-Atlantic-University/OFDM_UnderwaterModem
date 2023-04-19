@@ -412,8 +412,7 @@ uint16_T TxModulateGetScalarGain(void)
 }
 
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
-  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols,
-  Calculated_Ofdm_Parameters *OfdmCalcParams)
+  Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   char FileNameConverted[64];
@@ -508,7 +507,6 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   int NfftSize[1];
   int NfftInt = (int)Nfft;
   unsigned tmp_i, tmp_q;
-  unsigned ScanfRet;
   creal_T *IfftOutData;
 
 #ifdef DUC
@@ -647,7 +645,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
         {
           DucBufferPtr[j+Nfft] = 0x00000000;
         }
-        ScanfRet = fscanf(ZcFile,"%d, %d\n", &tmp_i, &tmp_q);
+        fscanf(ZcFile,"%d, %d\n", &tmp_i, &tmp_q);
         DucBufferPtr[j] = ((((int32_T)tmp_q)<<16)&0xFFFF0000)+
           (int16_T)tmp_i;
       }
@@ -741,8 +739,6 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   {
     fclose(ZcFile);
   }
-
-  printf("%d\n", ScanfRet); // Get rid of warnings
 
   free(IfftOutData);
   free(IfftOutStruct);
