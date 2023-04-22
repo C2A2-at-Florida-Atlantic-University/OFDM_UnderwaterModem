@@ -244,14 +244,20 @@ proc create_root_design { parentCell } {
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {S_AXIS:M_AXIS} \
+   CONFIG.ASSOCIATED_RESET {aresetn} \
  ] $aclk
+  set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
   set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
+  set i_sync_offset [ create_bd_port -dir I -from 9 -to 0 i_sync_offset ]
   set i_threshold [ create_bd_port -dir I -from 31 -to 0 i_threshold ]
 
   # Create instance: AXIS_Splitter_0, and set properties
   set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
+  set_property -dict [ list \
+   CONFIG.M_TREADY_ANDED_TVALID {true} \
+ ] $AXIS_Splitter_0
 
   # Create instance: AXIS_Splitter_1, and set properties
   set AXIS_Splitter_1 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_1 ]
@@ -284,6 +290,7 @@ proc create_root_design { parentCell } {
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.Has_ARESETn {true} \
    CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
@@ -306,6 +313,7 @@ proc create_root_design { parentCell } {
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.Has_ARESETn {true} \
    CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
@@ -357,7 +365,7 @@ proc create_root_design { parentCell } {
      return 1
    }
     set_property -dict [ list \
-   CONFIG.g_ILA {true} \
+   CONFIG.g_ILA {false} \
  ] $synchronizer_0
 
   # Create instance: xlconstant_0, and set properties
@@ -383,7 +391,9 @@ proc create_root_design { parentCell } {
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins synchronizer_0/i_nfft]
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]
   connect_bd_net -net i_threshold_0_1 [get_bd_ports i_threshold] [get_bd_pins max_thresh_0/i_threshold]
+  connect_bd_net -net i_trig_offset_0_1 [get_bd_ports i_sync_offset] [get_bd_pins synchronizer_0/i_trig_offset]
   connect_bd_net -net max_thresh_0_o_max_detected [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
+  connect_bd_net -net resetn_0_1 [get_bd_ports aresetn] [get_bd_pins fir_compiler_imag/aresetn] [get_bd_pins fir_compiler_real/aresetn]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments

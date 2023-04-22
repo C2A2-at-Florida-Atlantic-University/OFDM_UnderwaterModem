@@ -4,8 +4,8 @@
 #ifndef HW_INTERFACE_H_INCLUDED
 #define HW_INTERFACE_H_INCLUDED
 
-#include "ReturnStatus.h"
 #include <stdbool.h>
+#include "ReturnStatus.h"
 
 #define FpgaClkRate 100000000 // 100MHz
 #define DEFAULT_RX_GAIN_DB 30 // in dB
@@ -61,6 +61,11 @@
 #define SYNC_LOOPBACK_OFFSET 0x8
 #define SYNC_LOOPBACK_MASK_OFFSET 24
 #define SYNC_LOOPBACK_MASK 0x01000000
+
+#define SYNC_OFFSET_OFFSET 0x0
+#define SYNC_OFFSET_MASK_OFFSET 21
+#define SYNC_OFFSET_MASK 0x7FE
+#define SYNC_OFFSET_NEG_OFFSET 5
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -147,11 +152,13 @@ void HwInterfaceDisableDac(void);
 void HwInterfaceEnableAdc(void);
 void HwInterfaceDisableAdc(void);
 unsigned HwInterfaceReturnAdcStatus(void);
-void HwInterfaceConfigureDucInterpRatio(unsigned Ratio);
 void HwInterfaceDmaLoopback(unsigned Enable);
 void HwInterfaceSyncLoopback(unsigned Enable);
 void HwInterfaceSetGlobalMute(bool GlobalMuteSelect);
-void HwInterfaceConfigureSynchronizer(unsigned nfft, unsigned CpLen,
-  unsigned OfdmSymbols, unsigned Threshold);
+ReturnStatusType  HwInterfaceConfigureSynchronizer(unsigned nfft,
+  unsigned CpLen, unsigned OfdmSymbols, unsigned Threshold,
+  int SyncOffset);
+void HwInterfaceConfigureSignalParams(unsigned Interpolation,
+  unsigned Decimation, unsigned FcScaled);
 
 #endif

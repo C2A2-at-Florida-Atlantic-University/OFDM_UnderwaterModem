@@ -69,13 +69,6 @@ unsigned HwInterfaceReturnAdcStatus(void)
   return RegValue;
 }
 
-void HwInterfaceConfigureDucInterpRatio(unsigned Ratio)
-{
-  unsigned RegValue = Ratio;
-  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DUC_INTERP_RATIO_OFFSET,
-    RegValue, DUC_INTERP_RATIO_MASK, GlobalMute);
-}
-
 void HwInterfaceDmaLoopback(unsigned Enable)
 {
   unsigned RegValue = Enable;
@@ -92,20 +85,64 @@ void HwInterfaceSyncLoopback(unsigned Enable)
     RegValue, SYNC_LOOPBACK_MASK, GlobalMute);
 }
 
-void HwInterfaceConfigureSynchronizer(unsigned Nfft, unsigned CpLen,
-  unsigned OfdmSymbols, unsigned Threshold)
+void HwInterfaceConfigureSignalParams(unsigned Interpolation,
+  unsigned Decimation, unsigned FcScaled)
 {
+  unsigned RegValue = Interpolation;
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DUC_INTERP_RATIO_OFFSET,
+    RegValue, DUC_INTERP_RATIO_MASK, GlobalMute);
+  RegValue = Decimation;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DECIMATE_RADIO_OFFSET,
+    RegValue, DECIMATE_RADIO_MASK, GlobalMute);
+  RegValue = FcScaled;
+  FpgaInterfaceWrite32(GPIO_0_BASE_ADDR+FC_SCALED_OFFSET,
+    RegValue, GlobalMute);
+}
+
+ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft, 
+  unsigned CpLen, unsigned OfdmSymbols, unsigned Threshold, 
+  int SyncOffset)
+{
+  ReturnStatusType ReturnStatus;
   unsigned RegValue;
-  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft, NFFT_MASK,
+  int SyncOffsetReg;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft-1, NFFT_MASK,
     GlobalMute);
-  RegValue = CpLen << CP_LEN_MASK_OFFSET;
+  RegValue = (CpLen-1) << CP_LEN_MASK_OFFSET;
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+CP_LEN_OFFSET, RegValue,
     CP_LEN_MASK, GlobalMute);
-  RegValue = OfdmSymbols << OFDM_SYMBOLS_MASK_OFFSET;
+  RegValue = (OfdmSymbols-1) << OFDM_SYMBOLS_MASK_OFFSET;
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+OFDM_SYMBOLS_OFFSET, RegValue,
     OFDM_SYMBOLS_MASK, GlobalMute);
   FpgaInterfaceWrite32(GPIO_2_BASE_ADDR+SYNC_THRESHOLD_OFFSET,
     Threshold, GlobalMute);
+  if (SyncOffset < 0)
+  {
+    if (SyncOffset <= -32)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "HwInterfaceConfigureSynchronizer: ERROR: Offset too small\n");
+      return ReturnStatus;
+    }
+    SyncOffsetReg = SyncOffset << SYNC_OFFSET_NEG_OFFSET;
+  }
+  else
+  {
+    if (SyncOffset >= 32)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString,
+        "HwInterfaceConfigureSynchronizer: ERROR: Offset too large\n");
+      return ReturnStatus;
+    }
+    SyncOffsetReg = SyncOffset;
+  }
+  SyncOffsetReg = SyncOffsetReg << SYNC_OFFSET_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+SYNC_OFFSET_OFFSET,
+    SyncOffsetReg, SYNC_OFFSET_MASK, GlobalMute);
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
 }
 
 ReturnStatusType HwInterfaceSetVga(int gain)

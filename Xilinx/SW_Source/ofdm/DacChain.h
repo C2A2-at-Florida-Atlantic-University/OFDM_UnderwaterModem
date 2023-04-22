@@ -11,6 +11,7 @@
 #define DEFAULT_CENTER_FREQUENCY_KHZ 250
 
 #define DAC_SAMPLE_RATE_KHZ 10000 // 10 Msps
+#define ADC_SAMPLE_RATE_KHZ 40000 // 40 Msps
 
 #define CENTER_FREQUENCY_KHZ_MAX 400
 #define CENTER_FREQUENCY_KHZ_MIN 100
@@ -22,11 +23,18 @@ typedef struct {
   unsigned Fc;
 } Dac_Parameters_Type;
 
+typedef struct {
+  unsigned DacInterpolation;
+  unsigned AdcDecimation;
+  unsigned FcDds;
+} Hw_Parameters_Type;
+
 ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc);
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned BandWidth, unsigned OfdmSymbols);
 Dac_Parameters_Type DacChainGetDacParams(void);
 int16_t *DacChainGetDMABuff(void);
 void DacChainClearDMABuff(void);
+void DacChainSetLoopback(unsigned Loop);
 
 #endif

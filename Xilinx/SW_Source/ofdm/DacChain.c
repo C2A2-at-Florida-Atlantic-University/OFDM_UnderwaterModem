@@ -7,6 +7,8 @@
 #include <math.h>
 #include "TransmitChain.h"
 #include "TxModulate.h"
+#include "HwInterface.h"
+#include "FpgaInterface.h"
 #include "DacChain.h"
 #include "g_Interp.h"
 
@@ -14,10 +16,24 @@
 
 static Dac_Parameters_Type DacParams;
 static int16_t *DucOutData = NULL; // Buffer going to DAC
+bool Loopback = false;
+
+void DacChainSetLoopback(unsigned Loop)
+{
+  if (Loop == 1)
+  {
+    Loopback = true;
+  }
+  else
+  {
+    Loopback = false;
+  }
+}
 
 ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc)
 {
   ReturnStatusType ReturnStatus;
+  Hw_Parameters_Type HwParams;
 
   printf("DacChainSetDacParams: Valid Freq Range: %d kHz - %d kHz\n",
     CENTER_FREQUENCY_KHZ_MIN, CENTER_FREQUENCY_KHZ_MAX);
@@ -44,6 +60,22 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc)
   DacParams.Fs = BandWidth; // Nyquist complex Fs = BW
   DacParams.Interp = DAC_SAMPLE_RATE_KHZ/BandWidth;
   DacParams.Fc = Fc;
+
+  HwParams.DacInterpolation = DAC_SAMPLE_RATE_KHZ/BandWidth;
+  if (Loopback)
+  {
+    HwParams.AdcDecimation = DAC_SAMPLE_RATE_KHZ/BandWidth;
+  }
+  else
+  {
+    HwParams.AdcDecimation = ADC_SAMPLE_RATE_KHZ/BandWidth;
+  }
+  HwParams.FcDds = Fc*2<<32/FpgaClkRate;
+
+#ifndef NO_DEVMEM
+  HwInterfaceConfigureSignalParams(HwParams.DacInterpolation,
+    HwParams.AdcDecimation, HwParams.FcDds);
+#endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

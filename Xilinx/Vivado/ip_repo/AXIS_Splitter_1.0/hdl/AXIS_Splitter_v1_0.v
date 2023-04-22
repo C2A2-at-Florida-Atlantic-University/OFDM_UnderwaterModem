@@ -3,7 +3,8 @@
 
 	module AXIS_Splitter_v1_0 #
 	(
-		parameter integer AXIS_TDATA_WIDTH	= 32
+		parameter integer AXIS_TDATA_WIDTH	= 32,
+		parameter integer M_TREADY_ANDED_TVALID = 0
 	)
 	(
 		input wire  axis_aclk,
@@ -30,12 +31,12 @@
 	);
 
   // Outputs of AXI Masters:
-  assign m00_axis_tvalid = s00_axis_tvalid;
+  assign m00_axis_tvalid = M_TREADY_ANDED_TVALID && tready_select ? s00_axis_tvalid && m01_axis_tready : s00_axis_tvalid;
   assign m00_axis_tdata = s00_axis_tdata;
   assign m00_axis_tstrb = s00_axis_tstrb;
   assign m00_axis_tlast = s00_axis_tlast;
 
-  assign m01_axis_tvalid = s00_axis_tvalid;
+  assign m01_axis_tvalid = M_TREADY_ANDED_TVALID && ~tready_select ? s00_axis_tvalid && m00_axis_tready : s00_axis_tvalid;
   assign m01_axis_tdata = s00_axis_tdata;
   assign m01_axis_tstrb = s00_axis_tstrb;
   assign m01_axis_tlast = s00_axis_tlast;

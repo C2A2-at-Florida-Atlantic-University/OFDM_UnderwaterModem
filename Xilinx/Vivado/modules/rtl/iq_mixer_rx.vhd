@@ -49,19 +49,19 @@ architecture RTL of iq_mixer_rx is
     );
   end component mult_gen_0;
 
-  constant c_ONES_MASK            : std_logic_vector(5 downto 0) := (others => '1');
-  constant c_ZEROS_MASK           : std_logic_vector(5 downto 0) := (others => '0');
+  signal i_sample                 : std_logic_vector(15 downto 0) := (others => '0');
+  signal q_sample                 : std_logic_vector(15 downto 0) := (others => '0');
+  signal cos_sample               : std_logic_vector(6 downto 0)  := (others => '0');
+  signal sin_sample               : std_logic_vector(6 downto 0)  := (others => '0');
+  signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
-  signal toggle                   : std_logic                    := '0';
-  signal counter                  : std_logic_vector(3 downto 0) := (others => '0');
-  signal real_sample              : std_logic_vector(15 downto 0);
-  signal out_tvalid               : std_logic;
-  signal out_tlast                : std_logic;
-  signal out_tdata                : std_logic_vector(15 downto 0);
-  signal i_sample                 : std_logic_vector(15 downto 0);
-  signal q_sample                 : std_logic_vector(15 downto 0);
-  signal cos_sample               : std_logic_vector(6 downto 0);
-  signal sin_sample               : std_logic_vector(6 downto 0);
+  constant READY                  : std_logic_vector(1 downto 0)  := "00";
+  constant MIX_I                  : std_logic_vector(1 downto 0)  := "01";
+  constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "10";
+  constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "11";
+
+  signal Current_State            : std_logic_vector(1 downto 0)  := READY;
+  signal Next_State               : std_logic_vector(1 downto 0)  := READY;
 
 begin
 
@@ -83,47 +83,114 @@ begin
       P                           => q_sample
     );
 
-  -- Read 1 sample from FIFO every ADC sample rate
+  -- Process to assign Current State
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      if counter = g_CYCLES_PER_SAMPLE-'1' then
-        counter                   <= (others => '0');
-        s_axis_tready             <= '1';
-      else
-        s_axis_tready             <= '0';
-        counter                   <= counter + '1';
-        if counter = g_CYCLES_PER_SAMPLE-"111" then
-          real_sample             <= s_axis_tdata(15 downto 0);
-          cos_sample              <= s_axis_dds_tdata(6 downto 0);
-          sin_sample              <= s_axis_dds_tdata(14 downto 8);
-        end if;
-      end if;
-    end if;
-  end process;
-        
-  -- TDM I and Q
-  process(axis_aclk)
-  begin
-    if rising_edge(axis_aclk) then
-      if counter = g_CYCLES_PER_SAMPLE-"110" then
-        out_tvalid                <= '1';
-        out_tlast                 <= '0';
-        out_tdata                 <= i_sample;
-      elsif counter = g_CYCLES_PER_SAMPLE-'1' then
-        out_tvalid                <= '1';
-        out_tlast                 <= '1';
-        out_tdata                 <= q_sample;
-      else
-        out_tvalid                <= '0';
-        out_tlast                 <= '0';
-        out_tdata                 <= (others => '0');
-      end if;
+      Current_State               <= Next_State;
     end if;
   end process;
 
-  m_axis_tlast                    <= out_tlast;
-  m_axis_tvalid                   <= out_tvalid;
-  m_axis_tdata                    <= out_tdata;
+  -- Process describing State machine
+  process(axis_aclk)
+  begin
+    if rising_edge(axis_aclk) then
+
+      case Current_State is
+
+        when READY =>
+          if s_axis_tvalid = '1' then
+            real_sample           <= s_axis_tdata;
+            cos_sample            <= s_axis_dds_tdata(6 downto 0);
+            sin_sample            <= s_axis_dds_tdata(14 downto 8);
+          end if;
+
+        when others =>
+          NULL;
+
+      end case;
+    end if;
+  end process;
+
+  -- Process describing next state
+  process(
+    Current_State,
+    s_axis_tvalid,
+    m_axis_tready
+  ) begin
+
+    case Current_State is 
+
+      when READY => 
+        if s_axis_tvalid = '1' then
+          Next_State              <= MIX_I;
+        else
+          Next_State              <= READY;
+        end if;
+
+      when MIX_I =>
+        Next_State                <= SAMPLE_I;
+
+      when SAMPLE_I =>
+        if m_axis_tready = '1' then
+          Next_State              <= SAMPLE_Q;
+        else
+          Next_State              <= SAMPLE_I;
+        end if;
+
+      when SAMPLE_Q =>
+        if m_axis_tready = '1' then
+          Next_State              <= READY;
+        else
+          Next_State              <= SAMPLE_Q;
+        end if;
+
+      when others =>
+        Next_State                <= SAMPLE_Q;
+
+    end case;
+  end process;
+
+  -- Process assigning output products
+  process(
+    Current_State,
+    i_sample,
+    q_sample
+  ) begin
+    
+    case Current_State is
+
+      when READY =>
+        s_axis_tready             <= '1';
+        m_axis_tdata              <= (others => '0');
+        m_axis_tlast              <= '0';
+        m_axis_tvalid             <= '0';
+      
+      when MIX_I =>
+        s_axis_tready             <= '0';
+        m_axis_tvalid             <= '0';
+        m_axis_tlast              <= '0';
+        m_axis_tdata              <= (others => '0');
+
+      when SAMPLE_I =>
+        s_axis_tready             <= '0';
+        m_axis_tvalid             <= '1';
+        m_axis_tlast              <= '0';
+        m_axis_tdata              <= i_sample;
+
+      when SAMPLE_Q =>
+        s_axis_tready             <= '1';
+        m_axis_tvalid             <= '1';
+        m_axis_tlast              <= '1';
+        m_axis_tdata              <= q_sample;
+
+      when others =>
+        s_axis_tready             <= '0';
+        m_axis_tdata              <= (others => '0');
+        m_axis_tlast              <= '0';
+        m_axis_tvalid             <= '0';
+
+    end case;
+  end process;
 
 end architecture RTL;

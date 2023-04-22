@@ -368,6 +368,13 @@ void *DirectDmaPlToPs(void *arg)
         return NULL;
     }
 
+    // Actual number of bytes is written back onto buffer length reg
+    FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET, &ActualBytes,
+      GlobalMute);
+#ifdef DEBUG
+    printf("DirectDmaPlToPs: Read %d bytes\n", ActualBytes);
+#endif
+
     // Read if transfer was a mm2s => s2mm loopback
     FpgaInterfaceRead32(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, 
       &RegValue, GlobalMute);

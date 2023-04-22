@@ -387,12 +387,6 @@ proc create_root_design { parentCell } {
 
 
   # Create ports
-  set ADCclock [ create_bd_port -dir O ADCclock ]
-  set ADCdata [ create_bd_port -dir I -from 14 -to 0 ADCdata ]
-  set DACclock [ create_bd_port -dir O DACclock ]
-  set DACdata [ create_bd_port -dir O -from 13 -to 0 DACdata ]
-  set DACsleep [ create_bd_port -dir O DACsleep ]
-  set PowerAmpEnable [ create_bd_port -dir O PowerAmpEnable ]
 
   # Create instance: ADC_Chain_0, and set properties
   set ADC_Chain_0 [ create_bd_cell -type container -reference ADC_Chain ADC_Chain_0 ]
@@ -456,6 +450,7 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins Loopback/s_axis2]
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS_DDS [get_bd_intf_pins ADC_Chain_0/M_AXIS_DDS] [get_bd_intf_pins DAC_Chain_0/S_AXIS_DDS]
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins DAC_Chain_0/S_AXIS] [get_bd_intf_pins Loopback/M00_AXIS]
+  connect_bd_intf_net -intf_net DAC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/S_AXIS] [get_bd_intf_pins DAC_Chain_0/M_AXIS]
   connect_bd_intf_net -intf_net PS_Zynq_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins PS_Zynq_0/DDR]
   connect_bd_intf_net -intf_net PS_Zynq_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins PS_Zynq_0/FIXED_IO]
   connect_bd_intf_net -intf_net PS_Zynq_0_M_AXI_DMA [get_bd_intf_pins PS_Zynq_0/M_AXI_DMA] [get_bd_intf_pins axi_dma_0/S_AXI_LITE]
@@ -467,21 +462,15 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net s_axis0_1 [get_bd_intf_pins Loopback/s_axis0] [get_bd_intf_pins Ofdm_Sync_250k_0/M_AXIS]
 
   # Create port connections
-  connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
-  connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus]
-  connect_bd_net -net ADCdata_0_1 [get_bd_ports ADCdata] [get_bd_pins ADC_Chain_0/ADCdata]
-  connect_bd_net -net DAC_Chain_0_ClockToDAC_0 [get_bd_ports DACclock] [get_bd_pins DAC_Chain_0/ClockToDAC]
-  connect_bd_net -net DAC_Chain_0_DAC_data_0 [get_bd_ports DACdata] [get_bd_pins DAC_Chain_0/DAC_data]
-  connect_bd_net -net DAC_Chain_0_DAC_sleep_0 [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep]
-  connect_bd_net -net DAC_Chain_0_PA_enable_0 [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable]
-  connect_bd_net -net PS_Zynq_0_ADCcontrol [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol]
-  connect_bd_net -net PS_Zynq_0_DACcontrol [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol]
+  connect_bd_net -net ADC_Chain_0_status [get_bd_pins PS_Zynq_0/ADCstatus]
+  connect_bd_net -net PS_Zynq_0_ADCcontrol [get_bd_pins PS_Zynq_0/ADCcontrol]
+  connect_bd_net -net PS_Zynq_0_DACcontrol [get_bd_pins PS_Zynq_0/DACcontrol]
   connect_bd_net -net PS_Zynq_0_Fc_scaled [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/Fc_scaled]
   connect_bd_net -net PS_Zynq_0_Interp_ratio [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
   connect_bd_net -net PS_Zynq_0_aclk_100M [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins DAC_Chain_0/aclk] [get_bd_pins Loopback/axis_aclk] [get_bd_pins Ofdm_Sync_250k_0/aclk] [get_bd_pins PS_Zynq_0/aclk_100M] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk]
-  connect_bd_net -net PS_Zynq_0_aclk_40M [get_bd_pins ADC_Chain_0/aclk_40M] [get_bd_pins PS_Zynq_0/aclk_40M]
+  connect_bd_net -net PS_Zynq_0_aclk_40M [get_bd_pins PS_Zynq_0/aclk_40M]
   connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins Loopback/axis_aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins axi_dma_0/axi_resetn]
-  connect_bd_net -net PS_Zynq_0_aresetn_40M [get_bd_pins ADC_Chain_0/aresetn_40M] [get_bd_pins PS_Zynq_0/aresetn_40M]
+  connect_bd_net -net PS_Zynq_0_aresetn_40M [get_bd_pins PS_Zynq_0/aresetn_40M]
   connect_bd_net -net PS_Zynq_0_cp_len [get_bd_pins Ofdm_Sync_250k_0/i_cp_len] [get_bd_pins PS_Zynq_0/cp_len]
   connect_bd_net -net PS_Zynq_0_decimate_ratio [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio]
   connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins Loopback/dma_loopback] [get_bd_pins PS_Zynq_0/dma_loopback]
@@ -490,8 +479,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net PS_Zynq_0_sync_loopback [get_bd_pins Loopback/sync_loopback] [get_bd_pins PS_Zynq_0/sync_loopback]
   connect_bd_net -net PS_Zynq_0_sync_offset [get_bd_pins Ofdm_Sync_250k_0/i_sync_offset] [get_bd_pins PS_Zynq_0/sync_offset]
   connect_bd_net -net PS_Zynq_0_threshold [get_bd_pins Ofdm_Sync_250k_0/i_threshold] [get_bd_pins PS_Zynq_0/threshold]
-  connect_bd_net -net aclk_10M_1 [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
-  connect_bd_net -net aresetn_10M_1 [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
+  connect_bd_net -net aclk_10M_1 [get_bd_pins ADC_Chain_0/aclk_10M] [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
+  connect_bd_net -net aresetn_10M_1 [get_bd_pins ADC_Chain_0/aresetn_10M] [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] -force

@@ -11,6 +11,7 @@
 #include "TxModulate.h"
 #include "TransmitChain.h"
 #include "FpgaInterface.h"
+#include "HwInterface.h"
 #include "RxDemodulate.h"
 #include "d_QamDemod.h"
 #include "rtwtypes.h"
@@ -900,5 +901,6 @@ void *RxDemodulateThread(void *arg)
   }
 
   printf("RxDemodulateThread: SUCCESS: Exiting Thread\n");
+  HwInterfaceDisableAdc();
   return NULL;
 }

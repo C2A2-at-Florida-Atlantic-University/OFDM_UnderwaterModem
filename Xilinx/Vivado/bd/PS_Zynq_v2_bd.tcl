@@ -212,6 +212,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 11 -to 0 nfft
   create_bd_pin -dir O -from 3 -to 0 symbols
   create_bd_pin -dir O -from 0 -to 0 sync_loopback
+  create_bd_pin -dir O -from 9 -to 0 sync_offset
   create_bd_pin -dir O -from 31 -to 0 threshold
 
   # Create instance: axi_gpio_0, and set properties
@@ -232,9 +233,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_ALL_OUTPUTS {1} \
    CONFIG.C_ALL_OUTPUTS_2 {0} \
    CONFIG.C_DOUT_DEFAULT {0x00020028} \
-   CONFIG.C_DOUT_DEFAULT_2 {0x00000028} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x00000000} \
    CONFIG.C_GPIO2_WIDTH {32} \
-   CONFIG.C_GPIO_WIDTH {21} \
+   CONFIG.C_GPIO_WIDTH {31} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_1
 
@@ -263,10 +264,11 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: delimiter_1, and set properties
   set delimiter_1 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_1 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {21} \
-   CONFIG.NUM_OUTPUTS {3} \
+   CONFIG.IN0_WIDTH {31} \
+   CONFIG.NUM_OUTPUTS {4} \
    CONFIG.OUT0_WIDTH {16} \
    CONFIG.OUT2_WIDTH {4} \
+   CONFIG.OUT3_WIDTH {10} \
  ] $delimiter_1
 
   # Create instance: delimiter_2, and set properties
@@ -297,6 +299,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_1_OUT0 [get_bd_pins Interp_ratio] [get_bd_pins delimiter_1/OUT0]
   connect_bd_net -net delimiter_1_OUT1 [get_bd_pins dma_loopback] [get_bd_pins delimiter_1/OUT1]
   connect_bd_net -net delimiter_1_OUT2 [get_bd_pins symbols] [get_bd_pins delimiter_1/OUT2]
+  connect_bd_net -net delimiter_1_OUT3 [get_bd_pins sync_offset] [get_bd_pins delimiter_1/OUT3]
   connect_bd_net -net delimiter_2_OUT0 [get_bd_pins nfft] [get_bd_pins delimiter_2/OUT0]
   connect_bd_net -net delimiter_2_OUT1 [get_bd_pins cp_len] [get_bd_pins delimiter_2/OUT1]
   connect_bd_net -net delimiter_2_OUT2 [get_bd_pins sync_loopback] [get_bd_pins delimiter_2/OUT2]
@@ -505,6 +508,7 @@ proc create_root_design { parentCell } {
   set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
   set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
   set sync_loopback [ create_bd_port -dir O -from 0 -to 0 sync_loopback ]
+  set sync_offset [ create_bd_port -dir O -from 9 -to 0 sync_offset ]
   set threshold [ create_bd_port -dir O -from 31 -to 0 threshold ]
 
   # Create instance: axi_interconnect_0, and set properties
@@ -1356,6 +1360,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_OUT1_1 [get_bd_ports cp_len] [get_bd_pins regs/cp_len]
   connect_bd_net -net regs_OUT2_0 [get_bd_ports symbols] [get_bd_pins regs/symbols]
   connect_bd_net -net regs_OUT2_1 [get_bd_ports sync_loopback] [get_bd_pins regs/sync_loopback]
+  connect_bd_net -net regs_OUT3_0 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
 
   # Create address segments
