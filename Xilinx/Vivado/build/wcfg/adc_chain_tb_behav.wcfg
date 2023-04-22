@@ -11,15 +11,18 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3,742.161 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,946.486 ns"></ZoomEndTime>
-      <Cursor1Time time="3,849.983 ns"></Cursor1Time>
+      <ZoomStartTime time="1,121.766 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,298.518 ns"></ZoomEndTime>
+      <Cursor1Time time="1,210.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="180"></NameColumnWidth>
+      <NameColumnWidth column_width="168"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="11" />
+   <wave_markers>
+      <marker label="" time="1580645" />
+   </wave_markers>
    <wvobject type="logic" fp_name="/adc_chain_tb/r_clk">
       <obj_property name="ElementShortName">r_clk</obj_property>
       <obj_property name="ObjectShortName">r_clk</obj_property>
@@ -460,6 +463,18 @@
             <obj_property name="ObjectShortName">m_axis_tready</obj_property>
          </wvobject>
       </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/event_tlast_unexpected">
+         <obj_property name="ElementShortName">event_tlast_unexpected</obj_property>
+         <obj_property name="ObjectShortName">event_tlast_unexpected</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/cic_compiler_0/event_tlast_missing">
+         <obj_property name="ElementShortName">event_tlast_missing</obj_property>
+         <obj_property name="ObjectShortName">event_tlast_missing</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mute_output">
+         <obj_property name="ElementShortName">mute_output</obj_property>
+         <obj_property name="ObjectShortName">mute_output</obj_property>
+      </wvobject>
       <wvobject type="group" fp_name="group2034">
          <obj_property name="label">Mult_real</obj_property>
          <obj_property name="DisplayName">label</obj_property>
@@ -537,20 +552,12 @@
          <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/Current_State">
-         <obj_property name="ElementShortName">Current_State[1:0]</obj_property>
-         <obj_property name="ObjectShortName">Current_State[1:0]</obj_property>
+         <obj_property name="ElementShortName">Current_State[0:0]</obj_property>
+         <obj_property name="ObjectShortName">Current_State[0:0]</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/Next_State">
-         <obj_property name="ElementShortName">Next_State[1:0]</obj_property>
-         <obj_property name="ObjectShortName">Next_State[1:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/mute_output">
-         <obj_property name="ElementShortName">mute_output</obj_property>
-         <obj_property name="ObjectShortName">mute_output</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_0/inst/r_mute_output">
-         <obj_property name="ElementShortName">r_mute_output</obj_property>
-         <obj_property name="ObjectShortName">r_mute_output</obj_property>
+         <obj_property name="ElementShortName">Next_State[0:0]</obj_property>
+         <obj_property name="ObjectShortName">Next_State[0:0]</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group975">

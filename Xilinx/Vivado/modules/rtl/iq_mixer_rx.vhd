@@ -56,12 +56,13 @@ architecture RTL of iq_mixer_rx is
   signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
   constant READY                  : std_logic_vector(1 downto 0)  := "00";
-  constant MIX_I                  : std_logic_vector(1 downto 0)  := "01";
-  constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "10";
+  constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "01";
   constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "11";
 
   signal Current_State            : std_logic_vector(1 downto 0)  := READY;
   signal Next_State               : std_logic_vector(1 downto 0)  := READY;
+
+  signal s_axis_tvalid_reg        : std_logic;
 
 begin
 
@@ -88,28 +89,37 @@ begin
   begin
     if rising_edge(axis_aclk) then
       Current_State               <= Next_State;
+      s_axis_tvalid_reg           <= s_axis_tvalid;
     end if;
   end process;
 
   -- Process describing State machine
-  process(axis_aclk)
+  process(
+    s_axis_tvalid,
+    s_axis_tdata,
+    s_axis_dds_tdata)
   begin
-    if rising_edge(axis_aclk) then
 
-      case Current_State is
+    case Current_State is
 
-        when READY =>
-          if s_axis_tvalid = '1' then
-            real_sample           <= s_axis_tdata;
-            cos_sample            <= s_axis_dds_tdata(6 downto 0);
-            sin_sample            <= s_axis_dds_tdata(14 downto 8);
-          end if;
+      when READY =>
+        if s_axis_tvalid = '1' then
+          real_sample           <= s_axis_tdata;
+          cos_sample            <= s_axis_dds_tdata(6 downto 0);
+          sin_sample            <= s_axis_dds_tdata(14 downto 8);
+        end if;
 
-        when others =>
-          NULL;
+      when SAMPLE_Q =>
+        if s_axis_tvalid = '1' then
+          real_sample           <= s_axis_tdata;
+          cos_sample            <= s_axis_dds_tdata(6 downto 0);
+          sin_sample            <= s_axis_dds_tdata(14 downto 8);
+        end if;
 
-      end case;
-    end if;
+      when others =>
+        NULL;
+
+    end case;
   end process;
 
   -- Process describing next state
@@ -120,16 +130,13 @@ begin
   ) begin
 
     case Current_State is 
-
-      when READY => 
-        if s_axis_tvalid = '1' then
-          Next_State              <= MIX_I;
+      
+      when READY =>
+        if m_axis_tready = '1' and s_axis_tvalid = '1' then
+          Next_State              <= SAMPLE_I;
         else
           Next_State              <= READY;
         end if;
-
-      when MIX_I =>
-        Next_State                <= SAMPLE_I;
 
       when SAMPLE_I =>
         if m_axis_tready = '1' then
@@ -139,14 +146,14 @@ begin
         end if;
 
       when SAMPLE_Q =>
-        if m_axis_tready = '1' then
-          Next_State              <= READY;
+        if m_axis_tready = '1' and s_axis_tvalid = '1' then
+          Next_State              <= SAMPLE_I;
         else
-          Next_State              <= SAMPLE_Q;
+          Next_State              <= READY;
         end if;
 
       when others =>
-        Next_State                <= SAMPLE_Q;
+        Next_State                <= SAMPLE_I;
 
     end case;
   end process;
@@ -155,7 +162,8 @@ begin
   process(
     Current_State,
     i_sample,
-    q_sample
+    q_sample,
+    s_axis_tvalid_reg
   ) begin
     
     case Current_State is
@@ -165,16 +173,10 @@ begin
         m_axis_tdata              <= (others => '0');
         m_axis_tlast              <= '0';
         m_axis_tvalid             <= '0';
-      
-      when MIX_I =>
-        s_axis_tready             <= '0';
-        m_axis_tvalid             <= '0';
-        m_axis_tlast              <= '0';
-        m_axis_tdata              <= (others => '0');
 
       when SAMPLE_I =>
         s_axis_tready             <= '0';
-        m_axis_tvalid             <= '1';
+        m_axis_tvalid             <= s_axis_tvalid_reg;
         m_axis_tlast              <= '0';
         m_axis_tdata              <= i_sample;
 

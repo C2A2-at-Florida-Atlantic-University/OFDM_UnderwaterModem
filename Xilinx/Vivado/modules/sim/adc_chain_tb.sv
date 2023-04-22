@@ -10,6 +10,7 @@ module adc_chain_tb();
   localparam                        CLOCK_CYCLE       = CLOCK_PERIOD/2;
 
   localparam                        CLOCK_PERIOD_ADC  = 100; // 10 MHz
+  //localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
   localparam                        CLOCK_CYCLE_ADC   = CLOCK_PERIOD_ADC/2;
 
   int                               fd;
@@ -156,7 +157,7 @@ module adc_chain_tb();
     #(CLOCK_PERIOD*20);
     ADC_control                     = 4'b0001;
     Fc_scaled                       = 32'd10737418;
-    decimate_ratio                  = 16'd40;
+    decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD_ADC*30);
 
     for (int i = 0; i < 1740800; i++) begin

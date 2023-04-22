@@ -16,13 +16,14 @@ entity dma_tlast_gen is
 
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
-
-    o_div                         : out std_logic;
+    s_axis_tready                 : out std_logic;
 
     m_axis_tdata                  : out std_logic_vector(31 downto 0);
     m_axis_tvalid                 : out std_logic;
     m_axis_tlast                  : out std_logic;
-    m_axis_tready                 : in  std_logic
+    m_axis_tready                 : in  std_logic;
+
+    i_dma_tlast_count             : in  std_logic_vector(31 downto 0)
   );
 end entity dma_tlast_gen;
 
@@ -36,40 +37,36 @@ architecture RTL of dma_tlast_gen is
     signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:m_axis, FREQ_HZ 100000000";
 
   signal counter                  : std_logic_vector(31 downto 0) := (others => '0');
-  signal trigg_counter            : std_logic_vector(4 downto 0) := (others => '0');
 
 begin
 
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      if trigg_counter = "11111" then -- every 32 cycles
-        o_div                     <= '1';
-      else
-        o_div                     <= '0';
+      if s_axis_tvalid = '1' then
+        if counter = i_dma_tlast_count-'1' then 
+          counter                   <= (others => '0');
+        else
+          counter                   <= counter + '1';
+        end if;
       end if;
     end if;
   end process;
 
-  process(axis_aclk)
-  begin
-    if rising_edge(axis_aclk) then
-      if counter = X"00003FFF" then -- 16384 cycles
-        counter                   <= (others => '0');
-        m_axis_tlast              <= '1';
-      else
-        counter                   <= counter + '1';
-        m_axis_tlast              <= '0';
-      end if;
+  process(
+    s_axis_tvalid,
+    counter,
+    i_dma_tlast_count
+  ) begin
+    if s_axis_tvalid = '1' and counter = i_dma_tlast_count-'1' then
+      m_axis_tlast                <= '1';
+    else
+      m_axis_tlast                <= '0';
     end if;
   end process;
 
-  process(axis_aclk)
-  begin
-    if rising_edge(axis_aclk) then
-      m_axis_tdata                <= s_axis_tdata;
-      m_axis_tvalid               <= s_axis_tvalid;
-    end if;
-  end process;
+  m_axis_tdata                    <= s_axis_tdata;
+  m_axis_tvalid                   <= s_axis_tvalid;
+  s_axis_tready                   <= m_axis_tready;
 
 end architecture RTL;

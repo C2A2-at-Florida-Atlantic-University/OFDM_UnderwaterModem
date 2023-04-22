@@ -18,7 +18,8 @@ entity tdm_reformat is
     s_axis_tuser                  : in  std_logic_vector(15 downto 0);
     
     m_axis_tdata                  : out std_logic_vector(31 downto 0);
-    m_axis_tvalid                 : out std_logic
+    m_axis_tvalid                 : out std_logic;
+    m_axis_tready                 : in  std_logic
   );
 end entity tdm_reformat;
 
