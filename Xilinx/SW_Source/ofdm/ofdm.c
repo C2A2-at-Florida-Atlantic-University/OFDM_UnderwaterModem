@@ -569,6 +569,9 @@ int main(int argc, char **argv)
         break;
 
       case 14:
+#ifndef NO_DEVMEM
+        HwInterfaceSetDmaTlastGen(DucDdcLoopSel,0);
+#endif
         ReturnStatus = DirectDmaPlToPsThread();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {

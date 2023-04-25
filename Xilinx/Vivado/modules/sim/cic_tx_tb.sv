@@ -69,7 +69,8 @@ module cic_tx_tb();
 
     #(CLOCK_PERIOD*255);
 
-    for (int i = 0; i < 1218560; i++) begin
+    //for (int i = 0; i < 1218560; i++) begin // For OFDM signal
+    for (int i = 0; i < 80; i++) begin // For impulse response
       i_duc_out                     = m_tdata;
       #(CLOCK_PERIOD*5);
       q_duc_out                     = m_tdata;
@@ -112,17 +113,29 @@ module cic_tx_tb();
     #(CLOCK_PERIOD*19)
     #(CLOCK_PERIOD*10);
 
-    for (int i = 0; i < 30464; i++) begin
+    //for (int i = 0; i < 30464; i++) begin // OFDM signal
+    for (int i = 0; i < 80; i++) begin // Impulse response
       $fscanf(fd, "%d, %d", i_duc_data, q_duc_data);
-      s_tdata                       <= i_duc_data;
+      //s_tdata                       <= i_duc_data; // OFDM signal
+      if (i == 0) // Impulse response
+        s_tdata                     <= 1'b1;
+      else
+        s_tdata                     <= 1'b0;
       s_tvalid                      <= 1'b1;
+      s_tlast                       <= 1'b0;
       #CLOCK_PERIOD;
       s_tvalid                      <= 1'b0;
       #(CLOCK_PERIOD*199);
-      s_tdata                       <= q_duc_data;
+      //s_tdata                       <= q_duc_data; // OFDM Signal
+      if (i == 0)
+        s_tdata                     <= 1'b1;
+      else
+        s_tdata                     <= 1'b0;
       s_tvalid                      <= 1'b1;
+      s_tlast                       <= 1'b1;
       #CLOCK_PERIOD;
       s_tvalid                      <= 1'b0;
+      s_tlast                       <= 1'b0;
       #(CLOCK_PERIOD*199);
     end
 

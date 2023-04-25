@@ -57,7 +57,7 @@ architecture RTL of iq_mixer_rx is
 
   constant READY                  : std_logic_vector(1 downto 0)  := "00";
   constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "01";
-  constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "11";
+  constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "10";
 
   signal Current_State            : std_logic_vector(1 downto 0)  := READY;
   signal Next_State               : std_logic_vector(1 downto 0)  := READY;

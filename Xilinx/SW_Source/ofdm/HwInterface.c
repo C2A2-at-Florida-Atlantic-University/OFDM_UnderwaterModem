@@ -23,6 +23,20 @@ static int SpiFile;  // /dev/spidev1 file
 static int GpioFile; // /sys/class/gpio/* file
 static bool GlobalMute;
 
+void HwInterfaceDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
+{
+  if (DucDdcLoopSel == 0) // Program zero, tlast is passthrough
+  {
+    FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET, 0,
+      GlobalMute);
+  }
+  else // Program sample to generate tlast pulse on
+  {
+    FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET,
+      Samples-1, GlobalMute);
+  }
+}
+
 void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
 {
   GlobalMute = GlobalMuteSelect;

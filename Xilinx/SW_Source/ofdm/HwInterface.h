@@ -13,6 +13,7 @@
 #define GPIO_0_BASE_ADDR 0x40010000
 #define GPIO_1_BASE_ADDR 0x40010200
 #define GPIO_2_BASE_ADDR 0x40010400
+#define GPIO_3_BASE_ADDR 0x40010600
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -66,6 +67,9 @@
 #define SYNC_OFFSET_MASK_OFFSET 21
 #define SYNC_OFFSET_MASK 0x7FE
 #define SYNC_OFFSET_NEG_OFFSET 5
+
+#define DMA_TLAST_GEN_OFFSET 0x0
+#define DMA_TLAST_GEN_MASK 0xFFFFFFFF
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -160,5 +164,6 @@ ReturnStatusType  HwInterfaceConfigureSynchronizer(unsigned nfft,
   int SyncOffset);
 void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   unsigned Decimation, unsigned FcScaled);
+void HwInterfaceDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
 
 #endif

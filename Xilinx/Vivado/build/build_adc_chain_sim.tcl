@@ -15,7 +15,7 @@ update_ip_catalog
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
-source ADC_Chain_bd.tcl
+source ADC_Chain_sim_bd.tcl
 update_compile_order -fileset sources_1
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/adc_chain
 make_wrapper -files [get_files adc_chain.srcs/sources_1/bd/ADC_Chain/ADC_Chain.bd] -top

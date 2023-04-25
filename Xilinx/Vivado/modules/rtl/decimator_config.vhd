@@ -9,7 +9,8 @@ use ieee.std_logic_1164.all;
 
 entity decimator_config is
   generic(
-    g_PRECISION                   : integer := 16
+    g_PRECISION                   : integer := 16;
+    g_DEFAULT_RATE                : std_logic_vector(15 downto 0) := X"0028"
   );
   port(
     axis_aclk                     : in  std_logic;
@@ -31,7 +32,7 @@ architecture RTL of decimator_config is
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
     signal is "ASSOCIATED_BUSIF axis_aclk:m_axis, FREQ_HZ 100000000";
 
-  signal r_decimate_ratio            : std_logic_vector(g_PRECISION-1 downto 0) := (others => '0');
+  signal r_decimate_ratio            : std_logic_vector(g_PRECISION-1 downto 0) := g_DEFAULT_RATE;
 
 begin
 

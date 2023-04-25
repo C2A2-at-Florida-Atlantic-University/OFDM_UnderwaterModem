@@ -9,9 +9,11 @@ module adc_chain_tb();
   localparam                        CLOCK_PERIOD      = 10; // 100 MHz
   localparam                        CLOCK_CYCLE       = CLOCK_PERIOD/2;
 
-  localparam                        CLOCK_PERIOD_ADC  = 100; // 10 MHz
-  //localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
+  //localparam                        CLOCK_PERIOD_ADC  = 100; // 10 MHz
+  localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
   localparam                        CLOCK_CYCLE_ADC   = CLOCK_PERIOD_ADC/2;
+
+  logic                             select_10M = 1'b0;
 
   int                               fd;
   int                               fd_write;
@@ -46,6 +48,7 @@ module adc_chain_tb();
 
     .M_AXIS_tdata                   (m_tdata),
     .M_AXIS_tvalid                  (m_tvalid),
+    .M_AXIS_tready                  (1'b1),
 
     .aclk                           (r_clk),
     .aresetn                        (r_nRst),
@@ -54,7 +57,8 @@ module adc_chain_tb();
     .aresetn_40M                    (adc_aresetn),
 
     .decimate_ratio                 (decimate_ratio),
-    .status                         (adc_status)
+    .status                         (adc_status),
+    .select_40M_10M                 (select_10M)
   );
 
 //---------------------------------------------------------------
@@ -90,16 +94,21 @@ module adc_chain_tb();
 
     #(CLOCK_PERIOD*390);
 
-    for (int i = 0; i < 1740800; i++) begin
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tvalid)
+    for (int i = 0; i < 1392640; i++) begin
+      while (~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tvalid ||
+        DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tlast)
         #CLOCK_PERIOD;
       iq_mix_out_i = DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tdata;
-      #(CLOCK_PERIOD*5);
+      #CLOCK_PERIOD;
+      while (~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tvalid ||
+        ~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tlast) begin
+        #CLOCK_PERIOD;
+      end
       iq_mix_out_q = DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tdata;
       $fdisplay(fd_mix,"%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
       if (i < 10)
         $display("%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
-      #(CLOCK_PERIOD*5);
+        #CLOCK_PERIOD;
     end
 
     $fclose(fd_mix);
@@ -119,7 +128,7 @@ module adc_chain_tb();
 
     #(CLOCK_PERIOD*464);
 
-    for (int i = 0; i < 43520; i++) begin
+    for (int i = 0; i < 8704; i++) begin
       while (~m_tvalid) 
         #(CLOCK_PERIOD);
       i_ddc_out                     = m_tdata[15:0];
@@ -139,7 +148,8 @@ module adc_chain_tb();
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
-    fd = $fopen("../../../../../../modules/sim/iq_mix_test_in.txt","r");
+    //fd = $fopen("../../../../../../modules/sim/iq_mix_test_in.txt","r");
+    fd = $fopen("../../../../../../modules/sim/ddc_40M_input.txt","r");
     if (fd) $display("File was opened successfully: %0d ",fd);
     else begin
       $display("File was NOT opened successfully: %0d",fd);
@@ -150,17 +160,18 @@ module adc_chain_tb();
     ADC_control                     = '0;
     ADCdata                         = '0;
     Fc_scaled                       = '0;
-    decimate_ratio                  = 16'd4;
+    decimate_ratio                  = 16'd40;
     #(CLOCK_PERIOD*20);
     r_nRst                          = 1'b1;
     adc_aresetn                     = 1'b1;
     #(CLOCK_PERIOD*20);
-    ADC_control                     = 4'b0001;
+    //ADC_control                     = 4'b0001;
     Fc_scaled                       = 32'd10737418;
     decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD_ADC*30);
+    ADC_control                     = 4'b0001;
 
-    for (int i = 0; i < 1740800; i++) begin
+    for (int i = 0; i < 1392640; i++) begin
       $fscanf(fd, "%d", data);
       ADCdata                      <= data;
       #CLOCK_PERIOD_ADC;

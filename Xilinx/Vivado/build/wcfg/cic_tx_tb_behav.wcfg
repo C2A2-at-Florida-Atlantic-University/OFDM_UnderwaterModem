@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,080.001 ns"></ZoomEndTime>
-      <Cursor1Time time="0.000 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="330.400001 us"></ZoomEndTime>
+      <Cursor1Time time="10.450000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="205"></NameColumnWidth>
-      <ValueColumnWidth column_width="89"></ValueColumnWidth>
+      <ValueColumnWidth column_width="81"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="8" />
+   <WVObjectSize size="10" />
    <wvobject fp_name="/cic_tx_tb/r_clk" type="logic">
       <obj_property name="ElementShortName">r_clk</obj_property>
       <obj_property name="ObjectShortName">r_clk</obj_property>
@@ -155,6 +155,14 @@
          <obj_property name="ObjectShortName">m_tuser[15:0]</obj_property>
       </wvobject>
    </wvobject>
+   <wvobject fp_name="/cic_tx_tb/DUT/cic_tx_i/cic_compiler_0/event_tlast_unexpected" type="logic">
+      <obj_property name="ElementShortName">event_tlast_unexpected</obj_property>
+      <obj_property name="ObjectShortName">event_tlast_unexpected</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cic_tx_tb/DUT/cic_tx_i/cic_compiler_0/event_tlast_missing" type="logic">
+      <obj_property name="ElementShortName">event_tlast_missing</obj_property>
+      <obj_property name="ObjectShortName">event_tlast_missing</obj_property>
+   </wvobject>
    <wvobject fp_name="/cic_tx_tb/i_duc_data" type="array">
       <obj_property name="ElementShortName">i_duc_data[15:0]</obj_property>
       <obj_property name="ObjectShortName">i_duc_data[15:0]</obj_property>
@@ -168,9 +176,13 @@
    <wvobject fp_name="/cic_tx_tb/i_duc_out" type="array">
       <obj_property name="ElementShortName">i_duc_out[15:0]</obj_property>
       <obj_property name="ObjectShortName">i_duc_out[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
    </wvobject>
    <wvobject fp_name="/cic_tx_tb/q_duc_out" type="array">
       <obj_property name="ElementShortName">q_duc_out[15:0]</obj_property>
       <obj_property name="ObjectShortName">q_duc_out[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
    </wvobject>
 </wave_config>

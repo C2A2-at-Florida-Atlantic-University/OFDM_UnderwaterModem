@@ -17,6 +17,7 @@ entity dma_tlast_gen is
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
     s_axis_tready                 : out std_logic;
+    s_axis_tlast                  : in  std_logic;
 
     m_axis_tdata                  : out std_logic_vector(31 downto 0);
     m_axis_tvalid                 : out std_logic;
@@ -58,10 +59,14 @@ begin
     counter,
     i_dma_tlast_count
   ) begin
-    if s_axis_tvalid = '1' and counter = i_dma_tlast_count-'1' then
-      m_axis_tlast                <= '1';
+    if i_dma_tlast_count = (others => '0') then
+      m_axis_tlast                <= s_axis_tlast;
     else
-      m_axis_tlast                <= '0';
+      if s_axis_tvalid = '1' and counter = i_dma_tlast_count-'1' then
+        m_axis_tlast                <= '1';
+      else
+        m_axis_tlast                <= '0';
+      end if;
     end if;
   end process;
 

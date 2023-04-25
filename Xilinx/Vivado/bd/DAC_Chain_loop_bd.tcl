@@ -131,7 +131,6 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:axis_data_fifo:*\
 xilinx.com:ip:cic_compiler:*\
-xilinx.com:ip:system_ila:*\
 "
 
    set list_ips_missing ""
@@ -308,31 +307,6 @@ proc create_root_design { parentCell } {
      return 1
    }
   
-  # Create instance: system_ila_0, and set properties
-  set system_ila_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_0 ]
-  set_property -dict [ list \
-   CONFIG.ALL_PROBE_SAME_MU_CNT {3} \
-   CONFIG.C_ADV_TRIGGER {true} \
-   CONFIG.C_DATA_DEPTH {4096} \
-   CONFIG.C_EN_STRG_QUAL {1} \
-   CONFIG.C_NUM_MONITOR_SLOTS {4} \
-   CONFIG.C_PROBE0_MU_CNT {3} \
-   CONFIG.C_SLOT {3} \
-   CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-   CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-   CONFIG.C_SLOT_2_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-   CONFIG.C_SLOT_3_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
- ] $system_ila_0
-
-  # Create instance: system_ila_1, and set properties
-  set system_ila_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_1 ]
-  set_property -dict [ list \
-   CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
-   CONFIG.C_EN_STRG_QUAL {1} \
-   CONFIG.C_PROBE0_MU_CNT {2} \
-   CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
- ] $system_ila_1
-
   # Create instance: tdm_reformat_tx, and set properties
   set block_name tdm_reformat_tx
   set block_cell_name tdm_reformat_tx
@@ -346,23 +320,17 @@ proc create_root_design { parentCell } {
   
   # Create interface connections
   connect_bd_intf_net -intf_net S_AXIS_DDS_1 [get_bd_intf_ports S_AXIS_DDS] [get_bd_intf_pins iq_mixer_tx/s_axis_dds]
-connect_bd_intf_net -intf_net [get_bd_intf_nets S_AXIS_DDS_1] [get_bd_intf_ports S_AXIS_DDS] [get_bd_intf_pins system_ila_0/SLOT_3_AXIS]
   connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo/M_AXIS]
-connect_bd_intf_net -intf_net [get_bd_intf_nets axis_data_fifo_M_AXIS] [get_bd_intf_ports M_AXIS] [get_bd_intf_pins system_ila_1/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis]
-connect_bd_intf_net -intf_net [get_bd_intf_nets cic_compiler_0_M_AXIS_DATA] [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins system_ila_0/SLOT_1_AXIS]
   connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_CONFIG] [get_bd_intf_pins interpolator_config/m_axis]
   connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins axis_data_fifo/S_AXIS] [get_bd_intf_pins iq_mixer_tx/m_axis]
-connect_bd_intf_net -intf_net [get_bd_intf_nets iq_mixer_tx_0_m_axis] [get_bd_intf_pins axis_data_fifo/S_AXIS] [get_bd_intf_pins system_ila_0/SLOT_2_AXIS]
   connect_bd_intf_net -intf_net s_axis_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tdm_reformat_tx/s_axis]
-connect_bd_intf_net -intf_net [get_bd_intf_nets s_axis_0_1] [get_bd_intf_ports S_AXIS] [get_bd_intf_pins system_ila_0/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_DATA] [get_bd_intf_pins tdm_reformat_tx/m_axis]
 
   # Create port connections
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk] [get_bd_pins system_ila_0/clk] [get_bd_pins tdm_reformat_tx/axis_aclk]
-  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins system_ila_1/clk]
-  connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn] [get_bd_pins iq_mixer_tx/axis_aresetn] [get_bd_pins system_ila_0/resetn]
-  connect_bd_net -net aresetn_10M_1 [get_bd_ports aresetn_10M] [get_bd_pins system_ila_1/resetn]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk]
+  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins axis_data_fifo/m_axis_aclk]
+  connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn] [get_bd_pins iq_mixer_tx/axis_aresetn]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins interpolator_config/i_decimate_ratio]
 
   # Create address segments
