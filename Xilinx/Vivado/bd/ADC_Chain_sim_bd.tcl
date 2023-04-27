@@ -274,7 +274,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100} \
    CONFIG.Filter_Type {Decimation} \
-   CONFIG.Fixed_Or_Initial_Rate {40} \
+   CONFIG.Fixed_Or_Initial_Rate {160} \
    CONFIG.Input_Data_Width {16} \
    CONFIG.Input_Sample_Frequency {40} \
    CONFIG.Maximum_Rate {1600} \
@@ -295,7 +295,7 @@ proc create_root_design { parentCell } {
    CONFIG.Has_Phase_Out {false} \
    CONFIG.Latency {3} \
    CONFIG.M_DATA_Has_TUSER {Not_Required} \
-   CONFIG.Negative_Sine {false} \
+   CONFIG.Negative_Sine {true} \
    CONFIG.Noise_Shaping {None} \
    CONFIG.Output_Frequency1 {0} \
    CONFIG.Output_Width {7} \
@@ -316,7 +316,10 @@ proc create_root_design { parentCell } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+   CONFIG.g_DEFAULT_RATE {0x00A0} \
+ ] $decimator_config_0
+
   # Create instance: iq_mixer_10M_0, and set properties
   set block_name iq_mixer_10M
   set block_cell_name iq_mixer_10M_0

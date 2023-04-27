@@ -71,6 +71,13 @@
 #define DMA_TLAST_GEN_OFFSET 0x0
 #define DMA_TLAST_GEN_MASK 0xFFFFFFFF
 
+#define DUC_DDC_LOOPBACK_OFFSET 0x8
+#define DUC_DDC_LOOPBACK_MASK_OFFSET 3
+#define DUC_DDC_LOOPBACK_MASK 0x8
+
+//#define RX_SHIFT_ATTEN_OFFSET 0x8
+//#define RX_SHIFT_ATTEN_MASK_OFFSET
+
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
 // CP_LEN_REG, and NFFT_REG
@@ -164,6 +171,7 @@ ReturnStatusType  HwInterfaceConfigureSynchronizer(unsigned nfft,
   int SyncOffset);
 void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   unsigned Decimation, unsigned FcScaled);
-void HwInterfaceDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
+void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
+void HwInterfaceDucDdcLoopback(bool Select);
 
 #endif

@@ -37,6 +37,7 @@ int main(int argc, char **argv)
   unsigned ScalarGain;
   unsigned RxThread;
   unsigned SyncThreshold;
+  unsigned RxShiftAtten;
   int SyncOffset;
   int TxGainDb;
   int RxGainDb;
@@ -47,6 +48,7 @@ int main(int argc, char **argv)
   char FileName[32];
   ReturnStatusType ReturnStatus;
 
+  printf("\n----- OFDM RADIO TEST APPLICATION -----\n\n");
   if (argc == 1)
   {
     printf("Warning: Did not select TX/RX\n");
@@ -277,6 +279,11 @@ int main(int argc, char **argv)
         {
           printf("%s", ReturnStatus.ErrString);
         }
+#endif
+#ifndef NO_DEVMEM
+        printf("\tEnter Rx Shift Attenuation in bits: ");
+        ScanfRet = scanf("%d", &RxShiftAtten);
+        //HwInterfaceConfigRxShiftAtten(RxShiftAtten);
 #endif
         break;
 

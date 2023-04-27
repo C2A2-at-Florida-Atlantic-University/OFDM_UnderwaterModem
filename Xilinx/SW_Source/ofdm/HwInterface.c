@@ -23,7 +23,27 @@ static int SpiFile;  // /dev/spidev1 file
 static int GpioFile; // /sys/class/gpio/* file
 static bool GlobalMute;
 
-void HwInterfaceDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
+void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
+{
+  GlobalMute = GlobalMuteSelect;
+}
+
+void HwInterfaceDucDdcLoopback(bool Select)
+{
+  unsigned RegValue = Select << DUC_DDC_LOOPBACK_MASK_OFFSET;
+  if (Select)
+  {
+    FpgaInterfaceWrite(GPIO_3_BASE_ADDR+DUC_DDC_LOOPBACK_OFFSET,
+      RegValue, DUC_DDC_LOOPBACK_MASK, GlobalMute);
+  }
+  else
+  {
+    FpgaInterfaceWrite(GPIO_3_BASE_ADDR+DUC_DDC_LOOPBACK_OFFSET,
+      RegValue, DUC_DDC_LOOPBACK_MASK, GlobalMute);
+  }
+}
+
+void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
 {
   if (DucDdcLoopSel == 0) // Program zero, tlast is passthrough
   {
@@ -32,14 +52,13 @@ void HwInterfaceDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
   }
   else // Program sample to generate tlast pulse on
   {
+#ifdef DEBUG
+    printf("HwInterfaceSetDmaTlastGen: Program tlast to be on "
+      "%dth sample\n", Samples);
+#endif
     FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET,
       Samples-1, GlobalMute);
   }
-}
-
-void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
-{
-  GlobalMute = GlobalMuteSelect;
 }
 
 void HwInterfaceEnableDac(void)
@@ -265,8 +284,8 @@ ReturnStatusType HwInterfaceGpioSetup(void)
   if (RetVal == -1)
   {
     perror("HwInterfaceGpioSetup:");
-    printf("WARNING: Could not set GPIO20 through "
-    "/sys/class/gpio/export\n");
+    printf("HwInterfaceGpioSetup: WARNING: Could not set GPIO20 "
+    "through /sys/class/gpio/export\n");
   }
   close(GpioFile);
   // Set MIO20 pin to be an output

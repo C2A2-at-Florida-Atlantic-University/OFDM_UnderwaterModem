@@ -23,10 +23,12 @@ void DacChainSetLoopback(unsigned Loop)
   if (Loop == 1)
   {
     Loopback = true;
+    HwInterfaceDucDdcLoopback(true);
   }
   else
   {
     Loopback = false;
+    HwInterfaceDucDdcLoopback(false);
   }
 }
 

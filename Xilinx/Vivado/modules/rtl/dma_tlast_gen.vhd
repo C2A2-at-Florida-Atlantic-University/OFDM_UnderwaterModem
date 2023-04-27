@@ -59,7 +59,7 @@ begin
     counter,
     i_dma_tlast_count
   ) begin
-    if i_dma_tlast_count = (others => '0') then
+    if i_dma_tlast_count = X"00000000" then
       m_axis_tlast                <= s_axis_tlast;
     else
       if s_axis_tvalid = '1' and counter = i_dma_tlast_count-'1' then

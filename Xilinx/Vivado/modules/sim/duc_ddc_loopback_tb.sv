@@ -188,7 +188,8 @@ module duc_ddc_loopback_tb();
       $stop;
     end
 
-    Fc_scaled = 250000*2<<32/100000000;
+    //Fc_scaled = 250000*(2<<32/100000000);
+    Fc_scaled = 32'd10737418;
     Interp_ratio = 16'd40;
     decimate_ratio = 16'd40;
 

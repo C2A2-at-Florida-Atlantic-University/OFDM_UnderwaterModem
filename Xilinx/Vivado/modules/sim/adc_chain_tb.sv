@@ -92,19 +92,21 @@ module adc_chain_tb();
       $stop;
     end
 
-    #(CLOCK_PERIOD*390);
+    #(CLOCK_PERIOD*119);
+    #(CLOCK_PERIOD*327);
 
     for (int i = 0; i < 1392640; i++) begin
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tvalid ||
-        DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tlast)
+      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tvalid ||
+        DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tlast ||
+        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tready)
         #CLOCK_PERIOD;
-      iq_mix_out_i = DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tdata;
+      iq_mix_out_i = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tdata;
       #CLOCK_PERIOD;
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tvalid ||
-        ~DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tlast) begin
+      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tvalid ||
+        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tlast ||
+        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tready)
         #CLOCK_PERIOD;
-      end
-      iq_mix_out_q = DUT.ADC_Chain_i.iq_mixer_rx_0.m_axis_tdata;
+      iq_mix_out_q = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tdata;
       $fdisplay(fd_mix,"%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
       if (i < 10)
         $display("%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
@@ -127,6 +129,7 @@ module adc_chain_tb();
     end
 
     #(CLOCK_PERIOD*464);
+    #(CLOCK_PERIOD*327);
 
     for (int i = 0; i < 8704; i++) begin
       while (~m_tvalid) 
@@ -160,15 +163,16 @@ module adc_chain_tb();
     ADC_control                     = '0;
     ADCdata                         = '0;
     Fc_scaled                       = '0;
-    decimate_ratio                  = 16'd40;
+    decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD*20);
     r_nRst                          = 1'b1;
     adc_aresetn                     = 1'b1;
     #(CLOCK_PERIOD*20);
     //ADC_control                     = 4'b0001;
     Fc_scaled                       = 32'd10737418;
-    decimate_ratio                  = 16'd160;
+    //decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD_ADC*30);
+    #(CLOCK_PERIOD*327);
     ADC_control                     = 4'b0001;
 
     for (int i = 0; i < 1392640; i++) begin

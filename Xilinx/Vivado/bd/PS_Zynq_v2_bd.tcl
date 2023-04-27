@@ -212,7 +212,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 15 -to 0 decimate_ratio
   create_bd_pin -dir O -from 0 -to 0 dma_loopback
   create_bd_pin -dir O -from 31 -to 0 dma_tlast_count
+  create_bd_pin -dir O -from 0 -to 0 duc_ddc_loopback
   create_bd_pin -dir O -from 11 -to 0 nfft
+  create_bd_pin -dir O -from 2 -to 0 rx_gain_shift
   create_bd_pin -dir O -from 3 -to 0 symbols
   create_bd_pin -dir O -from 0 -to 0 sync_loopback
   create_bd_pin -dir O -from 9 -to 0 sync_offset
@@ -258,6 +260,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set axi_gpio_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_3 ]
   set_property -dict [ list \
    CONFIG.C_ALL_OUTPUTS {1} \
+   CONFIG.C_ALL_OUTPUTS_2 {1} \
+   CONFIG.C_GPIO2_WIDTH {4} \
+   CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_3
 
   # Create instance: delimiter_0, and set properties
@@ -290,6 +295,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.OUT2_WIDTH {1} \
  ] $delimiter_2
 
+  # Create instance: delimiter_3, and set properties
+  set delimiter_3 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_3 ]
+
   # Create interface connections
   connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins S_AXI2] [get_bd_intf_pins axi_gpio_2/S_AXI]
   connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
@@ -303,6 +311,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_pins axi_gpio_1/gpio_io_o] [get_bd_pins delimiter_1/IN0]
   connect_bd_net -net axi_gpio_2_gpio2_io_o [get_bd_pins axi_gpio_2/gpio2_io_o] [get_bd_pins delimiter_2/IN0]
   connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins threshold] [get_bd_pins axi_gpio_2/gpio_io_o]
+  connect_bd_net -net axi_gpio_3_gpio2_io_o [get_bd_pins axi_gpio_3/gpio2_io_o] [get_bd_pins delimiter_3/IN0]
   connect_bd_net -net axi_gpio_3_gpio_io_o [get_bd_pins dma_tlast_count] [get_bd_pins axi_gpio_3/gpio_io_o]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
@@ -314,6 +323,8 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_2_OUT0 [get_bd_pins nfft] [get_bd_pins delimiter_2/OUT0]
   connect_bd_net -net delimiter_2_OUT1 [get_bd_pins cp_len] [get_bd_pins delimiter_2/OUT1]
   connect_bd_net -net delimiter_2_OUT2 [get_bd_pins sync_loopback] [get_bd_pins delimiter_2/OUT2]
+  connect_bd_net -net delimiter_3_OUT0 [get_bd_pins rx_gain_shift] [get_bd_pins delimiter_3/OUT0]
+  connect_bd_net -net delimiter_3_OUT1 [get_bd_pins duc_ddc_loopback] [get_bd_pins delimiter_3/OUT1]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_gpio_3/s_axi_aresetn]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins axi_gpio_3/s_axi_aclk]
 
@@ -517,7 +528,9 @@ proc create_root_design { parentCell } {
   set decimate_ratio [ create_bd_port -dir O -from 15 -to 0 decimate_ratio ]
   set dma_loopback [ create_bd_port -dir O -from 0 -to 0 dma_loopback ]
   set dma_tlast_count [ create_bd_port -dir O -from 31 -to 0 dma_tlast_count ]
+  set duc_ddc_loopback [ create_bd_port -dir O -from 0 -to 0 duc_ddc_loopback ]
   set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
+  set rx_gain_shift [ create_bd_port -dir O -from 2 -to 0 rx_gain_shift ]
   set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
   set sync_loopback [ create_bd_port -dir O -from 0 -to 0 sync_loopback ]
   set sync_offset [ create_bd_port -dir O -from 9 -to 0 sync_offset ]
@@ -1369,8 +1382,10 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins proc_sys_reset/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
   connect_bd_net -net regs_OUT0_0 [get_bd_ports Interp_ratio] [get_bd_pins regs/Interp_ratio]
   connect_bd_net -net regs_OUT0_1 [get_bd_ports nfft] [get_bd_pins regs/nfft]
+  connect_bd_net -net regs_OUT0_2 [get_bd_ports rx_gain_shift] [get_bd_pins regs/rx_gain_shift]
   connect_bd_net -net regs_OUT1_0 [get_bd_ports dma_loopback] [get_bd_pins regs/dma_loopback]
   connect_bd_net -net regs_OUT1_1 [get_bd_ports cp_len] [get_bd_pins regs/cp_len]
+  connect_bd_net -net regs_OUT1_2 [get_bd_ports duc_ddc_loopback] [get_bd_pins regs/duc_ddc_loopback]
   connect_bd_net -net regs_OUT2_0 [get_bd_ports symbols] [get_bd_pins regs/symbols]
   connect_bd_net -net regs_OUT2_1 [get_bd_ports sync_loopback] [get_bd_pins regs/sync_loopback]
   connect_bd_net -net regs_OUT3_0 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
