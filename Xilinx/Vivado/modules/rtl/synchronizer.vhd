@@ -198,7 +198,8 @@ begin
   m_axis_tdata                    <= r_axis_tdata;
   m_axis_tvalid                   <= r_axis_tvalid;
   m_axis_tlast                    <= '1' when nfft_cp_counter = 
-                                  (('0' & i_cp_len)+('0' & i_nfft)+"10") 
+                                  (('0' & i_cp_len)+('0' & i_nfft)+"10") and
+                                  (symbol_counter = i_symbols)
                                   else '0';
   m_axis_tkeep                    <= X"F";
 

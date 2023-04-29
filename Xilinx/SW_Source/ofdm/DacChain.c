@@ -17,6 +17,7 @@
 static Dac_Parameters_Type DacParams;
 static int16_t *DucOutData = NULL; // Buffer going to DAC
 bool Loopback = false;
+bool LoopbackSync = false;
 
 void DacChainSetLoopback(unsigned Loop)
 {
@@ -29,6 +30,18 @@ void DacChainSetLoopback(unsigned Loop)
   {
     Loopback = false;
     HwInterfaceDucDdcLoopback(false);
+  }
+}
+
+void DacChainSetLoopbackSync(unsigned Loop)
+{
+  if (Loop == 1)
+  {
+    LoopbackSync = true;
+  }
+  else
+  {
+    LoopbackSync = false;
   }
 }
 
@@ -65,7 +78,7 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
   DacParams.Fc = Fc;
 
   HwParams.DacInterpolation = DAC_SAMPLE_RATE_KHZ/BandWidth;
-  if (Loopback)
+  if (Loopback || LoopbackSync)
   {
     HwParams.AdcDecimation = DAC_SAMPLE_RATE_KHZ/BandWidth;
   }

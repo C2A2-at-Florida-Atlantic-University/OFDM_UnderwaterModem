@@ -190,6 +190,7 @@ int main(int argc, char **argv)
       case 0:
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 1:
         printf("Set Glogal File Debug Mode (Save samples to file)\n");
         printf("Enter Selection ('0'-Off / '1'-On): ");
@@ -217,6 +218,7 @@ int main(int argc, char **argv)
         DirectDmaSetGlobalMute(GlobalMute);
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 2:
         printf("\tEnter number of sub-carriers: ");
         ScanfRet = scanf("%d", &OfdmParams.Nfft);
@@ -255,6 +257,7 @@ int main(int argc, char **argv)
           OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 3:
         printf("\tEnter Symbol Guard Period in ms: ");
         ScanfRet = scanf("%d", &OfdmTiming.SymbolGuardPeriod);
@@ -267,6 +270,7 @@ int main(int argc, char **argv)
           OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 4:
         printf("\tEnter TX Digital Gain (dBFS): ");
         ScanfRet = scanf("%d", &TxGainDb);
@@ -292,6 +296,7 @@ int main(int argc, char **argv)
 #endif
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 5:
         printf("\tEnter Center Frequency (kHz): ");
         ScanfRet = scanf("%d", &CenterFreq);
@@ -305,11 +310,13 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 6:
         printf("\tEnter Synchronizer Threshold (DEFAULT: "
           "0x%X): ", DEFAULT_SYNC_THRESHOLD);
         ScanfRet = scanf("%x", &SyncThreshold);
-        printf("\tEnter Synchronizer Offset (-1024:1024): ");
+        printf("\tEnter Synchronizer Offset (-1024:1024) (DEFAULT: "
+          "%d): ", DEFAULT_SYNCHRONIZER_OFFSET);
         ScanfRet = scanf("%d", &SyncOffset);
         ReturnStatus = HwInterfaceConfigureSynchronizer(
           OfdmParams.Nfft, OfdmParams.CpLen, 
@@ -321,6 +328,7 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 7:
         printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
@@ -381,6 +389,7 @@ int main(int argc, char **argv)
 
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 8:
         ReturnStatus = TransmitChainParamCheck(&OfdmParams);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -492,6 +501,7 @@ int main(int argc, char **argv)
 //        }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 9:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -504,6 +514,7 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 10:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -537,6 +548,7 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 11:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -569,6 +581,7 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 12:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -585,6 +598,7 @@ int main(int argc, char **argv)
           SwSynchronization);
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 13:
         printf("Write file number: ");
         ScanfRet = scanf("%d", &FileNumber);
@@ -599,6 +613,7 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 14:
         ReturnStatus = DirectDmaPlToPsThread();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -607,10 +622,12 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 15:
         DirectDmaPlToPsThreadCancel();
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 16:
         printf("Enable/Disable DMA loopback ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DmaLoopSel);
@@ -619,7 +636,7 @@ int main(int argc, char **argv)
           "('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DmaLoopSel);
         HwInterfaceSyncLoopback(DmaLoopSel);
-        printf("Enable/Disable Internal DUC/DDC Loopback (WARNING: "
+        printf("Enable/Disable Internal DUC/DDC Loopback \n\t(WARNING: "
           "Need Special Bitstream) ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DucDdcLoopSel);
         DacChainSetLoopback(DucDdcLoopSel);
@@ -634,8 +651,14 @@ int main(int argc, char **argv)
           HwInterfaceSetDmaTlastGen(DucDdcLoopSel,0);
         }
 #endif
+        printf("Enable/Disable Internal DUC/DDC Loopback with "
+          "Synchronization \n\t(WARNING: Need Special Bitstream) "
+          "('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        DacChainSetLoopbackSync(DebugSelection);
         break;
 
+//////////////////////////////////////////////////////////////////////////
       case 17:
         printf("SW RX Synchronization Symbol ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DebugSelection);

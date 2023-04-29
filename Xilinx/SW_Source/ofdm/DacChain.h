@@ -37,5 +37,6 @@ Dac_Parameters_Type DacChainGetDacParams(void);
 int16_t *DacChainGetDMABuff(void);
 void DacChainClearDMABuff(void);
 void DacChainSetLoopback(unsigned Loop);
+void DacChainSetLoopbackSync(unsigned Loop);
 
 #endif

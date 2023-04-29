@@ -393,7 +393,7 @@ void *DirectDmaPlToPs(void *arg)
     if (ActualBytes != BUFFER_SPAN)
     {
       printf("DirectDmaPlToPs: DMA ERROR: "
-      "Number of bytes read, %d,  does not match expected number of "
+      "Number of bytes read, %d,\n\tdoes not match expected number of "
       "bytes %d, pthread closing ...\n", ActualBytes, BUFFER_SPAN);
       return NULL;
     }
