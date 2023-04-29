@@ -29,7 +29,8 @@ typedef struct {
   unsigned FcDds;
 } Hw_Parameters_Type;
 
-ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc);
+ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
+  bool Configure);
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
   unsigned Nfft, unsigned CpLen, unsigned BandWidth, unsigned OfdmSymbols);
 Dac_Parameters_Type DacChainGetDacParams(void);

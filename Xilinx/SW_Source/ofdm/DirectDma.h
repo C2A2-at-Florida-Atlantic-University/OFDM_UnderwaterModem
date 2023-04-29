@@ -8,15 +8,15 @@
 
 // PS to PL control and status registers
 #define DMA_BASE_ADDR 0x40000000 // Same as DMA_CONTROL_REGISTER
-#define DMA_STATUS_OFFSET 0x00000004
-#define DMA_SOURCE_OFFSET 0x00000018
-#define DMA_LENGTH_OFFSET 0x00000028
+#define DMA_STATUS_OFFSET 0x4
+#define DMA_SOURCE_OFFSET 0x18
+#define DMA_LENGTH_OFFSET 0x28
 
 // PL to PS control and status registers
-#define DMAS_CONTROL_OFFSET 0x00000030
-#define DMAS_STATUS_OFFSET 0x00000034
-#define DMAS_DEST_OFFSET 0x00000048
-#define DMAS_LENGTH_OFFSET 0x00000058
+#define DMAS_CONTROL_OFFSET 0x30
+#define DMAS_STATUS_OFFSET 0x34
+#define DMAS_DEST_OFFSET 0x48
+#define DMAS_LENGTH_OFFSET 0x58
 
 #define DMA_RESET 0x4
 #define DMA_IOC_IRQ_MASK 0x00001000
@@ -27,7 +27,7 @@
 #include "ReturnStatus.h"
 
 void DirectDmaPsToPlInit(unsigned start);
-ReturnStatusType DirectDmaPsToPl(unsigned Bytes);
+ReturnStatusType DirectDmaPsToPl(unsigned Bytes, unsigned StartByte);
 ReturnStatusType DirectDmaPlToPsThread(void);
 void DirectDmaPlToPsInit(unsigned start);
 void *DirectDmaPlToPs(void *arg);

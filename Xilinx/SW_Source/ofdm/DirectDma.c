@@ -84,7 +84,7 @@ void DirectDmaPsToPlInit(unsigned start) // Enable or Disable PS to PL DMA
   FpgaInterfaceWrite32(DMA_BASE_ADDR, DMA_IOC_IRQ_MASK+start, GlobalMute);
 }
 
-ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
+ReturnStatusType DirectDmaPsToPl(unsigned Bytes, unsigned StartByte)
 {
   ReturnStatusType ReturnStatus;
   unsigned LoopCount;
@@ -119,6 +119,8 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     "%d = 0x%X Bytes\n", LoopCount, BUFFER_SPAN, BUFFER_SPAN);
   printf("DirectDmaPsToPl: Last DMA transaction: %d  = 0x%X bytes\n",
     BytesRemaining, BytesRemaining);
+  printf("DirectDmaPsToPl: Start Byte: %d = 0x%X\n", StartByte,
+    StartByte);
 
   // Get pointers to buffers
 #ifdef DUC
@@ -136,8 +138,8 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   {
 
     // Program address of CMA location to DMA
-    FpgaInterfaceWrite32(DMA_BASE_ADDR+DMA_SOURCE_OFFSET, TX_BUFFER_BASE,
-      GlobalMute);
+    FpgaInterfaceWrite32(DMA_BASE_ADDR+DMA_SOURCE_OFFSET, TX_BUFFER_BASE+
+      StartByte, GlobalMute);
 
     // As soon as Length register is written to, DMA transaction starts
     if (i == LoopCount-1)
@@ -391,8 +393,8 @@ void *DirectDmaPlToPs(void *arg)
     if (ActualBytes != BUFFER_SPAN)
     {
       printf("DirectDmaPlToPs: DMA ERROR: "
-      "Number of bytes read does not match expected number of "
-      "bytes, pthread closing ...\n");
+      "Number of bytes read, %d,  does not match expected number of "
+      "bytes %d, pthread closing ...\n", ActualBytes, BUFFER_SPAN);
       return NULL;
     }
 

@@ -32,6 +32,7 @@ int main(int argc, char **argv)
   unsigned FileNumber;
   unsigned CenterFreq;
   unsigned NumBytes;
+  unsigned StartByte;
   unsigned DmaLoopSel;
   unsigned DucDdcLoopSel;
   unsigned ScalarGain;
@@ -45,6 +46,7 @@ int main(int argc, char **argv)
   bool DebugMode;
   bool GlobalMute;
   bool SwSynchronization;
+  bool SwSynchronizationTx;
   char FileName[32];
   ReturnStatusType ReturnStatus;
 
@@ -96,10 +98,12 @@ int main(int argc, char **argv)
   RxGainDb = DEFAULT_RX_GAIN_DB;
 
   SyncThreshold = DEFAULT_SYNC_THRESHOLD;
+  SyncOffset = DEFAULT_SYNCHRONIZER_OFFSET;
 
   CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
 
   SwSynchronization = false;
+  SwSynchronizationTx = true;
 
   ReturnStatus = FpgaInterfaceSetup();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -124,9 +128,10 @@ int main(int argc, char **argv)
     OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
   ReturnStatus = HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
     OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
-    SyncThreshold, 0);
+    SyncThreshold, SyncOffset);
+  HwInterfaceSynchronizerStatus(false);
   ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
-    CenterFreq);
+    CenterFreq, false);
 #endif
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
@@ -167,15 +172,15 @@ int main(int argc, char **argv)
     printf("5  - Enter Center Frequency\n");
     printf("6  - Enter Synchronizer Parameters\n");
     printf("7  - Display OFDM Parameters\n");
-    printf("8  - Transmit Single OFDM Frame from File\n");
+    printf("8  - Transmit Single OFDM Frame\n");
     printf("9  - Write Transmitted Sub-Carriers to File\n");
-    printf("10 - Demod TX Buffer to File\n");
+    printf("10 - Demod TX Buffer\n");
     printf("11 - Start/Stop RX Demod Thread\n");
-    printf("12 - Demod RX Injection to File\n");
+    printf("12 - Demod RX Injection File\n");
     printf("13 - Compute BER/SER\n");
     printf("14 - Start S2MM DMA\n");
     printf("15 - Stop S2MM DMA\n");
-    printf("16 - Enable/Disable DMA loopback\n");
+    printf("16 - Set Loopback Mode\n");
     printf("17 - Enable/Disable SW Synchronization\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
@@ -238,7 +243,7 @@ int main(int argc, char **argv)
 
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
-          CenterFreq);
+          CenterFreq, false);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -291,7 +296,7 @@ int main(int argc, char **argv)
         printf("\tEnter Center Frequency (kHz): ");
         ScanfRet = scanf("%d", &CenterFreq);
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
-          CenterFreq);
+          CenterFreq, false);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -301,13 +306,15 @@ int main(int argc, char **argv)
         break;
 
       case 6:
-        printf("\tEnter Synchronizer Threshold: ");
+        printf("\tEnter Synchronizer Threshold (DEFAULT: "
+          "0x%X): ", DEFAULT_SYNC_THRESHOLD);
         ScanfRet = scanf("%x", &SyncThreshold);
-        printf("\tEnter Synchronizer Offset (-32:32): ");
+        printf("\tEnter Synchronizer Offset (-1024:1024): ");
         ScanfRet = scanf("%d", &SyncOffset);
         ReturnStatus = HwInterfaceConfigureSynchronizer(
           OfdmParams.Nfft, OfdmParams.CpLen, 
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold, SyncOffset);
+        HwInterfaceSynchronizerStatus(false);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -409,7 +416,7 @@ int main(int argc, char **argv)
           OfdmParams.Nfft, OfdmParams.BandWidth, OfdmParams.CpLen,
           OfdmParams.ModOrder, OfdmParams.ZpDensity,
           OfdmTiming.SymbolGuardPeriod, OfdmTiming.FrameGuardPeriod,
-          OfdmTiming.OfdmSymbolsPerFrame, DacParams.Fc, ScalarGain);
+          OfdmTiming.OfdmSymbolsPerFrame, CenterFreq, ScalarGain);
 
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
           OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,
@@ -441,19 +448,31 @@ int main(int argc, char **argv)
         NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
           OfdmTiming.OfdmSymbolsPerFrame*DacParams.Interp*2;
 #else
-        NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
-          (OfdmTiming.OfdmSymbolsPerFrame+1)*4;
+        if (SwSynchronizationTx)
+        {
+          NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
+            (OfdmTiming.OfdmSymbolsPerFrame+1)*4;
+          StartByte = 0;
+        }
+        else
+        {
+          NumBytes = (OfdmParams.Nfft+OfdmParams.CpLen)*
+            (OfdmTiming.OfdmSymbolsPerFrame+1)*4;
+          StartByte = (OfdmParams.Nfft+OfdmParams.CpLen)*4;
+          printf("Skipping Synchronization Symbol\n");
+        }
 #endif
 
 #ifndef NO_DEVMEM
           ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
-            CenterFreq);
+            CenterFreq, true);
           ReturnStatus = HwInterfaceConfigureSynchronizer(
             OfdmParams.Nfft, OfdmParams.CpLen, 
             OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
             SyncOffset);
+          HwInterfaceSynchronizerStatus(true);
           HwInterfaceEnableDac();
-          ReturnStatus = DirectDmaPsToPl(NumBytes);
+          ReturnStatus = DirectDmaPsToPl(NumBytes, StartByte);
           HwInterfaceDisableDac();
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
@@ -503,6 +522,7 @@ int main(int argc, char **argv)
           OfdmParams.Nfft, OfdmParams.CpLen, 
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
           SyncOffset);
+        HwInterfaceSynchronizerStatus(true);
 #endif
 
         ReturnStatus = RxDemodulateBufferData(DebugMode,
@@ -527,7 +547,10 @@ int main(int argc, char **argv)
           OfdmParams.Nfft, OfdmParams.CpLen, 
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
           SyncOffset);
+        HwInterfaceSynchronizerStatus(true);
         HwInterfaceEnableAdc();
+        ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
+          CenterFreq, true);
 #endif
         if (RxThread == 1)
         {
@@ -553,6 +576,7 @@ int main(int argc, char **argv)
         HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
           OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
           SyncThreshold, SyncOffset);
+        HwInterfaceSynchronizerStatus(true);
 #endif
         ReturnStatus = RxDemodulateBufferData(DebugMode, 
           RX_DEMODULATE_FILE_INJECTION, FileNumber, OfdmParams.ModOrder,
@@ -576,9 +600,6 @@ int main(int argc, char **argv)
         break;
 
       case 14:
-#ifndef NO_DEVMEM
-        HwInterfaceSetDmaTlastGen(DucDdcLoopSel,0);
-#endif
         ReturnStatus = DirectDmaPlToPsThread();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -602,10 +623,21 @@ int main(int argc, char **argv)
           "Need Special Bitstream) ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DucDdcLoopSel);
         DacChainSetLoopback(DucDdcLoopSel);
+#ifndef NO_DEVMEM
+        if (DucDdcLoopSel == 1)
+        {
+          HwInterfaceSetDmaTlastGen(DucDdcLoopSel,(OfdmParams.Nfft+
+            OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame+1));
+        }
+        else
+        {
+          HwInterfaceSetDmaTlastGen(DucDdcLoopSel,0);
+        }
+#endif
         break;
 
       case 17:
-        printf("Enter Selection ('0'-Off / '1'-On): ");
+        printf("SW RX Synchronization Symbol ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &DebugSelection);
         if (DebugSelection == 1)
         {
@@ -618,6 +650,16 @@ int main(int argc, char **argv)
           SwSynchronization = false;
           DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
             OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
+        }
+        printf("SW TX Synchronization Symbol ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          SwSynchronizationTx = true;
+        }
+        else
+        {
+          SwSynchronizationTx = false;
         }
         break;
 
@@ -634,6 +676,7 @@ int main(int argc, char **argv)
   DirectDmaS2mmStatus();
   HwInterfaceDisableDac();         // Disable DAC and PA
   HwInterfaceDisableAdc();         // Disable ADC
+  HwInterfaceSynchronizerStatus(false);
 
   return 0;
 }

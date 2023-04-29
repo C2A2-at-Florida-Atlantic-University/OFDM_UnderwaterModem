@@ -32,7 +32,8 @@ void DacChainSetLoopback(unsigned Loop)
   }
 }
 
-ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc)
+ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
+  bool Configure)
 {
   ReturnStatusType ReturnStatus;
   Hw_Parameters_Type HwParams;
@@ -75,8 +76,11 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc)
   HwParams.FcDds = Fc*2<<32/FpgaClkRate;
 
 #ifndef NO_DEVMEM
-  HwInterfaceConfigureSignalParams(HwParams.DacInterpolation,
-    HwParams.AdcDecimation, HwParams.FcDds);
+  if (Configure)
+  {
+    HwInterfaceConfigureSignalParams(HwParams.DacInterpolation,
+      HwParams.AdcDecimation, HwParams.FcDds);
+  }
 #endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

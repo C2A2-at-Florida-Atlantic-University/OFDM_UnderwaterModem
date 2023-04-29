@@ -138,7 +138,6 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
 {
   ReturnStatusType ReturnStatus;
   unsigned RegValue;
-  int SyncOffsetReg;
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft-1, NFFT_MASK,
     GlobalMute);
   RegValue = (CpLen-1) << CP_LEN_MASK_OFFSET;
@@ -149,33 +148,31 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
     OFDM_SYMBOLS_MASK, GlobalMute);
   FpgaInterfaceWrite32(GPIO_2_BASE_ADDR+SYNC_THRESHOLD_OFFSET,
     Threshold, GlobalMute);
-  if (SyncOffset < 0)
+  if (SyncOffset < -1024 || SyncOffset > 1024)
   {
-    if (SyncOffset <= -32)
-    {
-      ReturnStatus.Status = RETURN_STATUS_FAIL;
-      sprintf(ReturnStatus.ErrString,
-        "HwInterfaceConfigureSynchronizer: ERROR: Offset too small\n");
-      return ReturnStatus;
-    }
-    SyncOffsetReg = SyncOffset << SYNC_OFFSET_NEG_OFFSET;
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "HwInterfaceConfigureSynchronizer: ERR: Offset too large/small\n");
+    return ReturnStatus;
+  }
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+SYNC_OFFSET_OFFSET,
+    SyncOffset<<SYNC_OFFSET_MASK_OFFSET, SYNC_OFFSET_MASK, GlobalMute);
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+void HwInterfaceSynchronizerStatus(bool Enable)
+{
+  if (Enable)
+  {
+    FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_ENABLE_OFFSET,
+      1<<SYNC_ENABLE_MASK_OFFSET, SYNC_ENABLE_MASK, GlobalMute);
   }
   else
   {
-    if (SyncOffset >= 32)
-    {
-      ReturnStatus.Status = RETURN_STATUS_FAIL;
-      sprintf(ReturnStatus.ErrString,
-        "HwInterfaceConfigureSynchronizer: ERROR: Offset too large\n");
-      return ReturnStatus;
-    }
-    SyncOffsetReg = SyncOffset;
+    FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_ENABLE_OFFSET,
+      0<<SYNC_ENABLE_MASK_OFFSET, SYNC_ENABLE_MASK, GlobalMute);
   }
-  SyncOffsetReg = SyncOffsetReg << SYNC_OFFSET_MASK_OFFSET;
-  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+SYNC_OFFSET_OFFSET,
-    SyncOffsetReg, SYNC_OFFSET_MASK, GlobalMute);
-  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
-  return ReturnStatus;
 }
 
 ReturnStatusType HwInterfaceSetVga(int gain)

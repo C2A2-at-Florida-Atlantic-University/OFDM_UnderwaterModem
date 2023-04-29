@@ -657,8 +657,9 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, unsigned LoopMethod,
 
   for (unsigned i = 0; i < LoopCount; i++)
   {
-    if (i == 0) // Synchronization symbol
+    if (i == 0 && SwSync) // Synchronization symbol
     {
+      // Synchronization not implemented in SW. Drop Symbol
 #ifdef DUC
 #endif
 #ifdef DAC

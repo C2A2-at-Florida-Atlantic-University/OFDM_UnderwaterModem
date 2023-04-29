@@ -14,7 +14,7 @@ module synchronizer_module_tb();
   logic                             r_clk;
 
   logic [11:0]                      cp_len = 12'd3;
-  logic [9:0]                       trigg_offset = 12'b0001000000;
+  logic [10:0]                      trigg_offset = 11'b11111111110;
   logic [11:0]                      nfft = 12'd7;
   logic [3:0]                       symbols = 4'd9;
   logic                             max = 1'b0;

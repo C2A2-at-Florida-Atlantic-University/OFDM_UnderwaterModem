@@ -9,6 +9,7 @@
 
 #define FpgaClkRate 100000000 // 100MHz
 #define DEFAULT_RX_GAIN_DB 30 // in dB
+#define DEFAULT_SYNCHRONIZER_OFFSET -11
 
 #define GPIO_0_BASE_ADDR 0x40010000
 #define GPIO_1_BASE_ADDR 0x40010200
@@ -65,8 +66,7 @@
 
 #define SYNC_OFFSET_OFFSET 0x0
 #define SYNC_OFFSET_MASK_OFFSET 21
-#define SYNC_OFFSET_MASK 0x7FE
-#define SYNC_OFFSET_NEG_OFFSET 5
+#define SYNC_OFFSET_MASK 0xFFE00000
 
 #define DMA_TLAST_GEN_OFFSET 0x0
 #define DMA_TLAST_GEN_MASK 0xFFFFFFFF
@@ -74,6 +74,10 @@
 #define DUC_DDC_LOOPBACK_OFFSET 0x8
 #define DUC_DDC_LOOPBACK_MASK_OFFSET 3
 #define DUC_DDC_LOOPBACK_MASK 0x8
+
+#define SYNC_ENABLE_OFFSET 0x8
+#define SYNC_ENABLE_MASK_OFFSET 25
+#define SYNC_ENABLE_MASK 0x02000000
 
 //#define RX_SHIFT_ATTEN_OFFSET 0x8
 //#define RX_SHIFT_ATTEN_MASK_OFFSET
@@ -173,5 +177,6 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   unsigned Decimation, unsigned FcScaled);
 void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
 void HwInterfaceDucDdcLoopback(bool Select);
+void HwInterfaceSynchronizerStatus(bool Enable);
 
 #endif

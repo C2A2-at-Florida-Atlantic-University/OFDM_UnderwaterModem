@@ -15,6 +15,7 @@ entity synchronizer is
   );
   port(
     axis_aclk                     : in  std_logic;
+    aresetn                       : in  std_logic;
 
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
@@ -31,7 +32,7 @@ entity synchronizer is
     i_nfft                        : in  std_logic_vector(11 downto 0);
     i_cp_len                      : in  std_logic_vector(11 downto 0);
     i_symbols                     : in  std_logic_vector(3 downto 0);
-    i_trig_offset                 : in  std_logic_vector(9 downto 0);
+    i_trig_offset                 : in  std_logic_vector(10 downto 0);
     i_max_sync                    : in  std_logic
   );
 end entity synchronizer;
@@ -123,7 +124,8 @@ begin
     i_nfft,
     i_cp_len,
     i_trig_offset,
-    i_max_sync
+    i_max_sync,
+    aresetn
   ) begin
     case Current_State is
       when IDLE =>
@@ -134,19 +136,22 @@ begin
         end if;
 
       when SYNC_PEAK =>
-        if initial_counter = 
-          ('0' & i_cp_len)+(X"00" & i_trig_offset(4 downto 0))-
-          (X"00" & i_trig_offset(9 downto 5)) then
+        if initial_counter = ('0' & i_cp_len) + 
+          (i_trig_offset(10) & i_trig_offset(10) & i_trig_offset) then
           Next_State              <= SYMBOL;
         else
           Next_State              <= SYNC_PEAK;
         end if;
-
+ 
       when SYMBOL =>
-        if nfft_cp_counter = (('0' & i_cp_len)+('0' & i_nfft)+"10") then
-          Next_State              <= SYMBOL_TRANSITION;
+        if aresetn = '0' then
+          Next_State              <= IDLE;
         else
-          Next_State              <= SYMBOL;
+          if nfft_cp_counter = (('0' & i_cp_len)+('0' & i_nfft)+"10") then
+            Next_State            <= SYMBOL_TRANSITION;
+          else
+            Next_State            <= SYMBOL;
+          end if;
         end if;
 
       when SYMBOL_TRANSITION =>

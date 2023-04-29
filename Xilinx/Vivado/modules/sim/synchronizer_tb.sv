@@ -13,10 +13,11 @@ module synchronizer_tb();
   int                               i;
 
   logic                             r_clk;
+  logic                             r_nRst;
 
   logic [11:0]                      cp_len = 12'd256;
   logic [11:0]                      nfft = 12'd4096;
-  logic [3:0]                       symbols = 4'd10;
+  logic [3:0]                       symbols = 4'd1;
   logic [31:0]                      threshold = 32'h0001FFFF;
 
   logic [31:0]                      m_tdata;
@@ -39,13 +40,18 @@ module synchronizer_tb();
 
     .S_AXIS_tdata                   (s_tdata),
     .S_AXIS_tvalid                  (s_tvalid),
+    .S_AXIS_tlast                   (1'b0),
+    .S_AXIS_tready                  (),
+    .S_AXIS_tstrb                   (3'b000),
 
     .aclk                           (r_clk),
+    .aresetn                        (r_nRst),
 
     .i_cp_len                       (cp_len),
     .i_nfft                         (nfft),
     .i_symbols                      (symbols),
-    .i_threshold                    (threshold)
+    .i_threshold                    (threshold),
+    .i_sync_offset                  (10'b00_0000_0000)
   );
 
 //---------------------------------------------------------------
@@ -69,9 +75,12 @@ module synchronizer_tb();
       $stop;
     end
 
+    r_nRst                          = 1'b0;
     m_tready                        = 1'b0;
     s_tdata                         = '0;
     s_tvalid                        = 1'b0;
+    #(CLOCK_PERIOD*10);
+    r_nRst                          = 1'b1;
     #(CLOCK_PERIOD*50);
     for (i = 0; i < 51968; i++) begin
       $fscanf(fd, "%d, %d", i_ddc, q_ddc);

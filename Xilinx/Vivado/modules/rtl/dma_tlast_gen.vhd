@@ -56,6 +56,7 @@ begin
 
   process(
     s_axis_tvalid,
+    s_axis_tlast,
     counter,
     i_dma_tlast_count
   ) begin

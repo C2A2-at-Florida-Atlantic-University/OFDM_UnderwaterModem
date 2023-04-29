@@ -244,14 +244,15 @@ proc create_root_design { parentCell } {
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {S_AXIS:M_AXIS} \
-   CONFIG.ASSOCIATED_RESET {aresetn} \
+   CONFIG.ASSOCIATED_RESET {aresetn:sync_enable} \
  ] $aclk
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
   set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
-  set i_sync_offset [ create_bd_port -dir I -from 9 -to 0 i_sync_offset ]
+  set i_sync_offset [ create_bd_port -dir I -from 10 -to 0 i_sync_offset ]
   set i_threshold [ create_bd_port -dir I -from 31 -to 0 i_threshold ]
+  set sync_enable [ create_bd_port -dir I -type rst sync_enable ]
 
   # Create instance: AXIS_Splitter_0, and set properties
   set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
@@ -365,7 +366,7 @@ proc create_root_design { parentCell } {
      return 1
    }
     set_property -dict [ list \
-   CONFIG.g_ILA {false} \
+   CONFIG.g_ILA {true} \
  ] $synchronizer_0
 
   # Create instance: xlconstant_0, and set properties
@@ -387,6 +388,7 @@ proc create_root_design { parentCell } {
 
   # Create port connections
   connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
+  connect_bd_net -net aresetn_0_1 [get_bd_ports sync_enable] [get_bd_pins synchronizer_0/aresetn]
   connect_bd_net -net i_cp_len_0_1 [get_bd_ports i_cp_len] [get_bd_pins synchronizer_0/i_cp_len]
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins synchronizer_0/i_nfft]
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]

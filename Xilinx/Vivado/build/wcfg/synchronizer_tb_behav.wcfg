@@ -11,229 +11,617 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="233.500001 us"></ZoomEndTime>
-      <Cursor1Time time="62.910000 us"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,146.001 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="320"></NameColumnWidth>
-      <ValueColumnWidth column_width="128"></ValueColumnWidth>
+      <ValueColumnWidth column_width="124"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="9" />
-   <wvobject type="logic" fp_name="/synchronizer_tb/r_clk">
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/synchronizer_tb/r_clk" type="logic">
       <obj_property name="ElementShortName">r_clk</obj_property>
       <obj_property name="ObjectShortName">r_clk</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/synchronizer_tb/cp_len">
+   <wvobject fp_name="/synchronizer_tb/cp_len" type="array">
       <obj_property name="ElementShortName">cp_len[11:0]</obj_property>
       <obj_property name="ObjectShortName">cp_len[11:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/synchronizer_tb/nfft">
+   <wvobject fp_name="/synchronizer_tb/nfft" type="array">
       <obj_property name="ElementShortName">nfft[11:0]</obj_property>
       <obj_property name="ObjectShortName">nfft[11:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/synchronizer_tb/symbols">
+   <wvobject fp_name="/synchronizer_tb/symbols" type="array">
       <obj_property name="ElementShortName">symbols[3:0]</obj_property>
       <obj_property name="ObjectShortName">symbols[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/synchronizer_tb/threshold">
+   <wvobject fp_name="/synchronizer_tb/threshold" type="array">
       <obj_property name="ElementShortName">threshold[31:0]</obj_property>
       <obj_property name="ObjectShortName">threshold[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/synchronizer_tb/i">
+   <wvobject fp_name="/synchronizer_tb/i" type="array">
       <obj_property name="ElementShortName">i[31:0]</obj_property>
       <obj_property name="ObjectShortName">i[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="group" fp_name="group19">
+   <wvobject fp_name="group19" type="group">
       <obj_property name="label">S_AXIS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="array" fp_name="/synchronizer_tb/s_tdata">
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/synchronizer_tb/s_tdata" type="array">
          <obj_property name="ElementShortName">s_tdata[31:0]</obj_property>
          <obj_property name="ObjectShortName">s_tdata[31:0]</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/synchronizer_tb/s_tvalid">
+      <wvobject fp_name="/synchronizer_tb/s_tvalid" type="logic">
          <obj_property name="ElementShortName">s_tvalid</obj_property>
          <obj_property name="ObjectShortName">s_tvalid</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/synchronizer_tb/i_ddc">
+      <wvobject fp_name="/synchronizer_tb/i_ddc" type="array">
          <obj_property name="ElementShortName">i_ddc[15:0]</obj_property>
          <obj_property name="ObjectShortName">i_ddc[15:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/synchronizer_tb/q_ddc">
+      <wvobject fp_name="/synchronizer_tb/q_ddc" type="array">
          <obj_property name="ElementShortName">q_ddc[15:0]</obj_property>
          <obj_property name="ObjectShortName">q_ddc[15:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group18">
+   <wvobject fp_name="group18" type="group">
       <obj_property name="label">M_AXIS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="array" fp_name="/synchronizer_tb/m_tdata">
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/synchronizer_tb/m_tdata" type="array">
          <obj_property name="ElementShortName">m_tdata[31:0]</obj_property>
          <obj_property name="ObjectShortName">m_tdata[31:0]</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/synchronizer_tb/m_tvalid">
+      <wvobject fp_name="/synchronizer_tb/m_tvalid" type="logic">
          <obj_property name="ElementShortName">m_tvalid</obj_property>
          <obj_property name="ObjectShortName">m_tvalid</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/synchronizer_tb/m_tlast">
+      <wvobject fp_name="/synchronizer_tb/m_tlast" type="logic">
          <obj_property name="ElementShortName">m_tlast</obj_property>
          <obj_property name="ObjectShortName">m_tlast</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/synchronizer_tb/m_tready">
+      <wvobject fp_name="/synchronizer_tb/m_tready" type="logic">
          <obj_property name="ElementShortName">m_tready</obj_property>
          <obj_property name="ObjectShortName">m_tready</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group22">
+   <wvobject fp_name="group22" type="group">
       <obj_property name="label">CORDIC_ABS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tvalid">
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tvalid" type="logic">
          <obj_property name="ElementShortName">m_axis_dout_tvalid</obj_property>
          <obj_property name="ObjectShortName">m_axis_dout_tvalid</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata">
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata" type="array">
          <obj_property name="ElementShortName">m_axis_dout_tdata[63:0]</obj_property>
          <obj_property name="ObjectShortName">m_axis_dout_tdata[63:0]</obj_property>
       </wvobject>
-      <wvobject type="vbus" fp_name="vbus87">
+      <wvobject fp_name="vbus87" type="vbus">
          <obj_property name="label">ABS</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
          <obj_property name="CellHeight">100</obj_property>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[31]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[31]" type="logic">
             <obj_property name="ElementShortName">[31]</obj_property>
             <obj_property name="ObjectShortName">[31]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[30]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[30]" type="logic">
             <obj_property name="ElementShortName">[30]</obj_property>
             <obj_property name="ObjectShortName">[30]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[29]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[29]" type="logic">
             <obj_property name="ElementShortName">[29]</obj_property>
             <obj_property name="ObjectShortName">[29]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[28]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[28]" type="logic">
             <obj_property name="ElementShortName">[28]</obj_property>
             <obj_property name="ObjectShortName">[28]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[27]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[27]" type="logic">
             <obj_property name="ElementShortName">[27]</obj_property>
             <obj_property name="ObjectShortName">[27]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[26]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[26]" type="logic">
             <obj_property name="ElementShortName">[26]</obj_property>
             <obj_property name="ObjectShortName">[26]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[25]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[25]" type="logic">
             <obj_property name="ElementShortName">[25]</obj_property>
             <obj_property name="ObjectShortName">[25]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[24]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[24]" type="logic">
             <obj_property name="ElementShortName">[24]</obj_property>
             <obj_property name="ObjectShortName">[24]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[23]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[23]" type="logic">
             <obj_property name="ElementShortName">[23]</obj_property>
             <obj_property name="ObjectShortName">[23]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[22]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[22]" type="logic">
             <obj_property name="ElementShortName">[22]</obj_property>
             <obj_property name="ObjectShortName">[22]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[21]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[21]" type="logic">
             <obj_property name="ElementShortName">[21]</obj_property>
             <obj_property name="ObjectShortName">[21]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[20]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[20]" type="logic">
             <obj_property name="ElementShortName">[20]</obj_property>
             <obj_property name="ObjectShortName">[20]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[19]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[19]" type="logic">
             <obj_property name="ElementShortName">[19]</obj_property>
             <obj_property name="ObjectShortName">[19]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[18]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[18]" type="logic">
             <obj_property name="ElementShortName">[18]</obj_property>
             <obj_property name="ObjectShortName">[18]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[17]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[17]" type="logic">
             <obj_property name="ElementShortName">[17]</obj_property>
             <obj_property name="ObjectShortName">[17]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[16]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[16]" type="logic">
             <obj_property name="ElementShortName">[16]</obj_property>
             <obj_property name="ObjectShortName">[16]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[15]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[15]" type="logic">
             <obj_property name="ElementShortName">[15]</obj_property>
             <obj_property name="ObjectShortName">[15]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[14]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[14]" type="logic">
             <obj_property name="ElementShortName">[14]</obj_property>
             <obj_property name="ObjectShortName">[14]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[13]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[13]" type="logic">
             <obj_property name="ElementShortName">[13]</obj_property>
             <obj_property name="ObjectShortName">[13]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[12]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[12]" type="logic">
             <obj_property name="ElementShortName">[12]</obj_property>
             <obj_property name="ObjectShortName">[12]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[11]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[11]" type="logic">
             <obj_property name="ElementShortName">[11]</obj_property>
             <obj_property name="ObjectShortName">[11]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[10]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[10]" type="logic">
             <obj_property name="ElementShortName">[10]</obj_property>
             <obj_property name="ObjectShortName">[10]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[9]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[9]" type="logic">
             <obj_property name="ElementShortName">[9]</obj_property>
             <obj_property name="ObjectShortName">[9]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[8]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[8]" type="logic">
             <obj_property name="ElementShortName">[8]</obj_property>
             <obj_property name="ObjectShortName">[8]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[7]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[7]" type="logic">
             <obj_property name="ElementShortName">[7]</obj_property>
             <obj_property name="ObjectShortName">[7]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[6]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[6]" type="logic">
             <obj_property name="ElementShortName">[6]</obj_property>
             <obj_property name="ObjectShortName">[6]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[5]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[5]" type="logic">
             <obj_property name="ElementShortName">[5]</obj_property>
             <obj_property name="ObjectShortName">[5]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[4]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[4]" type="logic">
             <obj_property name="ElementShortName">[4]</obj_property>
             <obj_property name="ObjectShortName">[4]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[3]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[3]" type="logic">
             <obj_property name="ElementShortName">[3]</obj_property>
             <obj_property name="ObjectShortName">[3]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[2]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[2]" type="logic">
             <obj_property name="ElementShortName">[2]</obj_property>
             <obj_property name="ObjectShortName">[2]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[1]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[1]" type="logic">
             <obj_property name="ElementShortName">[1]</obj_property>
             <obj_property name="ObjectShortName">[1]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[0]">
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/cordic_0/m_axis_dout_tdata[0]" type="logic">
             <obj_property name="ElementShortName">[0]</obj_property>
             <obj_property name="ObjectShortName">[0]</obj_property>
          </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group77" type="group">
+      <obj_property name="label">Synchronizer</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="group75" type="group">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus127" type="vbus">
+            <obj_property name="label">i</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus110" type="vbus">
+            <obj_property name="label">q</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_abs_ila_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_abs_ila_tdata[63:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_abs_ila_tdata[63:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/s_axis_abs_ila_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_abs_ila_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_abs_ila_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group76" type="group">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata" type="array">
+            <obj_property name="ElementShortName">m_axis_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus193" type="vbus">
+            <obj_property name="label">i</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus176" type="vbus">
+            <obj_property name="label">q</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tvalid" type="logic">
+            <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tlast" type="logic">
+            <obj_property name="ElementShortName">m_axis_tlast</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tlast</obj_property>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tready" type="logic">
+            <obj_property name="ElementShortName">m_axis_tready</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+         </wvobject>
+         <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/m_axis_tkeep" type="array">
+            <obj_property name="ElementShortName">m_axis_tkeep[3:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tkeep[3:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_nfft" type="array">
+         <obj_property name="ElementShortName">i_nfft[11:0]</obj_property>
+         <obj_property name="ObjectShortName">i_nfft[11:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_cp_len" type="array">
+         <obj_property name="ElementShortName">i_cp_len[11:0]</obj_property>
+         <obj_property name="ObjectShortName">i_cp_len[11:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_symbols" type="array">
+         <obj_property name="ElementShortName">i_symbols[3:0]</obj_property>
+         <obj_property name="ObjectShortName">i_symbols[3:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_trig_offset" type="array">
+         <obj_property name="ElementShortName">i_trig_offset[9:0]</obj_property>
+         <obj_property name="ObjectShortName">i_trig_offset[9:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_max_sync" type="logic">
+         <obj_property name="ElementShortName">i_max_sync</obj_property>
+         <obj_property name="ObjectShortName">i_max_sync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/Current_State" type="array">
+         <obj_property name="ElementShortName">Current_State[1:0]</obj_property>
+         <obj_property name="ObjectShortName">Current_State[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/Next_State" type="array">
+         <obj_property name="ElementShortName">Next_State[1:0]</obj_property>
+         <obj_property name="ObjectShortName">Next_State[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/r_axis_tdata" type="array">
+         <obj_property name="ElementShortName">r_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">r_axis_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/r_axis_tvalid" type="logic">
+         <obj_property name="ElementShortName">r_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">r_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/symbol_counter" type="array">
+         <obj_property name="ElementShortName">symbol_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">symbol_counter[3:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/initial_counter" type="array">
+         <obj_property name="ElementShortName">initial_counter[12:0]</obj_property>
+         <obj_property name="ObjectShortName">initial_counter[12:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/nfft_cp_counter" type="array">
+         <obj_property name="ElementShortName">nfft_cp_counter[13:0]</obj_property>
+         <obj_property name="ObjectShortName">nfft_cp_counter[13:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

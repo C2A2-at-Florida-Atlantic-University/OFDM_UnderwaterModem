@@ -216,8 +216,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 11 -to 0 nfft
   create_bd_pin -dir O -from 2 -to 0 rx_gain_shift
   create_bd_pin -dir O -from 3 -to 0 symbols
+  create_bd_pin -dir O -from 0 -to 0 sync_enable
   create_bd_pin -dir O -from 0 -to 0 sync_loopback
-  create_bd_pin -dir O -from 9 -to 0 sync_offset
+  create_bd_pin -dir O -from 10 -to 0 sync_offset
   create_bd_pin -dir O -from 31 -to 0 threshold
 
   # Create instance: axi_gpio_0, and set properties
@@ -240,7 +241,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_DOUT_DEFAULT {0x00020028} \
    CONFIG.C_DOUT_DEFAULT_2 {0x00000000} \
    CONFIG.C_GPIO2_WIDTH {32} \
-   CONFIG.C_GPIO_WIDTH {31} \
+   CONFIG.C_GPIO_WIDTH {32} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_1
 
@@ -252,7 +253,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_ALL_OUTPUTS_2 {1} \
    CONFIG.C_DOUT_DEFAULT {0x0002D464} \
    CONFIG.C_DOUT_DEFAULT_2 {0x00100400} \
-   CONFIG.C_GPIO2_WIDTH {25} \
+   CONFIG.C_GPIO2_WIDTH {26} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_2
 
@@ -278,21 +279,23 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: delimiter_1, and set properties
   set delimiter_1 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_1 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {31} \
+   CONFIG.IN0_WIDTH {32} \
    CONFIG.NUM_OUTPUTS {4} \
    CONFIG.OUT0_WIDTH {16} \
    CONFIG.OUT2_WIDTH {4} \
-   CONFIG.OUT3_WIDTH {10} \
+   CONFIG.OUT3_WIDTH {11} \
  ] $delimiter_1
 
   # Create instance: delimiter_2, and set properties
   set delimiter_2 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_2 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {25} \
-   CONFIG.NUM_OUTPUTS {3} \
+   CONFIG.IN0_WIDTH {26} \
+   CONFIG.NUM_OUTPUTS {4} \
    CONFIG.OUT0_WIDTH {12} \
    CONFIG.OUT1_WIDTH {12} \
    CONFIG.OUT2_WIDTH {1} \
+   CONFIG.OUT3_WIDTH {1} \
+   CONFIG.OUT4_WIDTH {0} \
  ] $delimiter_2
 
   # Create instance: delimiter_3, and set properties
@@ -323,6 +326,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_2_OUT0 [get_bd_pins nfft] [get_bd_pins delimiter_2/OUT0]
   connect_bd_net -net delimiter_2_OUT1 [get_bd_pins cp_len] [get_bd_pins delimiter_2/OUT1]
   connect_bd_net -net delimiter_2_OUT2 [get_bd_pins sync_loopback] [get_bd_pins delimiter_2/OUT2]
+  connect_bd_net -net delimiter_2_OUT3 [get_bd_pins sync_enable] [get_bd_pins delimiter_2/OUT3]
   connect_bd_net -net delimiter_3_OUT0 [get_bd_pins rx_gain_shift] [get_bd_pins delimiter_3/OUT0]
   connect_bd_net -net delimiter_3_OUT1 [get_bd_pins duc_ddc_loopback] [get_bd_pins delimiter_3/OUT1]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_gpio_3/s_axi_aresetn]
@@ -532,8 +536,9 @@ proc create_root_design { parentCell } {
   set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
   set rx_gain_shift [ create_bd_port -dir O -from 2 -to 0 rx_gain_shift ]
   set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
+  set sync_enable [ create_bd_port -dir O -from 0 -to 0 sync_enable ]
   set sync_loopback [ create_bd_port -dir O -from 0 -to 0 sync_loopback ]
-  set sync_offset [ create_bd_port -dir O -from 9 -to 0 sync_offset ]
+  set sync_offset [ create_bd_port -dir O -from 10 -to 0 sync_offset ]
   set threshold [ create_bd_port -dir O -from 31 -to 0 threshold ]
 
   # Create instance: axi_interconnect_0, and set properties
@@ -1388,7 +1393,8 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_OUT1_2 [get_bd_ports duc_ddc_loopback] [get_bd_pins regs/duc_ddc_loopback]
   connect_bd_net -net regs_OUT2_0 [get_bd_ports symbols] [get_bd_pins regs/symbols]
   connect_bd_net -net regs_OUT2_1 [get_bd_ports sync_loopback] [get_bd_pins regs/sync_loopback]
-  connect_bd_net -net regs_OUT3_0 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
+  connect_bd_net -net regs_OUT3_1 [get_bd_ports sync_enable] [get_bd_pins regs/sync_enable]
+  connect_bd_net -net regs_OUT3_2 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
   connect_bd_net -net regs_gpio_io_o_1 [get_bd_ports dma_tlast_count] [get_bd_pins regs/dma_tlast_count]
 
