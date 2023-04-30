@@ -11,18 +11,23 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,146.001 ns"></ZoomEndTime>
-      <Cursor1Time time="0.000 ns"></Cursor1Time>
+      <ZoomStartTime time="188.169600000 ms"></ZoomStartTime>
+      <ZoomEndTime time="211.849200001 ms"></ZoomEndTime>
+      <Cursor1Time time="207.902600000 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="320"></NameColumnWidth>
-      <ValueColumnWidth column_width="124"></ValueColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="10" />
+   <WVObjectSize size="11" />
    <wvobject fp_name="/synchronizer_tb/r_clk" type="logic">
       <obj_property name="ElementShortName">r_clk</obj_property>
       <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_tb/i" type="array">
+      <obj_property name="ElementShortName">i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/synchronizer_tb/cp_len" type="array">
       <obj_property name="ElementShortName">cp_len[11:0]</obj_property>
@@ -567,26 +572,6 @@
             <obj_property name="ElementShortName">m_axis_tkeep[3:0]</obj_property>
             <obj_property name="ObjectShortName">m_axis_tkeep[3:0]</obj_property>
          </wvobject>
-      </wvobject>
-      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_nfft" type="array">
-         <obj_property name="ElementShortName">i_nfft[11:0]</obj_property>
-         <obj_property name="ObjectShortName">i_nfft[11:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_cp_len" type="array">
-         <obj_property name="ElementShortName">i_cp_len[11:0]</obj_property>
-         <obj_property name="ObjectShortName">i_cp_len[11:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_symbols" type="array">
-         <obj_property name="ElementShortName">i_symbols[3:0]</obj_property>
-         <obj_property name="ObjectShortName">i_symbols[3:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_trig_offset" type="array">
-         <obj_property name="ElementShortName">i_trig_offset[9:0]</obj_property>
-         <obj_property name="ObjectShortName">i_trig_offset[9:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/synchronizer_tb/DUT/Ofdm_Sync_250k_i/synchronizer_0/inst/i_max_sync" type="logic">
          <obj_property name="ElementShortName">i_max_sync</obj_property>

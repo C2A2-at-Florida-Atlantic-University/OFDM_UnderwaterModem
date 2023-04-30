@@ -9,7 +9,7 @@
 #include "rtwtypes.h"
 #include "TransmitChain.h"
 
-#define DEFAULT_DIGITAL_GAIN_DBFS -28
+#define DEFAULT_DIGITAL_GAIN_DBFS -4
 #define MAX_SAMPLE_VALUE ((1 << 14)-1) // 14 bit IQ
 #define IFFT_CONJUGATE 0x1
 

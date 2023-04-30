@@ -252,14 +252,6 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       TxOfdmSymbolModData[2*NfftCount] = (int16_T)ModData.re*DigitalGain;
       TxOfdmSymbolModData[(2*NfftCount)+1] = 
         (int16_T)ModData.im*DigitalGain;
-      if ((int16_T)ModData.re*DigitalGain > U_DAC_ACCURACY || 
-        (int16_T)ModData.im*DigitalGain > U_DAC_ACCURACY)
-      {
-        ReturnStatus.Status = RETURN_STATUS_FAIL;
-        sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
-          "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
-        return ReturnStatus;
-      }
 #endif
       NfftCount++;
     }
@@ -271,14 +263,6 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
     }
     IfftBufferPtr[NfftZpCount].re = ModData.re*(double)DigitalGain;
     IfftBufferPtr[NfftZpCount].im = ModData.im*(double)DigitalGain;
-    if (IfftBufferPtr[NfftZpCount].re > U_DAC_ACCURACY || 
-      IfftBufferPtr[NfftZpCount].im > U_DAC_ACCURACY)
-    {
-      ReturnStatus.Status = RETURN_STATUS_FAIL;
-      sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
-        "Signal Saturation with Scalar Gain of %d\n", DigitalGain);
-      return ReturnStatus;
-    }
 #endif
     NfftZpCount++;
     if (ZpIndex == Nfft-1)
