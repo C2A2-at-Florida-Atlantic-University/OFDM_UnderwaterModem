@@ -132,6 +132,8 @@ if { $bCheckIPs == 1 } {
 xilinx.com:user:AXIS_S_to_AD9764:*\
 xilinx.com:ip:axis_data_fifo:*\
 xilinx.com:ip:cic_compiler:*\
+xilinx.com:ip:dds_compiler:*\
+xilinx.com:ip:xlconstant:*\
 "
 
    set list_ips_missing ""
@@ -236,30 +238,18 @@ proc create_root_design { parentCell } {
    CONFIG.TUSER_WIDTH {0} \
    ] $S_AXIS
 
-  set S_AXIS_DDS [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S_AXIS_DDS ]
-  set_property -dict [ list \
-   CONFIG.HAS_TKEEP {0} \
-   CONFIG.HAS_TLAST {1} \
-   CONFIG.HAS_TREADY {1} \
-   CONFIG.HAS_TSTRB {0} \
-   CONFIG.LAYERED_METADATA {undef} \
-   CONFIG.TDATA_NUM_BYTES {2} \
-   CONFIG.TDEST_WIDTH {0} \
-   CONFIG.TID_WIDTH {0} \
-   CONFIG.TUSER_WIDTH {0} \
-   ] $S_AXIS_DDS
-
 
   # Create ports
   set ClockToDAC [ create_bd_port -dir O ClockToDAC ]
   set DAC_control [ create_bd_port -dir I -from 3 -to 0 DAC_control ]
   set DAC_data [ create_bd_port -dir O -from 13 -to 0 DAC_data ]
   set DAC_sleep [ create_bd_port -dir O DAC_sleep ]
+  set Fc_scaled [ create_bd_port -dir I -from 31 -to 0 Fc_scaled ]
   set Interp_ratio [ create_bd_port -dir I -from 15 -to 0 Interp_ratio ]
   set PA_enable [ create_bd_port -dir O PA_enable ]
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
-   CONFIG.ASSOCIATED_BUSIF {S_AXIS_DDS:S_AXIS} \
+   CONFIG.ASSOCIATED_BUSIF {S_AXIS} \
  ] $aclk
   set aclk_10M [ create_bd_port -dir I -type clk -freq_hz 10000000 aclk_10M ]
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
@@ -292,6 +282,25 @@ proc create_root_design { parentCell } {
    CONFIG.Quantization {Truncation} \
    CONFIG.Sample_Rate_Changes {Programmable} \
  ] $cic_compiler
+
+  # Create instance: dds_compiler_0, and set properties
+  set dds_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:dds_compiler dds_compiler_0 ]
+  set_property -dict [ list \
+   CONFIG.Amplitude_Mode {Unit_Circle} \
+   CONFIG.DATA_Has_TLAST {Not_Required} \
+   CONFIG.Has_Phase_Out {false} \
+   CONFIG.Latency {3} \
+   CONFIG.M_DATA_Has_TUSER {Not_Required} \
+   CONFIG.Negative_Sine {true} \
+   CONFIG.Noise_Shaping {None} \
+   CONFIG.Output_Frequency1 {0} \
+   CONFIG.Output_Width {7} \
+   CONFIG.PINC1 {0} \
+   CONFIG.Parameter_Entry {Hardware_Parameters} \
+   CONFIG.Phase_Increment {Streaming} \
+   CONFIG.Phase_Width {32} \
+   CONFIG.S_PHASE_Has_TUSER {Not_Required} \
+ ] $dds_compiler_0
 
   # Create instance: interpolator_config, and set properties
   set block_name decimator_config
@@ -337,10 +346,13 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: xlconstant_0, and set properties
+  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
+
   # Create interface connections
-  connect_bd_intf_net -intf_net S_AXIS_DDS_1 [get_bd_intf_ports S_AXIS_DDS] [get_bd_intf_pins iq_mixer_tx/s_axis_dds]
   connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_pins axis_data_fifo/M_AXIS] [get_bd_intf_pins sign_conversion_0/s_axis]
   connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis]
+  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis_dds]
   connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_CONFIG] [get_bd_intf_pins interpolator_config/m_axis]
   connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins axis_data_fifo/S_AXIS] [get_bd_intf_pins iq_mixer_tx/m_axis]
   connect_bd_intf_net -intf_net s_axis_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tdm_reformat_tx/s_axis]
@@ -352,12 +364,14 @@ proc create_root_design { parentCell } {
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_data [get_bd_ports DAC_data] [get_bd_pins AXIS_S_to_AD9764/DAC_data]
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_sleep [get_bd_ports DAC_sleep] [get_bd_pins AXIS_S_to_AD9764/DAC_sleep]
   connect_bd_net -net AXIS_S_to_AD9764_0_PA_enable [get_bd_ports PA_enable] [get_bd_pins AXIS_S_to_AD9764/PA_enable]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk]
   connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins sign_conversion_0/axis_aclk]
   connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn] [get_bd_pins iq_mixer_tx/axis_aresetn]
   connect_bd_net -net aresetn_10M_1 [get_bd_ports aresetn_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aresetn]
   connect_bd_net -net control_0_1 [get_bd_ports DAC_control] [get_bd_pins AXIS_S_to_AD9764/control]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins interpolator_config/i_decimate_ratio]
+  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
+  connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
 
