@@ -82,6 +82,10 @@
 //#define RX_SHIFT_ATTEN_OFFSET 0x8
 //#define RX_SHIFT_ATTEN_MASK_OFFSET
 
+#define AUX_RESETN_OFFSET 0x8
+#define AUX_RESETN_MASK_OFFSET 26
+#define AUX_RESETN_MASK 0x04000000
+
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
 // CP_LEN_REG, and NFFT_REG
@@ -178,5 +182,6 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
 void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
 void HwInterfaceDucDdcLoopback(bool Select);
 void HwInterfaceSynchronizerStatus(bool Enable);
+void HwInterfaceResetPL(bool Reset);
 
 #endif

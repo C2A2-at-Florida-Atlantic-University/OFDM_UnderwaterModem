@@ -41,14 +41,14 @@ architecture RTL of iq_mixer_rx_16_bit is
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
     signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:s_axis_dds:m_axis, FREQ_HZ 100000000";
 
-  component mult_gen_16 is
+  component mult_gen_0 is
     port(
       CLK                         : in  std_logic;
       A                           : in  std_logic_vector(15 downto 0);
       B                           : in  std_logic_vector(15 downto 0);
       P                           : out std_logic_vector(31 downto 0)
     );
-  end component mult_gen_16;
+  end component mult_gen_0;
 
   signal i_sample                 : std_logic_vector(31 downto 0) := (others => '0');
   signal q_sample                 : std_logic_vector(31 downto 0) := (others => '0');
@@ -68,7 +68,7 @@ architecture RTL of iq_mixer_rx_16_bit is
 begin
 
   -- Real
-  mult_gen_real_inst : mult_gen_16
+  mult_gen_real_inst : mult_gen_0
     port map(
       CLK                         => axis_aclk,
       A                           => real_sample,
@@ -77,7 +77,7 @@ begin
     );
 
   -- Imaginary
-  mult_gen_imaginary_inst : mult_gen_16
+  mult_gen_imaginary_inst : mult_gen_0
     port map(
       CLK                         => axis_aclk,
       A                           => real_sample,

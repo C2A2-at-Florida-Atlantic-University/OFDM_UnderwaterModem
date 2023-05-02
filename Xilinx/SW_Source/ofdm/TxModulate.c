@@ -37,6 +37,8 @@ static creal_T *DucBufferPtr = NULL; // Pointer to DUC inuput Buffer
 #endif
 //static unsigned *TxBufferPtr = NULL; // Pointer to Tx CMA Buffer
 static uint16_T DigitalGain;
+static double IfftGain;
+static double SyncGain;
 
 static FILE *PilotDataFile; // Pilot code
 
@@ -378,11 +380,12 @@ ReturnStatusType TxModulateDigitalGain(int GainDB)
   }
   else
   {
-    DigitalGain = MAX_SAMPLE_VALUE*pow(10,DEFAULT_DIGITAL_GAIN_DBFS/20);
+    DigitalGain = MAX_SAMPLE_VALUE*pow(10,
+      DEFAULT_FREQ_DIGITAL_GAIN_DBFS/20);
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
       "TxModulateDigitalGain: dBFS gain of %d is invalid, set to %d\n"
-        , GainDB, DEFAULT_DIGITAL_GAIN_DBFS);
+        , GainDB, DEFAULT_FREQ_DIGITAL_GAIN_DBFS);
     return ReturnStatus;
   }
 
@@ -393,6 +396,30 @@ ReturnStatusType TxModulateDigitalGain(int GainDB)
 uint16_T TxModulateGetScalarGain(void)
 {
   return DigitalGain;
+}
+
+void TxModulateSetIfftGain(double GainDB)
+{
+  IfftGain = pow(10.0,GainDB/20.0);
+  printf("TxModulateGetIfftGain: Ifft Gain = %lf dB = %lf\n",
+    GainDB, IfftGain);
+}
+
+double TxModulateGetIfftGain()
+{
+  return IfftGain;
+}
+
+void TxModulateSetSyncGain(double GainDB)
+{
+  SyncGain = pow(10.0,GainDB/20.0);
+  printf("TxModulateSetSyncGain: Sync Symbol Extra Gain = %lf dB "
+    "= %lf\n", GainDB, SyncGain);
+}
+
+double TxModulateGetSyncGain()
+{
+  return SyncGain;
 }
 
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
@@ -490,7 +517,8 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
   char FileNameZc[64];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
-  unsigned tmp_i, tmp_q;
+  int tmp_i, tmp_q;
+  double tmp_i1, tmp_q1;
   creal_T *IfftOutData;
 
 #ifdef DUC
@@ -630,17 +658,22 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
           DucBufferPtr[j+Nfft] = 0x00000000;
         }
         fscanf(ZcFile,"%d, %d\n", &tmp_i, &tmp_q);
-        DucBufferPtr[j] = ((((int32_T)tmp_q)<<16)&0xFFFF0000)+
-          (int16_T)tmp_i;
+        tmp_i1 = (double)tmp_i * IfftGain * SyncGain;
+        tmp_q1 = (double)tmp_q * IfftGain * SyncGain;
+        DucBufferPtr[j] = ((((int32_T)tmp_q1)<<16)&0xFFFF0000)+
+          (int16_T)tmp_i1;
       }
       else // Data symbols
       {
+        IfftOutData[j].re = IfftOutData[j].re * IfftGain;
+        IfftOutData[j].im = IfftOutData[j].im * IfftGain;
         // Apply cyclic prefix (CP)
         if (j >= (Nfft - CpLen))
         {
 #ifdef DUC
           DucBufferPtr[(i*(CpLen+Nfft))+j-(Nfft-CpLen)] = 
-            ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
+            ((((int32_T)IfftOutData[j].im)<<16)
+            &0xFFFF0000)+
             ((int16_T)IfftOutData[j].re);
 #endif
 #ifdef DAC
@@ -652,7 +685,8 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
         }
 #ifdef DUC
         DucBufferPtr[(i*(CpLen+Nfft))+j+CpLen] = 
-          ((((int32_T)IfftOutData[j].im)<<16)&0xFFFF0000)+
+          ((((int32_T)IfftOutData[j].im)<<16)
+          &0xFFFF0000)+
           ((int16_T)IfftOutData[j].re);
 #endif
 #ifdef DAC
@@ -679,7 +713,8 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       if (j < 12 && i == 1)
       {
         printf("\tSymbol %d: Nfft %d: \n\t%lf+j%lf\n",
-          i,j,IfftOutData[j].re,IfftOutData[j].im);
+          i,j,IfftOutData[j].re,
+          IfftOutData[j].im);
       }
 #endif
     }

@@ -9,7 +9,10 @@
 #include "rtwtypes.h"
 #include "TransmitChain.h"
 
-#define DEFAULT_DIGITAL_GAIN_DBFS -4
+#define DEFAULT_FREQ_DIGITAL_GAIN_DBFS -4
+#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB 1.6
+#define DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB 6.0
+
 #define MAX_SAMPLE_VALUE ((1 << 14)-1) // 14 bit IQ
 #define IFFT_CONJUGATE 0x1
 
@@ -23,6 +26,10 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 void             TxModulatePrintCrealType(creal_T Data);
 ReturnStatusType TxModulateDigitalGain(int GainDB);
 uint16_T         TxModulateGetScalarGain(void);
+void             TxModulateSetIfftGain(double GainDB);
+double           TxModulateGetIfftGain();
+void             TxModulateSetSyncGain(double GainDB);
+double           TxModulateGetSyncGain();
 ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
   Ofdm_Parameters_Type *OfdmParams, unsigned OfdmSymbols);
 

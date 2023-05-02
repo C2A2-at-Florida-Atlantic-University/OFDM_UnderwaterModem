@@ -38,7 +38,9 @@ int main(int argc, char **argv)
   unsigned ScalarGain;
   unsigned RxThread;
   unsigned SyncThreshold;
-  unsigned RxShiftAtten;
+  //unsigned RxShiftAtten;
+  double TxGainDbTime;
+  double SyncSymbolGainDB;
   int SyncOffset;
   int TxGainDb;
   int RxGainDb;
@@ -94,7 +96,9 @@ int main(int argc, char **argv)
   OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
   OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
 
-  TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+  TxGainDb = DEFAULT_FREQ_DIGITAL_GAIN_DBFS;
+  TxGainDbTime = DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB;
+  SyncSymbolGainDB = DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB;
   RxGainDb = DEFAULT_RX_GAIN_DB;
 
   SyncThreshold = DEFAULT_SYNC_THRESHOLD;
@@ -113,6 +117,9 @@ int main(int argc, char **argv)
   }
 
 #ifndef NO_DEVMEM                  // HW specific functions
+  HwInterfaceResetPL(true);        // Reset PL
+  usleep(1000);
+  HwInterfaceResetPL(false);       // Take PL out of Reset
   HwInterfaceSetGlobalMute(true);  // mute FPGA reg access prints
   DirectDmaSetGlobalMute(true);    // mute FPGA reg access prints
   DirectDmaPsToPlInit(0);          // Reset mm2s DMA
@@ -135,6 +142,8 @@ int main(int argc, char **argv)
 #endif
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
+  TxModulateSetIfftGain(TxGainDbTime);
+  TxModulateSetSyncGain(SyncSymbolGainDB);
 
 #ifdef SPI
   ReturnStatus = HwInterfaceGpioSetup();
@@ -272,16 +281,25 @@ int main(int argc, char **argv)
 
 //////////////////////////////////////////////////////////////////////////
       case 4:
-        printf("\tEnter TX Digital Gain (dBFS): ");
+        printf("\tEnter TX Frequency Domain Digital Gain (Default: "
+          "%d dBFS): ", DEFAULT_FREQ_DIGITAL_GAIN_DBFS);
         ScanfRet = scanf("%d", &TxGainDb);
-        printf("\tEnter RX Gain (dB): ");
+        printf("\tEnter TX Time Domain Digital Gain (Default: "
+          "%lf dB): ", DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB);
+        ScanfRet = scanf("%lf", &TxGainDbTime);
+        printf("\tEnter Extra Synchronization Symbol Gain (Default: "
+          "%lf dB): ", DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB);
+        ScanfRet = scanf("%lf", &SyncSymbolGainDB);
+        printf("\tEnter RX Gain (Default: %d dB): ", DEFAULT_RX_GAIN_DB);
         ScanfRet = scanf("%d", &RxGainDb);
         ReturnStatus = TxModulateDigitalGain(TxGainDb);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
-          TxGainDb = DEFAULT_DIGITAL_GAIN_DBFS;
+          TxGainDb = DEFAULT_FREQ_DIGITAL_GAIN_DBFS;
         }
+        TxModulateSetIfftGain(TxGainDbTime);
+        TxModulateSetSyncGain(SyncSymbolGainDB);
 #ifdef SPI
         ReturnStatus = HwInterfaceSetVga(RxGainDb);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
@@ -290,8 +308,8 @@ int main(int argc, char **argv)
         }
 #endif
 #ifndef NO_DEVMEM
-        printf("\tEnter Rx Shift Attenuation in bits: ");
-        ScanfRet = scanf("%d", &RxShiftAtten);
+        //printf("\tEnter Rx Shift Attenuation in bits: ");
+        //ScanfRet = scanf("%d", &RxShiftAtten);
         //HwInterfaceConfigRxShiftAtten(RxShiftAtten);
 #endif
         break;
@@ -344,8 +362,12 @@ int main(int argc, char **argv)
           OfdmTiming.FrameGuardPeriod);
         printf("\tSymbols per Frame         %d\n",
           OfdmTiming.OfdmSymbolsPerFrame);
-        printf("\n\tTX Digital Gain:          %d dBFS = %d\n",
+        printf("\n\tSub-Carrers Digital Gain: %d dBFS = %d\n",
           TxGainDb, TxModulateGetScalarGain());
+        printf("\tTX IFFT Gain:             %lf dB = %lf\n",
+          TxGainDbTime, TxModulateGetIfftGain());
+        printf("\tSync Symbol Extra Gain    %lf dB = %lf\n",
+          SyncSymbolGainDB, TxModulateGetSyncGain());
         printf("\n\tCenter Frequency:         %d kHz\n", CenterFreq);
         printf("\n\tSynchronizer Threshold    0x%X = %d\n",
           SyncThreshold, SyncThreshold);
@@ -421,11 +443,12 @@ int main(int argc, char **argv)
           break;
         }
         fprintf(OfdmInfoFile, "%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,"
-          "\n%d,\n%d,\n%d\n",
+          "\n%d,\n%d,\n%d,\n%lf,\n%lf\n",
           OfdmParams.Nfft, OfdmParams.BandWidth, OfdmParams.CpLen,
           OfdmParams.ModOrder, OfdmParams.ZpDensity,
           OfdmTiming.SymbolGuardPeriod, OfdmTiming.FrameGuardPeriod,
-          OfdmTiming.OfdmSymbolsPerFrame, CenterFreq, ScalarGain);
+          OfdmTiming.OfdmSymbolsPerFrame, CenterFreq, ScalarGain,
+          TxModulateGetIfftGain(), TxModulateGetSyncGain());
 
         ReturnStatus = TxModulateFileData(OfdmParams.ModOrder, 
           OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame,

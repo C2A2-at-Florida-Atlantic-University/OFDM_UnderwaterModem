@@ -28,6 +28,22 @@ void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
   GlobalMute = GlobalMuteSelect;
 }
 
+void HwInterfaceResetPL(bool Reset)
+{
+  if (Reset)
+  {
+    printf("HwInterfaceResetPL: Putting PL in Reset ... \n");
+    FpgaInterfaceWrite(GPIO_2_BASE_ADDR+AUX_RESETN_OFFSET,
+      0<<AUX_RESETN_MASK_OFFSET, AUX_RESETN_MASK, GlobalMute);
+  }
+  else
+  {
+    printf("HwInterfaceResetPL: Taking PL out of Reset ... \n");
+    FpgaInterfaceWrite(GPIO_2_BASE_ADDR+AUX_RESETN_OFFSET,
+      1<<AUX_RESETN_MASK_OFFSET, AUX_RESETN_MASK, GlobalMute);
+  }
+}
+
 void HwInterfaceDucDdcLoopback(bool Select)
 {
   unsigned RegValue = Select << DUC_DDC_LOOPBACK_MASK_OFFSET;
