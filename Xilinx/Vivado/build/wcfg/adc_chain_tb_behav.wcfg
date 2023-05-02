@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2.109506667 ms"></ZoomStartTime>
-      <ZoomEndTime time="18.089506668 ms"></ZoomEndTime>
-      <Cursor1Time time="5.989510000 ms"></Cursor1Time>
+      <ZoomStartTime time="33,439.100000 us"></ZoomStartTime>
+      <ZoomEndTime time="33,454.280001 us"></ZoomEndTime>
+      <Cursor1Time time="33,451.750000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="160"></NameColumnWidth>
-      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+      <NameColumnWidth column_width="174"></NameColumnWidth>
+      <ValueColumnWidth column_width="84"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="13" />
    <wave_markers>
@@ -588,11 +588,13 @@
             <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
          </wvobject>
          <wvobject fp_name="vbus695" type="vbus">
-            <obj_property name="label">iq</obj_property>
+            <obj_property name="label">real</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
             <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
             <obj_property name="CellHeight">100</obj_property>
+            <obj_property name="AnalogYRangeMin">-49326.3</obj_property>
+            <obj_property name="AnalogYRRangeMax">147281</obj_property>
             <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/s_axis_tdata[15]" type="logic">
                <obj_property name="ElementShortName">[15]</obj_property>
                <obj_property name="ObjectShortName">[15]</obj_property>
@@ -834,8 +836,7 @@
             <obj_property name="label">iq</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
-            <obj_property name="CellHeight">100</obj_property>
+            <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
             <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/m_axis_tdata[15]" type="logic">
                <obj_property name="ElementShortName">[15]</obj_property>
                <obj_property name="ObjectShortName">[15]</obj_property>
@@ -918,26 +919,169 @@
          <obj_property name="ElementShortName">i_sample[31:0]</obj_property>
          <obj_property name="ObjectShortName">i_sample[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus284" type="vbus">
+         <obj_property name="label">i_sample_scaled</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/i_sample[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
       </wvobject>
       <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample" type="array">
          <obj_property name="ElementShortName">q_sample[31:0]</obj_property>
          <obj_property name="ObjectShortName">q_sample[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus333" type="vbus">
+         <obj_property name="label">q_sample_scaled</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/q_sample[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
       </wvobject>
       <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/cos_sample" type="array">
          <obj_property name="ElementShortName">cos_sample[15:0]</obj_property>
          <obj_property name="ObjectShortName">cos_sample[15:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
       </wvobject>
       <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/sin_sample" type="array">
          <obj_property name="ElementShortName">sin_sample[15:0]</obj_property>
          <obj_property name="ObjectShortName">sin_sample[15:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
       </wvobject>
       <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/real_sample" type="array">
          <obj_property name="ElementShortName">real_sample[15:0]</obj_property>
          <obj_property name="ObjectShortName">real_sample[15:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
       </wvobject>
       <wvobject fp_name="/adc_chain_tb/DUT/ADC_Chain_i/iq_mixer_rx_16_bit_0/inst/Current_State" type="array">
          <obj_property name="ElementShortName">Current_State[1:0]</obj_property>

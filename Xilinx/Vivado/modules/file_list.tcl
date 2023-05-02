@@ -9,6 +9,7 @@ add_files -fileset sim_1 [glob sim/*.sv]
 # Add instantiated IQ
 import_ip ip/mult_gen_0.xci
 import_ip ip/ila_0.xci
+import_ip ip/dds_compiler_0.xci
 
 upgrade_ip [get_ips {*}]
 set_property generate_synth_checkpoint 0 [get_files mult_gen_0.xci]

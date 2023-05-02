@@ -18,6 +18,8 @@ module adc_chain_tb();
   int                               fd;
   int                               fd_write;
   int                               fd_mix;
+  int                               fd_mix_dds;
+  int                               fd_mix_in;
 
   logic                             r_clk;
   logic                             r_nRst;
@@ -36,6 +38,9 @@ module adc_chain_tb();
 
   logic [15:0]                      i_ddc_out,q_ddc_out;
   logic [15:0]                      iq_mix_out_i,iq_mix_out_q;
+  logic [15:0]                      iq_mix_tmp_in;
+
+  logic [15:0]                      dds_i,dds_q;
 
 //---------------------------------------------------------------
 // DUT
@@ -57,8 +62,8 @@ module adc_chain_tb();
     .aresetn_40M                    (adc_aresetn),
 
     .decimate_ratio                 (decimate_ratio),
-    .status                         (adc_status),
-    .select_40M_10M                 (select_10M)
+    .status                         (adc_status)
+  //  .select_40M_10M                 (select_10M)
   );
 
 //---------------------------------------------------------------
@@ -79,6 +84,42 @@ module adc_chain_tb();
     forever begin
       #CLOCK_CYCLE_ADC adc_aclk     = ~adc_aclk;
     end
+  end
+
+//---------------------------------------------------------------
+// Record IQ mixer output
+//---------------------------------------------------------------
+  initial begin
+    fd_mix_in = $fopen("../../../../../../modules/sim/iq_mix_tmp_in.txt","w");
+    if (fd_mix_in) $display("File was opened successfully: %0d ",fd_mix_in);
+    else begin
+      $display("File was NOT opened successfully: %0d",fd_mix_in);
+      $stop;
+    end
+    fd_mix_dds = $fopen("../../../../../../modules/sim/iq_dds.txt","w");
+    if (fd_mix_dds) $display("File was opened successfully: %0d ",fd_mix_dds);
+    else begin
+      $display("File was NOT opened successfully: %0d",fd_mix_dds);
+      $stop;
+    end
+
+    #(CLOCK_PERIOD*119);
+    #(CLOCK_PERIOD*326);
+
+    for (int i = 0; i < 1392640; i++) begin
+      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tvalid ||
+        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tready)
+        #CLOCK_PERIOD;
+      iq_mix_tmp_in = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tdata;
+      dds_i = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_dds_tdata[15:0];
+      dds_q = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_dds_tdata[31:16];
+      $fdisplay(fd_mix_in,"%d",$signed(iq_mix_tmp_in));
+      $fdisplay(fd_mix_dds, "%d, %d",$signed(dds_i),$signed(dds_q));
+      #CLOCK_PERIOD;
+    end
+    
+    $fclose(fd_mix_in);
+
   end
 
 //---------------------------------------------------------------
@@ -169,7 +210,11 @@ module adc_chain_tb();
     adc_aresetn                     = 1'b1;
     #(CLOCK_PERIOD*20);
     //ADC_control                     = 4'b0001;
-    Fc_scaled                       = 32'd10737418;
+    //Fc_scaled                       = 32'd10_737_418;
+    //Fc_scaled                       = 32'd11179799; // 260300 Hz
+    //Fc_scaled                       = 32'd11181947; // 260350 Hz
+    Fc_scaled                       = 32'd11184868; // 260418 Hz
+    //Fc_scaled                       = 32'd4_702_156_911;
     //decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD_ADC*30);
     #(CLOCK_PERIOD*327);

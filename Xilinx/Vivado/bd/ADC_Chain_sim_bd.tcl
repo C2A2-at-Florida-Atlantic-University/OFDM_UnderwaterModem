@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# decimator_config, iq_mixer_10M, iq_mixer_rx, mux, tdm_reformat
+# decimator_config, iq_mixer_rx_16_bit, tdm_reformat
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -130,7 +130,6 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:user:AD9244_to_AXIS_M:*\
-user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:axis_data_fifo:*\
 xilinx.com:ip:cic_compiler:*\
 xilinx.com:ip:dds_compiler:*\
@@ -161,9 +160,7 @@ set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 decimator_config\
-iq_mixer_10M\
-iq_mixer_rx\
-mux\
+iq_mixer_rx_16_bit\
 tdm_reformat\
 "
 
@@ -243,23 +240,10 @@ proc create_root_design { parentCell } {
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set aresetn_40M [ create_bd_port -dir I -type rst aresetn_40M ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
-  set select_40M_10M [ create_bd_port -dir I select_40M_10M ]
   set status [ create_bd_port -dir O -from 31 -to 0 status ]
 
   # Create instance: AD9244_to_AXIS_M_0, and set properties
   set AD9244_to_AXIS_M_0 [ create_bd_cell -type ip -vlnv xilinx.com:user:AD9244_to_AXIS_M AD9244_to_AXIS_M_0 ]
-
-  # Create instance: AXIS_Splitter_0, and set properties
-  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
-  set_property -dict [ list \
-   CONFIG.AXIS_TDATA_WIDTH {16} \
- ] $AXIS_Splitter_0
-
-  # Create instance: AXIS_Splitter_1, and set properties
-  set AXIS_Splitter_1 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_1 ]
-  set_property -dict [ list \
-   CONFIG.AXIS_TDATA_WIDTH {16} \
- ] $AXIS_Splitter_1
 
   # Create instance: axis_data_fifo_0, and set properties
   set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_0 ]
@@ -293,12 +277,12 @@ proc create_root_design { parentCell } {
    CONFIG.Amplitude_Mode {Unit_Circle} \
    CONFIG.DATA_Has_TLAST {Not_Required} \
    CONFIG.Has_Phase_Out {false} \
-   CONFIG.Latency {3} \
+   CONFIG.Latency {7} \
    CONFIG.M_DATA_Has_TUSER {Not_Required} \
    CONFIG.Negative_Sine {true} \
    CONFIG.Noise_Shaping {None} \
    CONFIG.Output_Frequency1 {0} \
-   CONFIG.Output_Width {7} \
+   CONFIG.Output_Width {16} \
    CONFIG.PINC1 {0} \
    CONFIG.Parameter_Entry {Hardware_Parameters} \
    CONFIG.Phase_Increment {Streaming} \
@@ -320,42 +304,17 @@ proc create_root_design { parentCell } {
    CONFIG.g_DEFAULT_RATE {0x00A0} \
  ] $decimator_config_0
 
-  # Create instance: iq_mixer_10M_0, and set properties
-  set block_name iq_mixer_10M
-  set block_cell_name iq_mixer_10M_0
-  if { [catch {set iq_mixer_10M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: iq_mixer_rx_16_bit_0, and set properties
+  set block_name iq_mixer_rx_16_bit
+  set block_cell_name iq_mixer_rx_16_bit_0
+  if { [catch {set iq_mixer_rx_16_bit_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $iq_mixer_10M_0 eq "" } {
+   } elseif { $iq_mixer_rx_16_bit_0 eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
   
-  # Create instance: iq_mixer_rx_0, and set properties
-  set block_name iq_mixer_rx
-  set block_cell_name iq_mixer_rx_0
-  if { [catch {set iq_mixer_rx_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $iq_mixer_rx_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
-  # Create instance: mux_0, and set properties
-  set block_name mux
-  set block_cell_name mux_0
-  if { [catch {set mux_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $mux_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-    set_property -dict [ list \
-   CONFIG.g_TDATA_WIDTH {16} \
- ] $mux_0
-
   # Create instance: tdm_reformat_0, and set properties
   set block_name tdm_reformat
   set block_cell_name tdm_reformat_0
@@ -372,17 +331,11 @@ proc create_root_design { parentCell } {
 
   # Create interface connections
   connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins iq_mixer_rx_0/s_axis]
-  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins iq_mixer_10M_0/s_axis]
-  connect_bd_intf_net -intf_net AXIS_Splitter_1_M00_AXIS [get_bd_intf_pins AXIS_Splitter_1/M00_AXIS] [get_bd_intf_pins iq_mixer_10M_0/s_axis_dds]
-  connect_bd_intf_net -intf_net AXIS_Splitter_1_M01_AXIS [get_bd_intf_pins AXIS_Splitter_1/M01_AXIS] [get_bd_intf_pins iq_mixer_rx_0/s_axis_dds]
-  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
+  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins axis_data_fifo_0/M_AXIS] [get_bd_intf_pins iq_mixer_rx_16_bit_0/s_axis]
   connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler_0/M_AXIS_DATA] [get_bd_intf_pins tdm_reformat_0/s_axis]
-  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins AXIS_Splitter_1/S00_AXIS] [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA]
+  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_16_bit_0/s_axis_dds]
   connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler_0/S_AXIS_CONFIG] [get_bd_intf_pins decimator_config_0/m_axis]
-  connect_bd_intf_net -intf_net iq_mixer_10M_0_m_axis [get_bd_intf_pins iq_mixer_10M_0/m_axis] [get_bd_intf_pins mux_0/s_axis1]
-  connect_bd_intf_net -intf_net iq_mixer_rx_0_m_axis [get_bd_intf_pins iq_mixer_rx_0/m_axis] [get_bd_intf_pins mux_0/s_axis0]
-  connect_bd_intf_net -intf_net mux_0_m_axis [get_bd_intf_pins cic_compiler_0/S_AXIS_DATA] [get_bd_intf_pins mux_0/m_axis]
+  connect_bd_intf_net -intf_net iq_mixer_rx_16_bit_0_m_axis [get_bd_intf_pins cic_compiler_0/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_16_bit_0/m_axis]
   connect_bd_intf_net -intf_net tdm_reformat_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins tdm_reformat_0/m_axis]
 
   # Create port connections
@@ -390,14 +343,13 @@ proc create_root_design { parentCell } {
   connect_bd_net -net AD9244_to_AXIS_M_0_status [get_bd_ports status] [get_bd_pins AD9244_to_AXIS_M_0/status]
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
-  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins cic_compiler_0/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config_0/axis_aclk] [get_bd_pins iq_mixer_10M_0/axis_aclk] [get_bd_pins iq_mixer_rx_0/axis_aclk] [get_bd_pins mux_0/axis_aclk] [get_bd_pins tdm_reformat_0/axis_aclk]
+  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins cic_compiler_0/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config_0/axis_aclk] [get_bd_pins iq_mixer_rx_16_bit_0/axis_aclk] [get_bd_pins tdm_reformat_0/axis_aclk]
   connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
+  connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins iq_mixer_rx_16_bit_0/axis_aresetn]
   connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
-  connect_bd_net -net axis_aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins iq_mixer_10M_0/axis_aresetn] [get_bd_pins iq_mixer_rx_0/axis_aresetn] [get_bd_pins mux_0/axis_aresetn]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports decimate_ratio] [get_bd_pins decimator_config_0/i_decimate_ratio]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
-  connect_bd_net -net tready_select_0_1 [get_bd_ports select_40M_10M] [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins mux_0/i_select]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
 
