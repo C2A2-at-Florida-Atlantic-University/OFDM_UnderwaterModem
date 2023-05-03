@@ -15,6 +15,7 @@
 #define GPIO_1_BASE_ADDR 0x40010200
 #define GPIO_2_BASE_ADDR 0x40010400
 #define GPIO_3_BASE_ADDR 0x40010600
+#define GPIO_4_BASE_ADDR 0x40010800
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -85,6 +86,10 @@
 #define AUX_RESETN_OFFSET 0x8
 #define AUX_RESETN_MASK_OFFSET 26
 #define AUX_RESETN_MASK 0x04000000
+
+#define ADC_FC_SCALED_OFFSET 0x8
+#define ADC_FC_SCALED_MASK_OFFSET 0
+#define ADC_FC_SCALED_MASK 0xFFFFFFFF
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,

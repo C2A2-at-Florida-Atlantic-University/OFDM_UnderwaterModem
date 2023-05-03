@@ -49,11 +49,15 @@ void HwInterfaceDucDdcLoopback(bool Select)
   unsigned RegValue = Select << DUC_DDC_LOOPBACK_MASK_OFFSET;
   if (Select)
   {
+    if (!GlobalMute)
+      printf("HwInterfaceDucDdcLoopback: Configuring DUC, DDC Loop\n");
     FpgaInterfaceWrite(GPIO_3_BASE_ADDR+DUC_DDC_LOOPBACK_OFFSET,
       RegValue, DUC_DDC_LOOPBACK_MASK, GlobalMute);
   }
   else
   {
+    if (!GlobalMute)
+      printf("HwInterfaceDucDdcLoopback: Configuring DUC, DDC Loop\n");
     FpgaInterfaceWrite(GPIO_3_BASE_ADDR+DUC_DDC_LOOPBACK_OFFSET,
       RegValue, DUC_DDC_LOOPBACK_MASK, GlobalMute);
   }
@@ -63,6 +67,8 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
 {
   if (DucDdcLoopSel == 0) // Program zero, tlast is passthrough
   {
+    if (!GlobalMute)
+      printf("HwinterfaceSetDmaTlastGen: Clearing DMA Tlast Gen\n");
     FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET, 0,
       GlobalMute);
   }
@@ -72,6 +78,8 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
     printf("HwInterfaceSetDmaTlastGen: Program tlast to be on "
       "%dth sample\n", Samples);
 #endif
+    if (!GlobalMute)
+      printf("HwinterfaceSetDmaTlastGen: Configuring DMA Tlast Gen\n");
     FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET,
       Samples-1, GlobalMute);
   }
@@ -81,6 +89,8 @@ void HwInterfaceEnableDac(void)
 {
   unsigned RegValue;
   RegValue = ENABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceEnableDac: Enabling DAC and PA\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue, 
     DAC_CONTROL_MASK, GlobalMute);
 }
@@ -89,6 +99,8 @@ void HwInterfaceDisableDac(void)
 {
   unsigned RegValue;
   RegValue = DISABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceDisableDac: Disabling DAC and PA\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue,
     DAC_CONTROL_MASK, GlobalMute);
 }
@@ -98,6 +110,8 @@ void HwInterfaceEnableAdc(void)
   unsigned RegValue;
   RegValue = (ADC_ENABLE+ADC_CLEAR_OVERRUN+ADC_CLEAR_OTR) << 
     ADC_CONTROL_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceEnableAdc: Enabling ADC\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
     ADC_CONTROL_MASK, GlobalMute);
 }
@@ -106,6 +120,8 @@ void HwInterfaceDisableAdc(void)
 {
   unsigned RegValue;
   RegValue = ADC_DISABLE << ADC_CONTROL_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceDisableAdc: Disabling ADC\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
     ADC_CONTROL_MASK, GlobalMute);
 }
@@ -113,6 +129,7 @@ void HwInterfaceDisableAdc(void)
 unsigned HwInterfaceReturnAdcStatus(void)
 {
   unsigned RegValue;
+  if (!GlobalMute)
   FpgaInterfaceRead32(GPIO_1_BASE_ADDR+ADC_STATUS_OFFSET, &RegValue,
     GlobalMute);
   return RegValue;
@@ -122,6 +139,8 @@ void HwInterfaceDmaLoopback(unsigned Enable)
 {
   unsigned RegValue = Enable;
   RegValue = RegValue << DMA_LOOPBACK_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceDmaLoopback: Setting DMA Loop %d\n", Enable);
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, RegValue,
     DMA_LOOPBACK_MASK, GlobalMute);
 }
@@ -130,6 +149,8 @@ void HwInterfaceSyncLoopback(unsigned Enable)
 {
   unsigned RegValue = Enable;
   RegValue = RegValue << SYNC_LOOPBACK_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceSyncLoopback: Setting Sync Loop %d\n", Enable);
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_LOOPBACK_OFFSET,
     RegValue, SYNC_LOOPBACK_MASK, GlobalMute);
 }
@@ -138,14 +159,25 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   unsigned Decimation, unsigned FcScaled)
 {
   unsigned RegValue = Interpolation;
+  if (!GlobalMute)
+    printf("HwinterfaceConfigureSignalParams: Setting Interp Factor\n");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DUC_INTERP_RATIO_OFFSET,
     RegValue, DUC_INTERP_RATIO_MASK, GlobalMute);
   RegValue = Decimation;
+  if (!GlobalMute)
+    printf("HwinterfaceConfigureSignalParams: Setting Decim Factor\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DECIMATE_RADIO_OFFSET,
     RegValue, DECIMATE_RADIO_MASK, GlobalMute);
   RegValue = FcScaled;
+  if (!GlobalMute)
+    printf("HwinterfaceConfigureSignalParams: Setting DAC FC\n");
   FpgaInterfaceWrite32(GPIO_0_BASE_ADDR+FC_SCALED_OFFSET,
     RegValue, GlobalMute);
+  if (!GlobalMute)
+    printf("HwinterfaceConfigureSignalParams: Setting ADC FC\n");
+  // ADC DDS requires specific value
+  FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
+    11184868, GlobalMute);
 }
 
 ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft, 

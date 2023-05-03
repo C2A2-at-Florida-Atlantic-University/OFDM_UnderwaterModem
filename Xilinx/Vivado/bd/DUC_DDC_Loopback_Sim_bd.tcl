@@ -223,15 +223,17 @@ proc create_root_design { parentCell } {
 
 
   # Create ports
-  set Fc_scaled [ create_bd_port -dir I -from 31 -to 0 Fc_scaled ]
+  set ADC_Fc_scaled [ create_bd_port -dir I -from 31 -to 0 ADC_Fc_scaled ]
+  set DAC_Fc_scaled [ create_bd_port -dir I -from 31 -to 0 DAC_Fc_scaled ]
   set Interp_ratio [ create_bd_port -dir I -from 15 -to 0 Interp_ratio ]
   set aclk [ create_bd_port -dir I -type clk aclk ]
-  set aclk_10M [ create_bd_port -dir I -type clk -freq_hz 40000000 aclk_10M ]
+  set aclk_10M [ create_bd_port -dir I -type clk -freq_hz 10000000 aclk_10M ]
+  set_property -dict [ list \
+   CONFIG.ASSOCIATED_RESET {aresetn_10M} \
+ ] $aclk_10M
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set aresetn_10M [ create_bd_port -dir I -type rst aresetn_10M ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
-  set i_select_40M_10M [ create_bd_port -dir I i_select_40M_10M ]
-  set i_shift_reg [ create_bd_port -dir I -from 2 -to 0 i_shift_reg ]
 
   # Create instance: ADC_Chain_0, and set properties
   set ADC_Chain_0 [ create_bd_cell -type container -reference ADC_Chain ADC_Chain_0 ]
@@ -259,18 +261,16 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins ADC_Chain_0/M_AXIS]
   connect_bd_intf_net -intf_net DAC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/S_AXIS] [get_bd_intf_pins DAC_Chain_0/M_AXIS]
   connect_bd_intf_net -intf_net S_AXIS_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins DAC_Chain_0/S_AXIS]
-  connect_bd_intf_net -intf_net S_AXIS_DDS_1 [get_bd_intf_pins ADC_Chain_0/M_AXIS_DDS] [get_bd_intf_pins DAC_Chain_0/S_AXIS_DDS]
 
   # Create port connections
-  connect_bd_net -net Fc_scaled_0_1 [get_bd_ports Fc_scaled] [get_bd_pins ADC_Chain_0/Fc_scaled]
-  connect_bd_net -net Interp_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins DAC_Chain_0/Interp_ratio]
+  connect_bd_net -net ADC_Fc_scaled_0_1 [get_bd_ports ADC_Fc_scaled] [get_bd_pins ADC_Chain_0/ADC_Fc_scaled]
+  connect_bd_net -net DAC_Fc_scaled_0_1 [get_bd_ports DAC_Fc_scaled] [get_bd_pins DAC_Chain_0/DAC_Fc_scaled]
+  connect_bd_net -net Interp_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins DAC_Chain_0/Interp_Ratio]
   connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins ADC_Chain_0/aclk] [get_bd_pins DAC_Chain_0/aclk]
-  connect_bd_net -net aclk_10M_0_1 [get_bd_ports aclk_10M] [get_bd_pins ADC_Chain_0/aclk_10M] [get_bd_pins DAC_Chain_0/aclk_10M]
+  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins ADC_Chain_0/aclk_10M] [get_bd_pins DAC_Chain_0/aclk_10M]
   connect_bd_net -net aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn]
-  connect_bd_net -net aresetn_10M_0_1 [get_bd_ports aresetn_10M] [get_bd_pins ADC_Chain_0/aresetn_10M] [get_bd_pins DAC_Chain_0/aresetn_10M]
+  connect_bd_net -net aresetn_10M_0_1 [get_bd_ports aresetn_10M] [get_bd_pins ADC_Chain_0/aresetn_10M]
   connect_bd_net -net decimate_ratio_0_1 [get_bd_ports decimate_ratio] [get_bd_pins ADC_Chain_0/decimate_ratio]
-  connect_bd_net -net i_select_40M_10M_0_1 [get_bd_ports i_select_40M_10M] [get_bd_pins ADC_Chain_0/i_select_40M_10M]
-  connect_bd_net -net i_shift_reg_0_1 [get_bd_ports i_shift_reg] [get_bd_pins ADC_Chain_0/i_shift_reg]
 
   # Create address segments
 

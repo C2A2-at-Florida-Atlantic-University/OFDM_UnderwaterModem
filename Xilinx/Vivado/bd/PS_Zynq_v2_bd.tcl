@@ -231,7 +231,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_ALL_OUTPUTS {1} \
    CONFIG.C_ALL_OUTPUTS_2 {1} \
    CONFIG.C_DOUT_DEFAULT {0x00A3D70A} \
-   CONFIG.C_DOUT_DEFAULT_2 {0x00000028} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x000000A0} \
    CONFIG.C_GPIO2_WIDTH {24} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_0
@@ -274,6 +274,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set axi_gpio_4 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_4 ]
   set_property -dict [ list \
    CONFIG.C_ALL_OUTPUTS {1} \
+   CONFIG.C_DOUT_DEFAULT {0x00AAAAE4} \
  ] $axi_gpio_4
 
   # Create instance: delimiter_0, and set properties
@@ -392,7 +393,6 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_100M
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_10M
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_40M
-  create_bd_pin -dir I -from 0 -to 0 -type rst aux_reset_in
   create_bd_pin -dir I -type rst ext_reset_in
   create_bd_pin -dir O -from 0 -to 0 -type rst interconnect_aresetn_100M
   create_bd_pin -dir O -from 0 -to 0 -type rst regs_aresetn_100M
@@ -412,7 +412,6 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
 
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins interconnect_aresetn_100M] [get_bd_pins proc_sys_reset_100M/interconnect_aresetn]
-  connect_bd_net -net aux_reset_in_1 [get_bd_pins aux_reset_in] [get_bd_pins proc_sys_reset_100M/aux_reset_in] [get_bd_pins proc_sys_reset_10M/aux_reset_in] [get_bd_pins proc_sys_reset_40M/aux_reset_in]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins aresetn_40M] [get_bd_pins proc_sys_reset_40M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins proc_sys_reset_100M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_10M_peripheral_aresetn [get_bd_pins aresetn_10M] [get_bd_pins proc_sys_reset_10M/peripheral_aresetn]
@@ -1421,7 +1420,6 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_OUT2_1 [get_bd_ports sync_loopback] [get_bd_pins regs/sync_loopback]
   connect_bd_net -net regs_OUT3_1 [get_bd_ports sync_enable] [get_bd_pins regs/sync_enable]
   connect_bd_net -net regs_OUT3_2 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
-  connect_bd_net -net regs_OUT4 [get_bd_pins proc_sys_reset/aux_reset_in] [get_bd_pins regs/aux_aresetn]
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
   connect_bd_net -net regs_gpio_io_o_1 [get_bd_ports dma_tlast_count] [get_bd_pins regs/dma_tlast_count]
   connect_bd_net -net regs_gpio_io_o_2 [get_bd_ports ADC_Fc_scaled] [get_bd_pins regs/ADC_Fc_scaled]

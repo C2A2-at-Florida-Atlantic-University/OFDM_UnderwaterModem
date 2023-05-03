@@ -13,13 +13,12 @@ module duc_ddc_loopback_tb();
   //localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
   localparam                        CLOCK_CYCLE_ADC   = CLOCK_PERIOD_ADC/2;
 
-  logic                             select_10M = 1'b1;
-
   int                               tmp;
-  int                               i,j,k,m;
+  int                               i,j,k,m,n;
 
   int                               fd;
   int                               fd_write;
+  int                               fd_mix_dds;
   int                               fd_duc;
   int                               fd_cic;
 
@@ -32,7 +31,7 @@ module duc_ddc_loopback_tb();
   logic                             adc_aclk;
   logic                             adc_aresetn;
 
-  logic [31:0]                      Fc_scaled;
+  logic [31:0]                      ADC_Fc_scaled, DAC_Fc_scaled;
   logic [15:0]                      Interp_ratio,decimate_ratio,tmp_duc,tmp_duc_q;
 
   logic [31:0]                      m_tdata;
@@ -48,11 +47,14 @@ module duc_ddc_loopback_tb();
 
   logic [2:0]                       i_gain_shift_reg;
 
+  logic [15:0]                      dds_i,dds_q;
+
 //---------------------------------------------------------------
 // DUT
 //---------------------------------------------------------------
   DUC_DDC_Loopback_Sim_wrapper DUT (
-    .Fc_scaled      (Fc_scaled),
+    .DAC_Fc_scaled      (DAC_Fc_scaled),
+    .ADC_Fc_scaled      (ADC_Fc_scaled),
     .Interp_ratio   (Interp_ratio),
     
     .M_AXIS_tdata   (m_tdata),
@@ -70,9 +72,7 @@ module duc_ddc_loopback_tb();
     .aresetn        (r_nRst),
     .aresetn_10M    (adc_aresetn),
 
-    .decimate_ratio (decimate_ratio),
-    .i_shift_reg(i_gain_shift_reg),
-    .i_select_40M_10M(select_10M)
+    .decimate_ratio (decimate_ratio)
   );
 
 //---------------------------------------------------------------
@@ -109,16 +109,16 @@ module duc_ddc_loopback_tb();
     #(CLOCK_PERIOD*800);
 
     for (m = 0; m < (ofdm_symbols+1)*(nfft+cp_len)*40; m++) begin
-      while(!DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tvalid ||
-        DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tlast) begin
+      while(!DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tvalid ||
+        DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tlast) begin
         #CLOCK_PERIOD;
       end
-      tmp_duc = DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tdata;
-      while(!DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tvalid ||
-        !DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tlast) begin
+      tmp_duc = DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tdata;
+      while(!DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tvalid ||
+        !DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tlast) begin
         #CLOCK_PERIOD;
       end
-      tmp_duc_q = DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.cic_compiler.m_axis_data_tdata;
+      tmp_duc_q = DUT.DUC_DDC_Loopback_Sim_i.DAC_Chain_0.DUC_Mixer.cic_compiler.m_axis_data_tdata;
       $fdisplay(fd_cic, "%d, %d", $signed(tmp_duc), $signed(tmp_duc_q));
       #CLOCK_PERIOD;
     end
@@ -150,6 +150,33 @@ module duc_ddc_loopback_tb();
     end
 
     $fclose(fd_duc);
+  end
+
+//---------------------------------------------------------------
+// Record DDS output
+//---------------------------------------------------------------
+  initial begin
+    fd_mix_dds = $fopen("../../../../../../modules/sim/iq_dds.txt","w");
+    if (fd_mix_dds) $display("File was opened successfully: %0d ",fd_mix_dds);
+    else begin
+      $display("File was NOT opened successfully: %0d",fd_mix_dds);
+      $stop;
+    end
+
+    #(CLOCK_PERIOD*700);
+
+    for (n = 0; n < (ofdm_symbols+1)*(nfft+cp_len)*40; n++) begin
+      while(~DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_tvalid ||
+        ~DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_tready)
+        #CLOCK_PERIOD;
+      dds_i = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_dds_tdata[15:0];
+      dds_q = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_dds_tdata[31:16];
+      $fdisplay(fd_mix_dds,"%d, %d",$signed(dds_i),$signed(dds_q));
+      #CLOCK_PERIOD;
+    end
+
+    $fclose(fd_mix_dds);
+
   end
 
 //---------------------------------------------------------------
@@ -189,7 +216,9 @@ module duc_ddc_loopback_tb();
     end
 
     //Fc_scaled = 250000*(2<<32/100000000);
-    Fc_scaled = 32'd10737418;
+    DAC_Fc_scaled = 32'd10737418;
+    ADC_Fc_scaled = 32'd10737418;
+    //ADC_Fc_scaled = 32'd11184868; // 260418 Hz
     Interp_ratio = 16'd40;
     decimate_ratio = 16'd40;
 

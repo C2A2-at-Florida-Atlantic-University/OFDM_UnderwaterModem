@@ -21,7 +21,7 @@ entity iq_mixer_tx is
     s_axis_tvalid                 : in  std_logic;
     s_axis_tlast                  : in  std_logic;
      
-    s_axis_dds_tdata              : in  std_logic_vector(15 downto 0);
+    s_axis_dds_tdata              : in  std_logic_vector(31 downto 0);
     s_axis_dds_tvalid             : in  std_logic;
 
     m_axis_tdata                  : out std_logic_vector(15 downto 0);
@@ -42,8 +42,8 @@ architecture RTL of iq_mixer_tx is
     port(
       CLK                         : in  std_logic;
       A                           : in  std_logic_vector(15 downto 0);
-      B                           : in  std_logic_vector(6 downto 0);
-      P                           : out std_logic_vector(15 downto 0)
+      B                           : in  std_logic_vector(15 downto 0);
+      P                           : out std_logic_vector(31 downto 0)
     );
   end component mult_gen_0;
 
@@ -52,12 +52,12 @@ architecture RTL of iq_mixer_tx is
 
   signal i_sample                 : std_logic_vector(15 downto 0);
   signal q_sample                 : std_logic_vector(15 downto 0);
-  signal i_sample_out             : std_logic_vector(15 downto 0);
-  signal q_sample_out             : std_logic_vector(15 downto 0);
+  signal i_sample_out             : std_logic_vector(31 downto 0);
+  signal q_sample_out             : std_logic_vector(31 downto 0);
   signal i_sample_out_reg         : std_logic_vector(15 downto 0);
   signal q_sample_out_reg         : std_logic_vector(15 downto 0);
-  signal cos_sample               : std_logic_vector(6 downto 0);
-  signal sin_sample               : std_logic_vector(6 downto 0);
+  signal cos_sample               : std_logic_vector(15 downto 0);
+  signal sin_sample               : std_logic_vector(15 downto 0);
   signal i_trigg                  : std_logic;
   signal i_trigg1                 : std_logic;
   signal q_trigg                  : std_logic;
@@ -92,8 +92,8 @@ begin
           q_sample                <= s_axis_tdata;
           q_trigg                 <= '1';
         else
-          cos_sample              <= s_axis_dds_tdata(6 downto 0);
-          sin_sample              <= s_axis_dds_tdata(14 downto 8);
+          cos_sample              <= s_axis_dds_tdata(15 downto 0);
+          sin_sample              <= s_axis_dds_tdata(31 downto 16);
           i_sample                <= s_axis_tdata;
           i_trigg                 <= '1';
         end if;
@@ -111,10 +111,10 @@ begin
       q_trigg1                    <= q_trigg;
       q_trigg2                    <= q_trigg1;
       if i_trigg1 = '1' then
-        i_sample_out_reg          <= i_sample_out;
+        i_sample_out_reg          <= i_sample_out(31 downto 16);
       end if;
       if q_trigg1 = '1' then
-        q_sample_out_reg          <= q_sample_out;
+        q_sample_out_reg          <= q_sample_out(31 downto 16);
       end if;
       if q_trigg2 = '1' then
         m_axis_tdata              <= q_sample_out_reg + i_sample_out_reg;

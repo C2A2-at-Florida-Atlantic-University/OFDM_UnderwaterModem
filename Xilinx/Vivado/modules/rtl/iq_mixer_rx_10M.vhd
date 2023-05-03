@@ -21,7 +21,7 @@ entity iq_mixer_10M is
     s_axis_tvalid                 : in  std_logic;
     s_axis_tready                 : out std_logic;
      
-    s_axis_dds_tdata              : in  std_logic_vector(15 downto 0);
+    s_axis_dds_tdata              : in  std_logic_vector(31 downto 0);
     s_axis_dds_tvalid             : in  std_logic;
 
     m_axis_tdata                  : out std_logic_vector(15 downto 0);
@@ -44,15 +44,15 @@ architecture RTL of iq_mixer_10M is
     port(
       CLK                         : in  std_logic;
       A                           : in  std_logic_vector(15 downto 0);
-      B                           : in  std_logic_vector(6 downto 0);
-      P                           : out std_logic_vector(15 downto 0)
+      B                           : in  std_logic_vector(15 downto 0);
+      P                           : out std_logic_vector(31 downto 0)
     );
   end component mult_gen_0;
 
-  signal i_sample                 : std_logic_vector(15 downto 0) := (others => '0');
-  signal q_sample                 : std_logic_vector(15 downto 0) := (others => '0');
-  signal cos_sample               : std_logic_vector(6 downto 0)  := (others => '0');
-  signal sin_sample               : std_logic_vector(6 downto 0)  := (others => '0');
+  signal i_sample                 : std_logic_vector(31 downto 0) := (others => '0');
+  signal q_sample                 : std_logic_vector(31 downto 0) := (others => '0');
+  signal cos_sample               : std_logic_vector(15 downto 0)  := (others => '0');
+  signal sin_sample               : std_logic_vector(15 downto 0)  := (others => '0');
   signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
   constant READY                  : std_logic_vector(1 downto 0)  := "00";
@@ -101,8 +101,8 @@ begin
         when READY =>
           if s_axis_tvalid = '1' then
             real_sample           <= s_axis_tdata;
-            cos_sample            <= s_axis_dds_tdata(6 downto 0);
-            sin_sample            <= s_axis_dds_tdata(14 downto 8);
+            cos_sample            <= s_axis_dds_tdata(15 downto 0);
+            sin_sample            <= s_axis_dds_tdata(31 downto 16);
           end if;
 
         when others =>
@@ -176,13 +176,13 @@ begin
         s_axis_tready             <= '0';
         m_axis_tvalid             <= '1';
         m_axis_tlast              <= '0';
-        m_axis_tdata              <= i_sample;
+        m_axis_tdata              <= i_sample(31 downto 16);
 
       when SAMPLE_Q =>
         s_axis_tready             <= '1';
         m_axis_tvalid             <= '1';
         m_axis_tlast              <= '1';
-        m_axis_tdata              <= q_sample;
+        m_axis_tdata              <= q_sample(31 downto 16);
 
       when others =>
         s_axis_tready             <= '0';
