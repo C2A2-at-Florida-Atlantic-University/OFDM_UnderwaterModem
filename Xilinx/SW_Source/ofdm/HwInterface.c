@@ -176,8 +176,8 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting ADC FC\n");
   // ADC DDS requires specific value
-  FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
-    11184868, GlobalMute);
+  //FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
+  //  11184868, GlobalMute);
 }
 
 ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft, 

@@ -281,7 +281,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
+   CONFIG.Coefficient_File {c:/O/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
@@ -304,7 +304,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {c:/Projects/FAU-Modem/OFDM/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
+   CONFIG.Coefficient_File {c:/O/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
