@@ -91,6 +91,10 @@
 #define ADC_FC_SCALED_MASK_OFFSET 0
 #define ADC_FC_SCALED_MASK 0xFFFFFFFF
 
+#define FIR_1_RELOAD_OFFSET 0x8
+#define FIR_1_RELOAD_MASK_OFFSET 27
+#define FIR_1_RELOAD_MASK 0x08000000
+
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
 // CP_LEN_REG, and NFFT_REG
@@ -188,5 +192,7 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
 void HwInterfaceDucDdcLoopback(bool Select);
 void HwInterfaceSynchronizerStatus(bool Enable);
 void HwInterfaceResetPL(bool Reset);
+ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
+  IqSelect);
 
 #endif

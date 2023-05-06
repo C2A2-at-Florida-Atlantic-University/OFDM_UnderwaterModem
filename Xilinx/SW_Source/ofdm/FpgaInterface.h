@@ -17,6 +17,8 @@
 #define RX_BUFFER_BASE1 0x1F100000
 #define RX_BUFFER_BASE2 0x1F180000
 
+#define RELOAD_BUFFER_BASE 0x1F200000
+
 #ifdef NO_DEVMEM
 #define BUFFER_SPAN 0x3FFFFF
 #else
@@ -39,5 +41,6 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value, bool mute);
 void FpgaInterfaceWrite(unsigned addr, unsigned value, unsigned mask,
   bool mute);
 unsigned *FpgaInterfaceGetTxBuffer(void);
+unsigned *FpgaInterfaceGetReloadBuffer(void);
 
 #endif

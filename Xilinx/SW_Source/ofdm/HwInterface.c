@@ -16,6 +16,7 @@
 #include "HwInterface.h"
 #include "FpgaInterface.h"
 #include "ReturnStatus.h"
+#include "DirectDma.h"
 
 #define DEBUG
 
@@ -221,6 +222,80 @@ void HwInterfaceSynchronizerStatus(bool Enable)
     FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_ENABLE_OFFSET,
       0<<SYNC_ENABLE_MASK_OFFSET, SYNC_ENABLE_MASK, GlobalMute);
   }
+}
+
+ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned 
+  IqSelect)
+{
+  ReturnStatusType ReturnStatus;
+  char FileNamePath[64];
+  FILE *ZcFile = NULL;
+  unsigned DmaInterrupt;
+  int16_T *ReloadBuffer = NULL;
+  int16_T tmp;
+
+  ReloadBuffer = (int16_T *)FpgaInterfaceGetReloadBuffer();
+  if (ReloadBuffer == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "HwInterfaceLoadZcSequence: Failed to open Reload Buffer\n");
+    return ReturnStatus;
+  }
+
+  if (IqSelect)
+  {
+    sprintf(FileNamePath, "files/zc_fir_coef_%d_nfft_%d_ZC_13_root_q.txt",
+      Nfft, Nfft/2);
+  }
+  else
+  {
+    sprintf(FileNamePath, "files/zc_fir_coef_%d_nfft_%d_ZC_13_root_i.txt",
+      Nfft, Nfft/2);
+  }
+
+  ZcFile = fopen(FileNamePath, "w");
+  if (ZcFile == NULL)
+  {
+    perror("HwInterfaceLoadZcSequence");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "HwInterfaceLoadScSequence: Failed to open %s\n", FileNamePath);
+    return ReturnStatus;
+  }
+
+  for (unsigned i = 0; i < MAX_NFFT; i++)
+  {
+    fscanf(ZcFile, "%hd\n", &tmp);
+    ReloadBuffer[i] = tmp;
+  }
+
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+FIR_1_RELOAD_OFFSET,
+    IqSelect<<FIR_1_RELOAD_MASK_OFFSET, FIR_1_RELOAD_MASK, GlobalMute);
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_IOC_IRQ_MASK+0x1,
+    GlobalMute);
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_LENGTH_OFFSET,
+    RELOAD_BUFFER_BASE, GlobalMute);
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_LENGTH_OFFSET,
+    MAX_NFFT, GlobalMute);
+  while (1)
+  {
+    FpgaInterfaceRead32(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
+      &DmaInterrupt, true);
+    if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
+    {
+      printf("HwInterfaceLoadZcSequence: Finished DMA Reload transaction "
+        "%d\n", IqSelect);
+      FpgaInterfaceWrite(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
+        DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);
+      break;
+    }
+  }
+
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
 }
 
 ReturnStatusType HwInterfaceSetVga(int gain)

@@ -326,6 +326,16 @@ int main(int argc, char **argv)
           printf("Setting default center frequency\n");
           CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
         }
+        printf("\tTurn DAC + PA on ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          HwInterfaceEnableDac();
+        }
+        else
+        {
+          HwInterfaceDisableDac();
+        }
         break;
 
 //////////////////////////////////////////////////////////////////////////
@@ -503,9 +513,9 @@ int main(int argc, char **argv)
             OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
             SyncOffset);
           HwInterfaceSynchronizerStatus(true);
-          HwInterfaceEnableDac();
+          //HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes, StartByte);
-          HwInterfaceDisableDac();
+          //HwInterfaceDisableDac();
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);

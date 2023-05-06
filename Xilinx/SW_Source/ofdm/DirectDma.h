@@ -8,6 +8,7 @@
 
 // PS to PL control and status registers
 #define DMA_BASE_ADDR 0x40000000 // Same as DMA_CONTROL_REGISTER
+#define DMA_RELOAD_BASE_ADDR 0x40001000
 #define DMA_STATUS_OFFSET 0x4
 #define DMA_SOURCE_OFFSET 0x18
 #define DMA_LENGTH_OFFSET 0x28
@@ -41,5 +42,6 @@ void DirectDmaS2mmIrqClear(void);
 void DirectDmaMm2sStatus(void);
 void DirectDmaS2mmStatus(void);
 ReturnStatusType DirectDmaCheckThreadRunning(void);
+//ReturnStatusType(void)
 
 #endif

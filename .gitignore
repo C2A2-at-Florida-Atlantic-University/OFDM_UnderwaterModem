@@ -23,4 +23,4 @@ Xilinx/SW_Source/ofdm/ofdm
 Xilinx/SW_Source/ofdm/ofdm_desktop
 log.txt
 bitfiles
-.BIN
+*.BIN

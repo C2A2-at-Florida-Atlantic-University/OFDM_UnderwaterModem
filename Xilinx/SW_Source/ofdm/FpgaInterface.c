@@ -92,6 +92,11 @@ unsigned *FpgaInterfaceClearTxBuffer()
 #endif
 }
 
+unsigned *FpgaInterfaceGetReloadBuffer()
+{
+  return (unsigned *)(FpgaVirtualAddr+RELOAD_BUFFER_BASE);
+}
+
 unsigned *FpgaInterfaceGetRxBuffer(unsigned RxBufferSelect)
 {
   switch (RxBufferSelect) {
