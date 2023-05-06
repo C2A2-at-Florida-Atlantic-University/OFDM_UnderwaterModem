@@ -89,11 +89,24 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
 void HwInterfaceEnableDac(void)
 {
   unsigned RegValue;
-  RegValue = ENABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
-  if (!GlobalMute)
-    printf("HwInterfaceEnableDac: Enabling DAC and PA\n");
-  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue, 
-    DAC_CONTROL_MASK, GlobalMute);
+  FpgaInterfaceRead32(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, &RegValue,
+    true);
+  RegValue = (RegValue & ADC_CONTROL_MASK) >> ADC_CONTROL_MASK_OFFSET;
+  if (RegValue != 0)
+  {
+    printf("HwInterfaceEnableDac: ERROR: ADC Enabled, not turning on "
+      " DAC\n");
+    printf("HwInterfaceEnableDac: Disabling DAC/PA\n");
+    HwInterfaceDisableDac();
+  }
+  else
+  {
+    RegValue = ENABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
+    if (!GlobalMute)
+      printf("HwInterfaceEnableDac: Enabling DAC and PA\n");
+    FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue, 
+      DAC_CONTROL_MASK, GlobalMute);
+  }
 }
 
 void HwInterfaceDisableDac(void)
@@ -109,12 +122,24 @@ void HwInterfaceDisableDac(void)
 void HwInterfaceEnableAdc(void)
 {
   unsigned RegValue;
-  RegValue = (ADC_ENABLE+ADC_CLEAR_OVERRUN+ADC_CLEAR_OTR) << 
-    ADC_CONTROL_MASK_OFFSET;
-  if (!GlobalMute)
+  FpgaInterfaceRead32(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, &RegValue,
+    true);
+  RegValue = (RegValue & DAC_CONTROL_MASK) >> DAC_CONTROL_MASK_OFFSET;
+  if (RegValue != 0)
+  {
+    printf("HwInterfaceEnableAdc: ERROR: DAC/PA Enabled, not turning "
+      "on ADC\n");
+    printf("HwInterfaceEnableAdc: Disabling ADC\n");
+    HwInterfaceDisableAdc();
+  }
+  else
+  {
+    RegValue = (ADC_ENABLE+ADC_CLEAR_OVERRUN+ADC_CLEAR_OTR) << 
+      ADC_CONTROL_MASK_OFFSET;
     printf("HwInterfaceEnableAdc: Enabling ADC\n");
-  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
-    ADC_CONTROL_MASK, GlobalMute);
+    FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
+      ADC_CONTROL_MASK, GlobalMute);
+  }
 }
 
 void HwInterfaceDisableAdc(void)
@@ -170,6 +195,7 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DECIMATE_RADIO_OFFSET,
     RegValue, DECIMATE_RADIO_MASK, GlobalMute);
   RegValue = FcScaled;
+  RegValue = 10737418;
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting DAC FC\n");
   FpgaInterfaceWrite32(GPIO_0_BASE_ADDR+FC_SCALED_OFFSET,
@@ -177,8 +203,8 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting ADC FC\n");
   // ADC DDS requires specific value
-  //FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
-  //  11184868, GlobalMute);
+  FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
+    11184868, GlobalMute);
 }
 
 ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft, 
@@ -187,14 +213,22 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
 {
   ReturnStatusType ReturnStatus;
   unsigned RegValue;
+  if (!GlobalMute)
+    printf("HwInterfaceConfigureSynchronizer: Config Nfft\n");
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft-1, NFFT_MASK,
     GlobalMute);
   RegValue = (CpLen-1) << CP_LEN_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceConfigureSynchronizer: Config CP Length\n");
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+CP_LEN_OFFSET, RegValue,
     CP_LEN_MASK, GlobalMute);
   RegValue = (OfdmSymbols-1) << OFDM_SYMBOLS_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceConfigureSynchronizer: Config OFDM Symbols\n");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+OFDM_SYMBOLS_OFFSET, RegValue,
     OFDM_SYMBOLS_MASK, GlobalMute);
+  if (!GlobalMute)
+    printf("HwInterfaceConfigureSynchronizer: Config Threshold\n");
   FpgaInterfaceWrite32(GPIO_2_BASE_ADDR+SYNC_THRESHOLD_OFFSET,
     Threshold, GlobalMute);
   if (SyncOffset < -1024 || SyncOffset > 1024)
@@ -204,6 +238,8 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
       "HwInterfaceConfigureSynchronizer: ERR: Offset too large/small\n");
     return ReturnStatus;
   }
+  if (!GlobalMute)
+    printf("HwInterfaceConfigureSynchronizer: Config Sync Offset\n");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+SYNC_OFFSET_OFFSET,
     SyncOffset<<SYNC_OFFSET_MASK_OFFSET, SYNC_OFFSET_MASK, GlobalMute);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
@@ -212,6 +248,8 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
 
 void HwInterfaceSynchronizerStatus(bool Enable)
 {
+  if (!GlobalMute)
+    printf("HwInterfaceSynchronizerStatus: Set Sync Status %d\n", Enable);
   if (Enable)
   {
     FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_ENABLE_OFFSET,
@@ -242,6 +280,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       "HwInterfaceLoadZcSequence: Failed to open Reload Buffer\n");
     return ReturnStatus;
   }
+  memset(ReloadBuffer, 0, MAX_NFFT*2);
 
   if (IqSelect)
   {
@@ -264,7 +303,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
     return ReturnStatus;
   }
 
-  for (unsigned i = 0; i < MAX_NFFT; i++)
+  for (unsigned i = 0; i < Nfft; i++)
   {
     fscanf(ZcFile, "%hd\n", &tmp);
     ReloadBuffer[i] = tmp;
@@ -294,6 +333,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   }
 
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
+  free(ReloadBuffer);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }

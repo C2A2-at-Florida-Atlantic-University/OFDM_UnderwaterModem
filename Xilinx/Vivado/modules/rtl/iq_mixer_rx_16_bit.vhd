@@ -1,4 +1,3 @@
-
 -----------------------------------------------------------------
 -- Jared Hermans
 --
@@ -56,6 +55,10 @@ architecture RTL of iq_mixer_rx_16_bit is
   signal sin_sample               : std_logic_vector(15 downto 0) := (others => '0');
   signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
+  signal real_sample_reg          : std_logic_vector(15 downto 0);
+  signal cos_sample_reg           : std_logic_vector(15 downto 0);
+  signal sin_sample_reg           : std_logic_vector(15 downto 0);
+
   constant READY                  : std_logic_vector(1 downto 0)  := "00";
   constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "01";
   constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "10";
@@ -85,6 +88,33 @@ begin
       P                           => q_sample
     );
 
+  process(axis_aclk)
+  begin
+    if rising_edge(axis_aclk) then
+      
+      case Current_State is
+        
+        when READY =>
+          if s_axis_tvalid = '1' then
+            real_sample_reg       <= s_axis_tdata;
+            cos_sample_reg        <= s_axis_dds_tdata(15 downto 0);
+            sin_sample_reg        <= s_axis_dds_tdata(31 downto 16);
+          end if;
+
+        when SAMPLE_Q =>
+          if s_axis_tvalid = '1' then
+            real_sample_reg       <= s_axis_tdata;
+            cos_sample_reg        <= s_axis_dds_tdata(15 downto 0);
+            sin_sample_reg        <= s_axis_dds_tdata(31 downto 16);
+          end if;
+
+        when others =>
+          NULL;
+      
+      end case;
+    end if;
+  end process;
+
   -- Process to assign Current State
   process(axis_aclk)
   begin
@@ -98,7 +128,11 @@ begin
   process(
     s_axis_tvalid,
     s_axis_tdata,
-    s_axis_dds_tdata)
+    Current_State,
+    s_axis_dds_tdata,
+    real_sample_reg,
+    cos_sample_reg,
+    sin_sample_reg)
   begin
 
     case Current_State is
@@ -108,6 +142,10 @@ begin
           real_sample           <= s_axis_tdata;
           cos_sample            <= s_axis_dds_tdata(15 downto 0);
           sin_sample            <= s_axis_dds_tdata(31 downto 16);
+        else
+          real_sample           <= real_sample_reg;
+          cos_sample            <= cos_sample_reg;
+          sin_sample            <= sin_sample_reg;
         end if;
 
       when SAMPLE_Q =>
@@ -115,10 +153,16 @@ begin
           real_sample           <= s_axis_tdata;
           cos_sample            <= s_axis_dds_tdata(15 downto 0);
           sin_sample            <= s_axis_dds_tdata(31 downto 16);
+        else
+          real_sample           <= real_sample_reg;
+          cos_sample            <= cos_sample_reg;
+          sin_sample            <= sin_sample_reg;
         end if;
 
       when others =>
-        NULL;
+        real_sample             <= real_sample_reg;
+        cos_sample              <= cos_sample_reg;
+        sin_sample              <= sin_sample_reg;
 
     end case;
   end process;

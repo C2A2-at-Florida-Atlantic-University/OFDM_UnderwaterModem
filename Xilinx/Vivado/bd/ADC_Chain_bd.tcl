@@ -131,7 +131,6 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:user:AD9244_to_AXIS_M:*\
 xilinx.com:ip:axis_data_fifo:*\
-xilinx.com:ip:system_ila:*\
 xilinx.com:ip:cic_compiler:*\
 xilinx.com:ip:dds_compiler:*\
 xilinx.com:ip:xlconstant:*\
@@ -383,15 +382,6 @@ proc create_root_design { parentCell } {
    CONFIG.IS_ACLK_ASYNC {1} \
  ] $axis_data_fifo_0
 
-  # Create instance: system_ila_adc, and set properties
-  set system_ila_adc [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_adc ]
-  set_property -dict [ list \
-   CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
-   CONFIG.C_MON_TYPE {MIX} \
-   CONFIG.C_PROBE0_MU_CNT {2} \
-   CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
- ] $system_ila_adc
-
   # Create instance: tdm_reformat_0, and set properties
   set block_name tdm_reformat
   set block_cell_name tdm_reformat_0
@@ -405,7 +395,6 @@ proc create_root_design { parentCell } {
   
   # Create interface connections
   connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
-connect_bd_intf_net -intf_net [get_bd_intf_nets AD9244_to_AXIS_M_0_m00_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS] [get_bd_intf_pins system_ila_adc/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins DDC_Mixer/s_axis] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
   connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins DDC_Mixer/M_AXIS_DATA] [get_bd_intf_pins tdm_reformat_0/s_axis]
   connect_bd_intf_net -intf_net tdm_reformat_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins tdm_reformat_0/m_axis]
@@ -414,11 +403,11 @@ connect_bd_intf_net -intf_net [get_bd_intf_nets AD9244_to_AXIS_M_0_m00_axis] [ge
   connect_bd_net -net AD9244_to_AXIS_M_0_ClockToADC [get_bd_ports ClockToADC] [get_bd_pins AD9244_to_AXIS_M_0/ClockToADC]
   connect_bd_net -net AD9244_to_AXIS_M_0_status [get_bd_ports status] [get_bd_pins AD9244_to_AXIS_M_0/status]
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
-  connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata] [get_bd_pins system_ila_adc/probe0]
+  connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
   connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins DDC_Mixer/aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins tdm_reformat_0/axis_aclk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins system_ila_adc/clk]
+  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
   connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins DDC_Mixer/aresetn]
-  connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins system_ila_adc/resetn]
+  connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports decimate_ratio] [get_bd_pins DDC_Mixer/decimate_ratio]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
 

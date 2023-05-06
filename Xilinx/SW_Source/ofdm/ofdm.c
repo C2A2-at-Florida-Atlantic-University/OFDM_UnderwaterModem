@@ -513,9 +513,15 @@ int main(int argc, char **argv)
             OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
             SyncOffset);
           HwInterfaceSynchronizerStatus(true);
-          //HwInterfaceEnableDac();
+          HwInterfaceEnableDac();
           ReturnStatus = DirectDmaPsToPl(NumBytes, StartByte);
-          //HwInterfaceDisableDac();
+          printf("Wait for %lfus to finish Transmission ... \n",
+            OfdmCalcParams.Symbol.Time*(OfdmTiming.OfdmSymbolsPerFrame+
+            1)*2*1000);
+          usleep(OfdmCalcParams.Symbol.Time*(
+            OfdmTiming.OfdmSymbolsPerFrame+1)*2*1000);
+          HwInterfaceDisableDac();
+          printf("Finished\n");
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
@@ -524,14 +530,6 @@ int main(int argc, char **argv)
 #else
           printf("Skipped DMA transfer of : %d Bytes\n", NumBytes);
 #endif
-
-//        ReturnStatus = TransmitChainEnableDl(&OfdmParams, 
-//          &OfdmTiming);
-//        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-//        {
-//          printf("%s", ReturnStatus.ErrString);
-//          break;
-//        }
         break;
 
 //////////////////////////////////////////////////////////////////////////
@@ -593,6 +591,8 @@ int main(int argc, char **argv)
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
           SyncOffset);
         HwInterfaceSynchronizerStatus(true);
+        HwInterfaceLoadZcSequence(OfdmParams.Nfft, 0);
+        HwInterfaceLoadZcSequence(OfdmParams.Nfft, 1);
         HwInterfaceEnableAdc();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
