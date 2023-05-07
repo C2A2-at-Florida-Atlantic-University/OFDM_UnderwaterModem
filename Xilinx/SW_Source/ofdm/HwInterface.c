@@ -6,6 +6,8 @@
 // When successful device "/dev/spidevB.C" will show up.
 //////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <linux/spi/spidev.h>
 #include <sys/ioctl.h>
@@ -16,7 +18,6 @@
 #include "HwInterface.h"
 #include "FpgaInterface.h"
 #include "ReturnStatus.h"
-#include "DirectDma.h"
 
 #define DEBUG
 
@@ -203,7 +204,7 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting ADC FC\n");
   // ADC DDS requires specific value
-  FpgaInterfacWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
+  FpgaInterfaceWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
     11184868, GlobalMute);
 }
 
@@ -268,9 +269,14 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   ReturnStatusType ReturnStatus;
   char FileNamePath[64];
   FILE *ZcFile = NULL;
+  FILE *ReloadOrderFile = NULL;
   unsigned DmaInterrupt;
+  unsigned ReloadOrder;
+  int16_T ReloadBufferUnOrdered[RELOAD_COEF_LENGTH];
   int16_T *ReloadBuffer = NULL;
   int16_T tmp;
+
+  memset(ReloadBufferUnOrdered, 0, sizeof(ReloadBufferUnOrdered));
 
   ReloadBuffer = (int16_T *)FpgaInterfaceGetReloadBuffer();
   if (ReloadBuffer == NULL)
@@ -280,7 +286,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       "HwInterfaceLoadZcSequence: Failed to open Reload Buffer\n");
     return ReturnStatus;
   }
-  memset(ReloadBuffer, 0, MAX_NFFT*2);
+  memset(ReloadBuffer, 0, RELOAD_COEF_LENGTH*2);
 
   if (IqSelect)
   {
@@ -293,32 +299,60 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       Nfft, Nfft/2);
   }
 
-  ZcFile = fopen(FileNamePath, "w");
+  ZcFile = fopen(FileNamePath, "r");
   if (ZcFile == NULL)
   {
     perror("HwInterfaceLoadZcSequence");
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
-      "HwInterfaceLoadScSequence: Failed to open %s\n", FileNamePath);
+      "HwInterfaceLoadZcSequence: Failed to open %s\n", FileNamePath);
     return ReturnStatus;
   }
+  printf("HwInterfaceLoadZcSequence: Opened file %s\n", FileNamePath);
+
+  sprintf(FileNamePath, "files/FIR_Sync_Reload_order.txt");
+
+  ReloadOrderFile = fopen(FileNamePath, "r");
+  if (ReloadOrderFile == NULL)
+  {
+    perror("HwInterfaceLoadZcSequence");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "HwInterfaceLoadZcSequence: Failed to open %s\n", FileNamePath);
+    return ReturnStatus;
+  }
+  printf("HwInterfaceLoadZcSequence: Opened file %s\n", FileNamePath);
 
   for (unsigned i = 0; i < Nfft; i++)
   {
-    fscanf(ZcFile, "%hd\n", &tmp);
-    ReloadBuffer[i] = tmp;
+    fscanf(ZcFile, "%hd", &tmp);
+    ReloadBufferUnOrdered[i] = tmp;
   }
 
+  for (unsigned i = 0; i < 12; i++)
+    printf("Coef: %hd\n", ReloadBufferUnOrdered[i]);
+
+  for (unsigned i = 0; i < RELOAD_COEF_LENGTH; i++)
+  {
+    fscanf(ReloadOrderFile, "%d\n", &ReloadOrder);
+    ReloadBuffer[i] = ReloadBufferUnOrdered[ReloadOrder];
+  }
+
+  // Set DMA mux to go to either real or imaginary FIR filter
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+FIR_1_RELOAD_OFFSET,
     IqSelect<<FIR_1_RELOAD_MASK_OFFSET, FIR_1_RELOAD_MASK, GlobalMute);
+  // Reset the DMA
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
+  // Take DMA out of reset and enable IOC IRQ mask
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_IOC_IRQ_MASK+0x1,
     GlobalMute);
-  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_LENGTH_OFFSET,
+  // Configure read address of DMA
+  FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_SOURCE_OFFSET,
     RELOAD_BUFFER_BASE, GlobalMute);
+  // Configure length of transfer in bytes of DMA
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_LENGTH_OFFSET,
-    MAX_NFFT, GlobalMute);
-  while (1)
+    MAX_NFFT*2, GlobalMute);
+  while (1) // Wait until done bit goes high
   {
     FpgaInterfaceRead32(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
       &DmaInterrupt, true);
@@ -326,14 +360,15 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
     {
       printf("HwInterfaceLoadZcSequence: Finished DMA Reload transaction "
         "%d\n", IqSelect);
+      // Reset done bit when done
       FpgaInterfaceWrite(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
         DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);
       break;
     }
   }
 
+  // Put DMA back in reset
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
-  free(ReloadBuffer);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
