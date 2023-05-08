@@ -124,6 +124,7 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:processing_system7:*\
 xilinx.com:ip:smartconnect:*\
+xilinx.com:ip:clk_wiz:*\
 xilinx.com:ip:proc_sys_reset:*\
 xilinx.com:ip:axi_gpio:*\
 user.org:user:delimiter:*\
@@ -391,8 +392,8 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
 
   # Create pins
   create_bd_pin -dir I -type clk aclk_100M
-  create_bd_pin -dir I -type clk aclk_10M
-  create_bd_pin -dir I -type clk aclk_40M
+  create_bd_pin -dir O -type clk aclk_10M
+  create_bd_pin -dir O -type clk aclk_40M
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_100M
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_10M
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_40M
@@ -400,6 +401,29 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 -type rst interconnect_aresetn_100M
   create_bd_pin -dir O -from 0 -to 0 -type rst regs_aresetn_100M
   create_bd_pin -dir O -from 0 -to 0 -type rst regs_interconnect_aresetn_100M
+
+  # Create instance: clk_wiz_10M, and set properties
+  set clk_wiz_10M [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_10M ]
+  set_property -dict [ list \
+   CONFIG.CLKOUT1_JITTER {290.478} \
+   CONFIG.CLKOUT1_PHASE_ERROR {133.882} \
+   CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {10.000} \
+   CONFIG.MMCM_CLKFBOUT_MULT_F {15.625} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {78.125} \
+   CONFIG.MMCM_DIVCLK_DIVIDE {2} \
+   CONFIG.RESET_PORT {resetn} \
+   CONFIG.RESET_TYPE {ACTIVE_LOW} \
+ ] $clk_wiz_10M
+
+  # Create instance: clk_wiz_40M, and set properties
+  set clk_wiz_40M [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_40M ]
+  set_property -dict [ list \
+   CONFIG.CLKOUT1_JITTER {159.371} \
+   CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {40.000} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {25.000} \
+   CONFIG.RESET_PORT {resetn} \
+   CONFIG.RESET_TYPE {ACTIVE_LOW} \
+ ] $clk_wiz_40M
 
   # Create instance: proc_sys_reset_100M, and set properties
   set proc_sys_reset_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_100M ]
@@ -415,15 +439,17 @@ proc create_hier_cell_proc_sys_reset { parentCell nameHier } {
 
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins interconnect_aresetn_100M] [get_bd_pins proc_sys_reset_100M/interconnect_aresetn]
+  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins aclk_40M] [get_bd_pins clk_wiz_40M/clk_out1] [get_bd_pins proc_sys_reset_40M/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins aclk_10M] [get_bd_pins clk_wiz_10M/clk_out1] [get_bd_pins proc_sys_reset_10M/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_locked [get_bd_pins clk_wiz_40M/locked] [get_bd_pins proc_sys_reset_40M/dcm_locked]
+  connect_bd_net -net clk_wiz_0_locked1 [get_bd_pins clk_wiz_10M/locked] [get_bd_pins proc_sys_reset_10M/dcm_locked]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins aresetn_40M] [get_bd_pins proc_sys_reset_40M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins proc_sys_reset_100M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_10M_peripheral_aresetn [get_bd_pins aresetn_10M] [get_bd_pins proc_sys_reset_10M/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_regs_interconnect_aresetn [get_bd_pins regs_interconnect_aresetn_100M] [get_bd_pins proc_sys_reset_regs/interconnect_aresetn]
   connect_bd_net -net proc_sys_reset_regs_peripheral_aresetn [get_bd_pins regs_aresetn_100M] [get_bd_pins proc_sys_reset_regs/peripheral_aresetn]
-  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins aclk_10M] [get_bd_pins proc_sys_reset_10M/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins proc_sys_reset_100M/slowest_sync_clk] [get_bd_pins proc_sys_reset_regs/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins aclk_40M] [get_bd_pins proc_sys_reset_40M/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_100M/ext_reset_in] [get_bd_pins proc_sys_reset_10M/ext_reset_in] [get_bd_pins proc_sys_reset_40M/ext_reset_in] [get_bd_pins proc_sys_reset_regs/ext_reset_in]
+  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins clk_wiz_10M/clk_in1] [get_bd_pins clk_wiz_40M/clk_in1] [get_bd_pins proc_sys_reset_100M/slowest_sync_clk] [get_bd_pins proc_sys_reset_regs/slowest_sync_clk]
+  connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins ext_reset_in] [get_bd_pins clk_wiz_10M/resetn] [get_bd_pins clk_wiz_40M/resetn] [get_bd_pins proc_sys_reset_100M/ext_reset_in] [get_bd_pins proc_sys_reset_10M/ext_reset_in] [get_bd_pins proc_sys_reset_40M/ext_reset_in] [get_bd_pins proc_sys_reset_regs/ext_reset_in]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -585,9 +611,16 @@ proc create_root_design { parentCell } {
   set aclk_100M [ create_bd_port -dir O -type clk aclk_100M ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {S_AXI_DMA_HP0:S_AXI_DMA_HP1:M_AXI_DMA:M_AXI_RELOAD_DMA:S_AXIS_DMA_RELOAD_HP0} \
+   CONFIG.ASSOCIATED_RESET {aresetn_100M} \
  ] $aclk_100M
   set aclk_10M [ create_bd_port -dir O -type clk aclk_10M ]
+  set_property -dict [ list \
+   CONFIG.ASSOCIATED_RESET {aresetn_10M} \
+ ] $aclk_10M
   set aclk_40M [ create_bd_port -dir O -type clk aclk_40M ]
+  set_property -dict [ list \
+   CONFIG.ASSOCIATED_RESET {aresetn_40M} \
+ ] $aclk_40M
   set aresetn_100M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_100M ]
   set aresetn_10M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_10M ]
   set aresetn_40M [ create_bd_port -dir O -from 0 -to 0 -type rst aresetn_40M ]
@@ -629,7 +662,7 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_ACT_ENET1_PERIPHERAL_FREQMHZ {10.000000} \
    CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {100.000000} \
    CONFIG.PCW_ACT_FPGA1_PERIPHERAL_FREQMHZ {10.000000} \
-   CONFIG.PCW_ACT_FPGA2_PERIPHERAL_FREQMHZ {40.000000} \
+   CONFIG.PCW_ACT_FPGA2_PERIPHERAL_FREQMHZ {10.000000} \
    CONFIG.PCW_ACT_FPGA3_PERIPHERAL_FREQMHZ {10.000000} \
    CONFIG.PCW_ACT_I2C_PERIPHERAL_FREQMHZ {50} \
    CONFIG.PCW_ACT_PCAP_PERIPHERAL_FREQMHZ {200.000000} \
@@ -671,7 +704,7 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_CAN_PERIPHERAL_VALID {0} \
    CONFIG.PCW_CLK0_FREQ {100000000} \
    CONFIG.PCW_CLK1_FREQ {10000000} \
-   CONFIG.PCW_CLK2_FREQ {40000000} \
+   CONFIG.PCW_CLK2_FREQ {10000000} \
    CONFIG.PCW_CLK3_FREQ {10000000} \
    CONFIG.PCW_CORE0_FIQ_INTR {0} \
    CONFIG.PCW_CORE0_IRQ_INTR {0} \
@@ -727,8 +760,8 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_EN_CAN0 {0} \
    CONFIG.PCW_EN_CAN1 {0} \
    CONFIG.PCW_EN_CLK0_PORT {1} \
-   CONFIG.PCW_EN_CLK1_PORT {1} \
-   CONFIG.PCW_EN_CLK2_PORT {1} \
+   CONFIG.PCW_EN_CLK1_PORT {0} \
+   CONFIG.PCW_EN_CLK2_PORT {0} \
    CONFIG.PCW_EN_CLK3_PORT {0} \
    CONFIG.PCW_EN_CLKTRIG0_PORT {0} \
    CONFIG.PCW_EN_CLKTRIG1_PORT {0} \
@@ -792,25 +825,25 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_FCLK0_PERIPHERAL_DIVISOR0 {4} \
    CONFIG.PCW_FCLK0_PERIPHERAL_DIVISOR1 {4} \
    CONFIG.PCW_FCLK1_PERIPHERAL_CLKSRC {IO PLL} \
-   CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR0 {16} \
-   CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR1 {10} \
+   CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR0 {1} \
+   CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR1 {1} \
    CONFIG.PCW_FCLK2_PERIPHERAL_CLKSRC {IO PLL} \
-   CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR0 {8} \
-   CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR1 {5} \
+   CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR0 {1} \
+   CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR1 {1} \
    CONFIG.PCW_FCLK3_PERIPHERAL_CLKSRC {IO PLL} \
    CONFIG.PCW_FCLK3_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_FCLK3_PERIPHERAL_DIVISOR1 {1} \
    CONFIG.PCW_FCLK_CLK0_BUF {TRUE} \
-   CONFIG.PCW_FCLK_CLK1_BUF {TRUE} \
-   CONFIG.PCW_FCLK_CLK2_BUF {TRUE} \
+   CONFIG.PCW_FCLK_CLK1_BUF {FALSE} \
+   CONFIG.PCW_FCLK_CLK2_BUF {FALSE} \
    CONFIG.PCW_FCLK_CLK3_BUF {FALSE} \
    CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100} \
    CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {10} \
    CONFIG.PCW_FPGA2_PERIPHERAL_FREQMHZ {40} \
    CONFIG.PCW_FPGA3_PERIPHERAL_FREQMHZ {50} \
    CONFIG.PCW_FPGA_FCLK0_ENABLE {1} \
-   CONFIG.PCW_FPGA_FCLK1_ENABLE {1} \
-   CONFIG.PCW_FPGA_FCLK2_ENABLE {1} \
+   CONFIG.PCW_FPGA_FCLK1_ENABLE {0} \
+   CONFIG.PCW_FPGA_FCLK2_ENABLE {0} \
    CONFIG.PCW_FPGA_FCLK3_ENABLE {0} \
    CONFIG.PCW_GP0_EN_MODIFIABLE_TXN {1} \
    CONFIG.PCW_GP0_NUM_READ_THREADS {4} \
@@ -1449,10 +1482,10 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_ports aresetn_40M] [get_bd_pins proc_sys_reset/aresetn_40M]
   connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_ports aresetn_100M] [get_bd_pins proc_sys_reset/aresetn_100M]
   connect_bd_net -net proc_sys_reset_10M_peripheral_aresetn [get_bd_ports aresetn_10M] [get_bd_pins proc_sys_reset/aresetn_10M]
+  connect_bd_net -net proc_sys_reset_aclk_10M [get_bd_ports aclk_10M] [get_bd_pins proc_sys_reset/aclk_10M]
+  connect_bd_net -net proc_sys_reset_aclk_40M [get_bd_ports aclk_40M] [get_bd_pins proc_sys_reset/aclk_40M]
   connect_bd_net -net proc_sys_reset_interconnect_aresetn [get_bd_pins proc_sys_reset/regs_interconnect_aresetn_100M] [get_bd_pins smartconnect_0/aresetn]
-  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_ports aclk_10M] [get_bd_pins proc_sys_reset/aclk_10M] [get_bd_pins processing_system7_0/FCLK_CLK1]
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_ports aclk_100M] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_0/S01_ACLK] [get_bd_pins axi_interconnect_0/S02_ACLK] [get_bd_pins proc_sys_reset/aclk_100M] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins regs/aclk_100M] [get_bd_pins smartconnect_0/aclk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_ports aclk_40M] [get_bd_pins proc_sys_reset/aclk_40M] [get_bd_pins processing_system7_0/FCLK_CLK2]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins proc_sys_reset/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
   connect_bd_net -net regs_OUT0_0 [get_bd_ports Interp_ratio] [get_bd_pins regs/Interp_ratio]
   connect_bd_net -net regs_OUT0_1 [get_bd_ports nfft] [get_bd_pins regs/nfft]
