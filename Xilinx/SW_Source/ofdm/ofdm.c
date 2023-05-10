@@ -38,6 +38,7 @@ int main(int argc, char **argv)
   unsigned ScalarGain;
   unsigned RxThread;
   unsigned SyncThreshold;
+  unsigned CwIqScale;
   //unsigned RxShiftAtten;
   double TxGainDbTime;
   double SyncSymbolGainDB;
@@ -139,11 +140,15 @@ int main(int argc, char **argv)
   HwInterfaceSynchronizerStatus(false);
   ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
     CenterFreq, false);
+  HwInterfaceSineToneSet(0);
 #endif
 
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
   TxModulateSetIfftGain(TxGainDbTime);
   TxModulateSetSyncGain(SyncSymbolGainDB);
+  TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+  OfdmCalcParams = TransmitChainGetParams();
+  DacParams = DacChainGetDacParams();
 
 #ifdef SPI
   ReturnStatus = HwInterfaceGpioSetup();
@@ -191,6 +196,7 @@ int main(int argc, char **argv)
     printf("15 - Stop S2MM DMA\n");
     printf("16 - Set Loopback Mode\n");
     printf("17 - Enable/Disable SW Synchronization\n");
+    printf("18 - Enable/Disable CW Tone\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -349,7 +355,7 @@ int main(int argc, char **argv)
         ReturnStatus = HwInterfaceConfigureSynchronizer(
           OfdmParams.Nfft, OfdmParams.CpLen, 
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold, SyncOffset);
-        HwInterfaceSynchronizerStatus(false);
+        HwInterfaceSynchronizerStatus(true);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -378,6 +384,8 @@ int main(int argc, char **argv)
           TxGainDbTime, TxModulateGetIfftGain());
         printf("\tSync Symbol Extra Gain    %lf dB = %lf\n",
           SyncSymbolGainDB, TxModulateGetSyncGain());
+        printf("\tRX Gain dB                %d dB\n",
+          RxGainDb);
         printf("\n\tCenter Frequency:         %d kHz\n", CenterFreq);
         printf("\n\tSynchronizer Threshold    0x%X = %d\n",
           SyncThreshold, SyncThreshold);
@@ -520,7 +528,7 @@ int main(int argc, char **argv)
             1)*2*1000);
           usleep(OfdmCalcParams.Symbol.Time*(
             OfdmTiming.OfdmSymbolsPerFrame+1)*2*1000);
-          HwInterfaceDisableDac();
+          //HwInterfaceDisableDac();
           printf("Finished\n");
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
@@ -591,8 +599,15 @@ int main(int argc, char **argv)
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
           SyncOffset);
         HwInterfaceSynchronizerStatus(true);
-        HwInterfaceLoadZcSequence(OfdmParams.Nfft, 0);
-        HwInterfaceLoadZcSequence(OfdmParams.Nfft, 1);
+        ReturnStatus = HwInterfaceLoadZcSequence(OfdmParams.Nfft, 0,
+          OfdmParams.BandWidth);
+        ReturnStatus = HwInterfaceLoadZcSequence(OfdmParams.Nfft, 1,
+          OfdmParams.BandWidth);
+        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        {
+          printf("%s", ReturnStatus.ErrString);
+          break;
+        }
         HwInterfaceEnableAdc();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
@@ -719,9 +734,37 @@ int main(int argc, char **argv)
         }
         break;
 
+      case 18:
+        printf("Enable Sine Tone at Fc ('0'-Off / '1'On): ");
+        ScanfRet = scanf("%d", &DebugSelection);
+        if (DebugSelection == 1)
+        {
+          printf("Enter 32-bit IQ Scalar Value: ");
+          ScanfRet = scanf("%x", &CwIqScale);
+          HwInterfaceSineToneSet(CwIqScale);
+        }
+        else
+        {
+          HwInterfaceSineToneSet(0);
+        }
+        break;
+
       default:
         printf("Invalid selection\n");
     }
+
+    if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+    {
+      printf("ERROR: Continue OFDM Radio Test? ('0'-No / '1'-Yes): ");
+      ScanfRet = scanf("%d", &DebugSelection);
+      if (!(DebugSelection == 1))
+      {
+        printf("Exiting ... \n");
+        break;
+      }
+      ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+    }
+
   } while (Selection);
 
   // Cleanup

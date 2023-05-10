@@ -8,18 +8,21 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity iq_concat is
+  generic(
+    g_TDATA_WIDTH                 : integer := 32
+  );
   port(
     axis_aclk                     : in  std_logic;
 
-    s_axis_real_tdata             : in  std_logic_vector(31 downto 0);
+    s_axis_real_tdata             : in  std_logic_vector(g_TDATA_WIDTH-1 downto 0);
     s_axis_real_tvalid            : in  std_logic;
     s_axis_real_tready            : out std_logic;
 
-    s_axis_imag_tdata             : in  std_logic_vector(31 downto 0);
+    s_axis_imag_tdata             : in  std_logic_vector(g_TDATA_WIDTH-1 downto 0);
     s_axis_imag_tvalid            : in  std_logic;
     s_axis_imag_tready            : out std_logic;
 
-    m_axis_tdata                  : out std_logic_vector(63 downto 0);
+    m_axis_tdata                  : out std_logic_vector(g_TDATA_WIDTH*2-1 downto 0);
     m_axis_tvalid                 : out std_logic
   );
 end entity iq_concat;

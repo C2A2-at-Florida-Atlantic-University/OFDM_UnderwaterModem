@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "ReturnStatus.h"
 
-#define RELOAD_COEF_LENGTH 4103
+#define RELOAD_COEF_MAX 4103
 
 // PS to PL control and status registers
 #define DMA_BASE_ADDR 0x40000000 // Same as DMA_CONTROL_REGISTER
@@ -29,8 +29,10 @@
 #define DMA_BUFFER_WIDTH_VAL 26 // Configured in DMA GUI
 
 #define FpgaClkRate 100000000 // 100MHz
-#define DEFAULT_RX_GAIN_DB 30 // in dB
-#define DEFAULT_SYNCHRONIZER_OFFSET -11
+#define AdcClkRate 40000000 // 40MHz
+// MAX input voltage of ~0.3V before distortion using 10 dB RX gain
+#define DEFAULT_RX_GAIN_DB 20 // in dB
+#define DEFAULT_SYNCHRONIZER_OFFSET -20
 
 #define GPIO_0_BASE_ADDR 0x40010000
 #define GPIO_1_BASE_ADDR 0x40010200
@@ -108,13 +110,15 @@
 #define AUX_RESETN_MASK_OFFSET 26
 #define AUX_RESETN_MASK 0x04000000
 
-#define ADC_FC_SCALED_OFFSET 0x8
+#define ADC_FC_SCALED_OFFSET 0x0
 #define ADC_FC_SCALED_MASK_OFFSET 0
 #define ADC_FC_SCALED_MASK 0xFFFFFFFF
 
 #define FIR_1_RELOAD_OFFSET 0x8
 #define FIR_1_RELOAD_MASK_OFFSET 27
 #define FIR_1_RELOAD_MASK 0x08000000
+
+#define SINE_TONE_OFFSET 0x8
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -208,12 +212,13 @@ ReturnStatusType  HwInterfaceConfigureSynchronizer(unsigned nfft,
   unsigned CpLen, unsigned OfdmSymbols, unsigned Threshold,
   int SyncOffset);
 void HwInterfaceConfigureSignalParams(unsigned Interpolation,
-  unsigned Decimation, unsigned FcScaled);
+  unsigned Decimation, unsigned FcScaledDac, unsigned FcScaledAdc);
 void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples);
 void HwInterfaceDucDdcLoopback(bool Select);
 void HwInterfaceSynchronizerStatus(bool Enable);
 void HwInterfaceResetPL(bool Reset);
 ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
-  IqSelect);
+  IqSelect, unsigned Bw;);
+void HwInterfaceSineToneSet(unsigned CwIqScale);
 
 #endif

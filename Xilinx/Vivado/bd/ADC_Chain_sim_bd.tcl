@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# decimator_config, iq_mixer_rx_16_bit, tdm_reformat
+# decimator_config2, iq_concat2, iq_mixer_rx_40M
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -131,6 +131,7 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:user:AD9244_to_AXIS_M:*\
 xilinx.com:ip:axis_data_fifo:*\
+user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:cic_compiler:*\
 xilinx.com:ip:dds_compiler:*\
 xilinx.com:ip:xlconstant:*\
@@ -159,9 +160,9 @@ xilinx.com:ip:xlconstant:*\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
-decimator_config\
-iq_mixer_rx_16_bit\
-tdm_reformat\
+decimator_config2\
+iq_concat2\
+iq_mixer_rx_40M\
 "
 
    set list_mods_missing ""
@@ -189,6 +190,177 @@ if { $bCheckIPsPassed != 1 } {
 # DESIGN PROCs
 ##################################################################
 
+
+# Hierarchical cell: DDC_Mixer
+proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
+
+  variable script_folder
+
+  if { $parentCell eq "" || $nameHier eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_DDC_Mixer() - Empty argument(s)!"}
+     return
+  }
+
+  # Get object for parentCell
+  set parentObj [get_bd_cells $parentCell]
+  if { $parentObj == "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
+     return
+  }
+
+  # Make sure parentObj is hier blk
+  set parentType [get_property TYPE $parentObj]
+  if { $parentType ne "hier" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     return
+  }
+
+  # Save current instance; Restore later
+  set oldCurInst [current_bd_instance .]
+
+  # Set parent object as current
+  current_bd_instance $parentObj
+
+  # Create cell and set as current instance
+  set hier_obj [create_bd_cell -type hier $nameHier]
+  current_bd_instance $hier_obj
+
+  # Create interface pins
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m_axis
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis
+
+
+  # Create pins
+  create_bd_pin -dir I -from 31 -to 0 Fc_scaled
+  create_bd_pin -dir I -type clk aclk_40M
+  create_bd_pin -dir I -type rst aresetn_40M
+  create_bd_pin -dir I -from 15 -to 0 decimate_ratio
+
+  # Create instance: AXIS_Splitter_0, and set properties
+  set AXIS_Splitter_0 [ create_bd_cell -type ip -vlnv user.org:user:AXIS_Splitter AXIS_Splitter_0 ]
+  set_property -dict [ list \
+   CONFIG.AXIS_TDATA_WIDTH {16} \
+ ] $AXIS_Splitter_0
+
+  # Create instance: cic_compiler_imag, and set properties
+  set cic_compiler_imag [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler_imag ]
+  set_property -dict [ list \
+   CONFIG.Clock_Frequency {40} \
+   CONFIG.Filter_Type {Decimation} \
+   CONFIG.Fixed_Or_Initial_Rate {160} \
+   CONFIG.Input_Data_Width {16} \
+   CONFIG.Input_Sample_Frequency {40} \
+   CONFIG.Maximum_Rate {1600} \
+   CONFIG.Minimum_Rate {4} \
+   CONFIG.Number_Of_Stages {2} \
+   CONFIG.Output_Data_Width {16} \
+   CONFIG.Quantization {Truncation} \
+   CONFIG.SamplePeriod {1} \
+   CONFIG.Sample_Rate_Changes {Programmable} \
+ ] $cic_compiler_imag
+
+  # Create instance: cic_compiler_real, and set properties
+  set cic_compiler_real [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler_real ]
+  set_property -dict [ list \
+   CONFIG.Clock_Frequency {40} \
+   CONFIG.Filter_Type {Decimation} \
+   CONFIG.Fixed_Or_Initial_Rate {160} \
+   CONFIG.Input_Data_Width {16} \
+   CONFIG.Input_Sample_Frequency {40} \
+   CONFIG.Maximum_Rate {1600} \
+   CONFIG.Minimum_Rate {4} \
+   CONFIG.Number_Of_Stages {2} \
+   CONFIG.Output_Data_Width {16} \
+   CONFIG.Quantization {Truncation} \
+   CONFIG.SamplePeriod {1} \
+   CONFIG.Sample_Rate_Changes {Programmable} \
+ ] $cic_compiler_real
+
+  # Create instance: dds_compiler_0, and set properties
+  set dds_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:dds_compiler dds_compiler_0 ]
+  set_property -dict [ list \
+   CONFIG.Amplitude_Mode {Unit_Circle} \
+   CONFIG.DATA_Has_TLAST {Not_Required} \
+   CONFIG.DDS_Clock_Rate {40} \
+   CONFIG.Has_Phase_Out {false} \
+   CONFIG.Latency {7} \
+   CONFIG.M_DATA_Has_TUSER {Not_Required} \
+   CONFIG.Negative_Sine {true} \
+   CONFIG.Noise_Shaping {None} \
+   CONFIG.Output_Frequency1 {0} \
+   CONFIG.Output_Width {16} \
+   CONFIG.PINC1 {0} \
+   CONFIG.Parameter_Entry {Hardware_Parameters} \
+   CONFIG.Phase_Increment {Streaming} \
+   CONFIG.Phase_Width {32} \
+   CONFIG.S_PHASE_Has_TUSER {Not_Required} \
+ ] $dds_compiler_0
+
+  # Create instance: decimator_config2_0, and set properties
+  set block_name decimator_config2
+  set block_cell_name decimator_config2_0
+  if { [catch {set decimator_config2_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $decimator_config2_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+   CONFIG.g_DEFAULT_RATE {0x00A0} \
+ ] $decimator_config2_0
+
+  # Create instance: iq_concat2_0, and set properties
+  set block_name iq_concat2
+  set block_cell_name iq_concat2_0
+  if { [catch {set iq_concat2_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $iq_concat2_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+   CONFIG.g_TDATA_WIDTH {16} \
+ ] $iq_concat2_0
+
+  # Create instance: iq_mixer_rx_40M_0, and set properties
+  set block_name iq_mixer_rx_40M
+  set block_cell_name iq_mixer_rx_40M_0
+  if { [catch {set iq_mixer_rx_40M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $iq_mixer_rx_40M_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: xlconstant_0, and set properties
+  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
+
+  # Create interface connections
+  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins s_axis] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins cic_compiler_real/S_AXIS_CONFIG]
+  connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins cic_compiler_imag/S_AXIS_CONFIG]
+  connect_bd_intf_net -intf_net cic_compiler_imag_M_AXIS_DATA [get_bd_intf_pins cic_compiler_imag/M_AXIS_DATA] [get_bd_intf_pins iq_concat2_0/s_axis_imag]
+  connect_bd_intf_net -intf_net cic_compiler_real_M_AXIS_DATA [get_bd_intf_pins cic_compiler_real/M_AXIS_DATA] [get_bd_intf_pins iq_concat2_0/s_axis_real]
+  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis_dds]
+  connect_bd_intf_net -intf_net decimator_config2_0_m_axis [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS] [get_bd_intf_pins decimator_config2_0/m_axis]
+  connect_bd_intf_net -intf_net iq_concat2_0_m_axis [get_bd_intf_pins m_axis] [get_bd_intf_pins iq_concat2_0/m_axis]
+  connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_imag [get_bd_intf_pins cic_compiler_imag/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_imag]
+  connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_real [get_bd_intf_pins cic_compiler_real/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_real]
+
+  # Create port connections
+  connect_bd_net -net aclk_40M_1 [get_bd_pins aclk_40M] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins cic_compiler_imag/aclk] [get_bd_pins cic_compiler_real/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config2_0/axis_aclk] [get_bd_pins iq_concat2_0/axis_aclk] [get_bd_pins iq_mixer_rx_40M_0/axis_aclk]
+  connect_bd_net -net aresetn_40M_1 [get_bd_pins aresetn_40M] [get_bd_pins iq_mixer_rx_40M_0/axis_aresetn]
+  connect_bd_net -net decimate_ratio_1 [get_bd_pins decimate_ratio] [get_bd_pins decimator_config2_0/i_decimate_ratio]
+  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
+  connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
+
+  # Restore current instance
+  current_bd_instance $oldCurInst
+}
 
 
 # Procedure to create entire design; Provide argument to make
@@ -236,14 +408,16 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {M_AXIS} \
  ] $aclk
-  set aclk_40M [ create_bd_port -dir I -type clk aclk_40M ]
-  set aresetn [ create_bd_port -dir I -type rst aresetn ]
+  set aclk_40M [ create_bd_port -dir I -type clk -freq_hz 40000000 aclk_40M ]
   set aresetn_40M [ create_bd_port -dir I -type rst aresetn_40M ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
   set status [ create_bd_port -dir O -from 31 -to 0 status ]
 
   # Create instance: AD9244_to_AXIS_M_0, and set properties
   set AD9244_to_AXIS_M_0 [ create_bd_cell -type ip -vlnv xilinx.com:user:AD9244_to_AXIS_M AD9244_to_AXIS_M_0 ]
+
+  # Create instance: DDC_Mixer
+  create_hier_cell_DDC_Mixer [current_bd_instance .] DDC_Mixer
 
   # Create instance: axis_data_fifo_0, and set properties
   set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_0 ]
@@ -253,103 +427,21 @@ proc create_root_design { parentCell } {
    CONFIG.IS_ACLK_ASYNC {1} \
  ] $axis_data_fifo_0
 
-  # Create instance: cic_compiler_0, and set properties
-  set cic_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler_0 ]
-  set_property -dict [ list \
-   CONFIG.Clock_Frequency {100} \
-   CONFIG.Filter_Type {Decimation} \
-   CONFIG.Fixed_Or_Initial_Rate {160} \
-   CONFIG.Input_Data_Width {16} \
-   CONFIG.Input_Sample_Frequency {40} \
-   CONFIG.Maximum_Rate {1600} \
-   CONFIG.Minimum_Rate {4} \
-   CONFIG.Number_Of_Channels {2} \
-   CONFIG.Number_Of_Stages {2} \
-   CONFIG.Output_Data_Width {16} \
-   CONFIG.Quantization {Truncation} \
-   CONFIG.SamplePeriod {1} \
-   CONFIG.Sample_Rate_Changes {Programmable} \
- ] $cic_compiler_0
-
-  # Create instance: dds_compiler_0, and set properties
-  set dds_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:dds_compiler dds_compiler_0 ]
-  set_property -dict [ list \
-   CONFIG.Amplitude_Mode {Unit_Circle} \
-   CONFIG.DATA_Has_TLAST {Not_Required} \
-   CONFIG.Has_Phase_Out {false} \
-   CONFIG.Latency {7} \
-   CONFIG.M_DATA_Has_TUSER {Not_Required} \
-   CONFIG.Negative_Sine {true} \
-   CONFIG.Noise_Shaping {None} \
-   CONFIG.Output_Frequency1 {0} \
-   CONFIG.Output_Width {16} \
-   CONFIG.PINC1 {0} \
-   CONFIG.Parameter_Entry {Hardware_Parameters} \
-   CONFIG.Phase_Increment {Streaming} \
-   CONFIG.Phase_Width {32} \
-   CONFIG.S_PHASE_Has_TUSER {Not_Required} \
- ] $dds_compiler_0
-
-  # Create instance: decimator_config_0, and set properties
-  set block_name decimator_config
-  set block_cell_name decimator_config_0
-  if { [catch {set decimator_config_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $decimator_config_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-    set_property -dict [ list \
-   CONFIG.g_DEFAULT_RATE {0x00A0} \
- ] $decimator_config_0
-
-  # Create instance: iq_mixer_rx_16_bit_0, and set properties
-  set block_name iq_mixer_rx_16_bit
-  set block_cell_name iq_mixer_rx_16_bit_0
-  if { [catch {set iq_mixer_rx_16_bit_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $iq_mixer_rx_16_bit_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
-  # Create instance: tdm_reformat_0, and set properties
-  set block_name tdm_reformat
-  set block_cell_name tdm_reformat_0
-  if { [catch {set tdm_reformat_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $tdm_reformat_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
-
   # Create interface connections
-  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
-  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins axis_data_fifo_0/M_AXIS] [get_bd_intf_pins iq_mixer_rx_16_bit_0/s_axis]
-  connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler_0/M_AXIS_DATA] [get_bd_intf_pins tdm_reformat_0/s_axis]
-  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_16_bit_0/s_axis_dds]
-  connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler_0/S_AXIS_CONFIG] [get_bd_intf_pins decimator_config_0/m_axis]
-  connect_bd_intf_net -intf_net iq_mixer_rx_16_bit_0_m_axis [get_bd_intf_pins cic_compiler_0/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_16_bit_0/m_axis]
-  connect_bd_intf_net -intf_net tdm_reformat_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins tdm_reformat_0/m_axis]
+  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins DDC_Mixer/s_axis]
+  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
+  connect_bd_intf_net -intf_net iq_concat2_0_m_axis [get_bd_intf_pins DDC_Mixer/m_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
 
   # Create port connections
   connect_bd_net -net AD9244_to_AXIS_M_0_ClockToADC [get_bd_ports ClockToADC] [get_bd_pins AD9244_to_AXIS_M_0/ClockToADC]
   connect_bd_net -net AD9244_to_AXIS_M_0_status [get_bd_ports status] [get_bd_pins AD9244_to_AXIS_M_0/status]
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
-  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins cic_compiler_0/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config_0/axis_aclk] [get_bd_pins iq_mixer_rx_16_bit_0/axis_aclk] [get_bd_pins tdm_reformat_0/axis_aclk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
-  connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins iq_mixer_rx_16_bit_0/axis_aresetn]
-  connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
-  connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports decimate_ratio] [get_bd_pins decimator_config_0/i_decimate_ratio]
-  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk]
+  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
+  connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins DDC_Mixer/aresetn_40M] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
+  connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins DDC_Mixer/decimate_ratio]
+  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
 
   # Create address segments
 

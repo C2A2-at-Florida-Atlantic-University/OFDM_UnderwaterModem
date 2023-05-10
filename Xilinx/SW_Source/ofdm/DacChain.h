@@ -14,7 +14,7 @@
 #define ADC_SAMPLE_RATE_KHZ 40000 // 40 Msps
 
 #define CENTER_FREQUENCY_KHZ_MAX 400
-#define CENTER_FREQUENCY_KHZ_MIN 100
+#define CENTER_FREQUENCY_KHZ_MIN 10
 
 typedef struct {
   unsigned BandWidth;
@@ -27,6 +27,7 @@ typedef struct {
   unsigned DacInterpolation;
   unsigned AdcDecimation;
   unsigned FcDds;
+  unsigned FcDdsAdc;
 } Hw_Parameters_Type;
 
 ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,

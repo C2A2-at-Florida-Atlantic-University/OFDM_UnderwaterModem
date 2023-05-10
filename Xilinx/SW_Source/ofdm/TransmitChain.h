@@ -19,15 +19,15 @@
 // User default parameters
 #define DEFAULT_NFFT 4096
 #define DEFAULT_BANDWIDTH 250 // in kHz
-#define DEFAULT_CP_LEN 256 // in Samples
+#define DEFAULT_CP_LEN 512 // in Samples
 #define DEFAULT_ZP_DENSITY 40 // in percent
-#define DEFAULT_MOD_ORDER 16 // QPSK
+#define DEFAULT_MOD_ORDER 4 // QPSK
 
 #define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
 #define DEFAULT_FRAME_GUARD_PERIOD 5 // in ms
-#define DEFAULT_SYMBOlS_PER_FRAME 16
+#define DEFAULT_SYMBOlS_PER_FRAME 10
 
-#define DEFAULT_SYNC_THRESHOLD 0x01A80A99
+#define DEFAULT_SYNC_THRESHOLD 0x00020000
 //#define DEFAULT_SYNC_THRESHOLD 0x008D44EF
 
 typedef struct {

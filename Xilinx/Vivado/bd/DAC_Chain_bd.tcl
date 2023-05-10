@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# sign_conversion, tdm_reformat_tx, decimator_config, iq_mixer_tx
+# sign_conversion, tdm_reformat_tx, tone, decimator_config, iq_mixer_tx
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -161,6 +161,7 @@ if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 sign_conversion\
 tdm_reformat_tx\
+tone\
 decimator_config\
 iq_mixer_tx\
 "
@@ -378,6 +379,7 @@ proc create_root_design { parentCell } {
   set aclk_10M [ create_bd_port -dir I -type clk -freq_hz 10000000 aclk_10M ]
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set aresetn_10M [ create_bd_port -dir I -type rst aresetn_10M ]
+  set i_tone_amplitude [ create_bd_port -dir I -from 31 -to 0 i_tone_amplitude ]
 
   # Create instance: AXIS_S_to_AD9764, and set properties
   set AXIS_S_to_AD9764 [ create_bd_cell -type ip -vlnv xilinx.com:user:AXIS_S_to_AD9764 AXIS_S_to_AD9764 ]
@@ -416,24 +418,37 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: tone_0, and set properties
+  set block_name tone
+  set block_cell_name tone_0
+  if { [catch {set tone_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $tone_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create interface connections
+  connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tone_0/s_axis]
   connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_pins axis_data_fifo/M_AXIS] [get_bd_intf_pins sign_conversion_0/s_axis]
   connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/M_AXIS_DATA] [get_bd_intf_pins axis_data_fifo/S_AXIS]
-  connect_bd_intf_net -intf_net s_axis_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tdm_reformat_tx/s_axis]
   connect_bd_intf_net -intf_net sign_conversion_0_m_axis [get_bd_intf_pins AXIS_S_to_AD9764/s00_axis] [get_bd_intf_pins sign_conversion_0/m_axis]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/S_AXIS_DATA] [get_bd_intf_pins tdm_reformat_tx/m_axis]
+  connect_bd_intf_net -intf_net tone_0_m_axis [get_bd_intf_pins tdm_reformat_tx/s_axis] [get_bd_intf_pins tone_0/m_axis]
 
   # Create port connections
   connect_bd_net -net AXIS_S_to_AD9764_0_ClockToDAC [get_bd_ports ClockToDAC] [get_bd_pins AXIS_S_to_AD9764/ClockToDAC]
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_data [get_bd_ports DAC_data] [get_bd_pins AXIS_S_to_AD9764/DAC_data]
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_sleep [get_bd_ports DAC_sleep] [get_bd_pins AXIS_S_to_AD9764/DAC_sleep]
   connect_bd_net -net AXIS_S_to_AD9764_0_PA_enable [get_bd_ports PA_enable] [get_bd_pins AXIS_S_to_AD9764/PA_enable]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk] [get_bd_pins tone_0/axis_aclk]
   connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins sign_conversion_0/axis_aclk]
   connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins DUC_Mixer/aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn]
   connect_bd_net -net aresetn_10M_1 [get_bd_ports aresetn_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aresetn]
   connect_bd_net -net control_0_1 [get_bd_ports DAC_control] [get_bd_pins AXIS_S_to_AD9764/control]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins DUC_Mixer/Interp_ratio]
+  connect_bd_net -net i_tone_amplitude_0_1 [get_bd_ports i_tone_amplitude] [get_bd_pins tone_0/i_tone_amplitude]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DUC_Mixer/Fc_scaled]
 
   # Create address segments

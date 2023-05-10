@@ -9,8 +9,8 @@ module duc_ddc_loopback_tb();
   localparam                        CLOCK_PERIOD      = 10; // 100 MHz
   localparam                        CLOCK_CYCLE       = CLOCK_PERIOD/2;
 
-  localparam                        CLOCK_PERIOD_ADC  = 100; // 10 MHz
-  //localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
+  //localparam                        CLOCK_PERIOD_ADC  = 100; // 10 MHz
+  localparam                        CLOCK_PERIOD_ADC  = 24; // 40 MHz
   localparam                        CLOCK_CYCLE_ADC   = CLOCK_PERIOD_ADC/2;
 
   int                               tmp;
@@ -153,7 +153,7 @@ module duc_ddc_loopback_tb();
   end
 
 //---------------------------------------------------------------
-// Record DDS output
+// Record RX IQ Mixer Fc :output
 //---------------------------------------------------------------
   initial begin
     fd_mix_dds = $fopen("../../../../../../modules/sim/iq_dds.txt","w");
@@ -166,13 +166,12 @@ module duc_ddc_loopback_tb();
     #(CLOCK_PERIOD*700);
 
     for (n = 0; n < (ofdm_symbols+1)*(nfft+cp_len)*40; n++) begin
-      while(~DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_tvalid ||
-        ~DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_tready)
-        #CLOCK_PERIOD;
-      dds_i = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_dds_tdata[15:0];
-      dds_q = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_10M_0.s_axis_dds_tdata[31:16];
+      while(~DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_tvalid)
+        #CLOCK_PERIOD_ADC;
+      dds_i = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_dds_tdata[15:0];
+      dds_q = DUT.DUC_DDC_Loopback_Sim_i.ADC_Chain_0.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_dds_tdata[31:16];
       $fdisplay(fd_mix_dds,"%d, %d",$signed(dds_i),$signed(dds_q));
-      #CLOCK_PERIOD;
+      #CLOCK_PERIOD_ADC;
     end
 
     $fclose(fd_mix_dds);
@@ -217,7 +216,7 @@ module duc_ddc_loopback_tb();
 
     //Fc_scaled = 250000*(2<<32/100000000);
     DAC_Fc_scaled = 32'd10737418;
-    ADC_Fc_scaled = 32'd10737418;
+    ADC_Fc_scaled = 32'd107374182;
     //ADC_Fc_scaled = 32'd11184868; // 260418 Hz
     Interp_ratio = 16'd40;
     decimate_ratio = 16'd40;

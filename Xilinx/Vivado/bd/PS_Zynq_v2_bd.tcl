@@ -226,6 +226,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 sync_loopback
   create_bd_pin -dir O -from 10 -to 0 sync_offset
   create_bd_pin -dir O -from 31 -to 0 threshold
+  create_bd_pin -dir O -from 31 -to 0 tone_amplitude
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_0 ]
@@ -276,7 +277,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set axi_gpio_4 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_4 ]
   set_property -dict [ list \
    CONFIG.C_ALL_OUTPUTS {1} \
-   CONFIG.C_DOUT_DEFAULT {0x00AAAAE4} \
+   CONFIG.C_ALL_OUTPUTS_2 {1} \
+   CONFIG.C_DOUT_DEFAULT {0x0199999A} \
+   CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_4
 
   # Create instance: delimiter_0, and set properties
@@ -331,6 +334,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins threshold] [get_bd_pins axi_gpio_2/gpio_io_o]
   connect_bd_net -net axi_gpio_3_gpio2_io_o [get_bd_pins axi_gpio_3/gpio2_io_o] [get_bd_pins delimiter_3/IN0]
   connect_bd_net -net axi_gpio_3_gpio_io_o [get_bd_pins dma_tlast_count] [get_bd_pins axi_gpio_3/gpio_io_o]
+  connect_bd_net -net axi_gpio_4_gpio2_io_o [get_bd_pins tone_amplitude] [get_bd_pins axi_gpio_4/gpio2_io_o]
   connect_bd_net -net axi_gpio_4_gpio_io_o [get_bd_pins ADC_Fc_scaled] [get_bd_pins axi_gpio_4/gpio_io_o]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
@@ -637,6 +641,7 @@ proc create_root_design { parentCell } {
   set sync_loopback [ create_bd_port -dir O -from 0 -to 0 sync_loopback ]
   set sync_offset [ create_bd_port -dir O -from 10 -to 0 sync_offset ]
   set threshold [ create_bd_port -dir O -from 31 -to 0 threshold ]
+  set tone_amplitude [ create_bd_port -dir O -from 31 -to 0 tone_amplitude ]
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect axi_interconnect_0 ]
@@ -1498,6 +1503,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_OUT3_1 [get_bd_ports sync_enable] [get_bd_pins regs/sync_enable]
   connect_bd_net -net regs_OUT3_2 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
   connect_bd_net -net regs_OUT5_0 [get_bd_ports fir_1_reload] [get_bd_pins regs/fir_1_reload]
+  connect_bd_net -net regs_gpio2_io_o_0 [get_bd_ports tone_amplitude] [get_bd_pins regs/tone_amplitude]
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
   connect_bd_net -net regs_gpio_io_o_1 [get_bd_ports dma_tlast_count] [get_bd_pins regs/dma_tlast_count]
   connect_bd_net -net regs_gpio_io_o_2 [get_bd_ports ADC_Fc_scaled] [get_bd_pins regs/ADC_Fc_scaled]

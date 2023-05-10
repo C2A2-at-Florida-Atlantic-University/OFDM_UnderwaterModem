@@ -183,7 +183,7 @@ void HwInterfaceSyncLoopback(unsigned Enable)
 }
 
 void HwInterfaceConfigureSignalParams(unsigned Interpolation,
-  unsigned Decimation, unsigned FcScaled)
+  unsigned Decimation, unsigned FcScaledDac, unsigned FcScaledAdc)
 {
   unsigned RegValue = Interpolation;
   if (!GlobalMute)
@@ -195,8 +195,7 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
     printf("HwinterfaceConfigureSignalParams: Setting Decim Factor\n");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DECIMATE_RADIO_OFFSET,
     RegValue, DECIMATE_RADIO_MASK, GlobalMute);
-  RegValue = FcScaled;
-  RegValue = 10737418;
+  RegValue = FcScaledDac;
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting DAC FC\n");
   FpgaInterfaceWrite32(GPIO_0_BASE_ADDR+FC_SCALED_OFFSET,
@@ -204,8 +203,10 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
   if (!GlobalMute)
     printf("HwinterfaceConfigureSignalParams: Setting ADC FC\n");
   // ADC DDS requires specific value
+  RegValue = FcScaledAdc;
   FpgaInterfaceWrite32(GPIO_4_BASE_ADDR+ADC_FC_SCALED_OFFSET,
-    11184868, GlobalMute);
+    RegValue, GlobalMute);
+    //26843546, GlobalMute);
 }
 
 ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft, 
@@ -263,8 +264,14 @@ void HwInterfaceSynchronizerStatus(bool Enable)
   }
 }
 
+void HwInterfaceSineToneSet(unsigned CwIqScale)
+{
+  FpgaInterfaceWrite32(GPIO_4_BASE_ADDR+SINE_TONE_OFFSET,
+    CwIqScale, GlobalMute);
+}
+
 ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned 
-  IqSelect)
+  IqSelect, unsigned Bw)
 {
   ReturnStatusType ReturnStatus;
   char FileNamePath[64];
@@ -272,7 +279,8 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   FILE *ReloadOrderFile = NULL;
   unsigned DmaInterrupt;
   unsigned ReloadOrder;
-  int16_T ReloadBufferUnOrdered[RELOAD_COEF_LENGTH];
+  unsigned ReloadCoefLength;
+  int16_T ReloadBufferUnOrdered[RELOAD_COEF_MAX];
   int16_T *ReloadBuffer = NULL;
   int16_T tmp;
 
@@ -286,7 +294,6 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       "HwInterfaceLoadZcSequence: Failed to open Reload Buffer\n");
     return ReturnStatus;
   }
-  memset(ReloadBuffer, 0, RELOAD_COEF_LENGTH*2);
 
   if (IqSelect)
   {
@@ -310,7 +317,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   }
   printf("HwInterfaceLoadZcSequence: Opened file %s\n", FileNamePath);
 
-  sprintf(FileNamePath, "files/FIR_Sync_Reload_order.txt");
+  sprintf(FileNamePath, "files/FIR_Sync_Reload_order_%d.txt", Bw);
 
   ReloadOrderFile = fopen(FileNamePath, "r");
   if (ReloadOrderFile == NULL)
@@ -329,10 +336,10 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
     ReloadBufferUnOrdered[i] = tmp;
   }
 
-  for (unsigned i = 0; i < 12; i++)
-    printf("Coef: %hd\n", ReloadBufferUnOrdered[i]);
+  fscanf(ReloadOrderFile, "%d\n", &ReloadCoefLength);
+  memset(ReloadBuffer, 0, ReloadCoefLength*2);
 
-  for (unsigned i = 0; i < RELOAD_COEF_LENGTH; i++)
+  for (unsigned i = 0; i < ReloadCoefLength; i++)
   {
     fscanf(ReloadOrderFile, "%d\n", &ReloadOrder);
     ReloadBuffer[i] = ReloadBufferUnOrdered[ReloadOrder];
@@ -351,7 +358,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
     RELOAD_BUFFER_BASE, GlobalMute);
   // Configure length of transfer in bytes of DMA
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR+DMA_LENGTH_OFFSET,
-    MAX_NFFT*2, GlobalMute);
+    ReloadCoefLength*2, GlobalMute);
   while (1) // Wait until done bit goes high
   {
     FpgaInterfaceRead32(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
@@ -461,6 +468,26 @@ ReturnStatusType HwInterfaceGpioSetup(void)
 {
   ReturnStatusType ReturnStatus;
   int RetVal;
+
+  // unexport MIO20 pil
+  GpioFile = open("/sys/class/gpio/unexport", O_WRONLY);
+  if (GpioFile == -1)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "HwInterfaceGpioSetup: ERROR: Could not open "
+      "\"/sys/class/gpio/unexport\"...\n");
+    return ReturnStatus;
+  }
+  // If the pin is already exported, unexport it
+  RetVal = write(GpioFile, "886", 4);
+  if (RetVal == -1)
+  {
+    perror("HwInterfaceGpioSetup:");
+    printf("HwInterfaceGpioSetup: WARNING: Could not unexport "
+      "GPIO20\n");
+  }
+  close(GpioFile);
 
   // Export MIO20 pin
   GpioFile = open("/sys/class/gpio/export", O_WRONLY);

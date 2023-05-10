@@ -50,6 +50,7 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
 {
   ReturnStatusType ReturnStatus;
   Hw_Parameters_Type HwParams;
+  double BitWidth = 4294967295.0;
 
   printf("DacChainSetDacParams: Valid Freq Range: %d kHz - %d kHz\n",
     CENTER_FREQUENCY_KHZ_MIN, CENTER_FREQUENCY_KHZ_MAX);
@@ -86,13 +87,16 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
   {
     HwParams.AdcDecimation = ADC_SAMPLE_RATE_KHZ/BandWidth;
   }
-  HwParams.FcDds = Fc*2<<32/FpgaClkRate;
+  HwParams.FcDds = (unsigned)((double)Fc*1000*
+    (BitWidth/(double)FpgaClkRate));
+  HwParams.FcDdsAdc=(unsigned)((double)Fc*1000*
+    (BitWidth/(double)AdcClkRate));
 
 #ifndef NO_DEVMEM
   if (Configure)
   {
     HwInterfaceConfigureSignalParams(HwParams.DacInterpolation,
-      HwParams.AdcDecimation, HwParams.FcDds);
+      HwParams.AdcDecimation, HwParams.FcDds, HwParams.FcDdsAdc);
   }
 #endif
 

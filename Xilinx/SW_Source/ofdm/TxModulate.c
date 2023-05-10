@@ -699,11 +699,11 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
       if (IfftOutData[j].re > U_DAC_ACCURACY || 
         IfftOutData[j].im > U_DAC_ACCURACY)
       {
-        ReturnStatus.Status = RETURN_STATUS_FAIL;
+        //ReturnStatus.Status = RETURN_STATUS_FAIL;
         sprintf(ReturnStatus.ErrString, "TxModulateFileData: "
           "Signal Saturation with Scalar Gain of %d, "
           "symbol %d, sample %d\n", DigitalGain, i, j);
-        return ReturnStatus;
+        //return ReturnStatus;
       }
 #ifdef SAMPLE_DEBUG
       if (i == 0 && j == 0)

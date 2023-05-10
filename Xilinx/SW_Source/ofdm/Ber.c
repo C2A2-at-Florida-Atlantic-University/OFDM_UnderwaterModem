@@ -57,6 +57,8 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   }
 
   printf("Number of OFDM Symbols: %d\n", OfdmSymbols);
+  printf("Number of Data Carriers: %d\n", OfdmCalcParams->NumDataCarriers);
+  printf("Modulation Order: %d\n", ModOrder);
   if (Ber)
   {
     SymbolLoop = OfdmCalcParams->NumDataCarriers*

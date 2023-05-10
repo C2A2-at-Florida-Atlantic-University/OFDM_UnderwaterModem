@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="duc_ddc_loopback_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="duc_ddc_loopback_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="12.420000001 ms"></ZoomEndTime>
+      <Cursor1Time time="5.320180000 ms"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="266"></NameColumnWidth>
+      <ValueColumnWidth column_width="130"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/duc_ddc_loopback_tb/r_clk" type="logic">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/duc_ddc_loopback_tb/r_nRst" type="logic">
+      <obj_property name="ElementShortName">r_nRst</obj_property>
+      <obj_property name="ObjectShortName">r_nRst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/duc_ddc_loopback_tb/adc_aclk" type="logic">
+      <obj_property name="ElementShortName">adc_aclk</obj_property>
+      <obj_property name="ObjectShortName">adc_aclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/duc_ddc_loopback_tb/adc_aresetn" type="logic">
+      <obj_property name="ElementShortName">adc_aresetn</obj_property>
+      <obj_property name="ObjectShortName">adc_aresetn</obj_property>
+   </wvobject>
+   <wvobject fp_name="group53" type="group">
+      <obj_property name="label">TB_Counters</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/duc_ddc_loopback_tb/i" type="array">
+         <obj_property name="ElementShortName">i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">i[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/j" type="array">
+         <obj_property name="ElementShortName">j[31:0]</obj_property>
+         <obj_property name="ObjectShortName">j[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/k" type="array">
+         <obj_property name="ElementShortName">k[31:0]</obj_property>
+         <obj_property name="ObjectShortName">k[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/m" type="array">
+         <obj_property name="ElementShortName">m[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/n" type="array">
+         <obj_property name="ElementShortName">n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">n[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group61" type="group">
+      <obj_property name="label">TB_Params</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/duc_ddc_loopback_tb/ofdm_symbols" type="array">
+         <obj_property name="ElementShortName">ofdm_symbols[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ofdm_symbols[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/nfft" type="array">
+         <obj_property name="ElementShortName">nfft[31:0]</obj_property>
+         <obj_property name="ObjectShortName">nfft[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/cp_len" type="array">
+         <obj_property name="ElementShortName">cp_len[31:0]</obj_property>
+         <obj_property name="ObjectShortName">cp_len[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/ADC_Fc_scaled" type="array">
+         <obj_property name="ElementShortName">ADC_Fc_scaled[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADC_Fc_scaled[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/DAC_Fc_scaled" type="array">
+         <obj_property name="ElementShortName">DAC_Fc_scaled[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DAC_Fc_scaled[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/Interp_ratio" type="array">
+         <obj_property name="ElementShortName">Interp_ratio[15:0]</obj_property>
+         <obj_property name="ObjectShortName">Interp_ratio[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/decimate_ratio" type="array">
+         <obj_property name="ElementShortName">decimate_ratio[15:0]</obj_property>
+         <obj_property name="ObjectShortName">decimate_ratio[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group70" type="group">
+      <obj_property name="label">M_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata" type="array">
+         <obj_property name="ElementShortName">m_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus121" type="vbus">
+         <obj_property name="label">i</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[15]" type="logic">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[14]" type="logic">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[13]" type="logic">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[12]" type="logic">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[11]" type="logic">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[10]" type="logic">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[9]" type="logic">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[8]" type="logic">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[7]" type="logic">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[6]" type="logic">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[5]" type="logic">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[4]" type="logic">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[3]" type="logic">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[2]" type="logic">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[1]" type="logic">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[0]" type="logic">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="vbus104" type="vbus">
+         <obj_property name="label">q</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/m_tdata[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/m_tvalid" type="logic">
+         <obj_property name="ElementShortName">m_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/m_tready" type="logic">
+         <obj_property name="ElementShortName">m_tready</obj_property>
+         <obj_property name="ObjectShortName">m_tready</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus71" type="vbus">
+      <obj_property name="label">S_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata" type="array">
+         <obj_property name="ElementShortName">s_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="vbus187" type="vbus">
+         <obj_property name="label">i</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[15]" type="logic">
+            <obj_property name="ElementShortName">[15]</obj_property>
+            <obj_property name="ObjectShortName">[15]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[14]" type="logic">
+            <obj_property name="ElementShortName">[14]</obj_property>
+            <obj_property name="ObjectShortName">[14]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[13]" type="logic">
+            <obj_property name="ElementShortName">[13]</obj_property>
+            <obj_property name="ObjectShortName">[13]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[12]" type="logic">
+            <obj_property name="ElementShortName">[12]</obj_property>
+            <obj_property name="ObjectShortName">[12]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[11]" type="logic">
+            <obj_property name="ElementShortName">[11]</obj_property>
+            <obj_property name="ObjectShortName">[11]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[10]" type="logic">
+            <obj_property name="ElementShortName">[10]</obj_property>
+            <obj_property name="ObjectShortName">[10]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[9]" type="logic">
+            <obj_property name="ElementShortName">[9]</obj_property>
+            <obj_property name="ObjectShortName">[9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[8]" type="logic">
+            <obj_property name="ElementShortName">[8]</obj_property>
+            <obj_property name="ObjectShortName">[8]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[7]" type="logic">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[6]" type="logic">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[5]" type="logic">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[4]" type="logic">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[3]" type="logic">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[2]" type="logic">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[1]" type="logic">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[0]" type="logic">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="vbus170" type="vbus">
+         <obj_property name="label">q</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[31]" type="logic">
+            <obj_property name="ElementShortName">[31]</obj_property>
+            <obj_property name="ObjectShortName">[31]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[30]" type="logic">
+            <obj_property name="ElementShortName">[30]</obj_property>
+            <obj_property name="ObjectShortName">[30]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[29]" type="logic">
+            <obj_property name="ElementShortName">[29]</obj_property>
+            <obj_property name="ObjectShortName">[29]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[28]" type="logic">
+            <obj_property name="ElementShortName">[28]</obj_property>
+            <obj_property name="ObjectShortName">[28]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[27]" type="logic">
+            <obj_property name="ElementShortName">[27]</obj_property>
+            <obj_property name="ObjectShortName">[27]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[26]" type="logic">
+            <obj_property name="ElementShortName">[26]</obj_property>
+            <obj_property name="ObjectShortName">[26]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[25]" type="logic">
+            <obj_property name="ElementShortName">[25]</obj_property>
+            <obj_property name="ObjectShortName">[25]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[24]" type="logic">
+            <obj_property name="ElementShortName">[24]</obj_property>
+            <obj_property name="ObjectShortName">[24]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[23]" type="logic">
+            <obj_property name="ElementShortName">[23]</obj_property>
+            <obj_property name="ObjectShortName">[23]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[22]" type="logic">
+            <obj_property name="ElementShortName">[22]</obj_property>
+            <obj_property name="ObjectShortName">[22]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[21]" type="logic">
+            <obj_property name="ElementShortName">[21]</obj_property>
+            <obj_property name="ObjectShortName">[21]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[20]" type="logic">
+            <obj_property name="ElementShortName">[20]</obj_property>
+            <obj_property name="ObjectShortName">[20]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[19]" type="logic">
+            <obj_property name="ElementShortName">[19]</obj_property>
+            <obj_property name="ObjectShortName">[19]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[18]" type="logic">
+            <obj_property name="ElementShortName">[18]</obj_property>
+            <obj_property name="ObjectShortName">[18]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[17]" type="logic">
+            <obj_property name="ElementShortName">[17]</obj_property>
+            <obj_property name="ObjectShortName">[17]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/s_tdata[16]" type="logic">
+            <obj_property name="ElementShortName">[16]</obj_property>
+            <obj_property name="ObjectShortName">[16]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/s_tvalid" type="logic">
+         <obj_property name="ElementShortName">s_tvalid</obj_property>
+         <obj_property name="ObjectShortName">s_tvalid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/s_tready" type="logic">
+         <obj_property name="ElementShortName">s_tready</obj_property>
+         <obj_property name="ObjectShortName">s_tready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/s_tlast" type="logic">
+         <obj_property name="ElementShortName">s_tlast</obj_property>
+         <obj_property name="ObjectShortName">s_tlast</obj_property>
+      </wvobject>
+      <wvobject fp_name="/duc_ddc_loopback_tb/s_tkeep" type="array">
+         <obj_property name="ElementShortName">s_tkeep[3:0]</obj_property>
+         <obj_property name="ObjectShortName">s_tkeep[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group282" type="group">
+      <obj_property name="label">IQ_MIXER_RX</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="group212" type="group">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group213" type="group">
+         <obj_property name="label">S_AXIS_DDS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_dds_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus265" type="vbus">
+            <obj_property name="label">cos</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus248" type="vbus">
+            <obj_property name="label">sin</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/s_axis_dds_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_dds_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group214" type="group">
+         <obj_property name="label">M_AXIS_REAL</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/m_axis_real_tdata" type="array">
+            <obj_property name="ElementShortName">m_axis_real_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_real_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/m_axis_real_tvalid" type="logic">
+            <obj_property name="ElementShortName">m_axis_real_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_real_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group215" type="group">
+         <obj_property name="label">M_AXIS_IMAG</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/m_axis_imag_tdata" type="array">
+            <obj_property name="ElementShortName">m_axis_imag_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_imag_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/ADC_Chain_0/DDC_Mixer/iq_mixer_rx_40M_0/m_axis_imag_tvalid" type="logic">
+            <obj_property name="ElementShortName">m_axis_imag_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_imag_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group293" type="group">
+      <obj_property name="label">IQ_MIXER_TX</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="group290" type="group">
+         <obj_property name="label">S_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_tlast" type="logic">
+            <obj_property name="ElementShortName">s_axis_tlast</obj_property>
+            <obj_property name="ObjectShortName">s_axis_tlast</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group291" type="group">
+         <obj_property name="label">S_AXIS_DDS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata" type="array">
+            <obj_property name="ElementShortName">s_axis_dds_tdata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tdata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="vbus343" type="vbus">
+            <obj_property name="label">cos</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[15]" type="logic">
+               <obj_property name="ElementShortName">[15]</obj_property>
+               <obj_property name="ObjectShortName">[15]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[14]" type="logic">
+               <obj_property name="ElementShortName">[14]</obj_property>
+               <obj_property name="ObjectShortName">[14]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[13]" type="logic">
+               <obj_property name="ElementShortName">[13]</obj_property>
+               <obj_property name="ObjectShortName">[13]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[12]" type="logic">
+               <obj_property name="ElementShortName">[12]</obj_property>
+               <obj_property name="ObjectShortName">[12]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[11]" type="logic">
+               <obj_property name="ElementShortName">[11]</obj_property>
+               <obj_property name="ObjectShortName">[11]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[10]" type="logic">
+               <obj_property name="ElementShortName">[10]</obj_property>
+               <obj_property name="ObjectShortName">[10]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[9]" type="logic">
+               <obj_property name="ElementShortName">[9]</obj_property>
+               <obj_property name="ObjectShortName">[9]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[8]" type="logic">
+               <obj_property name="ElementShortName">[8]</obj_property>
+               <obj_property name="ObjectShortName">[8]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[7]" type="logic">
+               <obj_property name="ElementShortName">[7]</obj_property>
+               <obj_property name="ObjectShortName">[7]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[6]" type="logic">
+               <obj_property name="ElementShortName">[6]</obj_property>
+               <obj_property name="ObjectShortName">[6]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[5]" type="logic">
+               <obj_property name="ElementShortName">[5]</obj_property>
+               <obj_property name="ObjectShortName">[5]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[4]" type="logic">
+               <obj_property name="ElementShortName">[4]</obj_property>
+               <obj_property name="ObjectShortName">[4]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[3]" type="logic">
+               <obj_property name="ElementShortName">[3]</obj_property>
+               <obj_property name="ObjectShortName">[3]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[2]" type="logic">
+               <obj_property name="ElementShortName">[2]</obj_property>
+               <obj_property name="ObjectShortName">[2]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[1]" type="logic">
+               <obj_property name="ElementShortName">[1]</obj_property>
+               <obj_property name="ObjectShortName">[1]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[0]" type="logic">
+               <obj_property name="ElementShortName">[0]</obj_property>
+               <obj_property name="ObjectShortName">[0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus326" type="vbus">
+            <obj_property name="label">sin</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[31]" type="logic">
+               <obj_property name="ElementShortName">[31]</obj_property>
+               <obj_property name="ObjectShortName">[31]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[30]" type="logic">
+               <obj_property name="ElementShortName">[30]</obj_property>
+               <obj_property name="ObjectShortName">[30]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[29]" type="logic">
+               <obj_property name="ElementShortName">[29]</obj_property>
+               <obj_property name="ObjectShortName">[29]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[28]" type="logic">
+               <obj_property name="ElementShortName">[28]</obj_property>
+               <obj_property name="ObjectShortName">[28]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[27]" type="logic">
+               <obj_property name="ElementShortName">[27]</obj_property>
+               <obj_property name="ObjectShortName">[27]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[26]" type="logic">
+               <obj_property name="ElementShortName">[26]</obj_property>
+               <obj_property name="ObjectShortName">[26]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[25]" type="logic">
+               <obj_property name="ElementShortName">[25]</obj_property>
+               <obj_property name="ObjectShortName">[25]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[24]" type="logic">
+               <obj_property name="ElementShortName">[24]</obj_property>
+               <obj_property name="ObjectShortName">[24]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[23]" type="logic">
+               <obj_property name="ElementShortName">[23]</obj_property>
+               <obj_property name="ObjectShortName">[23]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[22]" type="logic">
+               <obj_property name="ElementShortName">[22]</obj_property>
+               <obj_property name="ObjectShortName">[22]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[21]" type="logic">
+               <obj_property name="ElementShortName">[21]</obj_property>
+               <obj_property name="ObjectShortName">[21]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[20]" type="logic">
+               <obj_property name="ElementShortName">[20]</obj_property>
+               <obj_property name="ObjectShortName">[20]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[19]" type="logic">
+               <obj_property name="ElementShortName">[19]</obj_property>
+               <obj_property name="ObjectShortName">[19]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[18]" type="logic">
+               <obj_property name="ElementShortName">[18]</obj_property>
+               <obj_property name="ObjectShortName">[18]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[17]" type="logic">
+               <obj_property name="ElementShortName">[17]</obj_property>
+               <obj_property name="ObjectShortName">[17]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tdata[16]" type="logic">
+               <obj_property name="ElementShortName">[16]</obj_property>
+               <obj_property name="ObjectShortName">[16]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/s_axis_dds_tvalid" type="logic">
+            <obj_property name="ElementShortName">s_axis_dds_tvalid</obj_property>
+            <obj_property name="ObjectShortName">s_axis_dds_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group292" type="group">
+         <obj_property name="label">M_AXIS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/m_axis_tdata" type="array">
+            <obj_property name="ElementShortName">m_axis_tdata[15:0]</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tdata[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+            <obj_property name="CellHeight">100</obj_property>
+         </wvobject>
+         <wvobject fp_name="/duc_ddc_loopback_tb/DUT/DUC_DDC_Loopback_Sim_i/DAC_Chain_0/DUC_Mixer/iq_mixer_tx_0/m_axis_tvalid" type="logic">
+            <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+            <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

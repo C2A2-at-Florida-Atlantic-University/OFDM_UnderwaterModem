@@ -56,7 +56,7 @@ module adc_chain_tb();
     .M_AXIS_tready                  (1'b1),
 
     .aclk                           (r_clk),
-    .aresetn                        (r_nRst),
+//    .aresetn                        (r_nRst),
     
     .aclk_40M                       (adc_aclk),
     .aresetn_40M                    (adc_aresetn),
@@ -87,7 +87,7 @@ module adc_chain_tb();
   end
 
 //---------------------------------------------------------------
-// Record IQ mixer output
+// Record IQ mixer input
 //---------------------------------------------------------------
   initial begin
     fd_mix_in = $fopen("../../../../../../modules/sim/iq_mix_tmp_in.txt","w");
@@ -107,15 +107,14 @@ module adc_chain_tb();
     #(CLOCK_PERIOD*326);
 
     for (int i = 0; i < 1392640; i++) begin
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tvalid ||
-        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tready)
-        #CLOCK_PERIOD;
-      iq_mix_tmp_in = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_tdata;
-      dds_i = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_dds_tdata[15:0];
-      dds_q = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.s_axis_dds_tdata[31:16];
+      while (~DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_tvalid)
+        #CLOCK_PERIOD_ADC;
+      iq_mix_tmp_in = DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_tdata;
+      dds_i = DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_dds_tdata[15:0];
+      dds_q = DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.s_axis_dds_tdata[31:16];
       $fdisplay(fd_mix_in,"%d",$signed(iq_mix_tmp_in));
       $fdisplay(fd_mix_dds, "%d, %d",$signed(dds_i),$signed(dds_q));
-      #CLOCK_PERIOD;
+      #CLOCK_PERIOD_ADC;
     end
     
     $fclose(fd_mix_in);
@@ -137,21 +136,14 @@ module adc_chain_tb();
     #(CLOCK_PERIOD*327);
 
     for (int i = 0; i < 1392640; i++) begin
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tvalid ||
-        DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tlast ||
-        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tready)
-        #CLOCK_PERIOD;
-      iq_mix_out_i = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tdata;
-      #CLOCK_PERIOD;
-      while (~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tvalid ||
-        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tlast ||
-        ~DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tready)
-        #CLOCK_PERIOD;
-      iq_mix_out_q = DUT.ADC_Chain_i.iq_mixer_rx_16_bit_0.m_axis_tdata;
+      while (~DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.m_axis_real_tvalid)
+        #CLOCK_PERIOD_ADC;
+      iq_mix_out_i = DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.m_axis_real_tdata;
+      iq_mix_out_q = DUT.ADC_Chain_i.DDC_Mixer.iq_mixer_rx_40M_0.m_axis_imag_tdata;
       $fdisplay(fd_mix,"%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
       if (i < 10)
         $display("%d, %d",$signed(iq_mix_out_i),$signed(iq_mix_out_q));
-        #CLOCK_PERIOD;
+      #CLOCK_PERIOD_ADC;
     end
 
     $fclose(fd_mix);
@@ -210,10 +202,10 @@ module adc_chain_tb();
     adc_aresetn                     = 1'b1;
     #(CLOCK_PERIOD*20);
     //ADC_control                     = 4'b0001;
-    //Fc_scaled                       = 32'd10_737_418;
+    Fc_scaled                       = 32'd26_843_546;//250000 Hz 40MHz clock
     //Fc_scaled                       = 32'd11179799; // 260300 Hz
     //Fc_scaled                       = 32'd11181947; // 260350 Hz
-    Fc_scaled                       = 32'd11184868; // 260418 Hz
+    //Fc_scaled                       = 32'd11184868; // 260418 Hz
     //Fc_scaled                       = 32'd4_702_156_911;
     //decimate_ratio                  = 16'd160;
     #(CLOCK_PERIOD_ADC*30);

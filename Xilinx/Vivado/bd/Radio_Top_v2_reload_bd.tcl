@@ -627,10 +627,11 @@ proc create_root_design { parentCell } {
   connect_bd_net -net Fc_scaled_1 [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/ADC_Fc_scaled]
   connect_bd_net -net Interp_ratio_1 [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
   connect_bd_net -net PS_Zynq_0_DAC_Fc_scaled [get_bd_pins DAC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/DAC_Fc_scaled]
-  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins ADC_Chain_0/aresetn] [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins Loopback/axis_aresetn] [get_bd_pins Ofdm_Sync_250k_0/aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins dma/axis_aresetn]
+  connect_bd_net -net PS_Zynq_0_aresetn_100M [get_bd_pins DAC_Chain_0/aresetn] [get_bd_pins Loopback/axis_aresetn] [get_bd_pins Ofdm_Sync_250k_0/aresetn] [get_bd_pins PS_Zynq_0/aresetn_100M] [get_bd_pins dma/axis_aresetn]
   connect_bd_net -net PS_Zynq_0_dma_loopback [get_bd_pins Loopback/dma_loopback] [get_bd_pins PS_Zynq_0/dma_loopback]
   connect_bd_net -net PS_Zynq_0_dma_tlast_count [get_bd_pins PS_Zynq_0/dma_tlast_count] [get_bd_pins dma/i_dma_tlast_count]
   connect_bd_net -net PS_Zynq_0_fir_1_reload [get_bd_pins PS_Zynq_0/fir_1_reload] [get_bd_pins dma/reload_1_select]
+  connect_bd_net -net PS_Zynq_0_tone_amplitude [get_bd_pins DAC_Chain_0/i_tone_amplitude] [get_bd_pins PS_Zynq_0/tone_amplitude]
   connect_bd_net -net aclk_10M_1 [get_bd_pins DAC_Chain_0/aclk_10M] [get_bd_pins PS_Zynq_0/aclk_10M]
   connect_bd_net -net aclk_40M_1 [get_bd_pins ADC_Chain_0/aclk_40M] [get_bd_pins PS_Zynq_0/aclk_40M]
   connect_bd_net -net aresetn_10M_1 [get_bd_pins DAC_Chain_0/aresetn_10M] [get_bd_pins PS_Zynq_0/aresetn_10M]
@@ -647,8 +648,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net sync_loopback_1 [get_bd_pins Loopback/sync_loopback] [get_bd_pins PS_Zynq_0/sync_loopback]
 
   # Create address segments
-  assign_bd_address -offset 0x40001000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs dma/axi_dma_reload/S_AXI_LITE/Reg] -force
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs dma/axi_dma_data/S_AXI_LITE/Reg] -force
+  assign_bd_address -offset 0x40001000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs dma/axi_dma_reload/S_AXI_LITE/Reg] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces dma/axi_dma_data/Data_MM2S] [get_bd_addr_segs PS_Zynq_0/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces dma/axi_dma_data/Data_S2MM] [get_bd_addr_segs PS_Zynq_0/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces dma/axi_dma_reload/Data_MM2S] [get_bd_addr_segs PS_Zynq_0/processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
