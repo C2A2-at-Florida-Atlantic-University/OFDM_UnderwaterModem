@@ -31,7 +31,7 @@
 #define FpgaClkRate 100000000 // 100MHz
 #define AdcClkRate 40000000 // 40MHz
 // MAX input voltage of ~0.3V before distortion using 10 dB RX gain
-#define DEFAULT_RX_GAIN_DB 20 // in dB
+#define DEFAULT_RX_GAIN_DB 25 // in dB
 #define DEFAULT_SYNCHRONIZER_OFFSET -20
 
 #define GPIO_0_BASE_ADDR 0x40010000

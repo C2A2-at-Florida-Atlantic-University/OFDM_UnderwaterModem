@@ -33,7 +33,8 @@ entity synchronizer is
     i_cp_len                      : in  std_logic_vector(11 downto 0);
     i_symbols                     : in  std_logic_vector(3 downto 0);
     i_trig_offset                 : in  std_logic_vector(10 downto 0);
-    i_max_sync                    : in  std_logic
+    i_max_sync                    : in  std_logic;
+    i_guard_cycles                : in  std_logic_vector(31 downto 0)
   );
 end entity synchronizer;
 
@@ -57,12 +58,14 @@ architecture RTL of synchronizer is
 
   signal probe0                   : std_logic_vector(87 downto 0);
 
-  constant IDLE                   : std_logic_vector(1 downto 0) := "00";
-  constant SYNC_PEAK              : std_logic_vector(1 downto 0) := "01";
-  constant SYMBOL                 : std_logic_vector(1 downto 0) := "10";
-  constant SYMBOL_TRANSITION      : std_logic_vector(1 downto 0) := "11";
-  signal Current_State            : std_logic_vector(1 downto 0) := IDLE;
-  signal Next_State               : std_logic_vector(1 downto 0) := IDLE;
+  constant IDLE                   : std_logic_vector(2 downto 0) := "000";
+  constant SYNC_PEAK              : std_logic_vector(2 downto 0) := "001";
+  constant GUARD                  : std_logic_vector(2 downto 0) := "010";
+  constant SYMBOL                 : std_logic_vector(2 downto 0) := "011";
+  constant SYMBOL_TRANSITION      : std_logic_vector(2 downto 0) := "100";
+
+  signal Current_State            : std_logic_vector(2 downto 0) := IDLE;
+  signal Next_State               : std_logic_vector(2 downto 0) := IDLE;
 
   signal r_axis_tdata             : std_logic_vector(31 downto 0);
   signal r_axis_tvalid            : std_logic;
@@ -70,6 +73,7 @@ architecture RTL of synchronizer is
   signal symbol_counter           : std_logic_vector(3 downto 0);
   signal initial_counter          : std_logic_vector(12 downto 0);
   signal nfft_cp_counter          : std_logic_vector(13 downto 0);
+  signal Guard_Counter            : std_logic_vector(31 downto 0);
 
 begin
 
@@ -90,11 +94,15 @@ begin
           symbol_counter          <= (others => '0');
           initial_counter         <= (others => '0');
           nfft_cp_counter         <= (others => '0');
+          Guard_Counter           <= (others => '0');
 
         when SYNC_PEAK =>
           if s_axis_tvalid = '1' then
             initial_counter       <= initial_counter + '1';
           end if;
+
+        when GUARD =>
+          Guard_Counter           <= Guard_Counter + '1';
 
         when SYMBOL =>
           if s_axis_tvalid = '1' then
@@ -104,11 +112,13 @@ begin
         when SYMBOL_TRANSITION =>
           symbol_counter          <= symbol_counter + '1';
           nfft_cp_counter         <= (others => '0');
+          Guard_Counter           <= (others => '0');
 
         when others =>
           symbol_counter          <= (others => '0');
           initial_counter         <= (others => '0');
           nfft_cp_counter         <= (others => '0');
+          Guard_Counter           <= (others => '0');
 
       end case;
     end if;
@@ -120,6 +130,8 @@ begin
     initial_counter,
     nfft_cp_counter,
     symbol_counter,
+    Guard_Counter,
+    i_guard_cycles,
     i_symbols,
     i_nfft,
     i_cp_len,
@@ -138,9 +150,20 @@ begin
       when SYNC_PEAK =>
         if initial_counter = ('0' & i_cp_len) + 
           (i_trig_offset(10) & i_trig_offset(10) & i_trig_offset) then
-          Next_State              <= SYMBOL;
+          if i_guard_cycles = X"00000000" then
+            Next_State            <= SYMBOL;
+          else
+            Next_State            <= GUARD;
+          end if;
         else
           Next_State              <= SYNC_PEAK;
+        end if;
+
+      when GUARD =>
+        if Guard_Counter = i_guard_cycles then
+          Next_State              <= SYMBOL;
+        else
+          Next_State              <= GUARD;
         end if;
  
       when SYMBOL =>
@@ -179,6 +202,10 @@ begin
         when SYNC_PEAK =>
           NULL;
 
+        when GUARD =>
+          r_axis_tdata            <= (others => '0');
+          r_axis_tvalid           <= '0';
+
         when SYMBOL =>
           r_axis_tdata            <= s_axis_tdata;
           r_axis_tvalid           <= s_axis_tvalid;
@@ -206,7 +233,7 @@ begin
   ila_gen : if g_ILA generate
   
     probe0                          <= s_axis_abs_ila_tvalid & s_axis_abs_ila_tdata(31 downto 0) &
-                                       r_axis_tvalid & Current_State &
+                                       Current_State &
                                        symbol_counter & nfft_cp_counter & 
                                        i_max_sync & s_axis_tvalid & s_axis_tdata;
 

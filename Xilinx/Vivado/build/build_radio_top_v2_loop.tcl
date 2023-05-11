@@ -13,11 +13,15 @@ set_property target_language Verilog [current_project]
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
-source ADC_Chain_loop_bd.tcl
-source DAC_Chain_loop_bd.tcl
+#source ADC_Chain_loop_bd.tcl
+#source DAC_Chain_loop_bd.tcl
+source ADC_Chain_bd.tcl
+source DAC_Chain_bd.tcl
 source PS_Zynq_v2_bd.tcl
-source Ofdm_Sync_250k_bd.tcl
-source Radio_Top_v2_loop_bd.tcl
+source Ofdm_Sync_250k_reload_bd.tcl
+#source Ofdm_Sync_250k_bd.tcl
+#source Radio_Top_v2_loop_bd.tcl
+source Radio_Top_v2_reload_bd.tcl
 update_compile_order -fileset sources_1
 make_wrapper -files [get_files $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2_loop/radio_top_v2_loop.srcs/sources_1/bd/Radio_Top_v2/Radio_Top_v2.bd] -top
 add_files -norecurse $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2_loop/radio_top_v2_loop.gen/sources_1/bd/Radio_Top_v2/hdl/Radio_Top_v2_wrapper.v

@@ -224,14 +224,14 @@ proc create_hier_cell_DUC_Mixer { parentCell nameHier } {
   current_bd_instance $hier_obj
 
   # Create interface pins
-  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S_AXIS_DATA
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 M_AXIS_DATA
 
-  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m_axis
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S_AXIS_DATA
 
 
   # Create pins
-  create_bd_pin -dir I -from 31 -to 0 DAC_Fc_scaled
-  create_bd_pin -dir I -from 15 -to 0 Interp_Ratio
+  create_bd_pin -dir I -from 31 -to 0 Fc_scaled
+  create_bd_pin -dir I -from 15 -to 0 Interp_ratio
   create_bd_pin -dir I -type clk aclk
   create_bd_pin -dir I -type rst aresetn
 
@@ -281,13 +281,13 @@ proc create_hier_cell_DUC_Mixer { parentCell nameHier } {
      return 1
    }
   
-  # Create instance: iq_mixer_tx_0, and set properties
+  # Create instance: iq_mixer_tx, and set properties
   set block_name iq_mixer_tx
-  set block_cell_name iq_mixer_tx_0
-  if { [catch {set iq_mixer_tx_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  set block_cell_name iq_mixer_tx
+  if { [catch {set iq_mixer_tx [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $iq_mixer_tx_0 eq "" } {
+   } elseif { $iq_mixer_tx eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
@@ -296,17 +296,17 @@ proc create_hier_cell_DUC_Mixer { parentCell nameHier } {
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
 
   # Create interface connections
-  connect_bd_intf_net -intf_net cic_compiler_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx_0/s_axis]
-  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx_0/s_axis_dds]
+  connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis]
+  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis_dds]
   connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_CONFIG] [get_bd_intf_pins interpolator_config/m_axis]
-  connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins m_axis] [get_bd_intf_pins iq_mixer_tx_0/m_axis]
+  connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/m_axis]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins S_AXIS_DATA] [get_bd_intf_pins cic_compiler/S_AXIS_DATA]
 
   # Create port connections
-  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx_0/axis_aclk]
-  connect_bd_net -net aresetn_1 [get_bd_pins aresetn] [get_bd_pins iq_mixer_tx_0/axis_aresetn]
-  connect_bd_net -net i_decimate_ratio_0_1 [get_bd_pins Interp_Ratio] [get_bd_pins interpolator_config/i_decimate_ratio]
-  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins DAC_Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
+  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk]
+  connect_bd_net -net aresetn_1 [get_bd_pins aresetn] [get_bd_pins iq_mixer_tx/axis_aresetn]
+  connect_bd_net -net i_decimate_ratio_0_1 [get_bd_pins Interp_ratio] [get_bd_pins interpolator_config/i_decimate_ratio]
+  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
 
   # Restore current instance
@@ -367,13 +367,16 @@ proc create_root_design { parentCell } {
 
 
   # Create ports
-  set DAC_Fc_scaled [ create_bd_port -dir I -from 31 -to 0 DAC_Fc_scaled ]
-  set Interp_Ratio [ create_bd_port -dir I -from 15 -to 0 Interp_Ratio ]
+  set Fc_scaled [ create_bd_port -dir I -from 31 -to 0 Fc_scaled ]
+  set Interp_ratio [ create_bd_port -dir I -from 15 -to 0 Interp_ratio ]
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {S_AXIS} \
  ] $aclk
   set aclk_10M [ create_bd_port -dir I -type clk -freq_hz 10000000 aclk_10M ]
+  set_property -dict [ list \
+   CONFIG.ASSOCIATED_BUSIF {M_AXIS} \
+ ] $aclk_10M
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
 
   # Create instance: DUC_Mixer
@@ -397,17 +400,17 @@ proc create_root_design { parentCell } {
    }
   
   # Create interface connections
-  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo/M_AXIS]
-  connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/m_axis] [get_bd_intf_pins axis_data_fifo/S_AXIS]
+  connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo/M_AXIS]
+  connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/M_AXIS_DATA] [get_bd_intf_pins axis_data_fifo/S_AXIS]
   connect_bd_intf_net -intf_net s_axis_0_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tdm_reformat_tx/s_axis]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/S_AXIS_DATA] [get_bd_intf_pins tdm_reformat_tx/m_axis]
 
   # Create port connections
   connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk]
-  connect_bd_net -net axis_aresetn_0_1 [get_bd_ports aresetn] [get_bd_pins DUC_Mixer/aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn]
-  connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_Ratio] [get_bd_pins DUC_Mixer/Interp_Ratio]
-  connect_bd_net -net m_axis_aclk_0_1 [get_bd_ports aclk_10M] [get_bd_pins axis_data_fifo/m_axis_aclk]
-  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports DAC_Fc_scaled] [get_bd_pins DUC_Mixer/DAC_Fc_scaled]
+  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins axis_data_fifo/m_axis_aclk]
+  connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins DUC_Mixer/aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn]
+  connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins DUC_Mixer/Interp_ratio]
+  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DUC_Mixer/Fc_scaled]
 
   # Create address segments
 

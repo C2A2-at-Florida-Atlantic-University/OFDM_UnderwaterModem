@@ -275,6 +275,7 @@ proc create_root_design { parentCell } {
  ] $aclk
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
+  set i_guard_cycles [ create_bd_port -dir I -from 31 -to 0 i_guard_cycles ]
   set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
   set i_sync_offset [ create_bd_port -dir I -from 10 -to 0 i_sync_offset ]
@@ -342,7 +343,9 @@ proc create_root_design { parentCell } {
    CONFIG.ColumnConfig {11} \
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
+   CONFIG.DisplayReloadOrder {true} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.Gen_MIF_from_COE {false} \
    CONFIG.Has_ARESETn {true} \
    CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
@@ -437,6 +440,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins fir_reconfig_imag/aclk] [get_bd_pins fir_reconfig_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
   connect_bd_net -net aresetn_0_1 [get_bd_ports sync_enable] [get_bd_pins synchronizer_0/aresetn]
   connect_bd_net -net i_cp_len_0_1 [get_bd_ports i_cp_len] [get_bd_pins synchronizer_0/i_cp_len]
+  connect_bd_net -net i_guard_cycles_0_1 [get_bd_ports i_guard_cycles] [get_bd_pins synchronizer_0/i_guard_cycles]
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins synchronizer_0/i_nfft]
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]
   connect_bd_net -net i_threshold_0_1 [get_bd_ports i_threshold] [get_bd_pins max_thresh_0/i_threshold]

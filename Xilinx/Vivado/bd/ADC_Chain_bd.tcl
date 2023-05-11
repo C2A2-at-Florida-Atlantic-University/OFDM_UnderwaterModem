@@ -131,10 +131,10 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:user:AD9244_to_AXIS_M:*\
 xilinx.com:ip:axis_data_fifo:*\
+xilinx.com:ip:xpm_cdc_gen:*\
 user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:cic_compiler:*\
 xilinx.com:ip:dds_compiler:*\
-xilinx.com:ip:system_ila:*\
 xilinx.com:ip:xlconstant:*\
 "
 
@@ -337,40 +337,24 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
      return 1
    }
   
-  # Create instance: system_ila_0, and set properties
-  set system_ila_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila system_ila_0 ]
-  set_property -dict [ list \
-   CONFIG.ALL_PROBE_SAME_MU_CNT {3} \
-   CONFIG.C_ADV_TRIGGER {true} \
-   CONFIG.C_EN_STRG_QUAL {1} \
-   CONFIG.C_NUM_MONITOR_SLOTS {2} \
-   CONFIG.C_PROBE0_MU_CNT {3} \
-   CONFIG.C_SLOT {0} \
-   CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-   CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-   CONFIG.C_SLOT_2_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
- ] $system_ila_0
-
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
 
   # Create interface connections
   connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins s_axis] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis]
-  connect_bd_intf_net -intf_net [get_bd_intf_nets AD9244_to_AXIS_M_0_m00_axis] [get_bd_intf_pins s_axis] [get_bd_intf_pins system_ila_0/SLOT_1_AXIS]
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins cic_compiler_real/S_AXIS_CONFIG]
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins cic_compiler_imag/S_AXIS_CONFIG]
   connect_bd_intf_net -intf_net cic_compiler_imag_M_AXIS_DATA [get_bd_intf_pins cic_compiler_imag/M_AXIS_DATA] [get_bd_intf_pins iq_concat2_0/s_axis_imag]
   connect_bd_intf_net -intf_net cic_compiler_real_M_AXIS_DATA [get_bd_intf_pins cic_compiler_real/M_AXIS_DATA] [get_bd_intf_pins iq_concat2_0/s_axis_real]
   connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis_dds]
-  connect_bd_intf_net -intf_net [get_bd_intf_nets dds_compiler_0_M_AXIS_DATA] [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins system_ila_0/SLOT_0_AXIS]
   connect_bd_intf_net -intf_net decimator_config2_0_m_axis [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS] [get_bd_intf_pins decimator_config2_0/m_axis]
   connect_bd_intf_net -intf_net iq_concat2_0_m_axis [get_bd_intf_pins m_axis] [get_bd_intf_pins iq_concat2_0/m_axis]
   connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_imag [get_bd_intf_pins cic_compiler_imag/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_imag]
   connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_real [get_bd_intf_pins cic_compiler_real/S_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_real]
 
   # Create port connections
-  connect_bd_net -net aclk_40M_1 [get_bd_pins aclk_40M] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins cic_compiler_imag/aclk] [get_bd_pins cic_compiler_real/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config2_0/axis_aclk] [get_bd_pins iq_concat2_0/axis_aclk] [get_bd_pins iq_mixer_rx_40M_0/axis_aclk] [get_bd_pins system_ila_0/clk]
-  connect_bd_net -net aresetn_40M_1 [get_bd_pins aresetn_40M] [get_bd_pins iq_mixer_rx_40M_0/axis_aresetn] [get_bd_pins system_ila_0/resetn]
+  connect_bd_net -net aclk_40M_1 [get_bd_pins aclk_40M] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins cic_compiler_imag/aclk] [get_bd_pins cic_compiler_real/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins decimator_config2_0/axis_aclk] [get_bd_pins iq_concat2_0/axis_aclk] [get_bd_pins iq_mixer_rx_40M_0/axis_aclk]
+  connect_bd_net -net aresetn_40M_1 [get_bd_pins aresetn_40M] [get_bd_pins iq_mixer_rx_40M_0/axis_aresetn]
   connect_bd_net -net decimate_ratio_1 [get_bd_pins decimate_ratio] [get_bd_pins decimator_config2_0/i_decimate_ratio]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
@@ -444,6 +428,13 @@ proc create_root_design { parentCell } {
    CONFIG.IS_ACLK_ASYNC {1} \
  ] $axis_data_fifo_0
 
+  # Create instance: xpm_cdc_gen_0, and set properties
+  set xpm_cdc_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_0 ]
+  set_property -dict [ list \
+   CONFIG.INIT_SYNC_FF {true} \
+   CONFIG.WIDTH {16} \
+ ] $xpm_cdc_gen_0
+
   # Create interface connections
   connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins DDC_Mixer/s_axis]
   connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
@@ -454,11 +445,12 @@ proc create_root_design { parentCell } {
   connect_bd_net -net AD9244_to_AXIS_M_0_status [get_bd_ports status] [get_bd_pins AD9244_to_AXIS_M_0/status]
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins xpm_cdc_gen_0/src_clk]
+  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins xpm_cdc_gen_0/dest_clk]
   connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins DDC_Mixer/aresetn_40M] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
-  connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins DDC_Mixer/decimate_ratio]
+  connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins xpm_cdc_gen_0/src_in]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
+  connect_bd_net -net xpm_cdc_gen_0_dest_out [get_bd_pins DDC_Mixer/decimate_ratio] [get_bd_pins xpm_cdc_gen_0/dest_out]
 
   # Create address segments
 

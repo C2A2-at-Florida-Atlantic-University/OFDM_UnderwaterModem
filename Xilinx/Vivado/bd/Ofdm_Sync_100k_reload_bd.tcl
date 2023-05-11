@@ -403,7 +403,7 @@ proc create_root_design { parentCell } {
      return 1
    }
     set_property -dict [ list \
-   CONFIG.g_ILA {false} \
+   CONFIG.g_ILA {true} \
  ] $synchronizer_0
 
   # Create instance: xlconstant_0, and set properties

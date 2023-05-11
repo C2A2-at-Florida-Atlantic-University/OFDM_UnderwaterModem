@@ -202,6 +202,8 @@ proc create_hier_cell_regs { parentCell nameHier } {
 
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI4
 
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI5
+
 
   # Create pins
   create_bd_pin -dir O -from 31 -to 0 ADC_Fc_scaled
@@ -219,6 +221,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 31 -to 0 dma_tlast_count
   create_bd_pin -dir O -from 0 -to 0 duc_ddc_loopback
   create_bd_pin -dir O -from 0 -to 0 fir_1_reload
+  create_bd_pin -dir O -from 31 -to 0 guard_cycles
   create_bd_pin -dir O -from 11 -to 0 nfft
   create_bd_pin -dir O -from 2 -to 0 rx_gain_shift
   create_bd_pin -dir O -from 3 -to 0 symbols
@@ -282,6 +285,12 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_4
 
+  # Create instance: axi_gpio_5, and set properties
+  set axi_gpio_5 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_5 ]
+  set_property -dict [ list \
+   CONFIG.C_ALL_OUTPUTS {1} \
+ ] $axi_gpio_5
+
   # Create instance: delimiter_0, and set properties
   set delimiter_0 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_0 ]
   set_property -dict [ list \
@@ -323,6 +332,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins S_AXI1] [get_bd_intf_pins axi_gpio_1/S_AXI]
   connect_bd_intf_net -intf_net Conn3 [get_bd_intf_pins S_AXI3] [get_bd_intf_pins axi_gpio_3/S_AXI]
   connect_bd_intf_net -intf_net Conn4 [get_bd_intf_pins S_AXI4] [get_bd_intf_pins axi_gpio_4/S_AXI]
+  connect_bd_intf_net -intf_net Conn5 [get_bd_intf_pins S_AXI5] [get_bd_intf_pins axi_gpio_5/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
 
   # Create port connections
@@ -336,6 +346,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net axi_gpio_3_gpio_io_o [get_bd_pins dma_tlast_count] [get_bd_pins axi_gpio_3/gpio_io_o]
   connect_bd_net -net axi_gpio_4_gpio2_io_o [get_bd_pins tone_amplitude] [get_bd_pins axi_gpio_4/gpio2_io_o]
   connect_bd_net -net axi_gpio_4_gpio_io_o [get_bd_pins ADC_Fc_scaled] [get_bd_pins axi_gpio_4/gpio_io_o]
+  connect_bd_net -net axi_gpio_5_gpio_io_o [get_bd_pins guard_cycles] [get_bd_pins axi_gpio_5/gpio_io_o]
   connect_bd_net -net delimiter_0_OUT0 [get_bd_pins decimate_ratio] [get_bd_pins delimiter_0/OUT0]
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
   connect_bd_net -net delimiter_0_OUT2 [get_bd_pins ADCcontrol] [get_bd_pins delimiter_0/OUT2]
@@ -351,8 +362,8 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_2_OUT5 [get_bd_pins fir_1_reload] [get_bd_pins delimiter_2/OUT5]
   connect_bd_net -net delimiter_3_OUT0 [get_bd_pins rx_gain_shift] [get_bd_pins delimiter_3/OUT0]
   connect_bd_net -net delimiter_3_OUT1 [get_bd_pins duc_ddc_loopback] [get_bd_pins delimiter_3/OUT1]
-  connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_gpio_3/s_axi_aresetn] [get_bd_pins axi_gpio_4/s_axi_aresetn]
-  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins axi_gpio_3/s_axi_aclk] [get_bd_pins axi_gpio_4/s_axi_aclk]
+  connect_bd_net -net proc_sys_reset_100M_peripheral_aresetn [get_bd_pins aresetn_100M] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_gpio_3/s_axi_aresetn] [get_bd_pins axi_gpio_4/s_axi_aresetn] [get_bd_pins axi_gpio_5/s_axi_aresetn]
+  connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins aclk_100M] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins axi_gpio_3/s_axi_aclk] [get_bd_pins axi_gpio_4/s_axi_aclk] [get_bd_pins axi_gpio_5/s_axi_aclk]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -634,6 +645,7 @@ proc create_root_design { parentCell } {
   set dma_tlast_count [ create_bd_port -dir O -from 31 -to 0 dma_tlast_count ]
   set duc_ddc_loopback [ create_bd_port -dir O -from 0 -to 0 duc_ddc_loopback ]
   set fir_1_reload [ create_bd_port -dir O -from 0 -to 0 fir_1_reload ]
+  set guard_cycles [ create_bd_port -dir O -from 31 -to 0 guard_cycles ]
   set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
   set rx_gain_shift [ create_bd_port -dir O -from 2 -to 0 rx_gain_shift ]
   set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
@@ -1456,7 +1468,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   # Create instance: smartconnect_0, and set properties
   set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect smartconnect_0 ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {7} \
+   CONFIG.NUM_MI {8} \
    CONFIG.NUM_SI {1} \
  ] $smartconnect_0
 
@@ -1475,6 +1487,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_intf_net -intf_net smartconnect_0_M04_AXI [get_bd_intf_pins regs/S_AXI3] [get_bd_intf_pins smartconnect_0/M04_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M05_AXI [get_bd_intf_pins regs/S_AXI4] [get_bd_intf_pins smartconnect_0/M05_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M06_AXI [get_bd_intf_ports M_AXI_RELOAD_DMA] [get_bd_intf_pins smartconnect_0/M06_AXI]
+  connect_bd_intf_net -intf_net smartconnect_0_M07_AXI [get_bd_intf_pins regs/S_AXI5] [get_bd_intf_pins smartconnect_0/M07_AXI]
 
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_0/S01_ARESETN] [get_bd_pins axi_interconnect_0/S02_ARESETN] [get_bd_pins proc_sys_reset/interconnect_aresetn_100M]
@@ -1507,6 +1520,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]
   connect_bd_net -net regs_gpio_io_o_1 [get_bd_ports dma_tlast_count] [get_bd_pins regs/dma_tlast_count]
   connect_bd_net -net regs_gpio_io_o_2 [get_bd_ports ADC_Fc_scaled] [get_bd_pins regs/ADC_Fc_scaled]
+  connect_bd_net -net regs_gpio_io_o_3 [get_bd_ports guard_cycles] [get_bd_pins regs/guard_cycles]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI_DMA/Reg] -force
@@ -1516,6 +1530,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   assign_bd_address -offset 0x40010400 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_2/S_AXI/Reg] -force
   assign_bd_address -offset 0x40010600 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_3/S_AXI/Reg] -force
   assign_bd_address -offset 0x40010800 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_4/S_AXI/Reg] -force
+  assign_bd_address -offset 0x40010A00 -range 0x00000200 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs regs/axi_gpio_5/S_AXI/Reg] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXIS_DMA_RELOAD_HP0] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP0] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
   assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces S_AXI_DMA_HP1] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
