@@ -25,3 +25,4 @@ log.txt
 bitfiles
 *.BIN
 *.orig
+*.dmp

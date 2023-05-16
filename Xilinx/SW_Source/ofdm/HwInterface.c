@@ -380,6 +380,12 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   return ReturnStatus;
 }
 
+void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples)
+{
+  FpgaInterfaceWrite32(GPIO_5_BASE_ADDR+SYMBOL_GUARD_OFFSET,
+    FpgaClkSamples, GlobalMute);
+}
+
 ReturnStatusType HwInterfaceSetVga(int gain)
 {
   ReturnStatusType ReturnStatus;

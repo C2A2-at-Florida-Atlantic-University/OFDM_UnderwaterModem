@@ -354,7 +354,8 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
         fprintf(RxFreqFile, "%d, %d\n", 0, 0);
       }
     }
-    else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
+    //else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 4))
+    else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier) % 2))
     { // Pilot sub-carrier
       //printf("Pilot sub-carrier index %d\n", ZpIndex);
 #ifdef FFT

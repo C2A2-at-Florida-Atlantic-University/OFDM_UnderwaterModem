@@ -8,8 +8,10 @@
 #include "ReturnStatus.h"
 
 // Fixed parameters
-#define PILOT_DENSITY 1/4
-#define DATA_DENSITY 3/4
+#define PILOT_DENSITY 1/2
+//#define PILOT_DENSITY 1/4
+//#define DATA_DENSITY 3/4
+#define DATA_DENSITY 1/2
 #define MAX_NFFT 4096
 #define MAX_CP_LEN MAX_NFFT
 #define MAX_MOD_ORDER 16
@@ -20,11 +22,11 @@
 #define DEFAULT_NFFT 4096
 #define DEFAULT_BANDWIDTH 250 // in kHz
 #define DEFAULT_CP_LEN 256 // in Samples
-#define DEFAULT_ZP_DENSITY 40 // in percent
+#define DEFAULT_ZP_DENSITY 80 // in percent
 #define DEFAULT_MOD_ORDER 2 // QPSK
 
-#define DEFAULT_SYMBOL_GUARD_PERIOD 1 // in ms
-#define DEFAULT_FRAME_GUARD_PERIOD 5 // in ms
+#define DEFAULT_SYMBOL_GUARD_PERIOD 10 // in ms
+#define DEFAULT_FRAME_GUARD_PERIOD 0 // in ms
 #define DEFAULT_SYMBOlS_PER_FRAME 10
 
 #define DEFAULT_SYNC_THRESHOLD 0x00020000

@@ -10,6 +10,9 @@ use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 
 entity guard_insert is
+  generic(
+    g_ILA                         : boolean := false
+  );
   port(
     axis_aclk                     : in  std_logic;
     axis_aresetn                  : in  std_logic;
@@ -39,6 +42,15 @@ architecture RTL of guard_insert is
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
     signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:m_axis, FREQ_HZ 100000000";
 
+  component ila_0 is
+    port(
+      clk                         : in  std_logic;
+      probe0                      : in  std_logic_vector(87 downto 0)
+    );
+  end component ila_0;
+
+  signal probe0                   : std_logic_vector(87 downto 0);
+
   signal Guard_Counter            : std_logic_vector(31 downto 0);
   signal CP_Counter               : std_logic_vector(11 downto 0);
   signal Nfft_Counter             : std_logic_vector(11 downto 0);
@@ -50,6 +62,9 @@ architecture RTL of guard_insert is
 
   signal Current_State            : std_logic_vector(1 downto 0) := IDLE;
   signal Next_State               : std_logic_vector(1 downto 0) := IDLE;
+
+  signal w_axis_tdata             : std_logic_vector(31 downto 0);
+  signal w_axis_tvalid            : std_logic;
 
 begin
 
@@ -72,13 +87,13 @@ begin
           Nfft_Counter              <= (others => '0');
 
         when CP =>
-          if s_axis_tvalid = '1' then
+          if m_axis_tready = '1' and s_axis_tvalid = '1' then
             CP_Counter              <= CP_Counter + '1';
           end if;
           Nfft_Counter              <= (others => '0');
 
         when SYMBOL =>
-          if s_axis_tvalid = '1' then
+          if m_axis_tready = '1' and s_axis_tvalid = '1' then
             Nfft_Counter            <= Nfft_Counter + '1';
           end if;
           CP_Counter                <= (others => '0');
@@ -87,6 +102,7 @@ begin
         when GUARD =>
           Guard_Counter             <= Guard_Counter + '1';
           Nfft_Counter              <= (others => '0');
+          CP_Counter                <= (others => '0');
 
         when others =>
           NULL;
@@ -174,36 +190,51 @@ begin
     case Current_State is
       when IDLE =>
         s_axis_tready               <= m_axis_tready;
-        m_axis_tvalid               <= s_axis_tvalid;
-        m_axis_tdata                <= s_axis_tdata;
+        w_axis_tvalid               <= s_axis_tvalid;
+        w_axis_tdata                <= s_axis_tdata;
         m_axis_tlast                <= s_axis_tlast;
 
       when CP =>
         s_axis_tready               <= m_axis_tready;
-        m_axis_tvalid               <= s_axis_tvalid;
-        m_axis_tdata                <= s_axis_tdata;
+        w_axis_tvalid               <= s_axis_tvalid;
+        w_axis_tdata                <= s_axis_tdata;
         m_axis_tlast                <= s_axis_tlast;
 
       when SYMBOL =>
         s_axis_tready               <= m_axis_tready;
-        m_axis_tvalid               <= s_axis_tvalid;
-        m_axis_tdata                <= s_axis_tdata;
+        w_axis_tvalid               <= s_axis_tvalid;
+        w_axis_tdata                <= s_axis_tdata;
         m_axis_tlast                <= s_axis_tlast;
 
       when GUARD =>
         s_axis_tready               <= '0';
-        m_axis_tvalid               <= '0';
-        m_axis_tdata                <= (others => '0');
+        w_axis_tvalid               <= '0';
+        w_axis_tdata                <= (others => '0');
         m_axis_tlast                <= '0';
 
       when others =>
         s_axis_tready               <= m_axis_tready;
-        m_axis_tvalid               <= s_axis_tvalid;
-        m_axis_tdata                <= s_axis_tdata;
+        w_axis_tvalid               <= s_axis_tvalid;
+        w_axis_tdata                <= s_axis_tdata;
         m_axis_tlast                <= s_axis_tlast;
 
     end case;
   end process;
+
+  m_axis_tdata                      <= w_axis_tdata;
+  m_axis_tvalid                     <= w_axis_tvalid;
   
+  ila_gen : if g_ILA generate
+
+    probe0                          <= s_axis_tdata & s_axis_tvalid & w_axis_tdata & w_axis_tvalid &
+                                       m_axis_tready & Current_State & Guard_Counter(18 downto 0);
+  
+    ila_inst : ila_0
+      port map(
+        clk                         => axis_aclk,
+        probe0                      => probe0
+      );
+
+  end generate;
 
 end architecture RTL;

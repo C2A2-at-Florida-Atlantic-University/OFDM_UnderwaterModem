@@ -39,6 +39,7 @@
 #define GPIO_2_BASE_ADDR 0x40010400
 #define GPIO_3_BASE_ADDR 0x40010600
 #define GPIO_4_BASE_ADDR 0x40010800
+#define GPIO_5_BASE_ADDR 0x40010A00
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -119,6 +120,8 @@
 #define FIR_1_RELOAD_MASK 0x08000000
 
 #define SINE_TONE_OFFSET 0x8
+
+#define SYMBOL_GUARD_OFFSET 0x0
 
 // On 0 to 1 transition of IFFT_CONFIG_START_REG a configuration packet 
 // will be sent to the FFT IP core with the values in the SEL_IFFT_FFT_REG,
@@ -220,5 +223,6 @@ void HwInterfaceResetPL(bool Reset);
 ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   IqSelect, unsigned Bw;);
 void HwInterfaceSineToneSet(unsigned CwIqScale);
+void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples);
 
 #endif

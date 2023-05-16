@@ -181,7 +181,11 @@ begin
         if symbol_counter = i_symbols then
           Next_State              <= IDLE;
         else
-          Next_State              <= SYMBOL;
+          if i_guard_cycles = X"00000000" then
+            Next_State            <= SYMBOL;
+          else
+            Next_State            <= GUARD;
+          end if;
         end if;
 
       when others =>

@@ -115,7 +115,8 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       { // ZP Index
       }
       //else if (!(NfftCount % 4)) // Pilot carrier
-      else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%4))
+      //else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%4))
+      else if (!((ZpIndex-OfdmCalcParams->FirstPilotCarrier)%2))
       {
         if (fscanf(PilotDataFile, "%d\n", &PilotData) != 1)
         {
@@ -219,7 +220,8 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       ModData = ZeroComplex;
       if (ZpIndex == (Nfft/2-1) && NfftZpCount < Nfft)
       {
-        if ((NfftCount+1)%4 == 0)
+        //if ((NfftCount+1)%4 == 0)
+        if ((NfftCount+1)%2 == 0)
         {
           printf("TxModulateFileData: WARNING: DC sub-carrier "
           "is pilot\n");

@@ -316,7 +316,7 @@ proc create_root_design { parentCell } {
    CONFIG.Coefficient_Sign {Signed} \
    CONFIG.Coefficient_Structure {Inferred} \
    CONFIG.Coefficient_Width {16} \
-   CONFIG.ColumnConfig {5} \
+   CONFIG.ColumnConfig {3} \
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
@@ -325,7 +325,7 @@ proc create_root_design { parentCell } {
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
    CONFIG.Quantization {Integer_Coefficients} \
-   CONFIG.Sample_Frequency {0.1} \
+   CONFIG.Sample_Frequency {0.05} \
  ] $fir_compiler_imag
 
   # Create instance: fir_compiler_real, and set properties
@@ -340,7 +340,7 @@ proc create_root_design { parentCell } {
    CONFIG.Coefficient_Sign {Signed} \
    CONFIG.Coefficient_Structure {Inferred} \
    CONFIG.Coefficient_Width {16} \
-   CONFIG.ColumnConfig {5} \
+   CONFIG.ColumnConfig {3} \
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
    CONFIG.DisplayReloadOrder {true} \
@@ -351,7 +351,7 @@ proc create_root_design { parentCell } {
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
    CONFIG.Output_Width {32} \
    CONFIG.Quantization {Integer_Coefficients} \
-   CONFIG.Sample_Frequency {0.1} \
+   CONFIG.Sample_Frequency {0.05} \
  ] $fir_compiler_real
 
   # Create instance: fir_reconfig_imag, and set properties

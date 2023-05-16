@@ -276,13 +276,17 @@ int main(int argc, char **argv)
       case 3:
         printf("\tEnter Symbol Guard Period in ms: ");
         ScanfRet = scanf("%d", &OfdmTiming.SymbolGuardPeriod);
-        printf("\tEnter Frame Guard Period in ms: ");
-        ScanfRet = scanf("%d", &OfdmTiming.FrameGuardPeriod);
+        //printf("\tEnter Frame Guard Period in ms: ");
+        //ScanfRet = scanf("%d", &OfdmTiming.FrameGuardPeriod);
         printf("\tEnter OFDM Symbols per Frame: ");
         ScanfRet = scanf("%d", &OfdmTiming.OfdmSymbolsPerFrame);
         TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
         DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
           OfdmParams.CpLen)*OfdmTiming.OfdmSymbolsPerFrame*4);
+        TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
+        OfdmCalcParams = TransmitChainGetParams();
+        HwInterfaceSetGuardPeriod(
+          OfdmCalcParams.SymbolGuard.FpgaClkSamples);
         break;
 
 //////////////////////////////////////////////////////////////////////////
