@@ -81,7 +81,7 @@ ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
   ModOrder = OfdmParams->ModOrder;
 
   if (!(Nfft == 128 || Nfft == 256 || Nfft == 512 || Nfft == 1024 ||
-    Nfft == 2048 || Nfft == 4096))
+    Nfft == 2048 || Nfft == 4096 || Nfft == 8192 || Nfft == 16384))
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString, 
@@ -106,7 +106,7 @@ ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
     return ReturnStatus;
   }
 
-  if (!(ModOrder == 2 || ModOrder == 4 || ModOrder == 16))
+  if (!(ModOrder == 2 || ModOrder == 4 || ModOrder == 8 || ModOrder == 16))
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,

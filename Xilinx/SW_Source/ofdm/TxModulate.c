@@ -16,7 +16,7 @@
 #include "math.h"
 
 #define DEBUG
-//#define SAMPLE_DEBUG // Print out some freq domain samples
+#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
@@ -63,7 +63,21 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
   unsigned NfftZpCount = 0;
   unsigned ZpIndex = 0;
   unsigned PilotData;
+  char FileNamePath[64];
+  FILE *TxModFile;
   int i;
+
+  sprintf(FileNamePath, "files/TxModData%d.txt", ModOrder);
+  TxModFile = fopen(FileNamePath,"r");
+  if (TxModFile == NULL)
+  {
+    perror("TxModulateFileData");
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, 
+      "TxModulateFileData: Unable to open file %s\n", FileNamePath);
+    return ReturnStatus;
+  }
+  printf("TxModulateFileData: Opened file %s\n", FileNamePath);
 
   ZeroComplex.re = 0.0;
   ZeroComplex.im = 0.0;
@@ -132,6 +146,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
       else // Data carrier
       {
         //printf("Setting data\n");
+        /*
         switch (ModOrder) {
           case 2:
             TxOfdmSymbolBinData[NfftCount] = 
@@ -153,7 +168,10 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
             sprintf(ReturnStatus.ErrString,
               "TxModulateFileData: Error: Unsupported Mod Order\n");
             return ReturnStatus;
+
         }
+        */
+        fscanf(TxModFile, "%hhd\n", &TxOfdmSymbolBinData[NfftCount]);
         i++;
       }
 #ifdef SAMPLE_DEBUG2
@@ -311,6 +329,7 @@ ReturnStatusType TxModulateFileData(unsigned ModOrder, unsigned Nfft,
 #endif
 
   fclose(TxMessageFile);
+  fclose(TxModFile);
   fclose(PilotDataFile);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
@@ -478,6 +497,9 @@ ReturnStatusType TxModulateWriteToFile(unsigned FileNumber,
         case 4:
           fprintf(TxWriteFile, "%d\n",
             ((MessageByte & BIT_MASK_M4[i]) >> (6-i*2)));
+          break;
+
+        case 8:
           break;
 
         case 16:

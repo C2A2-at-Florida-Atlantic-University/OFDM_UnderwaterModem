@@ -149,6 +149,8 @@ ReturnStatusType RxDemodulateRecoverMessage(unsigned FileNumber,
         }
         break;
 
+      case 8:
+
       case 16:
         switch(DemodData[DataIndex])
         {
