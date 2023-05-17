@@ -130,6 +130,8 @@ int main(int argc, char **argv)
   DirectDmaMm2sStatus();           // DMA mm2s status
   DirectDmaS2mmStatus();           // DMA s2mm status
   HwInterfaceDmaLoopback(0);       // Disable DMA loopback 
+  HwInterfaceSyncLoopback(0);      // Disable Synchronizer loopback
+  DacChainSetLoopback(0);          // Disable DUC=>DDC loopback
   HwInterfaceDisableDac();         // Disable DAC and PA
   HwInterfaceDisableAdc();         // Disable ADC
   DirectDmaSetNumBytesForLoopback((OfdmParams.Nfft+
@@ -149,6 +151,8 @@ int main(int argc, char **argv)
   TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
   OfdmCalcParams = TransmitChainGetParams();
   DacParams = DacChainGetDacParams();
+  HwInterfaceSetGuardPeriod(
+    OfdmCalcParams.SymbolGuard.FpgaClkSamples);
 
 #ifdef SPI
   ReturnStatus = HwInterfaceGpioSetup();

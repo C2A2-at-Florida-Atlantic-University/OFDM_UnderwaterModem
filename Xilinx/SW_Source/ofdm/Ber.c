@@ -50,7 +50,7 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   unsigned i;
   unsigned fscanfRet = 0;
 
-  ReturnStatus = BerOpenFiles(Ber, FileNumber);
+  ReturnStatus = BerOpenFiles(Ber, FileNumber, ModOrder);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     return ReturnStatus;
@@ -72,9 +72,9 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
     IndexLoop = OfdmSymbols*SymbolLoop;
     printf("IndexLoop = %d, SymbolLoop = %d\n",IndexLoop,SymbolLoop);
     // Throw away header information
-    fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
-    fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
-    fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
+    //fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
+    //fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
+    //fscanfRet = fscanf(TxModFile, "%d\n", &TxSymbol);
     fscanfRet = fscanf(RxDemodFile, "%d\n", &RxSymbol);
     fscanfRet = fscanf(RxDemodFile, "%d\n", &RxSymbol);
     fscanfRet = fscanf(RxDemodFile, "%d\n", &RxSymbol);
@@ -196,7 +196,8 @@ ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   return ReturnStatus;
 }
 
-ReturnStatusType BerOpenFiles(bool Ber, unsigned FileNumber)
+ReturnStatusType BerOpenFiles(bool Ber, unsigned FileNumber, unsigned
+  ModOrder)
 {
   ReturnStatusType ReturnStatus;
   char TxFileName[32];
@@ -205,14 +206,14 @@ ReturnStatusType BerOpenFiles(bool Ber, unsigned FileNumber)
 
   if (Ber)
   {
-    sprintf(TxFileName, "files/TxModMessage%d.txt", FileNumber);
-    sprintf(RxFileName, "files/RxDemodMessage%d.txt", FileNumber);
+    sprintf(TxFileName, "files/TxModMessage%d.txt", ModOrder);
+    sprintf(RxFileName, "files/RxDemodMessage%d.txt", ModOrder);
     sprintf(Message, "Bit");
   }
   else // SER (Symbol Error Rate)
   {
-    sprintf(TxFileName, "files/TxModData%d.txt", FileNumber);
-    sprintf(RxFileName, "files/RxDemodData%d.txt", FileNumber);
+    sprintf(TxFileName, "files/TxModData%d.txt", ModOrder);
+    sprintf(RxFileName, "files/RxDemodData%d.txt", ModOrder);
     sprintf(Message, "Symbol");
   }
   

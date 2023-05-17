@@ -277,12 +277,22 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   char FileNamePath[64];
   FILE *ZcFile = NULL;
   FILE *ReloadOrderFile = NULL;
+  unsigned NfftLoop;
   unsigned DmaInterrupt;
   unsigned ReloadOrder;
   unsigned ReloadCoefLength;
   int16_T ReloadBufferUnOrdered[RELOAD_COEF_MAX];
   int16_T *ReloadBuffer = NULL;
   int16_T tmp;
+
+  if (Nfft > 4096)
+  {
+    NfftLoop = 4096;
+  }
+  else
+  {
+    NfftLoop = Nfft;
+  }
 
   memset(ReloadBufferUnOrdered, 0, sizeof(ReloadBufferUnOrdered));
 
@@ -298,12 +308,12 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   if (IqSelect)
   {
     sprintf(FileNamePath, "files/zc_fir_coef_%d_nfft_%d_ZC_13_root_q.txt",
-      Nfft, Nfft/2);
+      NfftLoop, NfftLoop/2);
   }
   else
   {
     sprintf(FileNamePath, "files/zc_fir_coef_%d_nfft_%d_ZC_13_root_i.txt",
-      Nfft, Nfft/2);
+      NfftLoop, NfftLoop/2);
   }
 
   ZcFile = fopen(FileNamePath, "r");
@@ -330,7 +340,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   }
   printf("HwInterfaceLoadZcSequence: Opened file %s\n", FileNamePath);
 
-  for (unsigned i = 0; i < Nfft; i++)
+  for (unsigned i = 0; i < NfftLoop; i++)
   {
     fscanf(ZcFile, "%hd", &tmp);
     ReloadBufferUnOrdered[i] = tmp;

@@ -16,7 +16,7 @@
 #include "math.h"
 
 #define DEBUG
-#define SAMPLE_DEBUG // Print out some freq domain samples
+//#define SAMPLE_DEBUG // Print out some freq domain samples
 
 static FILE *TxMessageFile; // Message signal to transmit
 static FILE *TxWriteFile; // Frequency domain data
@@ -741,6 +741,10 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned FileNumber,
           IfftOutData[j].im);
       }
 #endif
+    }
+    if (i == 0)
+    {
+      printf("TxModulateIfft: Allocated Syncronization Symbol\n");
     }
   }
 

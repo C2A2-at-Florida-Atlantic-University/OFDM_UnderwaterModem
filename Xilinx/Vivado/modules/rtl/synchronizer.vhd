@@ -29,7 +29,7 @@ entity synchronizer is
     m_axis_tready                 : in  std_logic;
     m_axis_tkeep                  : out std_logic_vector(3 downto 0);
 
-    i_nfft                        : in  std_logic_vector(11 downto 0);
+    i_nfft                        : in  std_logic_vector(13 downto 0);
     i_cp_len                      : in  std_logic_vector(11 downto 0);
     i_symbols                     : in  std_logic_vector(3 downto 0);
     i_trig_offset                 : in  std_logic_vector(10 downto 0);
@@ -52,11 +52,11 @@ architecture RTL of synchronizer is
   component ila_0 is
     port(
       clk                         : in  std_logic;
-      probe0                      : in  std_logic_vector(87 downto 0)
+      probe0                      : in  std_logic_vector(69 downto 0)
     );
   end component ila_0;
 
-  signal probe0                   : std_logic_vector(87 downto 0);
+  signal probe0                   : std_logic_vector(69 downto 0);
 
   constant IDLE                   : std_logic_vector(2 downto 0) := "000";
   constant SYNC_PEAK              : std_logic_vector(2 downto 0) := "001";
@@ -72,7 +72,7 @@ architecture RTL of synchronizer is
 
   signal symbol_counter           : std_logic_vector(3 downto 0);
   signal initial_counter          : std_logic_vector(12 downto 0);
-  signal nfft_cp_counter          : std_logic_vector(13 downto 0);
+  signal nfft_cp_counter          : std_logic_vector(14 downto 0);
   signal Guard_Counter            : std_logic_vector(31 downto 0);
 
 begin
@@ -170,7 +170,7 @@ begin
         if aresetn = '0' then
           Next_State              <= IDLE;
         else
-          if nfft_cp_counter = (('0' & i_cp_len)+('0' & i_nfft)+"10") then
+          if nfft_cp_counter = (("000" & i_cp_len)+('0' & i_nfft)+"10") then
             Next_State            <= SYMBOL_TRANSITION;
           else
             Next_State            <= SYMBOL;
@@ -229,7 +229,7 @@ begin
   m_axis_tdata                    <= r_axis_tdata;
   m_axis_tvalid                   <= r_axis_tvalid;
   m_axis_tlast                    <= '1' when nfft_cp_counter = 
-                                  (('0' & i_cp_len)+('0' & i_nfft)+"10") and
+                                  (("000" & i_cp_len)+('0' & i_nfft)+"10") and
                                   (symbol_counter = i_symbols)
                                   else '0';
   m_axis_tkeep                    <= X"F";
@@ -238,7 +238,6 @@ begin
   
     probe0                          <= s_axis_abs_ila_tvalid & s_axis_abs_ila_tdata(31 downto 0) &
                                        Current_State &
-                                       symbol_counter & nfft_cp_counter & 
                                        i_max_sync & s_axis_tvalid & s_axis_tdata;
 
     ila_inst : ila_0

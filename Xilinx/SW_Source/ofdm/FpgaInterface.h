@@ -13,9 +13,12 @@
 
 #define TX_BUFFER_BASE  0x1F000000
 
-#define RX_BUFFER_BASE0 0x1F080000
-#define RX_BUFFER_BASE1 0x1F100000
-#define RX_BUFFER_BASE2 0x1F180000
+//#define RX_BUFFER_BASE0 0x1F080000
+//#define RX_BUFFER_BASE1 0x1F100000
+//#define RX_BUFFER_BASE2 0x1F180000
+#define RX_BUFFER_BASE0 0x1F140000
+#define RX_BUFFER_BASE1 0x1F280000
+#define RX_BUFFER_BASE2 0x1F3C0000
 
 #define RELOAD_BUFFER_BASE 0x1F200000
 
@@ -23,7 +26,9 @@
 #define BUFFER_SPAN 0x3FFFFF
 #else
 // ((4096 carriers + 4096 cp) * 16 symbols max * 4(int32))
-#define BUFFER_SPAN 0x7FFFF // Contains int32 samples
+//#define BUFFER_SPAN 0x7FFFF // Contains int32 samples
+// ((16384 carriers + 4096 cp) * 16 symbols max * 4(int32))
+#define BUFFER_SPAN 0x13FFFF // Contains int32 samples
 #endif
 
 // RX Buffers get filled continuously. Read and process one

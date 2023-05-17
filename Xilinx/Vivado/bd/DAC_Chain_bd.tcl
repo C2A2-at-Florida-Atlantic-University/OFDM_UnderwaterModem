@@ -382,7 +382,7 @@ proc create_root_design { parentCell } {
   set aresetn_10M [ create_bd_port -dir I -type rst aresetn_10M ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
   set i_guard_cycles [ create_bd_port -dir I -from 31 -to 0 i_guard_cycles ]
-  set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
+  set i_nfft [ create_bd_port -dir I -from 13 -to 0 i_nfft ]
   set i_tone_amplitude [ create_bd_port -dir I -from 31 -to 0 i_tone_amplitude ]
 
   # Create instance: AXIS_S_to_AD9764, and set properties

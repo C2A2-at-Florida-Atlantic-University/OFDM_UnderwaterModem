@@ -222,7 +222,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 duc_ddc_loopback
   create_bd_pin -dir O -from 0 -to 0 fir_1_reload
   create_bd_pin -dir O -from 31 -to 0 guard_cycles
-  create_bd_pin -dir O -from 11 -to 0 nfft
+  create_bd_pin -dir O -from 13 -to 0 nfft
   create_bd_pin -dir O -from 2 -to 0 rx_gain_shift
   create_bd_pin -dir O -from 3 -to 0 symbols
   create_bd_pin -dir O -from 0 -to 0 sync_enable
@@ -261,9 +261,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_ALL_INPUTS {0} \
    CONFIG.C_ALL_OUTPUTS {1} \
    CONFIG.C_ALL_OUTPUTS_2 {1} \
-   CONFIG.C_DOUT_DEFAULT {0x0002D464} \
-   CONFIG.C_DOUT_DEFAULT_2 {0x00100400} \
-   CONFIG.C_GPIO2_WIDTH {28} \
+   CONFIG.C_DOUT_DEFAULT {0x00030000} \
+   CONFIG.C_DOUT_DEFAULT_2 {0x103FCFFF} \
+   CONFIG.C_GPIO2_WIDTH {30} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_2
 
@@ -289,6 +289,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   set axi_gpio_5 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_5 ]
   set_property -dict [ list \
    CONFIG.C_ALL_OUTPUTS {1} \
+   CONFIG.C_DOUT_DEFAULT {0x000186A0} \
  ] $axi_gpio_5
 
   # Create instance: delimiter_0, and set properties
@@ -314,9 +315,9 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: delimiter_2, and set properties
   set delimiter_2 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_2 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {28} \
+   CONFIG.IN0_WIDTH {30} \
    CONFIG.NUM_OUTPUTS {6} \
-   CONFIG.OUT0_WIDTH {12} \
+   CONFIG.OUT0_WIDTH {14} \
    CONFIG.OUT1_WIDTH {12} \
    CONFIG.OUT2_WIDTH {1} \
    CONFIG.OUT3_WIDTH {1} \
@@ -646,7 +647,7 @@ proc create_root_design { parentCell } {
   set duc_ddc_loopback [ create_bd_port -dir O -from 0 -to 0 duc_ddc_loopback ]
   set fir_1_reload [ create_bd_port -dir O -from 0 -to 0 fir_1_reload ]
   set guard_cycles [ create_bd_port -dir O -from 31 -to 0 guard_cycles ]
-  set nfft [ create_bd_port -dir O -from 11 -to 0 nfft ]
+  set nfft [ create_bd_port -dir O -from 13 -to 0 nfft ]
   set rx_gain_shift [ create_bd_port -dir O -from 2 -to 0 rx_gain_shift ]
   set symbols [ create_bd_port -dir O -from 3 -to 0 symbols ]
   set sync_enable [ create_bd_port -dir O -from 0 -to 0 sync_enable ]

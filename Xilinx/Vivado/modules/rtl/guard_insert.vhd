@@ -28,7 +28,7 @@ entity guard_insert is
     m_axis_tready                 : in  std_logic;
 
     i_guard_cycles                : in  std_logic_vector(31 downto 0);
-    i_nfft                        : in  std_logic_vector(11 downto 0);
+    i_nfft                        : in  std_logic_vector(13 downto 0);
     i_cp_len                      : in  std_logic_vector(11 downto 0)
   );
 end entity guard_insert;
@@ -53,7 +53,7 @@ architecture RTL of guard_insert is
 
   signal Guard_Counter            : std_logic_vector(31 downto 0);
   signal CP_Counter               : std_logic_vector(11 downto 0);
-  signal Nfft_Counter             : std_logic_vector(11 downto 0);
+  signal Nfft_Counter             : std_logic_vector(13 downto 0);
 
   constant IDLE                   : std_logic_vector(1 downto 0) := "00";
   constant CP                     : std_logic_vector(1 downto 0) := "01";

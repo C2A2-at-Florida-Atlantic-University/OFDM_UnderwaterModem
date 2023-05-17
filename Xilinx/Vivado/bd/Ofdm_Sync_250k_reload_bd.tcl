@@ -276,7 +276,7 @@ proc create_root_design { parentCell } {
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
   set i_guard_cycles [ create_bd_port -dir I -from 31 -to 0 i_guard_cycles ]
-  set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
+  set i_nfft [ create_bd_port -dir I -from 13 -to 0 i_nfft ]
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
   set i_sync_offset [ create_bd_port -dir I -from 10 -to 0 i_sync_offset ]
   set i_threshold [ create_bd_port -dir I -from 31 -to 0 i_threshold ]

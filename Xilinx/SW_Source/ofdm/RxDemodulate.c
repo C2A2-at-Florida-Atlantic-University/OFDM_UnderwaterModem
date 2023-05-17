@@ -300,7 +300,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
     fprintf(RxFreqFile, "%d,\n%d,\n%d,\n", Nfft, ModOrder, OfdmSymbols);
 
     // File containing QAMDEMOD output
-    sprintf(FileNameOut1, "files/RxDemodData%d.txt", FileNumber);
+    sprintf(FileNameOut1, "files/RxDemodData%d.txt", ModOrder);
 
     RxDemodFile = fopen(FileNameOut1, "w");
     if (RxDemodFile == NULL)
@@ -385,7 +385,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
           IqData.im);
       }
 #ifdef SAMPLE_DEBUG
-      if (i < 16)
+      if (i >= Nfft-1 && i < Nfft + 12)
       {
         printf("Pilot index %d removed: %d + j%d = bit %d\n", i,
           (int)IqData.re, (int)IqData.im, 
@@ -418,7 +418,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode,
           (float)ModOrder));
       }
 #ifdef EQ_SAMPLE_DEBUG
-      if (i < 16)
+      if (i >= Nfft-1 && i < Nfft + 12)
       {
         RxDemodulatePrintCrealType(IqData);
         printf("\tDemodData[%d] = %d\n", i,

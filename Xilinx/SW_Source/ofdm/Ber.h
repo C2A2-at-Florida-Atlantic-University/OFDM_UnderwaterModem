@@ -11,6 +11,7 @@
 double BerCharCalculation(const char tx, const char rx);
 ReturnStatusType Ber(bool Ber, unsigned FileNumber, unsigned ModOrder,
   unsigned OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams);
-ReturnStatusType BerOpenFiles(bool Ber, unsigned FileNumber);
+ReturnStatusType BerOpenFiles(bool Ber, unsigned FileNumber, unsigned 
+  ModOrder);
 
 #endif
