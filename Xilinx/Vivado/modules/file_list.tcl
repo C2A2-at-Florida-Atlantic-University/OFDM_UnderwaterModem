@@ -6,7 +6,7 @@ add_files -fileset sources_1 [glob rtl/*.vhd]
 # Add sim files
 add_files -fileset sim_1 [glob sim/*.sv]
 
-# Add instantiated IQ
+# Add instantiated IP
 import_ip ip/mult_gen_0.xci
 import_ip ip/ila_0.xci
 import_ip ip/dds_compiler_0.xci

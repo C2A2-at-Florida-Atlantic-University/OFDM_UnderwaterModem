@@ -55,8 +55,8 @@ architecture RTL of iq_mixer_rx_40M is
   signal sin_sample               : std_logic_vector(15 downto 0) := (others => '0');
   signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
-  signal w_tvalid                 : std_logic;
-  signal w_tvalid1                : std_logic;
+  signal w_tvalid                 : std_logic := '0';
+  signal w_tvalid1                : std_logic := '0';
 
 begin
 

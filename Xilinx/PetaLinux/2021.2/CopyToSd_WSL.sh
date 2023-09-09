@@ -7,6 +7,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
+cd $PetaLinuxPath
 cd images/linux
 echo "Mounting drive ..."
 sudo mkdir /mnt/$DRIVE

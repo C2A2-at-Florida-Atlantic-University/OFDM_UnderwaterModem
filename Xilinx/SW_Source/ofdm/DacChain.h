@@ -8,7 +8,7 @@
 #include "ReturnStatus.h"
 #include "g_Interp.h"
 
-#define DEFAULT_CENTER_FREQUENCY_KHZ 250
+#define DEFAULT_CENTER_FREQUENCY_KHZ 125
 
 #define DAC_SAMPLE_RATE_KHZ 10000 // 10 Msps
 #define ADC_SAMPLE_RATE_KHZ 40000 // 40 Msps

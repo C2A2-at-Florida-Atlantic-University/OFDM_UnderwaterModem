@@ -65,9 +65,6 @@ module dac_chain_tb();
     .aclk_10M                       (dac_aclk),
     .aresetn_10M                    (dac_aresetn),
 
-    .S_AXIS_DDS_tdata               (dds_tdata),
-    .S_AXIS_DDS_tvalid              (dds_tvalid),
-
     .S_AXIS_tdata                   (s_tdata),
     .S_AXIS_tkeep                   (s_tkeep),
     .S_AXIS_tlast                   (s_tlast),
