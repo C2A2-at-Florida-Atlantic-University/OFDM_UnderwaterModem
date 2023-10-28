@@ -45,7 +45,7 @@ void DacChainSetLoopbackSync(unsigned Loop)
   }
 }
 
-ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
+ReturnStatusType DacChainSetDacParams(double BandWidth, unsigned Fc,
   bool Configure)
 {
   ReturnStatusType ReturnStatus;
@@ -55,37 +55,41 @@ ReturnStatusType DacChainSetDacParams(unsigned BandWidth, unsigned Fc,
   printf("DacChainSetDacParams: Valid Freq Range: %d kHz - %d kHz\n",
     CENTER_FREQUENCY_KHZ_MIN, CENTER_FREQUENCY_KHZ_MAX);
 
-  if ((Fc - BandWidth/2) < CENTER_FREQUENCY_KHZ_MIN)
+  if ((Fc - BandWidth/2.0) < (double)CENTER_FREQUENCY_KHZ_MIN)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString, 
-      "DacChainSetDacParams: Failed to set Fc %d kHz for %d kHz BW "
+      "DacChainSetDacParams: Failed to set Fc %d kHz for %lf kHz BW "
       "signal\n", Fc, BandWidth);
     return ReturnStatus;
   }
 
-  if ((Fc + BandWidth/2) > CENTER_FREQUENCY_KHZ_MAX)
+  if ((Fc + BandWidth/2.0) > (double)CENTER_FREQUENCY_KHZ_MAX)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString, 
-      "DacChainSetDacParams: Failed to set Fc %d kHz for %d kHz BW "
+      "DacChainSetDacParams: Failed to set Fc %d kHz for %lf kHz BW "
       "signal\n", Fc, BandWidth);
     return ReturnStatus;
   }
 
   DacParams.BandWidth = BandWidth;
   DacParams.Fs = BandWidth; // Nyquist complex Fs = BW
-  DacParams.Interp = DAC_SAMPLE_RATE_KHZ/BandWidth;
+  DacParams.Interp = (unsigned)((double)DAC_SAMPLE_RATE_KHZ/
+    BandWidth);
   DacParams.Fc = Fc;
 
-  HwParams.DacInterpolation = DAC_SAMPLE_RATE_KHZ/BandWidth;
+  HwParams.DacInterpolation = (unsigned)((double)DAC_SAMPLE_RATE_KHZ/
+    BandWidth);
   if (Loopback || LoopbackSync)
   {
-    HwParams.AdcDecimation = DAC_SAMPLE_RATE_KHZ/BandWidth;
+    HwParams.AdcDecimation = (unsigned)((double)DAC_SAMPLE_RATE_KHZ/
+      BandWidth);
   }
   else
   {
-    HwParams.AdcDecimation = ADC_SAMPLE_RATE_KHZ/BandWidth;
+    HwParams.AdcDecimation = (unsigned)((double)ADC_SAMPLE_RATE_KHZ/
+      BandWidth);
   }
   HwParams.FcDds = (unsigned)((double)Fc*1000*
     (BitWidth/(double)FpgaClkRate));
@@ -111,7 +115,7 @@ Dac_Parameters_Type DacChainGetDacParams(void)
 
 #ifdef DAC
 ReturnStatusType DacChainUpConversion(bool DebugMode, unsigned FileNumber,
-  unsigned Nfft, unsigned CpLen, unsigned Bandwidth, unsigned OfdmSymbols)
+  unsigned Nfft, unsigned CpLen, double Bandwidth, unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
   char FileName[32];

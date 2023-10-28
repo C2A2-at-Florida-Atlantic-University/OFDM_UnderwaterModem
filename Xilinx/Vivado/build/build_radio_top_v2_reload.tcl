@@ -28,7 +28,7 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/constraints
 add_files -fileset constrs_1 -norecurse SDUAMconstraints.xdc
 set_property -name {xsim.simulate.runtime} -value {} -objects [get_filesets sim_1]
 
-if (0) {
+if (1) {
   launch_runs synth_1 -jobs 24
   wait_on_run synth_1
   launch_runs impl_1 -to_step write_bitstream

@@ -31,7 +31,7 @@
 #define FpgaClkRate 100000000 // 100MHz
 #define AdcClkRate 40000000 // 40MHz
 // MAX input voltage of ~0.3V before distortion using 10 dB RX gain
-#define DEFAULT_RX_GAIN_DB 55 // in dB
+#define DEFAULT_RX_GAIN_DB 32 // in dB
 #define DEFAULT_SYNCHRONIZER_OFFSET -20
 
 #define GPIO_0_BASE_ADDR 0x40010000
@@ -221,7 +221,7 @@ void HwInterfaceDucDdcLoopback(bool Select);
 void HwInterfaceSynchronizerStatus(bool Enable);
 void HwInterfaceResetPL(bool Reset);
 ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
-  IqSelect, unsigned Bw;);
+  IqSelect, double Bw;);
 void HwInterfaceSineToneSet(unsigned CwIqScale);
 void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples);
 

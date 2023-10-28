@@ -140,14 +140,15 @@ int main(int argc, char **argv)
     OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
     SyncThreshold, SyncOffset);
   HwInterfaceSynchronizerStatus(false);
-  ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
-    CenterFreq, false);
   HwInterfaceSineToneSet(0);
 #endif
 
+  ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
+    CenterFreq, false);
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
   TxModulateSetIfftGain(TxGainDbTime);
   TxModulateSetSyncGain(SyncSymbolGainDB);
+  printf("Debug 0\n");
   TransmitChainCalcParams(&OfdmParams, &OfdmTiming);
   OfdmCalcParams = TransmitChainGetParams();
   DacParams = DacChainGetDacParams();
@@ -242,7 +243,7 @@ int main(int argc, char **argv)
         printf("\tEnter number of sub-carriers: ");
         ScanfRet = scanf("%d", &OfdmParams.Nfft);
         printf("\tEnter BandWidth (Sample Frequency) in kHz: ");
-        ScanfRet = scanf("%d", &OfdmParams.BandWidth);
+        ScanfRet = scanf("%lf", &OfdmParams.BandWidth);
         printf("\tEnter CP length in Samples: ");
         ScanfRet = scanf("%d", &OfdmParams.CpLen);
         printf("\tEnter modulation order: ");
@@ -374,7 +375,7 @@ int main(int argc, char **argv)
       case 7:
         printf("\t------ User Parameters ------\n");
         printf("\tNFFT:                     %d\n", OfdmParams.Nfft);
-        printf("\tBandwidth:                %d kHz\n", 
+        printf("\tBandwidth:                %lf kHz\n", 
           OfdmParams.BandWidth);
         printf("\tCP Length:                %d\n", OfdmParams.CpLen);
         printf("\tModulation Order:         %d\n", OfdmParams.ModOrder);
@@ -468,7 +469,7 @@ int main(int argc, char **argv)
           printf("Failed to write to OfdmInfoFile\n");
           break;
         }
-        fprintf(OfdmInfoFile, "%d,\n%d,\n%d,\n%d,\n%d,\n%d,\n%d,"
+        fprintf(OfdmInfoFile, "%d,\n%lf,\n%d,\n%d,\n%d,\n%d,\n%d,"
           "\n%d,\n%d,\n%d,\n%lf,\n%lf\n",
           OfdmParams.Nfft, OfdmParams.BandWidth, OfdmParams.CpLen,
           OfdmParams.ModOrder, OfdmParams.ZpDensity,

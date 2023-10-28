@@ -26,3 +26,6 @@ bitfiles
 *.BIN
 *.orig
 *.dmp
+*.asv
+Xilinx/SW_Source/ofdm_v2/ofdm_desktop
+Xilinx/SW_Source/ofdm_v2/ofdm

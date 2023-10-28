@@ -1,0 +1,251 @@
+//////////////////////////////////////////////////////////////////////////
+// Jared Hermans
+//////////////////////////////////////////////////////////////////////////
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "ReturnStatus.h"
+#include "Power.h"
+#include "TxModulate.h"
+#include "TransmitChain.h"
+#include "HwInterface.h"
+#include "math.h"
+
+static int32_T *DucBufferPtr = NULL;
+
+ReturnStatusType PowerPeakDuc(void)
+{
+  ReturnStatusType ReturnStatus;
+  ReturnStatusType ReturnStatus2;
+  unsigned IqVal;
+  __int16_t IVal;
+  __int16_t QVal;
+  double Peak, PeakDbfs;
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+
+  printf("\n");
+
+  IqVal = HwInterfaceReadDucPeak();
+  IVal = (__int16_t)(IqVal & 0x0000FFFF);
+  QVal = (__int16_t)((IqVal & 0xFFFF0000) >> 16);
+
+  Peak = sqrt(pow((double)IVal,2.0)+pow((double)QVal,2.0));
+  PeakDbfs = 10*log10(((double)Peak)/pow(2.0,MAX_BITS-1));
+
+  printf("PowerPeakDuc: Peak DUC power: (sample %d +j%d) = %lf dBFS\n",
+    IVal, QVal, PeakDbfs);
+
+  if (PeakDbfs > 0)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, "PowerPeakDuc: ERROR: Over range "
+      "detected at DUC.\n");
+  }
+
+  ReturnStatus2 = PowerPeakDac();
+  if (ReturnStatus2.Status == RETURN_STATUS_FAIL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    printf("%s", ReturnStatus.ErrString);
+  }
+
+  printf("\n");
+
+  return ReturnStatus;
+}
+
+ReturnStatusType PowerPeakDac(void)
+{
+  ReturnStatusType ReturnStatus;
+  unsigned MaxVal;
+  double MaxValDbfs;
+
+  MaxVal = HwInterfaceReadDacPeak();
+
+  MaxValDbfs = 10*log10(((double)MaxVal)/pow(2.0,MAX_BITS-1));
+
+  printf("PowerPeakDac: Peak DAC power: (sample %d) = %lf dBFS\n", MaxVal,
+    MaxValDbfs);
+
+  if (MaxValDbfs > 0)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, "PowerPeakDac: ERROR: Over range "
+      "detected at DAC. Reboot Modem\n");
+    return ReturnStatus;
+  }
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned 
+  OfdmSymbols, double TxGain, unsigned TxSel, int32_T *RxBuffPtr)
+{
+  ReturnStatusType ReturnStatus;
+  long double SumVal = 0.0;
+  const long double FullScale = 
+    (Nfft+CpLen)*pow(pow(2.0,(double)MAX_BITS-1.0),2.0);
+  const long double FullScaleSync =
+    (NFFT_ZC)*pow(pow(2.0,(double)MAX_BITS-1.0),2.0);
+  double CurrentVal, MaxVal = 0.0, MaxValTotal = -250.0, abs, SyncValDbfs;
+  double a, b, a2, b2, SumValDbfs[OfdmSymbols], MaxValDbfs[OfdmSymbols];
+  double MaxSyncDbfs, TxGainDb, SumValTotalDbfs = 0.0;
+  unsigned Start;
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  TxGainDb = 10*log10(TxGain);
+
+  if (TxSel)
+  {
+    Start = NFFT_ZC;
+    DucBufferPtr = TxModulateGetTxBuffer();
+    for (unsigned ZcSymbolCount=0; ZcSymbolCount<NFFT_ZC; ZcSymbolCount++)
+    {
+      a = (double)((int16_T)(0x0000FFFF & DucBufferPtr[ZcSymbolCount]));
+      b = (double)((int16_T)((0xFFFF0000 & DucBufferPtr[ZcSymbolCount])
+        >>16));
+
+      a2 = pow(a,2.0) - pow(b,2.0);
+      b2 = 2.0 * a * b;
+
+      abs = sqrt(pow(a2,2.0) + pow(b2,2.0));
+
+      SumVal = SumVal + abs;
+
+      CurrentVal = sqrt(pow(a,2.0)+pow(b,2.0));
+      if (CurrentVal > MaxVal)
+      {
+        MaxVal = CurrentVal;
+      }
+    }
+    SyncValDbfs = 10*log10(SumVal/FullScaleSync);
+    MaxSyncDbfs = 10*log10(MaxVal/pow(2,MAX_BITS-1));
+    SumVal = 0;
+    MaxVal = 0;
+  }
+  else
+  {
+    SyncValDbfs = 0;
+    MaxSyncDbfs = 0;
+    Start = 0;
+    DucBufferPtr = RxBuffPtr;
+  }
+
+  for (unsigned OfdmSymbolCount = 0; OfdmSymbolCount < OfdmSymbols;
+    OfdmSymbolCount++)
+  { 
+    for (unsigned NfftCount = 0; NfftCount < Nfft+CpLen; NfftCount++)
+    {
+      a = (double)((int16_T)(0x0000FFFF & 
+        DucBufferPtr[Start+(OfdmSymbolCount*(Nfft+CpLen))+NfftCount]));
+      b = (double)((int16_T)((0xFFFF0000 & 
+        DucBufferPtr[Start+(OfdmSymbolCount*(Nfft+CpLen))+NfftCount])
+        >>16));
+
+      a2 = pow(a,2.0) - pow(b,2.0);
+      b2 = 2.0 * a * b;
+
+      abs = sqrt(pow(a2,2.0) + pow(b2,2.0));
+      
+      SumVal=SumVal + abs;
+
+      CurrentVal = sqrt(pow(a,2.0)+pow(b,2.0));
+      if (CurrentVal > MaxVal)
+      {
+        MaxVal = CurrentVal;
+      }
+    }
+    SumValDbfs[OfdmSymbolCount] = 10*log10(SumVal/FullScale);
+    MaxValDbfs[OfdmSymbolCount] = 10*log10(MaxVal/pow(2,MAX_BITS-1));
+    SumVal = 0;
+    MaxVal = 0;
+  }
+
+  if (TxSel)
+  {
+    printf("\n");
+    printf("  Sync Symbol:       \tPower: "
+      "%8.5lf dBFS \tPeak: %8.5lf dBFS \tPAPR: %8.5lf dB ",
+    SyncValDbfs, MaxSyncDbfs, MaxSyncDbfs - SyncValDbfs);
+    if (SyncValDbfs > 0 || MaxSyncDbfs > 0)
+    {
+      printf("\tERROR: Power too high");
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "Power: ERROR: Power too high. "
+        "Turning off TX and stopping transmission\n");
+    }
+  }
+  printf("\n");
+  for (unsigned OfdmSymbolCount = 0; OfdmSymbolCount < OfdmSymbols;
+    OfdmSymbolCount++)
+  {
+    SumValTotalDbfs = SumValTotalDbfs + SumValDbfs[OfdmSymbolCount];
+    printf("  OFDM Symbol %2d: \tPower: %8.5lf dBFS \tPeak: %8.5lf dBFS "
+      "\tPAPR: %8.5lf dB ",OfdmSymbolCount, SumValDbfs[OfdmSymbolCount],
+      MaxValDbfs[OfdmSymbolCount], MaxValDbfs[OfdmSymbolCount] -
+      SumValDbfs[OfdmSymbolCount]);
+    if (SumValDbfs[OfdmSymbolCount] > 0 ||
+      MaxValDbfs[OfdmSymbolCount] > 0)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      if (TxSel)
+      {
+        sprintf(ReturnStatus.ErrString, "Power: ERROR: Power too high. "
+          "Turning off TX and stopping transmission\n");
+      }
+      else
+      {
+        sprintf(ReturnStatus.ErrString, "Power: ERROR: Power too high. "
+          "Continue demod\n");
+      }
+      printf("\tERROR: Power too high\n");
+    }
+    else
+    {
+      printf("\n");
+    }
+    if (MaxValDbfs[OfdmSymbolCount] > MaxValTotal)
+    {
+      MaxValTotal = MaxValDbfs[OfdmSymbolCount];
+    }
+  }
+
+  printf("\n");
+  if (TxSel)
+  {
+    if (MaxValTotal < MaxSyncDbfs)
+    {
+      MaxValTotal = MaxSyncDbfs;
+    }
+  }
+
+  SumValTotalDbfs = SumValTotalDbfs/OfdmSymbols;
+  printf("Power: OFDM Frame Avg   dBFS %8.5lf\n", SumValTotalDbfs);
+  printf("Power: OFDM Frame Peak  dBFS %8.5lf\n", MaxValTotal);
+  printf("Power: OFDM Frame PAPR  dB   %8.5lf\n", MaxValTotal - 
+    SumValTotalDbfs);
+  printf("Power: Current TX gain: %lf (%lf dB), Recommend Adjustment "
+    "by %lf dB (Total: %lf dB)\n", TxGain, TxGainDb, -1.0*MaxValTotal,
+    TxGainDb-MaxValTotal);
+
+  return ReturnStatus;
+}
+
+void PowerExtraTxGain(double GaindB, unsigned Samples)
+{
+  double Gain;
+  double a, b;
+
+  Gain = pow(10.0,GaindB/10.0);
+  DucBufferPtr = TxModulateGetTxBuffer();
+  printf("Gain %lf\n",Gain);
+
+  for (unsigned i = 0; i < Samples; i++)
+  {
+    a = (double)((int16_T)(0x0000FFFF & DucBufferPtr[i])) * Gain;
+    b = (double)((int16_T)((0xFFFF0000 & DucBufferPtr[i])>>16));
+    DucBufferPtr[i] = ((((__int32_t)b)<<16)&0xFFFF0000)+((__int16_t)a);
+  }
+}

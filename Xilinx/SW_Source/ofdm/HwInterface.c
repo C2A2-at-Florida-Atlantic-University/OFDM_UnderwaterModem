@@ -271,7 +271,7 @@ void HwInterfaceSineToneSet(unsigned CwIqScale)
 }
 
 ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned 
-  IqSelect, unsigned Bw)
+  IqSelect, double Bw)
 {
   ReturnStatusType ReturnStatus;
   char FileNamePath[64];
@@ -327,7 +327,8 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   }
   printf("HwInterfaceLoadZcSequence: Opened file %s\n", FileNamePath);
 
-  sprintf(FileNamePath, "files/FIR_Sync_Reload_order_%d.txt", Bw);
+  sprintf(FileNamePath, "files/FIR_Sync_Reload_order_%d.txt", (unsigned) 
+    Bw);
 
   ReloadOrderFile = fopen(FileNamePath, "r");
   if (ReloadOrderFile == NULL)

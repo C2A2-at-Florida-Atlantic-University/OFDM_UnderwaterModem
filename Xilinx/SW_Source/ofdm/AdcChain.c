@@ -10,7 +10,7 @@
 #include "DacChain.h"
 
 ReturnStatusType AdcChainDownConversion(bool DebugMode, unsigned 
-  FileNumber, unsigned Nfft, unsigned CpLen, unsigned BandWidth,
+  FileNumber, unsigned Nfft, unsigned CpLen, double BandWidth,
   unsigned OfdmSymbols)
 {
   ReturnStatusType ReturnStatus;
@@ -32,7 +32,7 @@ ReturnStatusType AdcChainDownConversion(bool DebugMode, unsigned
   }
 
   // Get rid of warning
-  printf("Nfft %d, CpLen %d, BandWidth %d, OfdmSymbols %d\n", Nfft, CpLen,
+  printf("Nfft %d, CpLen %d, BandWidth %lf, OfdmSymbols %d\n", Nfft, CpLen,
     BandWidth, OfdmSymbols);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

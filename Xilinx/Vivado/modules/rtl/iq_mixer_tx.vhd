@@ -25,7 +25,9 @@ entity iq_mixer_tx is
     s_axis_dds_tvalid             : in  std_logic;
 
     m_axis_tdata                  : out std_logic_vector(15 downto 0);
-    m_axis_tvalid                 : out std_logic
+    m_axis_tvalid                 : out std_logic;
+
+    i_gain_shift                  : in  std_logic_vector(2 downto 0)
   );
 end entity iq_mixer_tx;
 
@@ -111,10 +113,10 @@ begin
       q_trigg1                    <= q_trigg;
       q_trigg2                    <= q_trigg1;
       if i_trigg1 = '1' then
-        i_sample_out_reg          <= i_sample_out(31 downto 16);
+        i_sample_out_reg          <= i_sample_out(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
       end if;
       if q_trigg1 = '1' then
-        q_sample_out_reg          <= q_sample_out(31 downto 16);
+        q_sample_out_reg          <= q_sample_out(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
       end if;
       if q_trigg2 = '1' then
         m_axis_tdata              <= q_sample_out_reg + i_sample_out_reg;

@@ -16,13 +16,13 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
   Ofdm_Timing_Type *OfdmTiming)
 {
   OfdmCalcParams.Scs = 
-    (double)OfdmParams->BandWidth/(double)OfdmParams->Nfft*1000.0;
+    OfdmParams->BandWidth/(double)OfdmParams->Nfft*1000.0;
   OfdmCalcParams.Symbol.Samples = OfdmParams->Nfft+OfdmParams->CpLen;
   OfdmCalcParams.Symbol.Time = 
-    1.0/(double)OfdmParams->BandWidth*
+    1.0/OfdmParams->BandWidth*
     (double)OfdmCalcParams.Symbol.Samples;
-  OfdmCalcParams.Symbol.FpgaClkSamples = FpgaClkRate/
-    OfdmParams->BandWidth/1000;
+  OfdmCalcParams.Symbol.FpgaClkSamples = (unsigned)((double)FpgaClkRate/
+    (OfdmParams->BandWidth*1000.0));
   OfdmCalcParams.FirstPilotCarrier = ceil((double)OfdmParams->Nfft*
     (double)OfdmParams->ZpDensity/100.0/2.0)-1;
   OfdmCalcParams.LastPilotCarrier = OfdmParams->Nfft-
@@ -72,7 +72,8 @@ Calculated_Ofdm_Parameters TransmitChainGetParams(void)
 
 ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
 {
-  unsigned Nfft, BandWidth, ModOrder, CpLen;
+  unsigned Nfft, ModOrder, CpLen;
+  double BandWidth;
   ReturnStatusType ReturnStatus;
 
   Nfft = OfdmParams->Nfft;
@@ -89,8 +90,9 @@ ReturnStatusType TransmitChainParamCheck(Ofdm_Parameters_Type *OfdmParams)
     return ReturnStatus;
   }
 
-  if (!(BandWidth == 25 || BandWidth == 50 || BandWidth == 100 ||
-    BandWidth == 150 || BandWidth == 200 || BandWidth == 250))
+  if (!(BandWidth == 25.0 || BandWidth == 50.0 || BandWidth == 100.0 ||
+    BandWidth == 150.0 || BandWidth == 200.0 || BandWidth == 250.0 ||
+    BandWidth == 312.5))
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
