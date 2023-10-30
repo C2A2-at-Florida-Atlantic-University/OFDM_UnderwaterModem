@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# guard_insert, sign_conversion, tdm_reformat_tx, tone, decimator_config, iq_mixer_tx
+# guard_insert, peak_sample, sign_conversion, tdm_reformat_tx, tone, tx_off, decimator_config, iq_mixer_tx, peak_sample_duc
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -160,11 +160,14 @@ set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 guard_insert\
+peak_sample\
 sign_conversion\
 tdm_reformat_tx\
 tone\
+tx_off\
 decimator_config\
 iq_mixer_tx\
+peak_sample_duc\
 "
 
    set list_mods_missing ""
@@ -238,6 +241,9 @@ proc create_hier_cell_DUC_Mixer { parentCell nameHier } {
   create_bd_pin -dir I -from 15 -to 0 Interp_ratio
   create_bd_pin -dir I -type clk aclk
   create_bd_pin -dir I -type rst aresetn
+  create_bd_pin -dir I -from 2 -to 0 i_gain_shift
+  create_bd_pin -dir I i_trigger
+  create_bd_pin -dir O -from 31 -to 0 iq_square_sum_duc
 
   # Create instance: cic_compiler, and set properties
   set cic_compiler [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler ]
@@ -296,20 +302,35 @@ proc create_hier_cell_DUC_Mixer { parentCell nameHier } {
      return 1
    }
   
+  # Create instance: peak_sample_duc_0, and set properties
+  set block_name peak_sample_duc
+  set block_cell_name peak_sample_duc_0
+  if { [catch {set peak_sample_duc_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $peak_sample_duc_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
 
   # Create interface connections
-  connect_bd_intf_net -intf_net cic_compiler_0_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis]
+  connect_bd_intf_net -intf_net cic_compiler_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins peak_sample_duc_0/s_axis]
   connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/s_axis_dds]
   connect_bd_intf_net -intf_net decimator_config_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_CONFIG] [get_bd_intf_pins interpolator_config/m_axis]
   connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins M_AXIS_DATA] [get_bd_intf_pins iq_mixer_tx/m_axis]
+  connect_bd_intf_net -intf_net peak_sample_duc_0_m_axis [get_bd_intf_pins iq_mixer_tx/s_axis] [get_bd_intf_pins peak_sample_duc_0/m_axis]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins S_AXIS_DATA] [get_bd_intf_pins cic_compiler/S_AXIS_DATA]
 
   # Create port connections
-  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk]
+  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins interpolator_config/axis_aclk] [get_bd_pins iq_mixer_tx/axis_aclk] [get_bd_pins peak_sample_duc_0/aclk]
   connect_bd_net -net aresetn_1 [get_bd_pins aresetn] [get_bd_pins iq_mixer_tx/axis_aresetn]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_pins Interp_ratio] [get_bd_pins interpolator_config/i_decimate_ratio]
+  connect_bd_net -net i_gain_shift_0_1 [get_bd_pins i_gain_shift] [get_bd_pins iq_mixer_tx/i_gain_shift]
+  connect_bd_net -net i_trigger_0_1 [get_bd_pins i_trigger] [get_bd_pins peak_sample_duc_0/i_trigger]
+  connect_bd_net -net peak_sample_duc_0_o_peak_sample [get_bd_pins iq_square_sum_duc] [get_bd_pins peak_sample_duc_0/o_iq_square]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
 
@@ -381,9 +402,14 @@ proc create_root_design { parentCell } {
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set aresetn_10M [ create_bd_port -dir I -type rst aresetn_10M ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
+  set i_gain_shift [ create_bd_port -dir I -from 2 -to 0 i_gain_shift ]
   set i_guard_cycles [ create_bd_port -dir I -from 31 -to 0 i_guard_cycles ]
   set i_nfft [ create_bd_port -dir I -from 13 -to 0 i_nfft ]
+  set i_on [ create_bd_port -dir I i_on ]
   set i_tone_amplitude [ create_bd_port -dir I -from 31 -to 0 i_tone_amplitude ]
+  set i_trigger [ create_bd_port -dir I i_trigger ]
+  set iq_square_sum_duc [ create_bd_port -dir O -from 31 -to 0 iq_square_sum_duc ]
+  set o_peak_sample_dac [ create_bd_port -dir O -from 15 -to 0 o_peak_sample_dac ]
 
   # Create instance: AXIS_S_to_AD9764, and set properties
   set AXIS_S_to_AD9764 [ create_bd_cell -type ip -vlnv xilinx.com:user:AXIS_S_to_AD9764 AXIS_S_to_AD9764 ]
@@ -414,6 +440,17 @@ proc create_root_design { parentCell } {
    CONFIG.g_ILA {false} \
  ] $guard_insert_0
 
+  # Create instance: peak_sample_dac, and set properties
+  set block_name peak_sample
+  set block_cell_name peak_sample_dac
+  if { [catch {set peak_sample_dac [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $peak_sample_dac eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: sign_conversion_0, and set properties
   set block_name sign_conversion
   set block_cell_name sign_conversion_0
@@ -447,30 +484,48 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: tx_off_0, and set properties
+  set block_name tx_off
+  set block_cell_name tx_off_0
+  if { [catch {set tx_off_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $tx_off_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create interface connections
   connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tone_0/s_axis]
-  connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_pins axis_data_fifo/M_AXIS] [get_bd_intf_pins sign_conversion_0/s_axis]
+  connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_pins axis_data_fifo/M_AXIS] [get_bd_intf_pins peak_sample_dac/s_axis]
   connect_bd_intf_net -intf_net guard_insert_0_m_axis [get_bd_intf_pins guard_insert_0/m_axis] [get_bd_intf_pins tdm_reformat_tx/s_axis]
   connect_bd_intf_net -intf_net iq_mixer_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/M_AXIS_DATA] [get_bd_intf_pins axis_data_fifo/S_AXIS]
+  connect_bd_intf_net -intf_net peak_sample_dac_m_axis [get_bd_intf_pins peak_sample_dac/m_axis] [get_bd_intf_pins tx_off_0/s_axis]
   connect_bd_intf_net -intf_net sign_conversion_0_m_axis [get_bd_intf_pins AXIS_S_to_AD9764/s00_axis] [get_bd_intf_pins sign_conversion_0/m_axis]
   connect_bd_intf_net -intf_net tdm_reformat_tx_0_m_axis [get_bd_intf_pins DUC_Mixer/S_AXIS_DATA] [get_bd_intf_pins tdm_reformat_tx/m_axis]
   connect_bd_intf_net -intf_net tone_0_m_axis [get_bd_intf_pins guard_insert_0/s_axis] [get_bd_intf_pins tone_0/m_axis]
+  connect_bd_intf_net -intf_net tx_off_0_m_axis [get_bd_intf_pins sign_conversion_0/s_axis] [get_bd_intf_pins tx_off_0/m_axis]
 
   # Create port connections
   connect_bd_net -net AXIS_S_to_AD9764_0_ClockToDAC [get_bd_ports ClockToDAC] [get_bd_pins AXIS_S_to_AD9764/ClockToDAC]
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_data [get_bd_ports DAC_data] [get_bd_pins AXIS_S_to_AD9764/DAC_data]
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_sleep [get_bd_ports DAC_sleep] [get_bd_pins AXIS_S_to_AD9764/DAC_sleep]
   connect_bd_net -net AXIS_S_to_AD9764_0_PA_enable [get_bd_ports PA_enable] [get_bd_pins AXIS_S_to_AD9764/PA_enable]
+  connect_bd_net -net DUC_Mixer_o_peak_sample_0 [get_bd_ports iq_square_sum_duc] [get_bd_pins DUC_Mixer/iq_square_sum_duc]
   connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins guard_insert_0/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk] [get_bd_pins tone_0/axis_aclk]
-  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins sign_conversion_0/axis_aclk]
+  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins peak_sample_dac/aclk] [get_bd_pins sign_conversion_0/axis_aclk] [get_bd_pins tx_off_0/aclk]
   connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins DUC_Mixer/aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn] [get_bd_pins guard_insert_0/axis_aresetn]
   connect_bd_net -net aresetn_10M_1 [get_bd_ports aresetn_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aresetn]
   connect_bd_net -net control_0_1 [get_bd_ports DAC_control] [get_bd_pins AXIS_S_to_AD9764/control]
   connect_bd_net -net i_cp_len_0_1 [get_bd_ports i_cp_len] [get_bd_pins guard_insert_0/i_cp_len]
   connect_bd_net -net i_decimate_ratio_0_1 [get_bd_ports Interp_ratio] [get_bd_pins DUC_Mixer/Interp_ratio]
+  connect_bd_net -net i_gain_shift_0_1 [get_bd_ports i_gain_shift] [get_bd_pins DUC_Mixer/i_gain_shift]
   connect_bd_net -net i_guard_cycles_0_1 [get_bd_ports i_guard_cycles] [get_bd_pins guard_insert_0/i_guard_cycles]
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins guard_insert_0/i_nfft]
+  connect_bd_net -net i_on_0_1 [get_bd_ports i_on] [get_bd_pins tx_off_0/i_on]
   connect_bd_net -net i_tone_amplitude_0_1 [get_bd_ports i_tone_amplitude] [get_bd_pins tone_0/i_tone_amplitude]
+  connect_bd_net -net i_trigger_0_1 [get_bd_ports i_trigger] [get_bd_pins DUC_Mixer/i_trigger] [get_bd_pins peak_sample_dac/i_trigger]
+  connect_bd_net -net peak_sample_dac_o_peak_sample [get_bd_ports o_peak_sample_dac] [get_bd_pins peak_sample_dac/o_peak_sample]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DUC_Mixer/Fc_scaled]
 
   # Create address segments

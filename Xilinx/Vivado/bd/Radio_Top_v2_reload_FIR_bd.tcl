@@ -624,6 +624,7 @@ proc create_root_design { parentCell } {
 
   # Create port connections
   connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
+  connect_bd_net -net ADC_Chain_0_o_peak_sample_adc [get_bd_pins ADC_Chain_0/o_peak_sample_adc] [get_bd_pins PS_Zynq_0/peak_sample_adc]
   connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus]
   connect_bd_net -net ADC_control_1 [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins ADC_Chain_0/ADCdata]
@@ -631,8 +632,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net DAC_Chain_0_DAC_data [get_bd_ports DACdata] [get_bd_pins DAC_Chain_0/DAC_data]
   connect_bd_net -net DAC_Chain_0_DAC_sleep [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep]
   connect_bd_net -net DAC_Chain_0_PA_enable [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable]
+  connect_bd_net -net DAC_Chain_0_iq_square_sum_duc [get_bd_pins DAC_Chain_0/iq_square_sum_duc] [get_bd_pins PS_Zynq_0/iq_square_sum_duc]
   connect_bd_net -net DAC_Chain_0_o_peak_sample_dac [get_bd_pins DAC_Chain_0/o_peak_sample_dac] [get_bd_pins PS_Zynq_0/peak_sample_dac]
-  connect_bd_net -net DAC_Chain_0_o_peak_sample_duc [get_bd_pins DAC_Chain_0/o_peak_sample_duc] [get_bd_pins PS_Zynq_0/peak_sample_duc]
   connect_bd_net -net DAC_control_1 [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol]
   connect_bd_net -net Fc_scaled_1 [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/ADC_Fc_scaled]
   connect_bd_net -net Interp_ratio_1 [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
@@ -657,7 +658,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net i_symbols_1 [get_bd_pins Ofdm_Sync_250k_0/i_symbols] [get_bd_pins PS_Zynq_0/symbols]
   connect_bd_net -net i_sync_offset_1 [get_bd_pins Ofdm_Sync_250k_0/i_sync_offset] [get_bd_pins PS_Zynq_0/sync_offset]
   connect_bd_net -net i_threshold_1 [get_bd_pins Ofdm_Sync_250k_0/i_threshold] [get_bd_pins PS_Zynq_0/threshold]
-  connect_bd_net -net i_trigger_1 [get_bd_pins DAC_Chain_0/i_trigger] [get_bd_pins PS_Zynq_0/trigger]
+  connect_bd_net -net i_trigger_1 [get_bd_pins ADC_Chain_0/i_trigger] [get_bd_pins DAC_Chain_0/i_trigger] [get_bd_pins PS_Zynq_0/trigger]
   connect_bd_net -net sync_enable_1 [get_bd_pins Ofdm_Sync_250k_0/sync_enable] [get_bd_pins PS_Zynq_0/sync_enable]
   connect_bd_net -net sync_loopback_1 [get_bd_pins Loopback/sync_loopback] [get_bd_pins PS_Zynq_0/sync_loopback]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins DAC_Chain_0/i_sample_delete] [get_bd_pins xlconstant_0/dout]

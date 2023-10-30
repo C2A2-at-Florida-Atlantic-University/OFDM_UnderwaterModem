@@ -12,6 +12,7 @@
 #include <linux/spi/spidev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <math.h>
 #include "ReturnStatus.h"
 #include "TxModulate.h"
 #include "TransmitChain.h"
@@ -366,11 +367,19 @@ void HwInterfaceSetTrigger(void)
     1<<TRIGGER_MASK_OFFSET,TRIGGER_MASK,GlobalMute);
 }
 
-unsigned HwInterfaceReadDucPeak(void)
+double HwInterfaceReadDucPeak(void)
 {
   unsigned RegValue;
   FpgaInterfaceRead32(GPIO_6_BASE_ADDR, &RegValue, GlobalMute);
-  return RegValue;
+  return sqrt((double)RegValue);
+}
+
+double HwInterfaceReadDdcPeak(void)
+{
+  unsigned RegValue;
+  FpgaInterfaceRead32(GPIO_6_BASE_ADDR+DDC_PEAK_OFFSET, &RegValue,
+    GlobalMute);
+  return sqrt((double)RegValue);
 }
 
 unsigned HwInterfaceReadDacPeak(void)
@@ -379,6 +388,15 @@ unsigned HwInterfaceReadDacPeak(void)
   FpgaInterfaceRead32(GPIO_5_BASE_ADDR+DAC_PEAK_OFFSET, &RegValue,
     GlobalMute);
   RegValue = RegValue & DAC_PEAK_MASK;
+  return RegValue;
+}
+
+unsigned HwInterfaceReadAdcPeak(void)
+{
+  unsigned RegValue;
+  FpgaInterfaceRead32(GPIO_5_BASE_ADDR+ADC_PEAK_OFFSET, &RegValue,
+    GlobalMute);
+  RegValue = (RegValue & ADC_PEAK_MASK) >> ADC_PEAK_MASK_OFFSET;
   return RegValue;
 }
 

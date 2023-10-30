@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# decimator_config2, iq_concat2, iq_mixer_rx_40M
+# peak_sample_40M, decimator_config2, iq_concat2, iq_mixer_rx_40M
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -161,6 +161,7 @@ xilinx.com:ip:xlconstant:*\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
+peak_sample_40M\
 decimator_config2\
 iq_concat2\
 iq_mixer_rx_40M\
@@ -412,6 +413,8 @@ proc create_root_design { parentCell } {
   set aclk_40M [ create_bd_port -dir I -type clk -freq_hz 40000000 aclk_40M ]
   set aresetn_40M [ create_bd_port -dir I -type rst aresetn_40M ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
+  set i_trigger [ create_bd_port -dir I i_trigger ]
+  set o_peak_sample_adc [ create_bd_port -dir O -from 15 -to 0 o_peak_sample_adc ]
   set status [ create_bd_port -dir O -from 31 -to 0 status ]
 
   # Create instance: AD9244_to_AXIS_M_0, and set properties
@@ -428,6 +431,17 @@ proc create_root_design { parentCell } {
    CONFIG.IS_ACLK_ASYNC {1} \
  ] $axis_data_fifo_0
 
+  # Create instance: peak_sample_40M_0, and set properties
+  set block_name peak_sample_40M
+  set block_cell_name peak_sample_40M_0
+  if { [catch {set peak_sample_40M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $peak_sample_40M_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: xpm_cdc_gen_0, and set properties
   set xpm_cdc_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_0 ]
   set_property -dict [ list \
@@ -436,9 +450,10 @@ proc create_root_design { parentCell } {
  ] $xpm_cdc_gen_0
 
   # Create interface connections
-  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins DDC_Mixer/s_axis]
+  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins peak_sample_40M_0/s_axis]
   connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
   connect_bd_intf_net -intf_net iq_concat2_0_m_axis [get_bd_intf_pins DDC_Mixer/m_axis] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
+  connect_bd_intf_net -intf_net s_axis_1 [get_bd_intf_pins DDC_Mixer/s_axis] [get_bd_intf_pins peak_sample_40M_0/m_axis]
 
   # Create port connections
   connect_bd_net -net AD9244_to_AXIS_M_0_ClockToADC [get_bd_ports ClockToADC] [get_bd_pins AD9244_to_AXIS_M_0/ClockToADC]
@@ -446,9 +461,11 @@ proc create_root_design { parentCell } {
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
   connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins xpm_cdc_gen_0/src_clk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins xpm_cdc_gen_0/dest_clk]
+  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins peak_sample_40M_0/aclk] [get_bd_pins xpm_cdc_gen_0/dest_clk]
   connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins DDC_Mixer/aresetn_40M] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
   connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins xpm_cdc_gen_0/src_in]
+  connect_bd_net -net i_trigger_1 [get_bd_ports i_trigger] [get_bd_pins peak_sample_40M_0/i_trigger]
+  connect_bd_net -net peak_sample_40M_0_o_peak_sample_40M [get_bd_ports o_peak_sample_adc] [get_bd_pins peak_sample_40M_0/o_peak_sample_40M]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
   connect_bd_net -net xpm_cdc_gen_0_dest_out [get_bd_pins DDC_Mixer/decimate_ratio] [get_bd_pins xpm_cdc_gen_0/dest_out]
 

@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     printf("Exiting\n");
     return 1;
     //printf("Default to TX on\n");
-    TxOff = 0;
+    //TxOff = 0;
   }
   else if (argc == 2)
   {
@@ -484,8 +484,8 @@ int main(int argc, char **argv)
           SyncOffset);
         HwInterfaceSynchronizerStatus(true);
         HwInterfaceEnableDac();
-        PowerExtraTxGain(3.8,NumBytes/4); // 6dB loss in DUC FIR
-        HwInterfaceSetMixerGain(3); // 6dB loss in Mixer
+        //PowerExtraTxGain(3.8,NumBytes/4); // 6dB loss in DUC FIR
+        HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
         HwInterfaceTxOn(~TxOff);
         ReturnStatus = DirectDmaPsToPl(NumBytes);
         printf("Wait for %lfus to finish Transmission ... \n",
@@ -493,6 +493,10 @@ int main(int argc, char **argv)
           1)*2*1000);
         usleep(OfdmCalcParams.Symbol.Time*(
           OfdmTiming.OfdmSymbolsPerFrame+1)*2*1000);
+        if (TxOff)
+        {
+          printf("\n\tTX transmission turned off -- no output\n");
+        }
         //HwInterfaceDisableDac();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -665,6 +669,7 @@ int main(int argc, char **argv)
 
   // Cleanup
   printf("%d\n", ScanfRet);
+  printf("%d\n", TxOff);
 #ifndef NO_DEVMEM
   DirectDmaPlToPsThreadCancel();
   RxDemodulateCancelThread();

@@ -17,24 +17,16 @@ ReturnStatusType PowerPeakDuc(void)
 {
   ReturnStatusType ReturnStatus;
   ReturnStatusType ReturnStatus2;
-  unsigned IqVal;
-  __int16_t IVal;
-  __int16_t QVal;
   double Peak, PeakDbfs;
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
 
   printf("\n");
 
-  IqVal = HwInterfaceReadDucPeak();
-  IVal = (__int16_t)(IqVal & 0x0000FFFF);
-  QVal = (__int16_t)((IqVal & 0xFFFF0000) >> 16);
+  Peak = HwInterfaceReadDucPeak();
+  PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
 
-  Peak = sqrt(pow((double)IVal,2.0)+pow((double)QVal,2.0));
-  PeakDbfs = 10*log10(((double)Peak)/pow(2.0,MAX_BITS-1));
-
-  printf("PowerPeakDuc: Peak DUC power: (sample %d +j%d) = %lf dBFS\n",
-    IVal, QVal, PeakDbfs);
+  printf("PowerPeakDuc: Peak DUC power: %lf dBFS\n", PeakDbfs);
 
   if (PeakDbfs > 0)
   {
@@ -44,6 +36,40 @@ ReturnStatusType PowerPeakDuc(void)
   }
 
   ReturnStatus2 = PowerPeakDac();
+  if (ReturnStatus2.Status == RETURN_STATUS_FAIL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    printf("%s", ReturnStatus.ErrString);
+  }
+
+  printf("\n");
+
+  return ReturnStatus;
+}
+
+ReturnStatusType PowerPeakDdc(void)
+{
+  ReturnStatusType ReturnStatus;
+  ReturnStatusType ReturnStatus2;
+  double Peak, PeakDbfs;
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+
+  printf("\n");
+
+  Peak = HwInterfaceReadDdcPeak();
+  PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
+
+  printf("PowerPeakDdc: Peak DDC power: %lf dBFS\n", PeakDbfs);
+
+  if (PeakDbfs > 0)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, "PowerPeakDdc: ERROR: Over range "
+      "detected at DDC.\n");
+  }
+
+  ReturnStatus2 = PowerPeakAdc();
   if (ReturnStatus2.Status == RETURN_STATUS_FAIL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -73,6 +99,31 @@ ReturnStatusType PowerPeakDac(void)
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString, "PowerPeakDac: ERROR: Over range "
       "detected at DAC. Reboot Modem\n");
+    return ReturnStatus;
+  }
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
+ReturnStatusType PowerPeakAdc(void)
+{
+  ReturnStatusType ReturnStatus;
+  unsigned MaxVal;
+  double MaxValDbfs;
+
+  MaxVal = HwInterfaceReadAdcPeak();
+
+  MaxValDbfs = 10*log10(((double)MaxVal)/pow(2.0,MAX_BITS-1));
+
+  printf("PowerPeakAdc: Peak ADC power: (sample %d) = %lf dBFS\n", MaxVal,
+    MaxValDbfs);
+
+  if (MaxValDbfs > 0)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString, "PowerPeakAdc: ERROR: Over range "
+      "detected at ADC.\n");
     return ReturnStatus;
   }
 
@@ -224,10 +275,10 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   SumValTotalDbfs = SumValTotalDbfs/OfdmSymbols;
   printf("Power: OFDM Frame Avg   dBFS %8.5lf\n", SumValTotalDbfs);
   printf("Power: OFDM Frame Peak  dBFS %8.5lf\n", MaxValTotal);
-  printf("Power: OFDM Frame PAPR  dB   %8.5lf\n", MaxValTotal - 
+  printf("Power: OFDM Frame PAPR  dB   %8.5lf\n\n", MaxValTotal - 
     SumValTotalDbfs);
   printf("Power: Current TX gain: %lf (%lf dB), Recommend Adjustment "
-    "by %lf dB (Total: %lf dB)\n", TxGain, TxGainDb, -1.0*MaxValTotal,
+    "by %lf dB (Total: %lf dB)\n\n", TxGain, TxGainDb, -1.0*MaxValTotal,
     TxGainDb-MaxValTotal);
 
   return ReturnStatus;
@@ -240,7 +291,6 @@ void PowerExtraTxGain(double GaindB, unsigned Samples)
 
   Gain = pow(10.0,GaindB/10.0);
   DucBufferPtr = TxModulateGetTxBuffer();
-  printf("Gain %lf\n",Gain);
 
   for (unsigned i = 0; i < Samples; i++)
   {

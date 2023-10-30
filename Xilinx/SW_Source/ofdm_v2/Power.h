@@ -9,6 +9,8 @@
 
 ReturnStatusType PowerPeakDuc(void);
 ReturnStatusType PowerPeakDac(void);
+ReturnStatusType PowerPeakDdc(void);
+ReturnStatusType PowerPeakAdc(void);
 ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   OfdmSymbols, double TxGain, unsigned TxSel, int32_T *RxBuffPtr);
 void PowerExtraTxGain(double GaindB, unsigned Samples);

@@ -4,9 +4,10 @@
 
 # MEM_ACCESS = NO_DEVMEM so program will not have access to system files
 #              or HW.
-MEM_ACCESS = NO_DEVMEM 
+MEM_ACCESS = DEVMEM 
 
 CC:=gcc
+CROSS_COMPILER:=arm-linux-gnueabihf-
 
 TARGET:=ofdm
 
@@ -54,8 +55,8 @@ HwInterface.c \
 Equalizer.c \
 TxModulate.c \
 RxDemodulate.c \
-DacChain.c \
 AdcChain.c \
+DacChain.c \
 Ber.c \
 DirectDma.c \
 Power.c \
@@ -67,10 +68,10 @@ OBJECTS := $(SOURCES:%.c=%.o)
 CFLAGS := -D$(MEM_ACCESS) -Wall -Wextra -O2 -lpthread -lm
 
 %.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR)
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -c -o $@ $< -I $(INCLUDEDIR) -I $(QAMMODDIR) -I $(QAMDEMODDIR) -I $(IFFTDIR) -I $(FFTDIR)
 
 $(BUILDDIR)$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm -lpthread
+	$(CROSS_COMPILER)$(CC) $(CFLAGS) -o $@ $^ -lm
 
 .PHONY: clean
 clean:
