@@ -224,6 +224,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 duc_ddc_loopback
   create_bd_pin -dir O -from 0 -to 0 fir_1_reload
   create_bd_pin -dir O -from 2 -to 0 gain_shift
+  create_bd_pin -dir O -from 1 -to 0 gain_shift_ddc
   create_bd_pin -dir O -from 31 -to 0 guard_cycles
   create_bd_pin -dir I -from 31 -to 0 iq_square_sum_ddc
   create_bd_pin -dir I -from 31 -to 0 iq_square_sum_duc
@@ -246,7 +247,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
    CONFIG.C_ALL_OUTPUTS_2 {1} \
    CONFIG.C_DOUT_DEFAULT {0x00A3D70A} \
    CONFIG.C_DOUT_DEFAULT_2 {0x000000A0} \
-   CONFIG.C_GPIO2_WIDTH {25} \
+   CONFIG.C_GPIO2_WIDTH {27} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_0
 
@@ -315,12 +316,13 @@ proc create_hier_cell_regs { parentCell nameHier } {
   # Create instance: delimiter_0, and set properties
   set delimiter_0 [ create_bd_cell -type ip -vlnv user.org:user:delimiter delimiter_0 ]
   set_property -dict [ list \
-   CONFIG.IN0_WIDTH {25} \
-   CONFIG.NUM_OUTPUTS {4} \
+   CONFIG.IN0_WIDTH {27} \
+   CONFIG.NUM_OUTPUTS {5} \
    CONFIG.OUT0_WIDTH {16} \
    CONFIG.OUT1_WIDTH {4} \
    CONFIG.OUT2_WIDTH {4} \
    CONFIG.OUT3_WIDTH {1} \
+   CONFIG.OUT4_WIDTH {2} \
  ] $delimiter_0
 
   # Create instance: delimiter_1, and set properties
@@ -382,6 +384,7 @@ proc create_hier_cell_regs { parentCell nameHier } {
   connect_bd_net -net delimiter_0_OUT1 [get_bd_pins DACcontrol] [get_bd_pins delimiter_0/OUT1]
   connect_bd_net -net delimiter_0_OUT2 [get_bd_pins ADCcontrol] [get_bd_pins delimiter_0/OUT2]
   connect_bd_net -net delimiter_0_OUT3 [get_bd_pins trigger] [get_bd_pins delimiter_0/OUT3]
+  connect_bd_net -net delimiter_0_OUT4 [get_bd_pins gain_shift_ddc] [get_bd_pins delimiter_0/OUT4]
   connect_bd_net -net delimiter_1_OUT0 [get_bd_pins Interp_ratio] [get_bd_pins delimiter_1/OUT0]
   connect_bd_net -net delimiter_1_OUT1 [get_bd_pins dma_loopback] [get_bd_pins delimiter_1/OUT1]
   connect_bd_net -net delimiter_1_OUT2 [get_bd_pins symbols] [get_bd_pins delimiter_1/OUT2]
@@ -682,6 +685,7 @@ proc create_root_design { parentCell } {
   set duc_ddc_loopback [ create_bd_port -dir O -from 0 -to 0 duc_ddc_loopback ]
   set fir_1_reload [ create_bd_port -dir O -from 0 -to 0 fir_1_reload ]
   set gain_shift [ create_bd_port -dir O -from 2 -to 0 gain_shift ]
+  set gain_shift_ddc [ create_bd_port -dir O -from 1 -to 0 gain_shift_ddc ]
   set guard_cycles [ create_bd_port -dir O -from 31 -to 0 guard_cycles ]
   set iq_square_sum_ddc [ create_bd_port -dir I -from 31 -to 0 iq_square_sum_ddc ]
   set iq_square_sum_duc [ create_bd_port -dir I -from 31 -to 0 iq_square_sum_duc ]
@@ -1563,6 +1567,7 @@ gpio[0]#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#
   connect_bd_net -net regs_OUT3_0 [get_bd_ports trigger] [get_bd_pins regs/trigger]
   connect_bd_net -net regs_OUT3_1 [get_bd_ports sync_enable] [get_bd_pins regs/sync_enable]
   connect_bd_net -net regs_OUT3_2 [get_bd_ports sync_offset] [get_bd_pins regs/sync_offset]
+  connect_bd_net -net regs_OUT4_0 [get_bd_ports gain_shift_ddc] [get_bd_pins regs/gain_shift_ddc]
   connect_bd_net -net regs_OUT5_0 [get_bd_ports fir_1_reload] [get_bd_pins regs/fir_1_reload]
   connect_bd_net -net regs_gpio2_io_o_0 [get_bd_ports tone_amplitude] [get_bd_pins regs/tone_amplitude]
   connect_bd_net -net regs_gpio_io_o_0 [get_bd_ports threshold] [get_bd_pins regs/threshold]

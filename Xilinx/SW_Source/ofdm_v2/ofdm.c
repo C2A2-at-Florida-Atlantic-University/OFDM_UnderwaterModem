@@ -184,7 +184,7 @@ int main(int argc, char **argv)
     printf("6  - Enter Synchronizer Parameters\n");
     printf("7  - Display OFDM Parameters\n");
     printf("8  - Transmit Single OFDM Frame\n");
-    printf("9  - Write Transmitted Sub-Carriers to File\n");
+    printf("9  - Read ADC Status\n");
     printf("10 - Demod TX Buffer\n");
     printf("11 - Start/Stop RX Demod Thread\n");
     printf("12 - Demod RX Injection File\n");
@@ -567,7 +567,9 @@ int main(int argc, char **argv)
           break;
         }
         HwInterfaceEnableAdc();
-        HwInterfaceReturnAdcStatus();
+        HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
+        HwInterfaceSetDdcGain(2);
+        HwInterfaceSetTrigger();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
 #endif

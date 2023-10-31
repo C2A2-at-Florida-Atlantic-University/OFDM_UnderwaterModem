@@ -616,6 +616,7 @@ proc create_root_design { parentCell } {
 
   # Create port connections
   connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
+  connect_bd_net -net ADC_Chain_0_o_iq_square_sum_ddc [get_bd_pins ADC_Chain_0/o_iq_square_sum_ddc] [get_bd_pins PS_Zynq_0/iq_square_sum_ddc]
   connect_bd_net -net ADC_Chain_0_o_peak_sample_adc [get_bd_pins ADC_Chain_0/o_peak_sample_adc] [get_bd_pins PS_Zynq_0/peak_sample_adc]
   connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus]
   connect_bd_net -net ADC_control_1 [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol]
@@ -644,7 +645,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net decimate_ratio_1 [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio]
   connect_bd_net -net duc_ddc_loopback_1 [get_bd_pins Loopback/duc_ddc_loopback] [get_bd_pins PS_Zynq_0/duc_ddc_loopback]
   connect_bd_net -net i_cp_len_1 [get_bd_pins DAC_Chain_0/i_cp_len] [get_bd_pins Ofdm_Sync_250k_0/i_cp_len] [get_bd_pins PS_Zynq_0/cp_len]
-  connect_bd_net -net i_gain_shift_1 [get_bd_pins DAC_Chain_0/i_gain_shift] [get_bd_pins PS_Zynq_0/gain_shift]
+  connect_bd_net -net i_gain_shift_1 [get_bd_pins ADC_Chain_0/i_gain_shift_mixer] [get_bd_pins DAC_Chain_0/i_gain_shift] [get_bd_pins PS_Zynq_0/gain_shift]
+  connect_bd_net -net i_gain_shift_ddc_1 [get_bd_pins ADC_Chain_0/i_gain_shift_ddc] [get_bd_pins PS_Zynq_0/gain_shift_ddc]
   connect_bd_net -net i_nfft_1 [get_bd_pins DAC_Chain_0/i_nfft] [get_bd_pins Ofdm_Sync_250k_0/i_nfft] [get_bd_pins PS_Zynq_0/nfft]
   connect_bd_net -net i_symbols_1 [get_bd_pins Ofdm_Sync_250k_0/i_symbols] [get_bd_pins PS_Zynq_0/symbols]
   connect_bd_net -net i_sync_offset_1 [get_bd_pins Ofdm_Sync_250k_0/i_sync_offset] [get_bd_pins PS_Zynq_0/sync_offset]

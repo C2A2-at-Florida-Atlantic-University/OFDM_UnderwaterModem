@@ -37,8 +37,8 @@
 #define FpgaClkRate 100000000 // 100MHz
 #define AdcClkRate 40000000 // 40MHz
 // MAX input voltage of ~0.3V before distortion using 10 dB RX gain
-#define DEFAULT_RX_GAIN_DB 32 // in dB
-#define DEFAULT_SYNCHRONIZER_OFFSET -20
+#define DEFAULT_RX_GAIN_DB 20 // in dB
+#define DEFAULT_SYNCHRONIZER_OFFSET -50
 
 #define GPIO_0_BASE_ADDR 0x40010000
 #define GPIO_1_BASE_ADDR 0x40010200
@@ -196,6 +196,10 @@
 #define TRIGGER_MASK 0x01000000
 #define TRIGGER_MASK_OFFSET 24
 
+#define DDC_GAIN_OFFSET 8
+#define DDC_GAIN_MASK 0x06000000
+#define DDC_GAIN_MASK_OFFSET 25
+
 #define GAIN_SHIFT_OFFSET 8
 #define GAIN_SHIFT_MASK 0x00000007
 
@@ -242,6 +246,7 @@ unsigned HwInterfaceReadDacPeak(void);
 double HwInterfaceReadDdcPeak(void);
 double HwInterfaceReadDucPeak(void);
 void HwInterfaceSetMixerGain(unsigned GainShift);
+void HwInterfaceSetDdcGain(unsigned GainShift);
 void HwInterfaceTxOn(unsigned Sel);
 
 #endif

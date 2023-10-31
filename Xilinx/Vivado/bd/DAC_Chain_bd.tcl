@@ -131,6 +131,7 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:user:AXIS_S_to_AD9764:*\
 xilinx.com:ip:axis_data_fifo:*\
+xilinx.com:ip:xpm_cdc_gen:*\
 xilinx.com:ip:cic_compiler:*\
 xilinx.com:ip:dds_compiler:*\
 xilinx.com:ip:xlconstant:*\
@@ -495,6 +496,12 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: xpm_cdc_gen_0, and set properties
+  set xpm_cdc_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_0 ]
+  set_property -dict [ list \
+   CONFIG.WIDTH {1} \
+ ] $xpm_cdc_gen_0
+
   # Create interface connections
   connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins tone_0/s_axis]
   connect_bd_intf_net -intf_net axis_data_fifo_M_AXIS [get_bd_intf_pins axis_data_fifo/M_AXIS] [get_bd_intf_pins peak_sample_dac/s_axis]
@@ -512,8 +519,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net AXIS_S_to_AD9764_0_DAC_sleep [get_bd_ports DAC_sleep] [get_bd_pins AXIS_S_to_AD9764/DAC_sleep]
   connect_bd_net -net AXIS_S_to_AD9764_0_PA_enable [get_bd_ports PA_enable] [get_bd_pins AXIS_S_to_AD9764/PA_enable]
   connect_bd_net -net DUC_Mixer_o_peak_sample_0 [get_bd_ports iq_square_sum_duc] [get_bd_pins DUC_Mixer/iq_square_sum_duc]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins guard_insert_0/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk] [get_bd_pins tone_0/axis_aclk]
-  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins peak_sample_dac/aclk] [get_bd_pins sign_conversion_0/axis_aclk] [get_bd_pins tx_off_0/aclk]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DUC_Mixer/aclk] [get_bd_pins axis_data_fifo/s_axis_aclk] [get_bd_pins guard_insert_0/axis_aclk] [get_bd_pins tdm_reformat_tx/axis_aclk] [get_bd_pins tone_0/axis_aclk] [get_bd_pins xpm_cdc_gen_0/src_in]
+  connect_bd_net -net aclk_10M_1 [get_bd_ports aclk_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aclk] [get_bd_pins axis_data_fifo/m_axis_aclk] [get_bd_pins peak_sample_dac/aclk] [get_bd_pins sign_conversion_0/axis_aclk] [get_bd_pins tx_off_0/aclk] [get_bd_pins xpm_cdc_gen_0/dest_clk]
   connect_bd_net -net aresetn_1 [get_bd_ports aresetn] [get_bd_pins DUC_Mixer/aresetn] [get_bd_pins axis_data_fifo/s_axis_aresetn] [get_bd_pins guard_insert_0/axis_aresetn]
   connect_bd_net -net aresetn_10M_1 [get_bd_ports aresetn_10M] [get_bd_pins AXIS_S_to_AD9764/s00_axis_aresetn]
   connect_bd_net -net control_0_1 [get_bd_ports DAC_control] [get_bd_pins AXIS_S_to_AD9764/control]
@@ -524,9 +531,10 @@ proc create_root_design { parentCell } {
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins guard_insert_0/i_nfft]
   connect_bd_net -net i_on_0_1 [get_bd_ports i_on] [get_bd_pins tx_off_0/i_on]
   connect_bd_net -net i_tone_amplitude_0_1 [get_bd_ports i_tone_amplitude] [get_bd_pins tone_0/i_tone_amplitude]
-  connect_bd_net -net i_trigger_0_1 [get_bd_ports i_trigger] [get_bd_pins DUC_Mixer/i_trigger] [get_bd_pins peak_sample_dac/i_trigger]
+  connect_bd_net -net i_trigger_0_1 [get_bd_ports i_trigger] [get_bd_pins DUC_Mixer/i_trigger] [get_bd_pins xpm_cdc_gen_0/src_clk]
   connect_bd_net -net peak_sample_dac_o_peak_sample [get_bd_ports o_peak_sample_dac] [get_bd_pins peak_sample_dac/o_peak_sample]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DUC_Mixer/Fc_scaled]
+  connect_bd_net -net xpm_cdc_gen_0_dest_out [get_bd_pins peak_sample_dac/i_trigger] [get_bd_pins xpm_cdc_gen_0/dest_out]
 
   # Create address segments
 

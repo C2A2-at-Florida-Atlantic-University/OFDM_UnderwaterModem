@@ -106,10 +106,8 @@ void HwInterfaceDisableAdc(void)
 void HwInterfaceReturnAdcStatus(void)
 {
   unsigned RegValue;
-  if (!GlobalMute)
   FpgaInterfaceRead32(GPIO_1_BASE_ADDR+ADC_STATUS_OFFSET, &RegValue,
     GlobalMute);
-  printf("HwInterfaceAdcStatus: 0x%X\n", RegValue);
   if (RegValue & ADC_STATUS_STREAM_ENABLE)
     printf("HwInterfaceAdcStatus: ADC Stream on\n");
   else
@@ -351,12 +349,22 @@ void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples)
 
 void HwInterfaceSetMixerGain(unsigned GainShift)
 {
-  // 0 - No gain
+  // 0 - 0dB
   // 1 - 6dB
   // 2 - 12dB
   // etc
   FpgaInterfaceWrite(GPIO_3_BASE_ADDR+GAIN_SHIFT_OFFSET,
     GainShift, GAIN_SHIFT_MASK, GlobalMute);
+}
+
+void HwInterfaceSetDdcGain(unsigned GainShift)
+{
+  // 0 - 0dB
+  // 1 - 6dB
+  // 2 - 12dB
+  // etc
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DDC_GAIN_OFFSET,
+    GainShift<<DDC_GAIN_MASK_OFFSET, DDC_GAIN_MASK, GlobalMute);
 }
 
 void HwInterfaceSetTrigger(void)

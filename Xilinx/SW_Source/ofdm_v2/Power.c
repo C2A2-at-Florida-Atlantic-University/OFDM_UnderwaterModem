@@ -50,12 +50,9 @@ ReturnStatusType PowerPeakDuc(void)
 ReturnStatusType PowerPeakDdc(void)
 {
   ReturnStatusType ReturnStatus;
-  ReturnStatusType ReturnStatus2;
   double Peak, PeakDbfs;
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
-
-  printf("\n");
 
   Peak = HwInterfaceReadDdcPeak();
   PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
@@ -69,12 +66,7 @@ ReturnStatusType PowerPeakDdc(void)
       "detected at DDC.\n");
   }
 
-  ReturnStatus2 = PowerPeakAdc();
-  if (ReturnStatus2.Status == RETURN_STATUS_FAIL)
-  {
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    printf("%s", ReturnStatus.ErrString);
-  }
+  PowerPeakAdc();
 
   printf("\n");
 
@@ -106,9 +98,8 @@ ReturnStatusType PowerPeakDac(void)
   return ReturnStatus;
 }
 
-ReturnStatusType PowerPeakAdc(void)
+void PowerPeakAdc(void)
 {
-  ReturnStatusType ReturnStatus;
   unsigned MaxVal;
   double MaxValDbfs;
 
@@ -119,16 +110,10 @@ ReturnStatusType PowerPeakAdc(void)
   printf("PowerPeakAdc: Peak ADC power: (sample %d) = %lf dBFS\n", MaxVal,
     MaxValDbfs);
 
-  if (MaxValDbfs > 0)
+  if (MaxValDbfs == 0.0)
   {
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString, "PowerPeakAdc: ERROR: Over range "
-      "detected at ADC.\n");
-    return ReturnStatus;
+    printf("\tPowerPeakAdc: ERROR: ADC at max range - clipping signal\n");
   }
-
-  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
-  return ReturnStatus;
 }
 
 ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned 
@@ -144,12 +129,14 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   double a, b, a2, b2, SumValDbfs[OfdmSymbols], MaxValDbfs[OfdmSymbols];
   double MaxSyncDbfs, TxGainDb, SumValTotalDbfs = 0.0;
   unsigned Start;
+  char Text[4];
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   TxGainDb = 10*log10(TxGain);
 
   if (TxSel)
   {
+    strcpy(Text,"TX");
     Start = NFFT_ZC;
     DucBufferPtr = TxModulateGetTxBuffer();
     for (unsigned ZcSymbolCount=0; ZcSymbolCount<NFFT_ZC; ZcSymbolCount++)
@@ -178,6 +165,7 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   }
   else
   {
+    strcpy(Text,"RX");
     SyncValDbfs = 0;
     MaxSyncDbfs = 0;
     Start = 0;
@@ -277,9 +265,9 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   printf("Power: OFDM Frame Peak  dBFS %8.5lf\n", MaxValTotal);
   printf("Power: OFDM Frame PAPR  dB   %8.5lf\n\n", MaxValTotal - 
     SumValTotalDbfs);
-  printf("Power: Current TX gain: %lf (%lf dB), Recommend Adjustment "
-    "by %lf dB (Total: %lf dB)\n\n", TxGain, TxGainDb, -1.0*MaxValTotal,
-    TxGainDb-MaxValTotal);
+  printf("Power: Current %s gain: %lf (%lf dB), Recommend Adjustment "
+    "by %lf dB (Total: %lf dB)\n\n", Text, TxGain, TxGainDb,
+    -1.0*MaxValTotal, TxGainDb-MaxValTotal);
 
   return ReturnStatus;
 }

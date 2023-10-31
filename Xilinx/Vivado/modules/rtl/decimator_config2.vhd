@@ -30,7 +30,7 @@ architecture RTL of decimator_config2 is
   
   attribute X_INTERFACE_INFO      of axis_aclk    : signal is "xilinx.com:signal:clock:1.0 axis_aclk CLK";
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
-    signal is "ASSOCIATED_BUSIF axis_aclk:m_axis, FREQ_HZ 40000000";
+    signal is "ASSOCIATED_BUSIF axis_aclk:m_axis, FREQ_HZ 100000000";
 
   signal r_decimate_ratio            : std_logic_vector(g_PRECISION-1 downto 0) := g_DEFAULT_RATE;
 

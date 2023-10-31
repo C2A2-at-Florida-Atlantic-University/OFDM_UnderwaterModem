@@ -28,7 +28,9 @@ duc_ddc_loss_gain = 2;
 % Channel parameters
 snr_db = 15;
 multipath = [0.5 0.5 0 0 1 0.2 0.54];
+multipath = 1;
 speed = -1.5; % In m/s
+speed = 0;
 
 cfo = 0;
 cpo = 0;
@@ -39,7 +41,7 @@ cpo_dopler = 0;
 % Fixed Values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ZC_length = nfft_zc/2;          % Zadoff-Chu Sequence Length
-sync_samples_early = 0;         % Number of samples to synchronize early
+sync_samples_early = -20;         % Number of samples to synchronize early
 force_dopler_sync = 0;         % Force dopler synchronization
 pilot_density = 0.5;            % Pilot to data ratio
 DAC_FS = 10000000;              % Dac sample rate

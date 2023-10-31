@@ -128,7 +128,6 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool DeleteSym1,
     return ReturnStatus;
   }
   //DigitalGain = TxModulateGetScalarGain();
-  printf("RxDemodulateBufferData: ModOrder %d\n", ModOrder);
   ReturnStatus = EqualizerTxPilotOpen(ModOrder);
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
@@ -286,6 +285,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   FftOutStruct->allocatedSize = Nfft;
   FftOutStruct->numDimensions = 1;
 
+  HwInterfaceReturnAdcStatus();
+
   while (1)
   {
     if (pthreadState == 1)
@@ -318,6 +319,8 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
       break;
     }
   }
+  printf("RxDemodulateFft: OFDM frame received and CMA buffer filled\n");
+
   BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer(BufferSelect);
 
   if (DebugMode)
@@ -347,12 +350,18 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
 
   LoopCount = OfdmSymbols;
 
-  printf("RxDemodulateFft: Rx Power %lf (10x), %lf (20x), (%d dB)\n", 
-    pow(10.0,(double)HwInterfaceGetVga()/10.0),
-    pow(10.0,(double)HwInterfaceGetVga()/20.0),
-    HwInterfaceGetVga());
   ReturnStatus = Power(Nfft, CpLen, OfdmSymbols,
     pow(10.0,(double)HwInterfaceGetVga()/10.0), 0, BufferInData);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+  }
+  ReturnStatus = PowerPeakDdc();
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+  }
+  HwInterfaceReturnAdcStatus();
 
   for (unsigned i = 0; i < LoopCount; i++)
   {
@@ -551,7 +560,6 @@ void *RxDemodulateThread(void *arg)
     return NULL;
   }
 
-  HwInterfaceReturnAdcStatus();
   HwInterfaceDisableAdc();
 
   ReturnStatus = Ber(false, args->ModOrder, args->OfdmSymbols,

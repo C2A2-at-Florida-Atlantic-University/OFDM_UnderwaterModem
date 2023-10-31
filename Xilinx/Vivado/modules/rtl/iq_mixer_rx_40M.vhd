@@ -27,7 +27,9 @@ entity iq_mixer_rx_40M is
     m_axis_real_tvalid            : out std_logic;
 
     m_axis_imag_tdata             : out std_logic_vector(15  downto 0);
-    m_axis_imag_tvalid            : out std_logic
+    m_axis_imag_tvalid            : out std_logic;
+
+    i_gain_shift                  : in  std_logic_vector(2 downto 0)
   );
 end entity iq_mixer_rx_40M;
 
@@ -92,8 +94,10 @@ begin
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      m_axis_real_tdata           <= i_sample(31 downto 16);
-      m_axis_imag_tdata           <= q_sample(31 downto 16);
+      m_axis_real_tdata           <= 
+        i_sample(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
+      m_axis_imag_tdata           <= 
+        q_sample(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
       m_axis_real_tvalid          <= w_tvalid1;
       m_axis_imag_tvalid          <= w_tvalid1;
     end if;

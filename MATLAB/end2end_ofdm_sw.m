@@ -914,7 +914,7 @@ ylim(y_lim),xlim(x_lim)
 title({'UW-A Channel','SW with Equalization'})
 sgtitle('Equalizer Output')
 
-symbol = 1;
+symbol = 2;
 figure(),scatter(real(EQ_sw(:,symbol)),imag(EQ_sw(:,symbol)),'.')
 title('SW')
 
