@@ -10,12 +10,12 @@
 #include "TransmitChain.h"
 
 #define DEFAULT_FREQ_DIGITAL_GAIN_DBFS -7
-#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB -9.0 //For 4096 OFDM 16 Mod
+#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB 4.915 //For 4096 OFDM 16 Mod
 
 //#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB 27.0//For 1024 OFDM 2 Mod
 //#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB 23.0//For 1024 OFDM 4 Mod
 //#define DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB 15.0//For 1024 OFDM 16 Mod
-#define DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB 4.3
+#define DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB 5.7
 
 #define MAX_BITS 14
 #define MAX_FREQ_BITS 16
@@ -40,7 +40,8 @@ double           TxModulateGetSyncGain();
 void TxModulateClose(void);
 uint16_T TxModulateGetDigitalGain(void);
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
-  unsigned CpLen, unsigned OfdmSymbols);
+  unsigned ModOrder, unsigned CpLen, unsigned OfdmSymbols,
+  unsigned ZcRoot);
 
 int32_T *TxModulateGetTxBuffer(void);
 void TxModulateFreeTxBuffer(void);

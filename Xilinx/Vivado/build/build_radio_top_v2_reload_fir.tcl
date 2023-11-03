@@ -14,8 +14,7 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
 source ADC_Chain_bd.tcl
-#source DAC_Chain_FIR_250k_bd.tcl
-source DAC_Chain_bd.tcl
+source DAC_Chain_FIR_250k_bd.tcl
 source PS_Zynq_v2_bd.tcl
 source Ofdm_Sync_250k_reload_bd.tcl
 #source Radio_Top_v2_reload_FIR_bd.tcl

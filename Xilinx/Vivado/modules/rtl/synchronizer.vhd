@@ -69,6 +69,7 @@ architecture RTL of synchronizer is
 
   signal r_axis_tdata             : std_logic_vector(31 downto 0);
   signal r_axis_tvalid            : std_logic;
+  signal r_axis_tlast             : std_logic;
 
   signal symbol_counter           : std_logic_vector(3 downto 0);
   signal initial_counter          : std_logic_vector(12 downto 0);
@@ -228,17 +229,19 @@ begin
 
   m_axis_tdata                    <= r_axis_tdata;
   m_axis_tvalid                   <= r_axis_tvalid;
-  m_axis_tlast                    <= '1' when nfft_cp_counter = 
+  r_axis_tlast                    <= '1' when nfft_cp_counter = 
                                   (("000" & i_cp_len)+('0' & i_nfft)+"10") and
                                   (symbol_counter = i_symbols)
                                   else '0';
+  m_axis_tlast                    <= r_axis_tlast;
   m_axis_tkeep                    <= X"F";
 
   ila_gen : if g_ILA generate
   
     probe0                          <= s_axis_abs_ila_tvalid & s_axis_abs_ila_tdata(31 downto 0) &
-                                       Current_State &
-                                       i_max_sync & s_axis_tvalid & s_axis_tdata;
+                                       Current_State & r_axis_tvalid & r_axis_tlast & 
+                                       i_max_sync & s_axis_tvalid & s_axis_tdata(29 downto 16) &
+                                       s_axis_tdata(13 downto 0) & m_axis_tready & '0';
 
     ila_inst : ila_0
       port map(

@@ -136,7 +136,6 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:xlconstant:*\
 user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:util_vector_logic:*\
 xilinx.com:ip:axi_dma:*\
@@ -598,13 +597,6 @@ proc create_root_design { parentCell } {
   # Create instance: dma
   create_hier_cell_dma [current_bd_instance .] dma
 
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
-  set_property -dict [ list \
-   CONFIG.CONST_VAL {0} \
-   CONFIG.CONST_WIDTH {12} \
- ] $xlconstant_0
-
   # Create interface connections
   connect_bd_intf_net -intf_net ADC_Chain_0_M_AXIS [get_bd_intf_pins ADC_Chain_0/M_AXIS] [get_bd_intf_pins Loopback/S_AXIS_ADC_CHAIN]
   connect_bd_intf_net -intf_net Loopback_M_AXIS_DAC_CHAIN [get_bd_intf_pins DAC_Chain_0/S_AXIS] [get_bd_intf_pins Loopback/M_AXIS_DAC_CHAIN]
@@ -624,6 +616,7 @@ proc create_root_design { parentCell } {
 
   # Create port connections
   connect_bd_net -net ADC_Chain_0_ClockToADC [get_bd_ports ADCclock] [get_bd_pins ADC_Chain_0/ClockToADC]
+  connect_bd_net -net ADC_Chain_0_o_iq_square_sum_ddc [get_bd_pins ADC_Chain_0/o_iq_square_sum_ddc] [get_bd_pins PS_Zynq_0/iq_square_sum_ddc]
   connect_bd_net -net ADC_Chain_0_o_peak_sample_adc [get_bd_pins ADC_Chain_0/o_peak_sample_adc] [get_bd_pins PS_Zynq_0/peak_sample_adc]
   connect_bd_net -net ADC_Chain_0_status [get_bd_pins ADC_Chain_0/status] [get_bd_pins PS_Zynq_0/ADCstatus]
   connect_bd_net -net ADC_control_1 [get_bd_pins ADC_Chain_0/ADC_control] [get_bd_pins PS_Zynq_0/ADCcontrol]
@@ -633,7 +626,6 @@ proc create_root_design { parentCell } {
   connect_bd_net -net DAC_Chain_0_DAC_sleep [get_bd_ports DACsleep] [get_bd_pins DAC_Chain_0/DAC_sleep]
   connect_bd_net -net DAC_Chain_0_PA_enable [get_bd_ports PowerAmpEnable] [get_bd_pins DAC_Chain_0/PA_enable]
   connect_bd_net -net DAC_Chain_0_iq_square_sum_duc [get_bd_pins DAC_Chain_0/iq_square_sum_duc] [get_bd_pins PS_Zynq_0/iq_square_sum_duc]
-  connect_bd_net -net DAC_Chain_0_o_peak_sample_dac [get_bd_pins DAC_Chain_0/o_peak_sample_dac] [get_bd_pins PS_Zynq_0/peak_sample_dac]
   connect_bd_net -net DAC_control_1 [get_bd_pins DAC_Chain_0/DAC_control] [get_bd_pins PS_Zynq_0/DACcontrol]
   connect_bd_net -net Fc_scaled_1 [get_bd_pins ADC_Chain_0/Fc_scaled] [get_bd_pins PS_Zynq_0/ADC_Fc_scaled]
   connect_bd_net -net Interp_ratio_1 [get_bd_pins DAC_Chain_0/Interp_ratio] [get_bd_pins PS_Zynq_0/Interp_ratio]
@@ -653,15 +645,16 @@ proc create_root_design { parentCell } {
   connect_bd_net -net decimate_ratio_1 [get_bd_pins ADC_Chain_0/decimate_ratio] [get_bd_pins PS_Zynq_0/decimate_ratio]
   connect_bd_net -net duc_ddc_loopback_1 [get_bd_pins Loopback/duc_ddc_loopback] [get_bd_pins PS_Zynq_0/duc_ddc_loopback]
   connect_bd_net -net i_cp_len_1 [get_bd_pins DAC_Chain_0/i_cp_len] [get_bd_pins Ofdm_Sync_250k_0/i_cp_len] [get_bd_pins PS_Zynq_0/cp_len]
-  connect_bd_net -net i_gain_shift_1 [get_bd_pins DAC_Chain_0/i_gain_shift] [get_bd_pins PS_Zynq_0/gain_shift]
+  connect_bd_net -net i_gain_shift_1 [get_bd_pins ADC_Chain_0/i_gain_shift_mixer] [get_bd_pins DAC_Chain_0/i_gain_shift] [get_bd_pins PS_Zynq_0/gain_shift]
+  connect_bd_net -net i_gain_shift_ddc_1 [get_bd_pins ADC_Chain_0/i_gain_shift_ddc] [get_bd_pins PS_Zynq_0/gain_shift_ddc]
   connect_bd_net -net i_nfft_1 [get_bd_pins DAC_Chain_0/i_nfft] [get_bd_pins Ofdm_Sync_250k_0/i_nfft] [get_bd_pins PS_Zynq_0/nfft]
   connect_bd_net -net i_symbols_1 [get_bd_pins Ofdm_Sync_250k_0/i_symbols] [get_bd_pins PS_Zynq_0/symbols]
   connect_bd_net -net i_sync_offset_1 [get_bd_pins Ofdm_Sync_250k_0/i_sync_offset] [get_bd_pins PS_Zynq_0/sync_offset]
   connect_bd_net -net i_threshold_1 [get_bd_pins Ofdm_Sync_250k_0/i_threshold] [get_bd_pins PS_Zynq_0/threshold]
   connect_bd_net -net i_trigger_1 [get_bd_pins ADC_Chain_0/i_trigger] [get_bd_pins DAC_Chain_0/i_trigger] [get_bd_pins PS_Zynq_0/trigger]
+  connect_bd_net -net peak_sample_dac_1 [get_bd_pins DAC_Chain_0/o_peak_sample_dac] [get_bd_pins PS_Zynq_0/peak_sample_dac]
   connect_bd_net -net sync_enable_1 [get_bd_pins Ofdm_Sync_250k_0/sync_enable] [get_bd_pins PS_Zynq_0/sync_enable]
   connect_bd_net -net sync_loopback_1 [get_bd_pins Loopback/sync_loopback] [get_bd_pins PS_Zynq_0/sync_loopback]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins DAC_Chain_0/i_sample_delete] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces PS_Zynq_0/processing_system7_0/Data] [get_bd_addr_segs dma/axi_dma_data/S_AXI_LITE/Reg] -force
@@ -674,7 +667,6 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -686,4 +678,6 @@ proc create_root_design { parentCell } {
 
 create_root_design ""
 
+
+common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 

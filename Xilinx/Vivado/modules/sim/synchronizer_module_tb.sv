@@ -13,10 +13,11 @@ module synchronizer_module_tb();
   
   logic                             r_clk;
 
-  logic [11:0]                      cp_len = 12'd3;
+  logic [11:0]                      cp_len = 12'd3; // 4
   logic [10:0]                      trigg_offset = 11'b11111111110;
-  logic [11:0]                      nfft = 12'd7;
-  logic [3:0]                       symbols = 4'd9;
+  logic [13:0]                      nfft = 14'd7; // 8
+  logic [3:0]                       symbols = 4'd3; // 3
+  logic [31:0]                      guard = 32'd10; // 10
   logic                             max = 1'b0;
 
   logic [31:0]                      s_tdata = '0;
@@ -52,7 +53,8 @@ module synchronizer_module_tb();
     .i_cp_len                       (cp_len),
     .i_symbols                      (symbols),
     .i_trig_offset                  (trigg_offset),
-    .i_max_sync                     (max)
+    .i_max_sync                     (max),
+    .i_guard_cycles                 (guard)
   );
 
 //---------------------------------------------------------------
@@ -79,12 +81,13 @@ module synchronizer_module_tb();
 // Stimulate design
 //---------------------------------------------------------------
   initial begin
+    #(CLOCK_PERIOD*90)
+    m_axis_tready                   = 1'b1;
     #(CLOCK_PERIOD*100)
     max                             = 1'b1;
     #CLOCK_PERIOD;
     max                             = 1'b0;
     #CLOCK_PERIOD;
-    m_axis_tready                   = 1'b1;
     #(CLOCK_PERIOD*7*(symbols+1)*(nfft+cp_len));
     #(CLOCK_PERIOD*100);
     $stop;

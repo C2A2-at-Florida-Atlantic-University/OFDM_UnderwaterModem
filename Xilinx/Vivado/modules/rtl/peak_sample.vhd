@@ -11,7 +11,8 @@ use ieee.std_logic_unsigned.all;
 
 entity peak_sample is
   generic(
-    g_DATA_WIDTH                  : integer := 16
+    g_DATA_WIDTH                  : integer := 16;
+    g_ILA                         : boolean := false
   );
   port(
     aclk                          : in  std_logic;
@@ -39,6 +40,15 @@ architecture RTL of peak_sample is
   signal r_trigger                : std_logic;
   signal r_peak_sample            : std_logic_vector(g_DATA_WIDTH-1 downto 0) := (others => '0');
 
+  component ila_0 is
+    port(
+      clk                         : in  std_logic;
+      probe0                      : in  std_logic_vector(69 downto 0)
+    );
+  end component ila_0;
+
+  signal probe0                   : std_logic_vector(69 downto 0);
+
 begin
 
   process (aclk)
@@ -63,5 +73,18 @@ begin
   m_axis_tvalid                   <= s_axis_tvalid;
 
   o_peak_sample                   <= r_peak_sample;
+
+  ila_gen : if g_ILA generate
+
+    probe0                        <= s_axis_tdata & s_axis_tvalid & r_peak_sample &
+                                     i_trigger & r_trigger & X"00000000" & "000"; -- 70
+
+    ila_inst : ila_0
+      port map(
+        clk                       => aclk,
+        probe0                    => probe0
+      );
+
+  end generate;
 
 end architecture RTL;

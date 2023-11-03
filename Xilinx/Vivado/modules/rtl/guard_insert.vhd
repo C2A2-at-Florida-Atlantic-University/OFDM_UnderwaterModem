@@ -14,8 +14,8 @@ entity guard_insert is
     g_ILA                         : boolean := false
   );
   port(
-    axis_aclk                     : in  std_logic;
-    axis_aresetn                  : in  std_logic;
+    aclk                          : in  std_logic;
+    aresetn                       : in  std_logic;
 
     s_axis_tdata                  : in  std_logic_vector(31 downto 0);
     s_axis_tvalid                 : in  std_logic;
@@ -38,53 +38,64 @@ architecture RTL of guard_insert is
   attribute X_INTERFACE_INFO      : string;
   attribute X_INTERFACE_PARAMETER : string;
   
-  attribute X_INTERFACE_INFO      of axis_aclk    : signal is "xilinx.com:signal:clock:1.0 axis_aclk CLK";
-  attribute X_INTERFACE_PARAMETER of axis_aclk    : 
-    signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:m_axis, FREQ_HZ 100000000";
+  attribute X_INTERFACE_INFO      of aclk    : signal is "xilinx.com:signal:clock:1.0 aclk CLK";
+  attribute X_INTERFACE_PARAMETER of aclk    : 
+    signal is "ASSOCIATED_BUSIF aclk:s_axis:m_axis, FREQ_HZ 100000000";
 
   component ila_0 is
     port(
       clk                         : in  std_logic;
-      probe0                      : in  std_logic_vector(87 downto 0)
+      probe0                      : in  std_logic_vector(69 downto 0)
     );
   end component ila_0;
 
-  signal probe0                   : std_logic_vector(87 downto 0);
+  signal probe0                   : std_logic_vector(69 downto 0);
 
   signal Guard_Counter            : std_logic_vector(31 downto 0);
   signal CP_Counter               : std_logic_vector(11 downto 0);
   signal Nfft_Counter             : std_logic_vector(13 downto 0);
+  signal Zc_Counter               : std_logic_vector(11 downto 0);
 
-  constant IDLE                   : std_logic_vector(1 downto 0) := "00";
-  constant CP                     : std_logic_vector(1 downto 0) := "01";
-  constant SYMBOL                 : std_logic_vector(1 downto 0) := "10";
-  constant GUARD                  : std_logic_vector(1 downto 0) := "11";
+  constant IDLE                   : std_logic_vector(2 downto 0) := "000";
+  constant ZC                     : std_logic_vector(2 downto 0) := "001";
+  constant CP                     : std_logic_vector(2 downto 0) := "010";
+  constant SYMBOL                 : std_logic_vector(2 downto 0) := "011";
+  constant GUARD                  : std_logic_vector(2 downto 0) := "100";
 
-  signal Current_State            : std_logic_vector(1 downto 0) := IDLE;
-  signal Next_State               : std_logic_vector(1 downto 0) := IDLE;
+  signal Current_State            : std_logic_vector(2 downto 0) := IDLE;
+  signal Next_State               : std_logic_vector(2 downto 0) := IDLE;
 
   signal w_axis_tdata             : std_logic_vector(31 downto 0);
   signal w_axis_tvalid            : std_logic;
 
+  signal Sync_Symbol             : std_logic;
+
 begin
 
   -- Process to assign Current_State
-  process(axis_aclk)
+  process(aclk)
   begin
-    if rising_edge(axis_aclk) then
+    if rising_edge(aclk) then
       Current_State                <= Next_State;
     end if;
   end process;
 
   -- Process to control state machine
-  process(axis_aclk)
+  process(aclk)
   begin
-    if rising_edge(axis_aclk) then
+    if rising_edge(aclk) then
       case Current_State is
         when IDLE =>
           Guard_Counter             <= (others => '0');
           CP_Counter                <= (others => '0');
           Nfft_Counter              <= (others => '0');
+          Zc_Counter                <= (others => '0');
+          Sync_Symbol              <= '1';
+
+        when ZC =>
+          if m_axis_tready = '1' and s_axis_tvalid = '1' then
+            Zc_Counter              <= Zc_Counter + '1';
+          end if;
 
         when CP =>
           if m_axis_tready = '1' and s_axis_tvalid = '1' then
@@ -100,6 +111,7 @@ begin
           Guard_Counter             <= (others => '0');
 
         when GUARD =>
+          Sync_Symbol              <= '0';
           Guard_Counter             <= Guard_Counter + '1';
           Nfft_Counter              <= (others => '0');
           CP_Counter                <= (others => '0');
@@ -117,6 +129,7 @@ begin
     Nfft_Counter,
     CP_Counter,
     Guard_Counter,
+    ZC_Counter,
     i_nfft,
     i_cp_len,
     i_guard_cycles,
@@ -126,19 +139,30 @@ begin
     case Current_State is
       when IDLE =>
         if s_axis_tvalid = '1' then
+          Next_State                <= ZC;
+        else
+          Next_State                <= IDLE;
+        end if;
+
+      when ZC =>
+        if Zc_Counter = X"FFE" then
           if i_cp_len = "000000000000" then
-            Next_State              <= SYMBOL;
+            Next_State              <= GUARD;
           else
             Next_State              <= CP;
           end if;
         else
-          Next_State                <= IDLE;
+          Next_State                <= ZC;
         end if;
 
       when CP =>
         if s_axis_tlast = '0' then
           if CP_Counter = i_cp_len then
-            Next_State              <= SYMBOL;
+            if Sync_Symbol = '0' then
+              Next_State            <= SYMBOL;
+            else
+              Next_State            <= GUARD;
+            end if;
           else
             Next_State              <= CP;
           end if;
@@ -163,8 +187,12 @@ begin
 
       when GUARD =>
         if s_axis_tlast = '0' then
-          if Guard_Counter = i_guard_cycles then
-            Next_State              <= CP;
+          if Guard_Counter = i_guard_cycles-1 then
+            if i_cp_len = "000000000000" then
+              Next_State            <= SYMBOL;
+            else
+              Next_State            <= CP;
+            end if;
           else
             Next_State              <= GUARD;
           end if;
@@ -189,6 +217,12 @@ begin
   begin
     case Current_State is
       when IDLE =>
+        s_axis_tready               <= m_axis_tready;
+        w_axis_tvalid               <= s_axis_tvalid;
+        w_axis_tdata                <= s_axis_tdata;
+        m_axis_tlast                <= s_axis_tlast;
+
+      when ZC =>
         s_axis_tready               <= m_axis_tready;
         w_axis_tvalid               <= s_axis_tvalid;
         w_axis_tdata                <= s_axis_tdata;
@@ -226,12 +260,14 @@ begin
   
   ila_gen : if g_ILA generate
 
-    probe0                          <= s_axis_tdata & s_axis_tvalid & w_axis_tdata & w_axis_tvalid &
-                                       m_axis_tready & Current_State & Guard_Counter(18 downto 0);
+    probe0                          <= s_axis_tdata(15 downto 0) & s_axis_tvalid & 
+                                       w_axis_tdata(15 downto 0) & w_axis_tvalid &
+                                       m_axis_tready & Current_State & Guard_Counter(18 downto 0) &  -- 56A
+                                       X"000" & "00";
   
     ila_inst : ila_0
       port map(
-        clk                         => axis_aclk,
+        clk                         => aclk,
         probe0                      => probe0
       );
 

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="synchronizer_module_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="synchronizer_module_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="9.020001 us"></ZoomEndTime>
+      <Cursor1Time time="0.000000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="145"></NameColumnWidth>
+      <ValueColumnWidth column_width="65"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="31" />
+   <wvobject fp_name="/synchronizer_module_tb/r_clk" type="logic">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/cp_len" type="array">
+      <obj_property name="ElementShortName">cp_len[11:0]</obj_property>
+      <obj_property name="ObjectShortName">cp_len[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/trigg_offset" type="array">
+      <obj_property name="ElementShortName">trigg_offset[10:0]</obj_property>
+      <obj_property name="ObjectShortName">trigg_offset[10:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/nfft" type="array">
+      <obj_property name="ElementShortName">nfft[13:0]</obj_property>
+      <obj_property name="ObjectShortName">nfft[13:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/symbols" type="array">
+      <obj_property name="ElementShortName">symbols[3:0]</obj_property>
+      <obj_property name="ObjectShortName">symbols[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/max" type="logic">
+      <obj_property name="ElementShortName">max</obj_property>
+      <obj_property name="ObjectShortName">max</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/s_axis_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/s_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/s_axis_abs_ila_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_abs_ila_tdata[63:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_abs_ila_tdata[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/s_axis_abs_ila_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_abs_ila_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_abs_ila_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/m_axis_tdata" type="array">
+      <obj_property name="ElementShortName">m_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/m_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/m_axis_tlast" type="logic">
+      <obj_property name="ElementShortName">m_axis_tlast</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/m_axis_tready" type="logic">
+      <obj_property name="ElementShortName">m_axis_tready</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/m_axis_tkeep" type="array">
+      <obj_property name="ElementShortName">m_axis_tkeep[3:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_tkeep[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_nfft" type="array">
+      <obj_property name="ElementShortName">i_nfft[13:0]</obj_property>
+      <obj_property name="ObjectShortName">i_nfft[13:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_cp_len" type="array">
+      <obj_property name="ElementShortName">i_cp_len[11:0]</obj_property>
+      <obj_property name="ObjectShortName">i_cp_len[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_symbols" type="array">
+      <obj_property name="ElementShortName">i_symbols[3:0]</obj_property>
+      <obj_property name="ObjectShortName">i_symbols[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_trig_offset" type="array">
+      <obj_property name="ElementShortName">i_trig_offset[10:0]</obj_property>
+      <obj_property name="ObjectShortName">i_trig_offset[10:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_max_sync" type="logic">
+      <obj_property name="ElementShortName">i_max_sync</obj_property>
+      <obj_property name="ObjectShortName">i_max_sync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/i_guard_cycles" type="array">
+      <obj_property name="ElementShortName">i_guard_cycles[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_guard_cycles[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/probe0" type="array">
+      <obj_property name="ElementShortName">probe0[69:0]</obj_property>
+      <obj_property name="ObjectShortName">probe0[69:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/Current_State" type="array">
+      <obj_property name="ElementShortName">Current_State[2:0]</obj_property>
+      <obj_property name="ObjectShortName">Current_State[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/Next_State" type="array">
+      <obj_property name="ElementShortName">Next_State[2:0]</obj_property>
+      <obj_property name="ObjectShortName">Next_State[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/r_axis_tdata" type="array">
+      <obj_property name="ElementShortName">r_axis_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r_axis_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/r_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">r_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">r_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/r_axis_tlast" type="logic">
+      <obj_property name="ElementShortName">r_axis_tlast</obj_property>
+      <obj_property name="ObjectShortName">r_axis_tlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/symbol_counter" type="array">
+      <obj_property name="ElementShortName">symbol_counter[3:0]</obj_property>
+      <obj_property name="ObjectShortName">symbol_counter[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/initial_counter" type="array">
+      <obj_property name="ElementShortName">initial_counter[12:0]</obj_property>
+      <obj_property name="ObjectShortName">initial_counter[12:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/nfft_cp_counter" type="array">
+      <obj_property name="ElementShortName">nfft_cp_counter[14:0]</obj_property>
+      <obj_property name="ObjectShortName">nfft_cp_counter[14:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/synchronizer_module_tb/DUT/Guard_Counter" type="array">
+      <obj_property name="ElementShortName">Guard_Counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">Guard_Counter[31:0]</obj_property>
+   </wvobject>
+</wave_config>

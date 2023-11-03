@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   unsigned SyncThreshold;
   unsigned CwIqScale;
   unsigned PadSamples;
-  //unsigned RxShiftAtten;
+  unsigned CicFirIsCic; // 1 = CIC based DUC/DDC
   double TxGainDbTime;
   double SyncSymbolGainDB;
   int SyncOffset;
@@ -116,6 +116,8 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  CicFirIsCic = 1;
+
 #ifndef NO_DEVMEM                  // HW specific functions
   usleep(1000);
   HwInterfaceSetGlobalMute(true);  // mute FPGA reg access prints
@@ -176,7 +178,7 @@ int main(int argc, char **argv)
     usleep(1000); // Give some time for prints from threads
     printf("\n----- MODEM MENU -----\n");
     printf("0  - Exit\n");
-    printf("1  - Set Debug Features\n");
+    printf("1  - Set Debug/HW Features\n");
     printf("2  - Enter OFDM Parameters\n");
     printf("3  - Enter OFDM Timing Parameters\n");
     printf("4  - Enter TX/RX Gain (dBFS)/(dB)\n");
@@ -184,14 +186,11 @@ int main(int argc, char **argv)
     printf("6  - Enter Synchronizer Parameters\n");
     printf("7  - Display OFDM Parameters\n");
     printf("8  - Transmit Single OFDM Frame\n");
-    printf("9  - Read ADC Status\n");
-    printf("10 - Demod TX Buffer\n");
-    printf("11 - Start/Stop RX Demod Thread\n");
-    printf("12 - Demod RX Injection File\n");
-    printf("13 - Compute BER/SER\n");
-    printf("14 - Start S2MM DMA\n");
-    printf("15 - Stop S2MM DMA\n");
-    printf("18 - Enable/Disable CW Tone\n");
+    printf("9  - Demod TX Buffer\n");
+    printf("10 - Start/Stop RX Demod Thread\n");
+    printf("11 - Start S2MM DMA\n");
+    printf("12 - Stop S2MM DMA\n");
+    printf("13 - Enable/Disable CW Tone\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -226,6 +225,8 @@ int main(int argc, char **argv)
         }
         HwInterfaceSetGlobalMute(GlobalMute);
         DirectDmaSetGlobalMute(GlobalMute);
+        printf("Set CIC based DUC/DDC (1) or FIR based (0): ");
+        ScanfRet = scanf("%d", &CicFirIsCic);
         break;
 
 //////////////////////////////////////////////////////////////////////////
@@ -444,7 +445,8 @@ int main(int argc, char **argv)
         }
 
         ReturnStatus = TxModulateIfft(DebugMode, OfdmParams.Nfft,
-          OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame);
+          OfdmParams.ModOrder, OfdmParams.CpLen,
+          OfdmTiming.OfdmSymbolsPerFrame, 13);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -462,7 +464,7 @@ int main(int argc, char **argv)
         }
         
         NumBytes = ((OfdmParams.Nfft+OfdmParams.CpLen)*
-          (OfdmTiming.OfdmSymbolsPerFrame)+NFFT_ZC)*4;
+          (OfdmTiming.OfdmSymbolsPerFrame)+NFFT_ZC+OfdmParams.CpLen)*4;
         PadSamples = NUM_DUC_DDC_COEF/2 + NUM_PAD_SAMPLES;
         NumBytes = NumBytes + (PadSamples * 4);
 /*
@@ -484,8 +486,18 @@ int main(int argc, char **argv)
           SyncOffset);
         HwInterfaceSynchronizerStatus(true);
         HwInterfaceEnableDac();
-        //PowerExtraTxGain(3.8,NumBytes/4); // 6dB loss in DUC FIR
-        HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
+        if (CicFirIsCic)
+        {
+          //HwInterfaceSetMixerGain(2);// For CIC
+          //PowerExtraTxGain(2.5,NumBytes/4); // 6dB loss in DUC FIR
+          HwInterfaceSetMixerGain(0);// For CIC
+          PowerExtraTxGain(0,NumBytes/4); // 6dB loss in DUC FIR
+        }
+        else
+        {
+          PowerExtraTxGain(6.1,NumBytes/4); // 6dB loss in DUC FIR
+          HwInterfaceSetMixerGain(2);// For FIR
+        }
         HwInterfaceTxOn(~TxOff);
         ReturnStatus = DirectDmaPsToPl(NumBytes);
         printf("Wait for %lfus to finish Transmission ... \n",
@@ -517,18 +529,6 @@ int main(int argc, char **argv)
 
 //////////////////////////////////////////////////////////////////////////
       case 9:
-        break;
-
-//////////////////////////////////////////////////////////////////////////
-      case 10:
-#ifndef NO_DEVMEM
-        ReturnStatus = HwInterfaceConfigureSynchronizer(
-          OfdmParams.Nfft, OfdmParams.CpLen, 
-          OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
-          SyncOffset);
-        HwInterfaceSynchronizerStatus(true);
-#endif
-
         ReturnStatus = RxDemodulateBufferData(DebugMode, true,
           OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
           OfdmTiming.OfdmSymbolsPerFrame);
@@ -548,7 +548,7 @@ int main(int argc, char **argv)
         break;
 
 //////////////////////////////////////////////////////////////////////////
-      case 11:
+      case 10:
         printf("Enter Thread Selection ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &RxThread);
 #ifndef NO_DEVMEM
@@ -567,8 +567,8 @@ int main(int argc, char **argv)
           break;
         }
         HwInterfaceEnableAdc();
-        HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
-        HwInterfaceSetDdcGain(2);
+        HwInterfaceSetMixerGain(0); // 6dB loss in Mixer
+        HwInterfaceSetDdcGain(0);
         HwInterfaceSetTrigger();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
@@ -591,21 +591,8 @@ int main(int argc, char **argv)
         break;
 
 //////////////////////////////////////////////////////////////////////////
-      case 13:
-        ReturnStatus = Ber(true, OfdmParams.ModOrder,
-          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
-        ReturnStatus = Ber(false, OfdmParams.ModOrder,
-          OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          printf("%s", ReturnStatus.ErrString);
-          break;
-        }
-        break;
-
-//////////////////////////////////////////////////////////////////////////
 #ifndef NO_DEVMEM
-      case 14:
+      case 11:
         ReturnStatus = DirectDmaPlToPsThread();
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
@@ -614,13 +601,13 @@ int main(int argc, char **argv)
         break;
 
 //////////////////////////////////////////////////////////////////////////
-      case 15:
+      case 12:
         DirectDmaPlToPsThreadCancel();
         break;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-      case 18:
+      case 13:
         printf("Enable Sine Tone at Fc ('0'-Off / '1'On): ");
         ScanfRet = scanf("%d", &DebugSelection);
         if (DebugSelection == 1)

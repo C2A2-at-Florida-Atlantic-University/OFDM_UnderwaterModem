@@ -128,6 +128,10 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
     }
     else if (i > OfdmParams->Nfft/2)
     { // Upper half of sub-carriers
+      if (!FirstPilotIsEven)
+      {
+        FirstPilotIsEven = 1;
+      }
       if (i%2 == FirstPilotIsEven)
       { // Pilot
         PilotIndex[OfdmCalcParams.NumPilotCarriers] = i;

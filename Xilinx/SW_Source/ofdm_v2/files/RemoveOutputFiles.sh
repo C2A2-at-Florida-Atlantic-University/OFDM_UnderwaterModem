@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm Rx* *.zip ChannelEstimate1.txt TxFreqData1.txt TxIfftSamples1.txt TxIfftSamplesInt1.txt OfdmInfo1.txt
+rm Rx* InputFiles.tar.xz *7z *.tar.bz2 ChannelEstimate1.txt TxFreqData1.txt TxIfftSamples1.txt TxIfftSamplesInt1.txt OfdmInfo1.txt

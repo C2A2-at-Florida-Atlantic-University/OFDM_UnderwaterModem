@@ -237,27 +237,26 @@ double TxModulateGetSyncGain()
 }
 
 ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft, 
-  unsigned CpLen, unsigned OfdmSymbols)
+  unsigned ModOrder, unsigned CpLen, unsigned OfdmSymbols,
+  unsigned ZcRoot)
 {
   ReturnStatusType ReturnStatus;
   FILE *IfftFile = NULL;
   FILE *IfftFileInt = NULL;
-  FILE *ZcFile = NULL;
   FILE *TxFreqIfftInput = NULL;
   cint16_T IfftInData[MAX_NFFT];
+  creal_T ZcFreqSequence[NFFT_ZC];
   emxArray_creal_T *IfftOutStruct;
   char FileName[64];
-  char FileNameZc[64];
   int NfftSize[1];
   int NfftInt = (int)Nfft;
-  double tmp_i, tmp_q;
   double tmp_i1, tmp_q1;
   unsigned ScanfRet = 0;
   creal_T *IfftOutData;
 
   // Buffer going to DMA to DUC
   DucBufferPtr = (int32_T *)malloc((((CpLen+Nfft)*OfdmSymbols)+
-    NFFT_ZC)*16);
+    NFFT_ZC+CpLen)*16);
   if (DucBufferPtr == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -265,7 +264,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
       "TxModulateIfft: Could not malloc DucBufferPtr\n");
     return ReturnStatus;
   }
-  memset(DucBufferPtr, 0, (((CpLen+Nfft)*OfdmSymbols)+NFFT_ZC)*16);
+  memset(DucBufferPtr, 0, (((CpLen+Nfft)*OfdmSymbols)+NFFT_ZC+CpLen)*16);
 
   // Set up structs for Ifft function
   IfftOutStruct = (emxArray_creal_T *)malloc(sizeof(emxArray_creal_T));
@@ -329,17 +328,6 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
     printf("TxModulateIfft: Opened file %s\n", FileName);
     fprintf(TxFreqIfftInput, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
-  sprintf(FileNameZc, "files/zc_seq_time_%d_nfft_%d_ZC_13_root.txt",
-    NFFT_ZC, NFFT_ZC/2);
-  ZcFile = fopen(FileNameZc, "r");
-  if (ZcFile == NULL)
-  {
-    ReturnStatus.Status = RETURN_STATUS_FAIL;
-    sprintf(ReturnStatus.ErrString,
-      "TxModulateIfft: Failed to open %s\n", FileNameZc);
-    return ReturnStatus;
-  }
-  printf("TxModulateIfft: Opened file %s\n", FileNameZc);
 
   for (unsigned i = 0; i < OfdmSymbols; i++)
   {
@@ -375,12 +363,12 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
       if (j >= (Nfft - CpLen))
       {
         DucBufferPtr
-          [NFFT_ZC+(i*(CpLen+Nfft))+j-(Nfft-CpLen)]=
+          [NFFT_ZC+CpLen+(i*(CpLen+Nfft))+j-(Nfft-CpLen)]=
           ((((int32_T)IfftOutData[j].im)<<16)
           &0xFFFF0000)+
           ((int16_T)IfftOutData[j].re);
       }
-      DucBufferPtr[NFFT_ZC+(i*(CpLen+Nfft))+j+CpLen] = 
+      DucBufferPtr[NFFT_ZC+CpLen+(i*(CpLen+Nfft))+j+CpLen] = 
         ((((int32_T)IfftOutData[j].im)<<16)
         &0xFFFF0000)+
         ((int16_T)IfftOutData[j].re);
@@ -410,21 +398,78 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
     }
   }
 
-  // Add ZC sequence to beginning of OFDM frame
+  memset(IfftOutData, 0, sizeof(creal_T)*MAX_NFFT);
+  NfftSize[0] = (int)NFFT_ZC;
+  IfftOutStruct->data = IfftOutData;
+  NfftInt = (int)NFFT_ZC;
+  IfftOutStruct->size = &NfftInt;
+  IfftOutStruct->allocatedSize = NFFT_ZC;
+  IfftOutStruct->numDimensions = 1;
+
+  // Create ZC sequence in freq domain
   for (unsigned i = 0; i < NFFT_ZC; i++)
   {
-    ScanfRet=fscanf(ZcFile,"%lf, %lf\n", &tmp_i, &tmp_q);
-    tmp_i1 = (double)tmp_i * IfftGain * SyncGain;
-    tmp_q1 = (double)tmp_q * IfftGain * SyncGain;
-    DucBufferPtr[i] = ((((int32_T)tmp_q1)<<16)&0xFFFF0000)+
-      (int16_T)tmp_i1;
+    if (i < NFFT_ZC/4)
+    {
+      ZcFreqSequence[i].re = 0.0;
+      ZcFreqSequence[i].im = 0.0;
+    }
+    else if (i < 3*NFFT_ZC/4)
+    {
+      //ZcFreqSequence[i].re = log2(ModOrder)/sqrt(2)*(double)DigitalGain*
+      ZcFreqSequence[i].re = (double)DigitalGain*
+        cos(M_PI*ZcRoot*((double)i+1.0-(double)NFFT_ZC/4.0)*
+        ((double)i+2.0-(double)NFFT_ZC/4.0)/(double)NFFT_ZC*2.0);
+      //ZcFreqSequence[i].im = log2(ModOrder)/sqrt(2)*(double)DigitalGain*
+      ZcFreqSequence[i].im = (double)DigitalGain*
+        -sin(M_PI*ZcRoot*((double)i+1.0-(double)NFFT_ZC/4.0)*
+        ((double)i+2.0-(double)NFFT_ZC/4.0)/(double)NFFT_ZC*2.0);
+    }
+    else
+    {
+      ZcFreqSequence[i].re = 0.0;
+      ZcFreqSequence[i].im = 0.0;
+    }
+  }
+
+  // Take FFTSHIFT of ZC sequence
+  for (unsigned i = 0; i < NFFT_ZC; i++)
+  {
+    if (i < Nfft/2)
+    {
+      IfftInData[i+NFFT_ZC/2].re = (int16_t)ZcFreqSequence[i].re;
+      IfftInData[i+NFFT_ZC/2].im = (int16_t)ZcFreqSequence[i].im; 
+    }
+    else
+    {
+      IfftInData[i-NFFT_ZC/2].re = (int16_t)ZcFreqSequence[i].re;
+      IfftInData[i-NFFT_ZC/2].im = (int16_t)ZcFreqSequence[i].im; 
+    }
+  }
+
+  // IFFT
+  Ifft(IfftInData,NfftSize,Nfft,IfftOutStruct);
+
+  for (unsigned i = 0; i < NFFT_ZC+CpLen; i++)
+  {
+    if (i < NFFT_ZC) // Add ZC sequence to FPGA buffer
+    {
+      tmp_i1 = IfftOutData[i].re * IfftGain * SyncGain;
+      tmp_q1 = IfftOutData[i].im * IfftGain * SyncGain;
+      DucBufferPtr[i] = ((((int32_T)tmp_q1)<<16)&0xFFFF0000)+
+        (int16_T)tmp_i1;
+    }
+    else // Add CP samples of zero after ZC sequence
+    {
+      DucBufferPtr[i] = 0x00000000;
+    }
   }
 
   // Print IFFT output to file
   if (DebugMode)
   {
     for (unsigned i = 0; i < (Nfft+CpLen)*(OfdmSymbols)
-      +NFFT_ZC; i++)
+      +NFFT_ZC+CpLen; i++)
     {
       fprintf(IfftFile, "%d, %d\n", 
         (int16_T)(DucBufferPtr[i]&0x0000FFFF),
@@ -446,17 +491,13 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
       fclose(IfftFile);
     }
   }
-  if (ZcFile != NULL)
-  {
-    fclose(ZcFile);
-  }
 
   free(IfftOutData);
   free(IfftOutStruct);
   TxModulateClose();
 
   // Get rid of warnings
-  printf("%d\n", ScanfRet);
+  printf("%d, %d\n", ScanfRet, ModOrder);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 } // ReturnStatusType TxModulateIfft

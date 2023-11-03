@@ -370,9 +370,9 @@ void HwInterfaceSetDdcGain(unsigned GainShift)
 void HwInterfaceSetTrigger(void)
 {
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
-    0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK,GlobalMute);
+    0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
-    1<<TRIGGER_MASK_OFFSET,TRIGGER_MASK,GlobalMute);
+    1<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
 }
 
 double HwInterfaceReadDucPeak(void)

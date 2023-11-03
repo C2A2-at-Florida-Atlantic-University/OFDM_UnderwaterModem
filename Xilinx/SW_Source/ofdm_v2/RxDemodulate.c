@@ -238,7 +238,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
 
   if (DeleteSym1)
   { // Delete first symbol which will be the Synchronization symbol
-    StartSample = NFFT_ZC;
+    StartSample = NFFT_ZC+CpLen;
   }
   else
   { // Synchronization symbol is taken out in PL
@@ -318,6 +318,11 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
     {
       break;
     }
+    if (DeleteSym1)
+    {
+      break;
+    }
+
   }
   printf("RxDemodulateFft: OFDM frame received and CMA buffer filled\n");
 

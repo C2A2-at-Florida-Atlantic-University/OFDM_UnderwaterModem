@@ -5,10 +5,15 @@ clear; clc; close all; fclose all; format long;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 EQUALIZER_METHOD = "ZF"; % "ZF", "MMSE", "ZF Averaged"
 PLOT_TX_CARRIERS = false;
-FIR_BASED_NOT_CIC = false;
+FIR_BASED_NOT_CIC = true;
 LOOPBACK = false;
+RXFFTSIM = true;
 seed = 0;
 seed_diff = 0;
+
+% system('cd ../Xilinx/SW_Source/ofdm_v2/files');
+% system('tar -xJf CompressedResults.tar.xz');
+% system('cd ../../../../MATLAB');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Generate Pilot Data
@@ -129,6 +134,11 @@ pilot_index=[zp_carriers/2:rep:nfft/2-1,nfft/2+2:rep:nfft-zp_carriers/2];
 if zp_index(end/2+2)-1 ~= pilot_index(end)
     pilot_index = [pilot_index zp_index(end/2+2)-1];
 end
+index = find(pilot_index == nfft/2-1);
+if isempty(index)
+    index = find(pilot_index == nfft/2-2);
+    pilot_index = [pilot_index(1:index) nfft/2-1 pilot_index(index+1:end)];
+end
 pilot_carriers = length(pilot_index);
 data_index = 1:nfft;
 data_index([zp_index,pilot_index]) = [];
@@ -177,6 +187,11 @@ zp_carrier = complex(0,0);
 % Create Zadoff-Chu sequence
 sync_tx = log2(M)/sqrt(2)*exp(-1i*pi*ZC_root*(1:ZC_length).* ...
     ((1:ZC_length)+1)/ZC_length); % ZC sequence
+sync_tx_i = cos(pi*ZC_root*(1:ZC_length).* ...
+    ((1:ZC_length)+1)/ZC_length);
+sync_tx_q = -sin(pi*ZC_root*(1:ZC_length).* ...
+    ((1:ZC_length)+1)/ZC_length);
+sync_tx = complex(sync_tx_i,sync_tx_q);
 sync_tx_zp = tx_scale*[zeros(1,(nfft_zc-ZC_length)/2),sync_tx,zeros(1, ...
     (nfft_zc-ZC_length)/2)]; % Add ZP and center ZC sequence in BW
 sync_tx_time = ifft(ifftshift(sync_tx_zp),nfft_zc);
@@ -219,15 +234,6 @@ filename = "../Xilinx/SW_Source/ofdm_v2/files/zc_fir_coef_"+ ...
     "_root_q.txt";
 file = fopen(filename,'w');
 fprintf(file,"%d\n",scaled_sync_coef_q);
-fclose('all');
-
-% ZC sequence time domain for SW
-filename = "../Xilinx/SW_Source/ofdm_v2/files/zc_seq_time_"+ ...
-    string(nfft_zc)+"_nfft_"+string(nfft_zc/2)+"_ZC_"+string(ZC_root)+ ...
-    "_root.txt";
-file = fopen(filename,'w');
-fprintf(file,"%f, %f\n",[(real(sync_tx_time)); ...
-    (imag(sync_tx_time))]);
 fclose('all');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -288,7 +294,7 @@ ofdm_tx_signal_par = vertcat(ofdm_tx_signal_par1,gp); % Copy GP
 
 if (PLOT_TX_CARRIERS)
     ifft_mat = reshape(ofdm_tx_signal_par1,[1 (nfft+cp_len)*ofdm_symbols]);
-    ifft_mat = [sync_tx_time*extra_sync_gain*ifft_gain ifft_mat];    
+    ifft_mat = [sync_tx_time*extra_sync_gain*ifft_gain zeros(1,cp_len) ifft_mat];    
     % Read carrier allocation from SW: Ignore header:
     file = fopen('../Xilinx/SW_Source/ofdm_v2/files/TxFreqData1.txt','r');
     tmp = fscanf(file,"%d,",1);
@@ -302,11 +308,12 @@ if (PLOT_TX_CARRIERS)
     tmp = fscanf(file,"%d,",1);
     tmp = fscanf(file,"%d,",1);
     tmp = fscanf(file,"%d,",1);
-    ifft_sw = fscanf(file,"%lf, %lf", [2 nfft_zc+ ...
+    ifft_sw = fscanf(file,"%lf, %lf", [2 nfft_zc+cp_len+ ...
         ((nfft+cp_len)*ofdm_symbols)]);
     fclose('all');
     ifft_sw = complex(ifft_sw(1,:),ifft_sw(2,:));
-    ifft_sw = reshape(ifft_sw,[1 nfft_zc+(ofdm_symbols*(nfft+cp_len))]);
+    ifft_sw = reshape(ifft_sw, ...
+        [1 nfft_zc+cp_len+(ofdm_symbols*(nfft+cp_len))]);
     freq_data_ofdm_1 = reshape(freq_data_ofdm,[nfft ofdm_symbols]);
     % Plotting
     p_plot = reshape(qam_mod_data*tx_scale,[1 ofdm_symbols*data_carriers]);
@@ -343,7 +350,7 @@ ofdm_tx_signal_ser = reshape(ofdm_tx_signal_par,[(nfft+cp_len+ ...
     gp_samples)*ofdm_symbols, 1]);         % Parallel to Serial
 gp = zeros(gp_samples,1);                  % Obtain GP
 ofdm_tx_signal_ser = [extra_sync_gain*ifft_gain*sync_tx_time.'; ...
-    gp;ofdm_tx_signal_ser]; % OFDM Frame
+    zeros(cp_len,1);gp;ofdm_tx_signal_ser]; % OFDM Frame
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DUC
@@ -459,11 +466,19 @@ end
 % subplot(2,2,4),plot(F/1000,angle(10*log10(fftshift(fft(multipath, ...
 %     nfft_p))))),title('Phase Multipath Channel'),xlabel('F (kHz)')
 file = fopen('../Xilinx/SW_Source/ofdm_v2/files/RxFftSamples1.txt','r');
-fft_sw = fscanf(file,"%d, %d\n", [2 ofdm_symbols*nfft]);
+fft_sw = fscanf(file,"%d, %d\n", [2 ofdm_symbols*(cp_len+nfft)]);
 fclose('all');
 fft_sw = complex(fft_sw(1,:),fft_sw(2,:));
 figure(),plot(F/1000,10*log10(abs(fftshift(fft(fft_sw,nfft_p)))))
 xlabel('kHz'),ylabel('dB'),title('FFT Input Spectrum')
+
+scale = 5;
+figure(),subplot(2,1,1),plot(real(reshape(ofdm_tx_signal_par1,[1 ...
+    ofdm_symbols*(cp_len+nfft)])),'LineWidth',2),hold on,plot(real(fft_sw*scale))
+title('Real'),legend('MATLAB','SW'),subplot(2,1,2),plot(imag( ...
+    reshape(ofdm_tx_signal_par1,[1 ofdm_symbols*(cp_len+nfft)])),'LineWidth',2)
+hold on,plot(imag(fft_sw*scale)),legend('MATLAB','SW'),title('Imaginary')
+sgtitle('FFT Input')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Synchronization
@@ -471,7 +486,7 @@ xlabel('kHz'),ylabel('dB'),title('FFT Input Spectrum')
 sync_coef = conj(fliplr(sync_tx_time)); % Matched Filter
 sync_corr_filt = abs(filter(sync_coef,1,ddc_base_signal));
 [val,ind] = max(sync_corr_filt);
-ind = ind-sync_samples_early+gp_samples; % Remove GP from index
+ind = ind-sync_samples_early+gp_samples+cp_len; % Remove GP from index
 ofdm_rx_sync_signal = ddc_base_signal;
 ofdm_rx_sync_signal([1:ind, ...
     ind+1+(nfft+cp_len+gp_samples)*ofdm_symbols:end]) = [];
@@ -484,7 +499,7 @@ end
 
 sync_corr_doppler = abs(filter(sync_coef,1,ddc_doppler));
 [val2,ind2] = max(sync_corr_doppler);
-ind2 = ind2-sync_samples_early+gp_samples+force_doppler_sync;
+ind2 = ind2-sync_samples_early+gp_samples+force_doppler_sync+cp_len;
 ofdm_rx_sync_doppler = ddc_doppler;
 ofdm_rx_sync_doppler([1:ind2, ...
     ind2+1+(nfft+cp_len+gp_samples)*ofdm_symbols:end]) = [];
@@ -560,7 +575,7 @@ end
 legend('TX','AWGN Channel','UW-A doppler'),xlabel('Time (ms)')
 title('Quadrature'),subplot(3,1,3),plot(t_p/1000,sync_corr_filt),hold on
 plot(t_p/1000,sync_corr_doppler)
-vertical_lines = [ind2-gp_samples vertical_lines];
+vertical_lines = [ind2-gp_samples-cp_len vertical_lines];
 line_label = ["UW-A Sync", line_label];
 xline(vertical_lines(2)*Ts/1000,'--b',line_label{2}, ...
     'LabelHorizontalAlignment','left')
@@ -583,6 +598,11 @@ ofdm_rx_doppler_par=reshape(ofdm_rx_sync_doppler, ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Remove GP
 ofdm_rx_signal_par(end-gp_samples+1:end,:) = [];
+
+if (RXFFTSIM)
+    %ofdm_rx_signal_par = ofdm_tx_signal_par1;
+    ofdm_rx_signal_par = reshape(fft_sw, [(nfft+cp_len) ofdm_symbols]);
+end
 
 % Save and remove CP
 cp_rm_signal = ofdm_rx_signal_par;
@@ -681,7 +701,7 @@ table(cfo_est_doppler)
     % Synchronization
     sync_corr_doppler2 = abs(filter(sync_coef,1,ddc_doppler2));
     [val3,ind3] = max(sync_corr_doppler2);
-    ind3 = ind3-sync_samples_early+gp_samples+force_doppler_sync;
+    ind3 = ind3-sync_samples_early+gp_samples+force_doppler_sync+cp_len;
     ofdm_rx_sync_doppler2 = ddc_doppler2;
     ofdm_rx_sync_doppler2([1:ind3, ...
         ind3+1+(nfft+cp_len+gp_samples)*ofdm_symbols:end]) = [];
@@ -901,20 +921,20 @@ Z_EQ_ZF_doppler2([pilot_index,zp_index],:) = [];
 
 % Plot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 lim = sqrt(2*M) + 1; y_lim = [-lim lim]; x_lim = [-lim lim];
-figure(),subplot(2,2,1),scatter(real(Z_EQ_ZF),imag(Z_EQ_ZF),'.')
+figure(),subplot(2,2,1),scatter(real(Z_EQ_ZF),imag(Z_EQ_ZF),'.'),grid on
 title({'AWGN Channel', 'CFO Correction with Equalization'}),ylim(y_lim)
 xlim(x_lim),subplot(2,2,2),scatter(real(Z_EQ_ZF_doppler2),imag( ...
-    Z_EQ_ZF_doppler2),'.'),title({'UW-A Channel', ...
+    Z_EQ_ZF_doppler2),'.'),grid on,title({'UW-A Channel', ...
     'Doppler Correction with Equalization'}),ylim(y_lim),xlim(x_lim)
 subplot(2,2,3),scatter(real(fft_signal_eq/tx_scale/ifft_gain), ...
-    imag(fft_signal_eq/tx_scale/ifft_gain),'.')
+    imag(fft_signal_eq/tx_scale/ifft_gain),'.'),grid on
 title({'AWGN Channel','CFO Correction without Equalization'}),ylim(y_lim)
 xlim(x_lim),subplot(2,2,4),scatter(real(EQ_sw),imag(EQ_sw),'.')
-ylim(y_lim),xlim(x_lim)
+ylim(y_lim),xlim(x_lim),grid on
 title({'UW-A Channel','SW with Equalization'})
 sgtitle('Equalizer Output')
 
-symbol = 2;
+symbol = 1;
 figure(),scatter(real(EQ_sw(:,symbol)),imag(EQ_sw(:,symbol)),'.')
 title('SW')
 
@@ -939,7 +959,7 @@ demod_sw = qamdemod(EQ_sw,M);
 ser_data = symerr(tx_data, demod_data)/numel(tx_data);
 ser_doppler2 = symerr(tx_data, demod_doppler2)/numel(tx_data);
 ser_sw = symerr(tx_data, demod_sw)/numel(tx_data);
-%ser_sw = symerr(tx_data, data_char_rx)/numel(tx_data);
+ser_sw = symerr(tx_data, data_char_rx)/numel(tx_data);
 
 % Get EVM measurements
 evm = comm.EVM(AveragingDimensions=[1 2],MaximumEVMOutputPort=1);
