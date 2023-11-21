@@ -39,7 +39,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# peak_sample_40M, decimator_config2, iq_concat2, iq_mixer_rx_40M, iq_tdm_concat, peak_sample_duc, tdm_reformat_rx
+# peak_sample_100M, decimator_config2, iq_concat, iq_mixer_rx_100M, iq_tdm_concat, peak_sample_duc, tdm_reformat_rx
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -129,12 +129,7 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:user:AD9244_to_AXIS_M:*\
-xilinx.com:ip:xpm_cdc_gen:*\
-xilinx.com:ip:axis_data_fifo:*\
 xilinx.com:ip:cic_compiler:*\
-xilinx.com:ip:dds_compiler:*\
-xilinx.com:ip:xlconstant:*\
 "
 
    set list_ips_missing ""
@@ -160,10 +155,10 @@ xilinx.com:ip:xlconstant:*\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
-peak_sample_40M\
+peak_sample_100M\
 decimator_config2\
-iq_concat2\
-iq_mixer_rx_40M\
+iq_concat\
+iq_mixer_rx_100M\
 iq_tdm_concat\
 peak_sample_duc\
 tdm_reformat_rx\
@@ -234,25 +229,19 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
 
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis
 
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis_cic
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis_dds_0
+
 
   # Create pins
-  create_bd_pin -dir I -from 31 -to 0 Fc_scaled
   create_bd_pin -dir I -type clk aclk
-  create_bd_pin -dir I -type clk aclk_40M
-  create_bd_pin -dir I -type rst aresetn_40M
+  create_bd_pin -dir I -type rst axis_aresetn
   create_bd_pin -dir I -from 15 -to 0 decimate_ratio
   create_bd_pin -dir I -from 1 -to 0 i_gain_shift_ddc
   create_bd_pin -dir I -from 2 -to 0 i_gain_shift_mixer
   create_bd_pin -dir I i_trigger
   create_bd_pin -dir O -from 31 -to 0 o_iq_square_sum_ddc
-
-  # Create instance: axis_data_fifo_0, and set properties
-  set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo axis_data_fifo_0 ]
-  set_property -dict [ list \
-   CONFIG.FIFO_DEPTH {16} \
-   CONFIG.FIFO_MEMORY_TYPE {block} \
-   CONFIG.IS_ACLK_ASYNC {1} \
- ] $axis_data_fifo_0
 
   # Create instance: cic_compiler, and set properties
   set cic_compiler [ create_bd_cell -type ip -vlnv xilinx.com:ip:cic_compiler cic_compiler ]
@@ -272,26 +261,6 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
    CONFIG.Sample_Rate_Changes {Programmable} \
  ] $cic_compiler
 
-  # Create instance: dds_compiler_0, and set properties
-  set dds_compiler_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:dds_compiler dds_compiler_0 ]
-  set_property -dict [ list \
-   CONFIG.Amplitude_Mode {Unit_Circle} \
-   CONFIG.DATA_Has_TLAST {Not_Required} \
-   CONFIG.DDS_Clock_Rate {40} \
-   CONFIG.Has_Phase_Out {false} \
-   CONFIG.Latency {7} \
-   CONFIG.M_DATA_Has_TUSER {Not_Required} \
-   CONFIG.Negative_Sine {true} \
-   CONFIG.Noise_Shaping {None} \
-   CONFIG.Output_Frequency1 {0} \
-   CONFIG.Output_Width {16} \
-   CONFIG.PINC1 {0} \
-   CONFIG.Parameter_Entry {Hardware_Parameters} \
-   CONFIG.Phase_Increment {Streaming} \
-   CONFIG.Phase_Width {32} \
-   CONFIG.S_PHASE_Has_TUSER {Not_Required} \
- ] $dds_compiler_0
-
   # Create instance: decimator_config2_0, and set properties
   set block_name decimator_config2
   set block_cell_name decimator_config2_0
@@ -306,31 +275,34 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
    CONFIG.g_DEFAULT_RATE {0x00A0} \
  ] $decimator_config2_0
 
-  # Create instance: iq_concat2_0, and set properties
-  set block_name iq_concat2
-  set block_cell_name iq_concat2_0
-  if { [catch {set iq_concat2_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: iq_concat_0, and set properties
+  set block_name iq_concat
+  set block_cell_name iq_concat_0
+  if { [catch {set iq_concat_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $iq_concat2_0 eq "" } {
+   } elseif { $iq_concat_0 eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
     set_property -dict [ list \
    CONFIG.g_TDATA_WIDTH {16} \
- ] $iq_concat2_0
+ ] $iq_concat_0
 
-  # Create instance: iq_mixer_rx_40M_0, and set properties
-  set block_name iq_mixer_rx_40M
-  set block_cell_name iq_mixer_rx_40M_0
-  if { [catch {set iq_mixer_rx_40M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: iq_mixer_rx_100M_0, and set properties
+  set block_name iq_mixer_rx_100M
+  set block_cell_name iq_mixer_rx_100M_0
+  if { [catch {set iq_mixer_rx_100M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $iq_mixer_rx_40M_0 eq "" } {
+   } elseif { $iq_mixer_rx_100M_0 eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+   CONFIG.g_ILA {false} \
+ ] $iq_mixer_rx_100M_0
+
   # Create instance: iq_tdm_concat_0, and set properties
   set block_name iq_tdm_concat
   set block_cell_name iq_tdm_concat_0
@@ -341,7 +313,10 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+   CONFIG.g_ILA {false} \
+ ] $iq_tdm_concat_0
+
   # Create instance: peak_sample_duc_0, and set properties
   set block_name peak_sample_duc
   set block_cell_name peak_sample_duc_0
@@ -363,34 +338,30 @@ proc create_hier_cell_DDC_Mixer { parentCell nameHier } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
+    set_property -dict [ list \
+   CONFIG.g_ILA {false} \
+ ] $tdm_reformat_rx_0
 
   # Create interface connections
-  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins s_axis] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis]
-  connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins axis_data_fifo_0/M_AXIS] [get_bd_intf_pins tdm_reformat_rx_0/s_axis]
+  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins s_axis_dds_0] [get_bd_intf_pins iq_mixer_rx_100M_0/s_axis_dds]
+  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins s_axis_cic] [get_bd_intf_pins peak_sample_duc_0/s_axis]
   connect_bd_intf_net -intf_net cic_compiler_M_AXIS_DATA [get_bd_intf_pins cic_compiler/M_AXIS_DATA] [get_bd_intf_pins iq_tdm_concat_0/s_axis]
-  connect_bd_intf_net -intf_net dds_compiler_0_M_AXIS_DATA [get_bd_intf_pins dds_compiler_0/M_AXIS_DATA] [get_bd_intf_pins iq_mixer_rx_40M_0/s_axis_dds]
   connect_bd_intf_net -intf_net decimator_config2_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_CONFIG] [get_bd_intf_pins decimator_config2_0/m_axis]
-  connect_bd_intf_net -intf_net iq_concat2_0_m_axis [get_bd_intf_pins axis_data_fifo_0/S_AXIS] [get_bd_intf_pins iq_concat2_0/m_axis]
-  connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_imag [get_bd_intf_pins iq_concat2_0/s_axis_imag] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_imag]
-  connect_bd_intf_net -intf_net iq_mixer_rx_40M_0_m_axis_real [get_bd_intf_pins iq_concat2_0/s_axis_real] [get_bd_intf_pins iq_mixer_rx_40M_0/m_axis_real]
+  connect_bd_intf_net -intf_net iq_concat_0_m_axis [get_bd_intf_pins iq_concat_0/m_axis] [get_bd_intf_pins tdm_reformat_rx_0/s_axis]
+  connect_bd_intf_net -intf_net iq_mixer_rx_100M_0_m_axis_imag [get_bd_intf_pins iq_concat_0/s_axis_imag] [get_bd_intf_pins iq_mixer_rx_100M_0/m_axis_imag]
+  connect_bd_intf_net -intf_net iq_mixer_rx_100M_0_m_axis_real [get_bd_intf_pins iq_concat_0/s_axis_real] [get_bd_intf_pins iq_mixer_rx_100M_0/m_axis_real]
   connect_bd_intf_net -intf_net iq_tdm_concat_0_m_axis [get_bd_intf_pins M_AXIS] [get_bd_intf_pins iq_tdm_concat_0/m_axis]
   connect_bd_intf_net -intf_net peak_sample_duc_0_m_axis [get_bd_intf_pins cic_compiler/S_AXIS_DATA] [get_bd_intf_pins peak_sample_duc_0/m_axis]
-  connect_bd_intf_net -intf_net tdm_reformat_rx_0_m_axis [get_bd_intf_pins peak_sample_duc_0/s_axis] [get_bd_intf_pins tdm_reformat_rx_0/m_axis]
+  connect_bd_intf_net -intf_net s_axis_1 [get_bd_intf_pins s_axis] [get_bd_intf_pins iq_mixer_rx_100M_0/s_axis]
 
   # Create port connections
-  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins axis_data_fifo_0/m_axis_aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins decimator_config2_0/axis_aclk] [get_bd_pins iq_tdm_concat_0/aclk] [get_bd_pins peak_sample_duc_0/aclk] [get_bd_pins tdm_reformat_rx_0/aclk]
-  connect_bd_net -net aclk_40M_1 [get_bd_pins aclk_40M] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins dds_compiler_0/aclk] [get_bd_pins iq_concat2_0/axis_aclk] [get_bd_pins iq_mixer_rx_40M_0/axis_aclk]
-  connect_bd_net -net aresetn_40M_1 [get_bd_pins aresetn_40M] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins iq_mixer_rx_40M_0/axis_aresetn]
+  connect_bd_net -net aclk_1 [get_bd_pins aclk] [get_bd_pins cic_compiler/aclk] [get_bd_pins decimator_config2_0/axis_aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_mixer_rx_100M_0/axis_aclk] [get_bd_pins iq_tdm_concat_0/aclk] [get_bd_pins peak_sample_duc_0/aclk] [get_bd_pins tdm_reformat_rx_0/aclk]
+  connect_bd_net -net axis_aresetn_0_1 [get_bd_pins axis_aresetn] [get_bd_pins iq_mixer_rx_100M_0/axis_aresetn]
   connect_bd_net -net decimate_ratio_1 [get_bd_pins decimate_ratio] [get_bd_pins decimator_config2_0/i_decimate_ratio]
-  connect_bd_net -net i_gain_shift_0_1 [get_bd_pins i_gain_shift_mixer] [get_bd_pins iq_mixer_rx_40M_0/i_gain_shift]
   connect_bd_net -net i_gain_shift_0_2 [get_bd_pins i_gain_shift_ddc] [get_bd_pins iq_tdm_concat_0/i_gain_shift]
+  connect_bd_net -net i_gain_shift_mixer_1 [get_bd_pins i_gain_shift_mixer] [get_bd_pins iq_mixer_rx_100M_0/i_gain_shift]
   connect_bd_net -net i_trigger_1 [get_bd_pins i_trigger] [get_bd_pins peak_sample_duc_0/i_trigger]
   connect_bd_net -net peak_sample_duc_0_o_iq_square [get_bd_pins o_iq_square_sum_ddc] [get_bd_pins peak_sample_duc_0/o_iq_square]
-  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_pins Fc_scaled] [get_bd_pins dds_compiler_0/s_axis_phase_tdata]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins dds_compiler_0/s_axis_phase_tvalid] [get_bd_pins xlconstant_0/dout]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -432,74 +403,90 @@ proc create_root_design { parentCell } {
   # Create interface ports
   set M_AXIS [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 M_AXIS ]
 
+  set s_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {0} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {2} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s_axis
+
+  set s_axis_cic [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis_cic ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.HAS_TREADY {0} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {2} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s_axis_cic
+
+  set s_axis_dds_0 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis_dds_0 ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {0} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 32} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} array_type {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chan} size {attribs {resolve_type generated dependency chan_size format long minimum {} maximum {}} value 1} stride {attribs {resolve_type generated dependency chan_stride format long minimum {} maximum {}} value 32} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 32} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_cosine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value cosine} enabled {attribs {resolve_type generated dependency cosine_enabled format bool minimum {} maximum {}} value true} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency cosine_width format long minimum {} maximum {}} value 16} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} real {fixed {fractwidth {attribs {resolve_type generated dependency cosine_fractwidth format long minimum {} maximum {}} value 14} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}} field_sine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value sine} enabled {attribs {resolve_type generated dependency sine_enabled format bool minimum {} maximum {}} value true} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency sine_width format long minimum {} maximum {}} value 16} bitoffset {attribs {resolve_type generated dependency sine_offset format long minimum {} maximum {}} value 16} real {fixed {fractwidth {attribs {resolve_type generated dependency sine_fractwidth format long minimum {} maximum {}} value 14} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}}}}}}} TDATA_WIDTH 32 TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_chanid {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chanid} enabled {attribs {resolve_type generated dependency chanid_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency chanid_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} field_user {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value user} enabled {attribs {resolve_type generated dependency user_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency user_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type generated dependency user_offset format long minimum {} maximum {}} value 0}}}}}} TUSER_WIDTH 0}} \
+   CONFIG.TDATA_NUM_BYTES {4} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s_axis_dds_0
+
 
   # Create ports
-  set ADC_control [ create_bd_port -dir I -from 3 -to 0 ADC_control ]
-  set ADCdata [ create_bd_port -dir I -from 14 -to 0 ADCdata ]
-  set ClockToADC [ create_bd_port -dir O ClockToADC ]
-  set Fc_scaled [ create_bd_port -dir I -from 31 -to 0 Fc_scaled ]
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
-   CONFIG.ASSOCIATED_BUSIF {M_AXIS} \
-   CONFIG.ASSOCIATED_RESET {resetn_0} \
+   CONFIG.ASSOCIATED_BUSIF {M_AXIS:s_axis:s_axis_dds_0:s_axis_cic} \
+   CONFIG.ASSOCIATED_RESET {resetn_0:axis_aresetn_0} \
  ] $aclk
-  set aclk_40M [ create_bd_port -dir I -type clk -freq_hz 40000000 aclk_40M ]
-  set_property -dict [ list \
-   CONFIG.ASSOCIATED_RESET {aresetn_40M:aresetn_40M} \
- ] $aclk_40M
-  set aresetn_40M [ create_bd_port -dir I -type rst aresetn_40M ]
+  set axis_aresetn_0 [ create_bd_port -dir I -type rst axis_aresetn_0 ]
   set decimate_ratio [ create_bd_port -dir I -from 15 -to 0 decimate_ratio ]
   set i_gain_shift_ddc [ create_bd_port -dir I -from 1 -to 0 i_gain_shift_ddc ]
   set i_gain_shift_mixer [ create_bd_port -dir I -from 2 -to 0 i_gain_shift_mixer ]
   set i_trigger [ create_bd_port -dir I i_trigger ]
   set o_iq_square_sum_ddc [ create_bd_port -dir O -from 31 -to 0 o_iq_square_sum_ddc ]
   set o_peak_sample_adc [ create_bd_port -dir O -from 15 -to 0 o_peak_sample_adc ]
-  set status [ create_bd_port -dir O -from 31 -to 0 status ]
-
-  # Create instance: AD9244_to_AXIS_M_0, and set properties
-  set AD9244_to_AXIS_M_0 [ create_bd_cell -type ip -vlnv xilinx.com:user:AD9244_to_AXIS_M AD9244_to_AXIS_M_0 ]
 
   # Create instance: DDC_Mixer
   create_hier_cell_DDC_Mixer [current_bd_instance .] DDC_Mixer
 
-  # Create instance: peak_sample_40M_0, and set properties
-  set block_name peak_sample_40M
-  set block_cell_name peak_sample_40M_0
-  if { [catch {set peak_sample_40M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: peak_sample_100M_0, and set properties
+  set block_name peak_sample_100M
+  set block_cell_name peak_sample_100M_0
+  if { [catch {set peak_sample_100M_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $peak_sample_40M_0 eq "" } {
+   } elseif { $peak_sample_100M_0 eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
   
-  # Create instance: xpm_cdc_gen_1, and set properties
-  set xpm_cdc_gen_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_1 ]
-  set_property -dict [ list \
-   CONFIG.WIDTH {1} \
- ] $xpm_cdc_gen_1
-
   # Create interface connections
-  connect_bd_intf_net -intf_net AD9244_to_AXIS_M_0_m00_axis [get_bd_intf_pins AD9244_to_AXIS_M_0/m00_axis] [get_bd_intf_pins peak_sample_40M_0/s_axis]
   connect_bd_intf_net -intf_net DDC_Mixer_M_AXIS [get_bd_intf_ports M_AXIS] [get_bd_intf_pins DDC_Mixer/M_AXIS]
-  connect_bd_intf_net -intf_net s_axis_1 [get_bd_intf_pins DDC_Mixer/s_axis] [get_bd_intf_pins peak_sample_40M_0/m_axis]
+  connect_bd_intf_net -intf_net peak_sample_100M_0_m_axis [get_bd_intf_pins DDC_Mixer/s_axis] [get_bd_intf_pins peak_sample_100M_0/m_axis]
+  connect_bd_intf_net -intf_net s_axis_0_1 [get_bd_intf_ports s_axis_cic] [get_bd_intf_pins DDC_Mixer/s_axis_cic]
+  connect_bd_intf_net -intf_net s_axis_1 [get_bd_intf_ports s_axis] [get_bd_intf_pins peak_sample_100M_0/s_axis]
+  connect_bd_intf_net -intf_net s_axis_dds_0_1 [get_bd_intf_ports s_axis_dds_0] [get_bd_intf_pins DDC_Mixer/s_axis_dds_0]
 
   # Create port connections
-  connect_bd_net -net AD9244_to_AXIS_M_0_ClockToADC [get_bd_ports ClockToADC] [get_bd_pins AD9244_to_AXIS_M_0/ClockToADC]
-  connect_bd_net -net AD9244_to_AXIS_M_0_status [get_bd_ports status] [get_bd_pins AD9244_to_AXIS_M_0/status]
-  connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
-  connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
   connect_bd_net -net DDC_Mixer_o_iq_square_0 [get_bd_ports o_iq_square_sum_ddc] [get_bd_pins DDC_Mixer/o_iq_square_sum_ddc]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DDC_Mixer/aclk] [get_bd_pins xpm_cdc_gen_1/src_clk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins peak_sample_40M_0/aclk] [get_bd_pins xpm_cdc_gen_1/dest_clk]
-  connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins DDC_Mixer/aresetn_40M]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DDC_Mixer/aclk] [get_bd_pins peak_sample_100M_0/aclk]
+  connect_bd_net -net axis_aresetn_0_1 [get_bd_ports axis_aresetn_0] [get_bd_pins DDC_Mixer/axis_aresetn]
   connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins DDC_Mixer/decimate_ratio]
   connect_bd_net -net i_gain_shift_0_1 [get_bd_ports i_gain_shift_mixer] [get_bd_pins DDC_Mixer/i_gain_shift_mixer]
   connect_bd_net -net i_gain_shift_0_3 [get_bd_ports i_gain_shift_ddc] [get_bd_pins DDC_Mixer/i_gain_shift_ddc]
-  connect_bd_net -net i_trigger_1 [get_bd_ports i_trigger] [get_bd_pins DDC_Mixer/i_trigger] [get_bd_pins xpm_cdc_gen_1/src_in]
-  connect_bd_net -net peak_sample_40M_0_o_peak_sample_40M [get_bd_ports o_peak_sample_adc] [get_bd_pins peak_sample_40M_0/o_peak_sample_40M]
-  connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
-  connect_bd_net -net xpm_cdc_gen_1_dest_out [get_bd_pins peak_sample_40M_0/i_trigger] [get_bd_pins xpm_cdc_gen_1/dest_out]
+  connect_bd_net -net i_trigger_1 [get_bd_ports i_trigger] [get_bd_pins DDC_Mixer/i_trigger] [get_bd_pins peak_sample_100M_0/i_trigger]
+  connect_bd_net -net peak_sample_100M_0_o_peak_sample [get_bd_ports o_peak_sample_adc] [get_bd_pins peak_sample_100M_0/o_peak_sample]
 
   # Create address segments
 

@@ -16,10 +16,12 @@
 
 struct thread_args {
   bool DebugMode;
+  bool Sym1;
   unsigned ModOrder;
   unsigned Nfft;
   unsigned CpLen;
   unsigned OfdmSymbols;
+  unsigned LoopBackBytes;
   Calculated_Ofdm_Parameters *OfdmCalcParams;
 };
 
@@ -32,10 +34,12 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols);
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode, unsigned 
   ModOrder, unsigned Nfft, unsigned CpLen, unsigned OfdmSymbols,
-  Calculated_Ofdm_Parameters *OfdmCalcParams);
+  Calculated_Ofdm_Parameters *OfdmCalcParams, bool DeleteSym1,
+  unsigned LoopBackBytes);
 void *RxDemodulateThread(void *arg);
 void RxDemodulateCancelThread(void);
 int32_T *RxDemodulateGetCurrentDmaBuffer(void);
 ReturnStatusType RxDemodulateCheckThreadRunning(void);
+ReturnStatusType RxDemodulateSaveRawAdcSamples(unsigned LoopBackBytes);
 
 #endif

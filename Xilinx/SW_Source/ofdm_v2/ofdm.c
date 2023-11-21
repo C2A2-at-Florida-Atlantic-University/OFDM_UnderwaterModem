@@ -28,16 +28,23 @@ static FILE *OfdmInfoFile;
 
 int main(int argc, char **argv)
 {
+  //double GainSel;
   unsigned Selection;
   unsigned ScanfRet; // To get rid of warnings
   unsigned CenterFreq;
   unsigned NumBytes;
+  unsigned LoopbackBytes;
+  unsigned DmaLoopSel;
+  unsigned SyncLoopSel;
+  unsigned SyncGuardLoopSel;
   unsigned ScalarGain;
   unsigned RxThread;
   unsigned SyncThreshold;
   unsigned CwIqScale;
   unsigned PadSamples;
   unsigned CicFirIsCic; // 1 = CIC based DUC/DDC
+  unsigned GpReg0;
+  unsigned GpReg1;
   double TxGainDbTime;
   double SyncSymbolGainDB;
   int SyncOffset;
@@ -46,6 +53,7 @@ int main(int argc, char **argv)
   int DebugSelection;
   bool DebugMode;
   bool GlobalMute;
+  bool SwSynchronization;
   char FileName[32];
   unsigned TxOff;
   ReturnStatusType ReturnStatus;
@@ -109,6 +117,11 @@ int main(int argc, char **argv)
 
   CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
 
+  SwSynchronization = false;
+  SyncLoopSel = 0;
+  GpReg0 = 1; // Select FIR by default
+  GpReg1 = 0; // Select full demod path
+
   ReturnStatus = FpgaInterfaceSetup();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
@@ -116,7 +129,8 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  CicFirIsCic = 1;
+  CicFirIsCic = 0;
+  LoopbackBytes = 0;
 
 #ifndef NO_DEVMEM                  // HW specific functions
   usleep(1000);
@@ -128,8 +142,13 @@ int main(int argc, char **argv)
   DirectDmaS2mmIrqClear();         // Clear IRQ for s2mm DMA
   DirectDmaMm2sStatus();           // DMA mm2s status
   DirectDmaS2mmStatus();           // DMA s2mm status
+  HwInterfaceDmaLoopback(0);       // Disable DMA loopback 
+  HwInterfaceSyncLoopback(0);      // Disable Synchronizer loopback
+  HwInterfaceSyncGuardLoopback(0); // Disable Synchronizer loopback
   HwInterfaceDisableDac();         // Disable DAC and PA
   HwInterfaceDisableAdc();         // Disable ADC
+  HwInterfaceGpReg0(GpReg0);
+  HwInterfaceGpReg1(GpReg1);
   ReturnStatus = HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
     OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
     SyncThreshold, SyncOffset);
@@ -171,11 +190,24 @@ int main(int argc, char **argv)
     printf("%s", ReturnStatus.ErrString);
   }
 
-  printf("\nDebug Mode Enabled\n");
+  printf("\n----- DEFAULTS -----\n");
+  printf("Debug Mode Enabled\n");
   DebugMode = true;
+  printf("FIR based DUC/DDC enabled by default\n");
+  printf("--------------------\n\n");
 
   do {
     usleep(1000); // Give some time for prints from threads
+    if (GpReg0)
+      printf("\nFIR based DUC/DDC selected\n");
+    else
+      printf("\nCIC based DUC/DDC selected\n");
+
+    if (GpReg1)
+      printf("Saving raw ADC samples to SD card\n");
+    else
+      printf("Full demod path selected\n");
+
     printf("\n----- MODEM MENU -----\n");
     printf("0  - Exit\n");
     printf("1  - Set Debug/HW Features\n");
@@ -191,6 +223,8 @@ int main(int argc, char **argv)
     printf("11 - Start S2MM DMA\n");
     printf("12 - Stop S2MM DMA\n");
     printf("13 - Enable/Disable CW Tone\n");
+    printf("14 - Set Loopback Mode\n");
+    printf("15 - Set GP Regs\n");
     printf("=> ");
     ScanfRet = scanf("%d", &Selection);
     printf("\n");
@@ -465,7 +499,16 @@ int main(int argc, char **argv)
         
         NumBytes = ((OfdmParams.Nfft+OfdmParams.CpLen)*
           (OfdmTiming.OfdmSymbolsPerFrame)+NFFT_ZC+OfdmParams.CpLen)*4;
-        PadSamples = NUM_DUC_DDC_COEF/2 + NUM_PAD_SAMPLES;
+        if (DmaLoopSel)
+        {
+          printf("Setting Pad samples to 0 for DMA loopback\n");
+          PadSamples = 0;
+        }
+        else
+        {
+          printf("Allocating Pad samples for FIR filter\n");
+          PadSamples = NUM_DUC_DDC_COEF/2 + NUM_PAD_SAMPLES;
+        }
         NumBytes = NumBytes + (PadSamples * 4);
 /*
         if (TxOff)
@@ -488,15 +531,26 @@ int main(int argc, char **argv)
         HwInterfaceEnableDac();
         if (CicFirIsCic)
         {
-          //HwInterfaceSetMixerGain(2);// For CIC
-          //PowerExtraTxGain(2.5,NumBytes/4); // 6dB loss in DUC FIR
-          HwInterfaceSetMixerGain(0);// For CIC
-          PowerExtraTxGain(0,NumBytes/4); // 6dB loss in DUC FIR
+          //HwInterfaceSetMixerGain(2);  // Validated For CIC
+          //PowerExtraTxGain(2.9,NumBytes/4); // Validated 
+          HwInterfaceSetMixerGain(2);// For CIC
+          //PowerExtraTxGain(2.8,NumBytes/4); // 6dB loss in Mixer
+          PowerExtraTxGain(0,NumBytes/4); // 6dB loss in Mixer
         }
         else
         {
-          PowerExtraTxGain(6.1,NumBytes/4); // 6dB loss in DUC FIR
+          //printf("Enter FIR gain (default 2): ");
+          //ScanfRet = scanf("%lf", &GainSel);
+          //HwInterfaceSetFirGain((unsigned)GainSel);
+          //printf("Enter TX gain (default 0): ");
+          //ScanfRet = scanf("%lf", &GainSel);
+          //PowerExtraTxGain(GainSel,NumBytes/4); // 6dB loss in DUC FIR
+          //printf("Enter mixer gain (default 2): ");
+          //ScanfRet = scanf("%lf", &GainSel);
+          //HwInterfaceSetMixerGain((unsigned)GainSel);// For FIR
           HwInterfaceSetMixerGain(2);// For FIR
+          PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+          HwInterfaceSetFirGain(2);
         }
         HwInterfaceTxOn(~TxOff);
         ReturnStatus = DirectDmaPsToPl(NumBytes);
@@ -522,7 +576,6 @@ int main(int argc, char **argv)
         printf("Finished\n");
        break;
 #else
-        DirectDmaSetTxBufferLoop(1);
         printf("Skipped DMA transfer of : %d Bytes\n", NumBytes);
 #endif
         break;
@@ -552,6 +605,25 @@ int main(int argc, char **argv)
         printf("Enter Thread Selection ('0'-Off / '1'-On): ");
         ScanfRet = scanf("%d", &RxThread);
 #ifndef NO_DEVMEM
+        if (SyncLoopSel)
+        {
+          if (SyncGuardLoopSel)
+          {
+            HwInterfaceSetGuardPeriod(
+              OfdmCalcParams.SymbolGuard.FpgaClkSamples);
+          }
+          else
+          {
+            printf("Setting Guard Period to 0 for DMA loopback\n");
+            // Set guard period to 2 samples, 0 will mess up state machine
+            HwInterfaceSetGuardPeriod(0);
+          }
+        }
+        else
+        {
+          HwInterfaceSetGuardPeriod(
+            OfdmCalcParams.SymbolGuard.FpgaClkSamples);
+        }
         ReturnStatus = HwInterfaceConfigureSynchronizer(
           OfdmParams.Nfft, OfdmParams.CpLen, 
           OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
@@ -567,8 +639,8 @@ int main(int argc, char **argv)
           break;
         }
         HwInterfaceEnableAdc();
-        HwInterfaceSetMixerGain(0); // 6dB loss in Mixer
-        HwInterfaceSetDdcGain(0);
+        HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
+        HwInterfaceSetDdcGain(1);
         HwInterfaceSetTrigger();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
@@ -577,7 +649,8 @@ int main(int argc, char **argv)
         {
           ReturnStatus = RxDemodulateCreateThread(DebugMode,
             OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
-            OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams);
+            OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams,
+            SwSynchronization, LoopbackBytes);
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
@@ -593,7 +666,7 @@ int main(int argc, char **argv)
 //////////////////////////////////////////////////////////////////////////
 #ifndef NO_DEVMEM
       case 11:
-        ReturnStatus = DirectDmaPlToPsThread();
+        ReturnStatus = DirectDmaPlToPsThread(GpReg1);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -622,6 +695,60 @@ int main(int argc, char **argv)
         }
         break;
 
+//////////////////////////////////////////////////////////////////////////
+      case 14:
+        printf("Enable/Disable DMA loopback ('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &DmaLoopSel);
+        if (DmaLoopSel)
+        {
+          DirectDmaSetNumBytesForLoopback(((OfdmParams.Nfft+
+            OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame+1)+
+            NFFT_ZC+OfdmParams.CpLen)*4);
+          SwSynchronization = true;
+        }
+        else
+        {
+          SwSynchronization = false;
+        }
+        HwInterfaceDmaLoopback(DmaLoopSel);
+        printf("Enable/Disable Synchronizer Loopback "
+          "('0'-Off / '1'-On): ");
+        ScanfRet = scanf("%d", &SyncLoopSel);
+        HwInterfaceSyncLoopback(SyncLoopSel);
+        if (SyncLoopSel)
+        {
+          printf("Enable/Disable guard module in sync loopback: "
+            "('0'-Off / '1'-On): ");
+          ScanfRet = scanf("%d", &SyncGuardLoopSel);
+          HwInterfaceSyncGuardLoopback(SyncGuardLoopSel);
+        }
+        else
+        {
+          HwInterfaceSyncGuardLoopback(0);
+        }
+        break;
+
+//////////////////////////////////////////////////////////////////////////
+      case 15:
+        printf("GP Reg 0 ('0'-CIC / '1'-FIR DUC/DDC): ");
+        ScanfRet = scanf("%d", &GpReg0);
+        HwInterfaceGpReg0(GpReg0);
+        printf("GP Reg 0 ('0'-Normal Demod Path / '1'-Save Raw "
+          "ADC samples): ");
+        ScanfRet = scanf("%d", &GpReg1);
+        HwInterfaceGpReg1(GpReg1);
+        if (GpReg1) // Save ADC samples
+        {
+          LoopbackBytes = (OfdmParams.Nfft+
+            OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame)*4*
+            DacParams.Interp*4;
+          DirectDmaSetNumBytesForLoopback(LoopbackBytes);
+        }
+        else
+          LoopbackBytes = 0;
+        break;
+
+//////////////////////////////////////////////////////////////////////////
       default:
         printf("Invalid selection\n");
     }

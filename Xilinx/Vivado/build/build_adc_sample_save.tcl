@@ -4,23 +4,23 @@
 
 # Make sure to set environment variable $FAU_OFDM_REPO_PATH to root of this git repo
 # This script will build the OFDM base project for the Modem board
-# Run "vivado -mode batch -source build_radio_top_v2_reload.tcl"
+# Run "vivado -mode batch -source build_adc_sample_save.tcl"
 
 set FAU_OFDM_REPO_PATH $::env(FAU_OFDM_REPO_PATH)
-create_project -force radio_top_v2_reload_fir radio_top_v2_reload_fir -part xc7z010clg400-1
+create_project -force adc_sample_save adc_sample_save -part xc7z010clg400-1
 # BD Wrapper has to be verilog or else simulation crashes
 set_property target_language Verilog [current_project]
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
-source ADC_Chain_FIR_250k_bd.tcl
-source DAC_Chain_FIR_250k_bd.tcl
+source ADC_Chain_bd.tcl
+source DAC_Chain_bd.tcl
 source PS_Zynq_v2_bd.tcl
 source Ofdm_Sync_250k_reload_bd.tcl
-source Radio_Top_v2_reload_FIR_bd.tcl
+source Radio_Top_v2_reload_bd.tcl
 update_compile_order -fileset sources_1
-make_wrapper -files [get_files $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2_reload_fir/radio_top_v2_reload_fir.srcs/sources_1/bd/Radio_Top_v2/Radio_Top_v2.bd] -top
-add_files -norecurse $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2_reload_fir/radio_top_v2_reload_fir.gen/sources_1/bd/Radio_Top_v2/hdl/Radio_Top_v2_wrapper.v
+make_wrapper -files [get_files $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/adc_sample_save/adc_sample_save.srcs/sources_1/bd/Radio_Top_v2/Radio_Top_v2.bd] -top
+add_files -norecurse $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/adc_sample_save/adc_sample_save.gen/sources_1/bd/Radio_Top_v2/hdl/Radio_Top_v2_wrapper.v
 update_compile_order -fileset sources_1
 set_property top Radio_Top_v2_wrapper [current_fileset]
 update_compile_order -fileset sources_1

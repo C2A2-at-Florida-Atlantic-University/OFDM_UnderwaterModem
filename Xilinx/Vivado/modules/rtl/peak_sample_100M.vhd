@@ -9,7 +9,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 
-entity peak_sample is
+entity peak_sample_100M is
   generic(
     g_DATA_WIDTH                  : integer := 16;
     g_ILA                         : boolean := false
@@ -26,16 +26,16 @@ entity peak_sample is
     i_trigger                     : in  std_logic;
     o_peak_sample                 : out std_logic_vector(g_DATA_WIDTH-1 downto 0)
   );
-end entity peak_sample;
+end entity peak_sample_100M;
  
-architecture RTL of peak_sample is 
+architecture RTL of peak_sample_100M is 
 
   attribute X_INTERFACE_INFO      : string;
   attribute X_INTERFACE_PARAMETER : string;
   
   attribute X_INTERFACE_INFO      of aclk    : signal is "xilinx.com:signal:clock:1.0 aclk CLK";
   attribute X_INTERFACE_PARAMETER of aclk    : 
-    signal is "ASSOCIATED_BUSIF aclk:s_axis:m_axis, FREQ_HZ 10000000";
+    signal is "ASSOCIATED_BUSIF aclk:s_axis:m_axis, FREQ_HZ 100000000";
 
   signal r_trigger                : std_logic;
   signal r_peak_sample            : std_logic_vector(g_DATA_WIDTH-1 downto 0) := (others => '0');
@@ -71,7 +71,6 @@ begin
 
   m_axis_tdata                    <= s_axis_tdata;
   m_axis_tvalid                   <= s_axis_tvalid;
-  --m_axis_tvalid                   <= i_trigger;
 
   o_peak_sample                   <= r_peak_sample;
 

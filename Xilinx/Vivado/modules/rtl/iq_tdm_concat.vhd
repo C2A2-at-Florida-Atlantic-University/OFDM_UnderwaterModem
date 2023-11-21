@@ -6,10 +6,13 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
 
 entity iq_tdm_concat is
   generic(
-    g_TDATA_WIDTH                 : integer := 32
+    g_TDATA_WIDTH                 : integer := 32;
+    g_ILA                         : boolean := false
   );
   port(
     aclk                          : in  std_logic;
@@ -36,11 +39,26 @@ architecture RTL of iq_tdm_concat is
   attribute X_INTERFACE_PARAMETER of aclk    : 
     signal is "ASSOCIATED_BUSIF aclk:s_axis:m_axis, FREQ_HZ 100000000";
 
-  type t_state is (I_SAMPLE, Q_SAMPLE);
-  signal Current_State            : t_state := I_SAMPLE;
-  signal Next_State               : t_state := I_SAMPLE;
+  component ila_0 is
+    port(
+      clk                         : in  std_logic;
+      probe0                      : in  std_logic_vector(69 downto 0)
+    );
+  end component ila_0;
+
+  signal probe0                   : std_logic_vector(69 downto 0);
+
+  constant I_SAMPLE               : std_logic := '0';
+  constant Q_SAMPLE               : std_logic := '1';
+
+  signal Current_State            : std_logic := I_SAMPLE;
+  signal Next_State               : std_logic := I_SAMPLE;
 
   signal i_data                   : std_logic_vector(15 downto 0) := (others => '0');
+
+  signal r_axis_tdata             : std_logic_vector(31 downto 0);
+  signal r_axis_tvalid            : std_logic;
+  signal r_s_axis_tready          : std_logic;
 
 begin
 
@@ -112,36 +130,54 @@ begin
       when I_SAMPLE =>
         --if m_axis_tready = '1' and s_axis_tvalid = '1' then
           --m_axis_tdata            <= s_axis_tdata(15 downto 0);
-        m_axis_tdata              <= (others => '0');
-        s_axis_tready             <= '0';
-        m_axis_tvalid             <= '0';
+        r_axis_tdata              <= (others => '0');
+        r_s_axis_tready           <= '0';
+        r_axis_tvalid             <= '0';
 
       when Q_SAMPLE =>
         if m_axis_tready = '1' then
           case i_gain_shift is
             when "00" =>
-              m_axis_tdata        <= s_axis_tdata & i_data;
+              r_axis_tdata        <= s_axis_tdata & i_data;
             when "01" =>
-              m_axis_tdata        <= s_axis_tdata(14 downto 0) & '0' & i_data(14 downto 0) & '0';
+              r_axis_tdata        <= s_axis_tdata(14 downto 0) & '0' & i_data(14 downto 0) & '0';
             when "10" =>
-              m_axis_tdata        <= s_axis_tdata(13 downto 0) & "00" & i_data(13 downto 0) & "00";
+              r_axis_tdata        <= s_axis_tdata(13 downto 0) & "00" & i_data(13 downto 0) & "00";
             when "11" =>
-              m_axis_tdata        <= s_axis_tdata(12 downto 0) & "000" & i_data(12 downto 0) & "000";
+              r_axis_tdata        <= s_axis_tdata(12 downto 0) & "000" & i_data(12 downto 0) & "000";
             when others =>
-              m_axis_tdata        <= s_axis_tdata & i_data;
+              r_axis_tdata        <= s_axis_tdata & i_data;
           end case;
         else
-          m_axis_tdata            <= (others => '0');
+          r_axis_tdata            <= (others => '0');
         end if;
-        s_axis_tready             <= '1';
-        m_axis_tvalid             <= s_axis_tvalid and m_axis_tready;
+        r_s_axis_tready           <= '1';
+        r_axis_tvalid             <= s_axis_tvalid and m_axis_tready;
 
       when others =>
-        s_axis_tready             <= '0';
-        m_axis_tdata              <= (others => '0');
-        m_axis_tvalid             <= '0';
+        r_s_axis_tready           <= '0';
+        r_axis_tdata              <= (others => '0');
+        r_axis_tvalid             <= '0';
 
     end case;
   end process p_OUTPUT_SIGNALS;
+
+  m_axis_tdata                    <= r_axis_tdata;
+  m_axis_tvalid                   <= r_axis_tvalid;
+  s_axis_tready                   <= r_s_axis_tready;
+
+  ila_gen : if g_ILA generate
+
+    probe0                        <= s_axis_tdata & s_axis_tvalid & s_axis_tlast & 
+                                     r_axis_tdata & r_axis_tvalid & r_s_axis_tready &
+                                     Current_State & Next_State & X"0000";
+
+    ila_inst : ila_0
+      port map(
+        clk                         => aclk,
+        probe0                      => probe0
+      );
+
+  end generate;
 
 end architecture RTL;

@@ -1,0 +1,10 @@
+create_run inpl_2  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Performance_Explore
+create_run inpl_3  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Performance_ExtraTimingOpt
+create_run inpl_4  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Performance_RefinePlacement
+create_run inpl_5  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Performance_ExplorePostRoutePhysOpt
+create_run inpl_6  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Performance_EarlyBlockPlacement
+create_run inpl_7  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Congestion_SpreadLogic_high
+create_run inpl_8  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Congestion_SpreadLogic_medium
+create_run inpl_9  -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Congestion_SpreadLogic_low
+create_run inpl_10 -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Area_Explore
+create_run inpl_11 -parent_run synth_1 -flow {Vivado Implementation 2022} -strategy Area_ExploreWithRemap

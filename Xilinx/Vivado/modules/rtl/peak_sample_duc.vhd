@@ -23,10 +23,12 @@ entity peak_sample_duc is
     s_axis_tdata                  : in  std_logic_vector(g_DATA_WIDTH-1 downto 0);
     s_axis_tvalid                 : in  std_logic;
     s_axis_tlast                  : in  std_logic;
+    s_axis_tready                 : out std_logic;
 
     m_axis_tdata                  : out std_logic_vector(g_DATA_WIDTH-1 downto 0);
     m_axis_tvalid                 : out std_logic;
     m_axis_tlast                  : out std_logic;
+    m_axis_tready                 : in  std_logic;
 
     i_trigger                     : in  std_logic;
     o_iq_square                   : out std_logic_vector(g_DATA_WIDTH*2-1 downto 0)
@@ -129,6 +131,8 @@ begin
   m_axis_tdata                    <= s_axis_tdata;
   m_axis_tvalid                   <= s_axis_tvalid;
   m_axis_tlast                    <= s_axis_tlast;
+
+  s_axis_tready                   <= m_axis_tready;
 
   o_iq_square                     <= r_iq_mult;
 

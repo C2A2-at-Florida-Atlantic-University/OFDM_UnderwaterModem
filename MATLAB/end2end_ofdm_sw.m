@@ -108,7 +108,7 @@ num_bits = 14;                  % Number of bits in a sample
 cic_scale = 50;                 % Scaling of CIC
 
 % Channel parameters
-snr_db = 10;
+snr_db = 14;
 multipath = [0 0 0 0 0 0 0 0 0.5 0.5 0 0 1 0.2 0.54 0 0 0 0 0 0.6 ...
     0.1 0.2 0.1 0.4 0.1 0 0 0 0.1 0.05 0.02 0.2 0.2 0.1 0.1 0.1 0.05 0 ...
     0.1 0.2 0.1 0.4 0.1 0 0 0 0.1 0.05 0.02 0.2 0.2 0.1 0.1 0.1 0.05 0 ...
@@ -356,14 +356,22 @@ ofdm_tx_signal_ser = [extra_sync_gain*ifft_gain*sync_tx_time.'; ...
 % DUC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if (FIR_BASED_NOT_CIC)
-    [kdk,fir_taps] = interp(ofdm_tx_signal_ser,Interp_val,10,1);
+%      [kdk,fir_taps] = interp(ofdm_tx_signal_ser,Interp_val,10,1);
+%     filter_delay = floor(length(fir_taps)/2);
+%     ofdm_tx_signal_zp = [zeros(filter_delay,1);ofdm_tx_signal_ser; ...
+%         zeros(filter_delay,1)];
+%     ofdm_duc_signal = interp(ofdm_tx_signal_zp,Interp_val,10,1);
+%     ofdm_duc_signal = ofdm_duc_signal(filter_delay*Interp_val+1:end- ...
+%         filter_delay*Interp_val);
+%     ofdm_duc_signal = ofdm_duc_signal.';
+    fir_taps = fir1(1024,1/(DAC_FS/Fs));
+    fir_taps = fir_taps / sqrt(sum(fir_taps.^2));
     filter_delay = floor(length(fir_taps)/2);
-    ofdm_tx_signal_zp = [zeros(filter_delay,1);ofdm_tx_signal_ser; ...
-        zeros(filter_delay,1)];
-    ofdm_duc_signal = interp(ofdm_tx_signal_zp,Interp_val,10,1);
-    ofdm_duc_signal = ofdm_duc_signal(filter_delay*Interp_val+1:end- ...
-        filter_delay*Interp_val);
-    ofdm_duc_signal = ofdm_duc_signal.';
+    up_signal = upsample(ofdm_tx_signal_ser, Interp_val);
+    up_signal = [up_signal;zeros(filter_delay,1)];
+    ofdm_duc_signal = filter(fir_taps, 1, up_signal).'*7;
+    ofdm_duc_signal(1:filter_delay) = [];
+
 else
     % Read Captured Xilinx CIC Filter impulse Response:
     file = fopen('../Xilinx/Vivado/modules/sim/cic_duc_test_out.txt','r');
@@ -469,6 +477,7 @@ file = fopen('../Xilinx/SW_Source/ofdm_v2/files/RxFftSamples1.txt','r');
 fft_sw = fscanf(file,"%d, %d\n", [2 ofdm_symbols*(cp_len+nfft)]);
 fclose('all');
 fft_sw = complex(fft_sw(1,:),fft_sw(2,:));
+mat_sw = ddc_base_signal(nfft_zc+1:end);
 figure(),plot(F/1000,10*log10(abs(fftshift(fft(fft_sw,nfft_p)))))
 xlabel('kHz'),ylabel('dB'),title('FFT Input Spectrum')
 
@@ -479,6 +488,15 @@ title('Real'),legend('MATLAB','SW'),subplot(2,1,2),plot(imag( ...
     reshape(ofdm_tx_signal_par1,[1 ofdm_symbols*(cp_len+nfft)])),'LineWidth',2)
 hold on,plot(imag(fft_sw*scale)),legend('MATLAB','SW'),title('Imaginary')
 sgtitle('FFT Input')
+scale = -0.36; % Full Demod path
+scale = 1; % Internal loopback
+fft_sw1 = fft_sw*scale;
+fft_sw = reshape(fft_sw, [nfft+cp_len ofdm_symbols]);
+gp = zeros(gp_samples,ofdm_symbols);   
+fft_sw = vertcat(fft_sw,gp);
+fft_sw = reshape(fft_sw, [(nfft+cp_len+length(gp))*ofdm_symbols 1]);
+fft_sw = [zeros(nfft_zc+cp_len+gp_samples,1);fft_sw];
+fft_sw = scale*fft_sw;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Synchronization
@@ -546,8 +564,8 @@ end
 vertical_lines = [nfft_zc vertical_lines];
 line_label = ["Sync", line_label];
 figure(),subplot(3,1,1),plot(t_p/1000,real(ofdm_tx_signal_ser), ...
-    'LineWidth',2),hold on,plot(t_p/1000,real(ddc_base_signal))
-plot(t_p/1000,real(ddc_doppler))
+    'LineWidth',2),hold on,plot(t_p/1000,real(ddc_doppler))
+plot(t_p/1000,real(fft_sw))
 for i = 1:length(vertical_lines)
     if i == 1
         xline(vertical_lines(i)*Ts/1000,'--r',line_label{i}, ...
@@ -558,10 +576,10 @@ for i = 1:length(vertical_lines)
             'LabelVerticalAlignment','bottom');
     end
 end
-legend('TX','AWGN Channel','UW-A Channel')
+legend('TX','UW-A MAT Channel','UW-A Channel')
 xlabel('Time (ms)'),title('In Phase'),subplot(3,1,2)
 plot(t_p/1000,imag(ofdm_tx_signal_ser),'LineWidth',2),hold on
-plot(t_p/1000,imag(ddc_base_signal)),plot(t_p/1000,imag(ddc_doppler))
+plot(t_p/1000,imag(ddc_doppler)),plot(t_p/1000,imag(fft_sw))
 for i = 1:length(vertical_lines)
     if i == 1
         xline(vertical_lines(i)*Ts/1000,'--r',line_label{i}, ...
@@ -572,7 +590,7 @@ for i = 1:length(vertical_lines)
             'LabelVerticalAlignment','bottom');
     end
 end
-legend('TX','AWGN Channel','UW-A doppler'),xlabel('Time (ms)')
+legend('TX','UW-A MAT Channel','UW-A doppler'),xlabel('Time (ms)')
 title('Quadrature'),subplot(3,1,3),plot(t_p/1000,sync_corr_filt),hold on
 plot(t_p/1000,sync_corr_doppler)
 vertical_lines = [ind2-gp_samples-cp_len vertical_lines];
@@ -581,7 +599,7 @@ xline(vertical_lines(2)*Ts/1000,'--b',line_label{2}, ...
     'LabelHorizontalAlignment','left')
 xline(vertical_lines(1)*Ts/1000,'--r',line_label{1}, ...
     'LabelHorizontalAlignment','left','LabelVerticalAlignment','bottom')
-legend('AWGN Channel','UW-A Channel','AWGN Timing','UW-A Timing')
+legend('AWGN Channel','UW-A MAT Channel','AWGN Timing','UW-A MAT Timing')
 xlabel('Time (ms)'),title('Synchronizer Correlator Output')
 sgtitle('Baseband OFDM Signal')
 
@@ -601,7 +619,17 @@ ofdm_rx_signal_par(end-gp_samples+1:end,:) = [];
 
 if (RXFFTSIM)
     %ofdm_rx_signal_par = ofdm_tx_signal_par1;
-    ofdm_rx_signal_par = reshape(fft_sw, [(nfft+cp_len) ofdm_symbols]);
+
+%     fft_sw1 = reshape(fft_sw1, [(nfft+cp_len) ofdm_symbols]);
+%     fft_sw1(end-6:end,:) = ofdm_rx_signal_par(end-6:end,:);
+%     fft_sw1 = reshape(fft_sw1, [(nfft+cp_len)*ofdm_symbols 1]);  
+    figure(),subplot(2,1,1),plot(real(ofdm_rx_signal_par(1:nfft+cp_len)), ...
+        'LineWidth',2),hold on,plot(real(fft_sw1(1:nfft+cp_len))),title('Real')
+    legend('MATLAB','SW'),subplot(2,1,2),plot(imag(ofdm_rx_signal_par( ...
+        1:nfft+cp_len)),'LineWidth',2),hold on,plot(imag(fft_sw1(1:nfft+cp_len)))
+    title('Imaginary'),legend('MATLAB','SW'),sgtitle('FFT Input')
+
+    ofdm_rx_signal_par = reshape(fft_sw1, [(nfft+cp_len) ofdm_symbols]);
 end
 
 % Save and remove CP
@@ -934,9 +962,11 @@ ylim(y_lim),xlim(x_lim),grid on
 title({'UW-A Channel','SW with Equalization'})
 sgtitle('Equalizer Output')
 
-symbol = 1;
-figure(),scatter(real(EQ_sw(:,symbol)),imag(EQ_sw(:,symbol)),'.')
-title('SW')
+symbol = 4;
+for i=1:ofdm_symbols
+    figure(),scatter(real(EQ_sw(:,i)),imag(EQ_sw(:,i)),'.')
+    title(['SW Symbol ',num2str(i)])
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % QAM Demodulation
