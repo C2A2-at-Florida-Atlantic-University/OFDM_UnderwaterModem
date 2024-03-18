@@ -109,6 +109,7 @@ ZC_length = nfft_zc/2;                         % Zadof-Chu length
 sync_samples_early = 0;                     % Number of samples to synchronize early
 pilot_density = 0.5;                       % Pilot carrier to data carrier density
 DAC_FS = 10000000;                          % Sample frequency of the DAC
+ADC_FS = 40000000;                          % Sample frequency of the ADC
 nfft_p = 32*nfft;                            % FFT size for plotting spectrum
 Delay_samples = nfft/2; % Baseband samples of Delay channel to exercise the synchronizer
 if (SIM_DDC_40M)

@@ -16,9 +16,9 @@
 
 #ifndef NO_DEVMEM
 static pthread_t DmaThread = (pthread_t)NULL;
-static unsigned LoopBackBytes;
 static unsigned DmaPlToPsComplete;
 #endif
+static unsigned LoopBackBytes;
 static bool GlobalMute;
 
 void DirectDmaSetGlobalMute(bool GlobalMuteSelect)
@@ -53,12 +53,21 @@ void DirectDmaS2mmStatus(void)
   printf("DirectDmaS2mmStatus: Status: 0x%X\n", RegVal);
 }
 
+unsigned DirectDmaBuffReadStatus(void)
+{
 #ifndef NO_DEVMEM
+  return DmaPlToPsComplete;
+#else
+  return 1;
+#endif
+}
 
 void DirectDmaSetNumBytesForLoopback(unsigned Bytes)
 {
   LoopBackBytes = Bytes;
 }
+
+#ifndef NO_DEVMEM
 
 void DirectDmaPsToPlInit(unsigned start) // Enable or Disable PS to PL DMA
 {
@@ -228,11 +237,6 @@ void DirectDmaPlToPsThreadCancel(void)
   }
 }
   
-unsigned DirectDmaBuffReadStatus(void)
-{
-  return DmaPlToPsComplete;
-}
-
 void DirectDmaPlToPsInit(unsigned start) // Enable PL to PS
 {
   FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_CONTROL_OFFSET, DMA_RESET,
@@ -271,7 +275,7 @@ void *DirectDmaPlToPs(void *arg)
   {
     if ((int)arg)
     {
-      printf("DirectDmaPlToPs: Saving %d bytes of raw ADC samples\n",
+      printf("DirectDmaPlToPs: Saving %d bytes of raw DAC/ADC samples\n",
         LoopBackBytes);
       if (LoopBackBytes > RX_BUFFER_SPAN)
       {

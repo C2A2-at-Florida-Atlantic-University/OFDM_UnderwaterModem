@@ -25,6 +25,7 @@ Ofdm_Timing_Type OfdmTiming;
 Calculated_Ofdm_Parameters OfdmCalcParams;
 Dac_Parameters_Type DacParams;
 static FILE *OfdmInfoFile;
+static FILE *PresetFile = NULL;
 
 int main(int argc, char **argv)
 {
@@ -42,9 +43,11 @@ int main(int argc, char **argv)
   unsigned SyncThreshold;
   unsigned CwIqScale;
   unsigned PadSamples;
-  unsigned CicFirIsCic; // 1 = CIC based DUC/DDC
-  unsigned GpReg0;
-  unsigned GpReg1;
+  unsigned FirCicIsFir;
+  unsigned AdcSampleSave;
+  unsigned DacSampleSave;
+  unsigned FirSampleSave;
+  unsigned SampleSave;
   double TxGainDbTime;
   double SyncSymbolGainDB;
   int SyncOffset;
@@ -55,6 +58,7 @@ int main(int argc, char **argv)
   bool GlobalMute;
   bool SwSynchronization;
   char FileName[32];
+  char PresetFileName[32];
   unsigned TxOff;
   ReturnStatusType ReturnStatus;
 
@@ -69,7 +73,7 @@ int main(int argc, char **argv)
     //printf("Default to TX on\n");
     //TxOff = 0;
   }
-  else if (argc == 2)
+  else if (argc >= 2)
   {
     if (!(atoi(argv[1])))
     {
@@ -96,26 +100,81 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  // Set default values
-  OfdmParams.Nfft = DEFAULT_NFFT;
-  OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
-  OfdmParams.CpLen = DEFAULT_CP_LEN;
-  OfdmParams.ZpDensity = DEFAULT_ZP_DENSITY;
-  OfdmParams.ModOrder = DEFAULT_MOD_ORDER;
+  if (argc == 3)
+  {
+    printf("Selecting preset %d\n", atoi(argv[2]));
+    sprintf(PresetFileName,"files/preset/preset_%d.txt", 
+      atoi(argv[2]));
+    PresetFile = fopen(PresetFileName,"r");
+    if (PresetFile == NULL)
+    {
+      printf("Error: Could not open %s, Exiting\n", PresetFileName);
+      return 1;
+    }
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmParams.Nfft);
+    ScanfRet = fscanf(PresetFile, "%lf", &OfdmParams.BandWidth);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmParams.CpLen);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmParams.ModOrder);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmParams.ZpDensity);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmTiming.SymbolGuardPeriod);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmTiming.FrameGuardPeriod);
+    ScanfRet = fscanf(PresetFile, "%d", &OfdmTiming.OfdmSymbolsPerFrame);
+    ScanfRet = fscanf(PresetFile, "%d", &TxGainDb);
+    ScanfRet = fscanf(PresetFile, "%lf", &TxGainDbTime);
+    ScanfRet = fscanf(PresetFile, "%lf", &SyncSymbolGainDB);
+    ScanfRet = fscanf(PresetFile, "%d", &RxGainDb);
+    ScanfRet = fscanf(PresetFile, "%X", &SyncThreshold);
+    ScanfRet = fscanf(PresetFile, "%d", &SyncOffset);
+    ScanfRet = fscanf(PresetFile, "%d", &CenterFreq);
+    printf("\nPreset Config Parameters:\n");
+  }
+  else
+  {
+    printf("No preset selected, using default values\n");
+    // Set default values
+    OfdmParams.Nfft = DEFAULT_NFFT;
+    OfdmParams.BandWidth = DEFAULT_BANDWIDTH;
+    OfdmParams.CpLen = DEFAULT_CP_LEN;
+    OfdmParams.ModOrder = DEFAULT_MOD_ORDER;
+    OfdmParams.ZpDensity = DEFAULT_ZP_DENSITY;
 
-  OfdmTiming.SymbolGuardPeriod = DEFAULT_SYMBOL_GUARD_PERIOD;
-  OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
-  OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
+    OfdmTiming.SymbolGuardPeriod = DEFAULT_SYMBOL_GUARD_PERIOD;
+    OfdmTiming.FrameGuardPeriod = DEFAULT_FRAME_GUARD_PERIOD;
+    OfdmTiming.OfdmSymbolsPerFrame = DEFAULT_SYMBOlS_PER_FRAME;
 
-  TxGainDb = DEFAULT_FREQ_DIGITAL_GAIN_DBFS;
-  TxGainDbTime = DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB;
-  SyncSymbolGainDB = DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB;
-  RxGainDb = DEFAULT_RX_GAIN_DB;
+    TxGainDb = DEFAULT_FREQ_DIGITAL_GAIN_DBFS;
+    TxGainDbTime = DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB;
+    SyncSymbolGainDB = DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB;
+    RxGainDb = DEFAULT_RX_GAIN_DB;
 
-  SyncThreshold = DEFAULT_SYNC_THRESHOLD;
-  SyncOffset = DEFAULT_SYNCHRONIZER_OFFSET;
+    SyncThreshold = DEFAULT_SYNC_THRESHOLD;
+    SyncOffset = DEFAULT_SYNCHRONIZER_OFFSET;
 
-  CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+    CenterFreq = DEFAULT_CENTER_FREQUENCY_KHZ;
+    printf("\nDefault Config Parameters:\n");
+  }
+  printf("\tNfft: %d\n",OfdmParams.Nfft);
+  printf("\tBandWidth: %lf kHz\n", OfdmParams.BandWidth);
+  printf("\tCpLen: %d\n", OfdmParams.CpLen);
+  printf("\tModOrder: %d\n", OfdmParams.ModOrder);
+  printf("\tZpDensity: %d%%\n", OfdmParams.ZpDensity);
+  printf("\tSymbol Guard Period: %d ms\n", OfdmTiming.SymbolGuardPeriod);
+  printf("\tFrame Guard Period: %d ms \n", OfdmTiming.FrameGuardPeriod);
+  printf("\tSymbols Per Frame: %d\n", OfdmTiming.OfdmSymbolsPerFrame);
+  printf("\tIFFT gain: %ddB\n", TxGainDb);
+  printf("\tTx Time Domain Gain: %lf dB\n", TxGainDbTime);
+  printf("\tSynchronization Symbol Gain: %lf dB\n", SyncSymbolGainDB);
+  printf("\tRx Gain: %d dB\n", RxGainDb);
+  printf("\tSynchronization Threshold: 0x%X\n", SyncThreshold);
+  printf("\tSynchronization Offset: %d samples\n", SyncOffset);
+  printf("\tCenter Frequency: %d kHz\n\n", CenterFreq);
+
+  SwSynchronization = false;
+  SyncLoopSel = 0;
+  FirCicIsFir = 1; // Select FIR by default
+  AdcSampleSave = 0; // Select full demod path
+  DacSampleSave = 0;
+  FirSampleSave = 0;
 
   SwSynchronization = false;
   SyncLoopSel = 0;
@@ -129,8 +188,8 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  CicFirIsCic = 0;
   LoopbackBytes = 0;
+  DmaLoopSel = 0;
 
 #ifndef NO_DEVMEM                  // HW specific functions
   usleep(1000);
@@ -147,8 +206,11 @@ int main(int argc, char **argv)
   HwInterfaceSyncGuardLoopback(0); // Disable Synchronizer loopback
   HwInterfaceDisableDac();         // Disable DAC and PA
   HwInterfaceDisableAdc();         // Disable ADC
-  HwInterfaceGpReg0(GpReg0);
-  HwInterfaceGpReg1(GpReg1);
+  HwInterfaceResetTrigger();
+  HwInterfaceGpReg0(1);
+  HwInterfaceGpReg1(0);
+  HwInterfaceSetDacSampleSave(DacSampleSave);
+  HwInterfaceSetFirSampleSave(FirSampleSave);
   ReturnStatus = HwInterfaceConfigureSynchronizer(OfdmParams.Nfft, 
     OfdmParams.CpLen, OfdmTiming.OfdmSymbolsPerFrame,
     SyncThreshold, SyncOffset);
@@ -156,9 +218,17 @@ int main(int argc, char **argv)
   HwInterfaceSineToneSet(0);
 #endif
 
-  ReturnStatus = DacChainSetDacParams(DEFAULT_BANDWIDTH,
+  ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
     CenterFreq, false);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+  }
   ReturnStatus = TxModulateDigitalGain(TxGainDb);
+  if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+  {
+    printf("%s", ReturnStatus.ErrString);
+  }
   TxModulateSetIfftGain(TxGainDbTime);
   TxModulateSetSyncGain(SyncSymbolGainDB);
   ScalarGain = TxModulateGetScalarGain();
@@ -167,6 +237,7 @@ int main(int argc, char **argv)
   DacParams = DacChainGetDacParams();
   HwInterfaceSetGuardPeriod(
     OfdmCalcParams.SymbolGuard.FpgaClkSamples);
+
 
 #ifndef NO_DEVMEM
   ReturnStatus = HwInterfaceGpioSetup();
@@ -198,13 +269,15 @@ int main(int argc, char **argv)
 
   do {
     usleep(1000); // Give some time for prints from threads
-    if (GpReg0)
+    if (FirCicIsFir)
       printf("\nFIR based DUC/DDC selected\n");
     else
       printf("\nCIC based DUC/DDC selected\n");
 
-    if (GpReg1)
+    if (AdcSampleSave)
       printf("Saving raw ADC samples to SD card\n");
+    else if (DacSampleSave)
+      printf("Saving raw DAC samples to SD card\n");
     else
       printf("Full demod path selected\n");
 
@@ -259,8 +332,6 @@ int main(int argc, char **argv)
         }
         HwInterfaceSetGlobalMute(GlobalMute);
         DirectDmaSetGlobalMute(GlobalMute);
-        printf("Set CIC based DUC/DDC (1) or FIR based (0): ");
-        ScanfRet = scanf("%d", &CicFirIsCic);
         break;
 
 //////////////////////////////////////////////////////////////////////////
@@ -529,11 +600,11 @@ int main(int argc, char **argv)
           SyncOffset);
         HwInterfaceSynchronizerStatus(true);
         HwInterfaceEnableDac();
-        if (CicFirIsCic)
+        if (FirCicIsFir == 0)
         {
           //HwInterfaceSetMixerGain(2);  // Validated For CIC
           //PowerExtraTxGain(2.9,NumBytes/4); // Validated 
-          HwInterfaceSetMixerGain(2);// For CIC
+          HwInterfaceSetMixerGain(1);// For CIC
           //PowerExtraTxGain(2.8,NumBytes/4); // 6dB loss in Mixer
           PowerExtraTxGain(0,NumBytes/4); // 6dB loss in Mixer
         }
@@ -548,11 +619,33 @@ int main(int argc, char **argv)
           //printf("Enter mixer gain (default 2): ");
           //ScanfRet = scanf("%lf", &GainSel);
           //HwInterfaceSetMixerGain((unsigned)GainSel);// For FIR
-          HwInterfaceSetMixerGain(2);// For FIR
-          PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
-          HwInterfaceSetFirGain(2);
+          if (OfdmParams.BandWidth == 250.0)
+          {
+            HwInterfaceSetMixerGain(2);// For FIR
+            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+            HwInterfaceSetFirGain(2);
+          }
+          else if (OfdmParams.BandWidth == 100.0)
+          {
+            HwInterfaceSetMixerGain(2);// For FIR
+            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+            HwInterfaceSetFirGain(1);
+          }
+          else if (OfdmParams.BandWidth == 50.0)
+          {
+            HwInterfaceSetMixerGain(2);
+            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+            HwInterfaceSetFirGain(1);
+          }
+          else
+          {
+            HwInterfaceSetMixerGain(2);// For FIR
+            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+            HwInterfaceSetFirGain(2);
+          }
         }
         HwInterfaceTxOn(~TxOff);
+        HwInterfaceGpReg0(FirCicIsFir);
         ReturnStatus = DirectDmaPsToPl(NumBytes);
         printf("Wait for %lfus to finish Transmission ... \n",
           OfdmCalcParams.Symbol.Time*(OfdmTiming.OfdmSymbolsPerFrame+
@@ -640,17 +733,45 @@ int main(int argc, char **argv)
         }
         HwInterfaceEnableAdc();
         HwInterfaceSetMixerGain(2); // 6dB loss in Mixer
-        HwInterfaceSetDdcGain(1);
+        if (FirCicIsFir == 0)
+        {
+          HwInterfaceSetFirGain(2);
+          HwInterfaceSetDdcGain(1);
+        }
+        else
+        {
+          if (OfdmParams.BandWidth == 250.0)
+          {
+            HwInterfaceSetFirGain(3);
+            HwInterfaceSetDdcGain(1);
+          }
+          else if (OfdmParams.BandWidth == 100.0)
+          {
+            HwInterfaceSetFirGain(3);
+            HwInterfaceSetDdcGain(0);
+          }
+          else if (OfdmParams.BandWidth == 50.0)
+          {
+            HwInterfaceSetFirGain(3);
+            HwInterfaceSetDdcGain(0);
+          }
+          else
+          {
+            HwInterfaceSetFirGain(3);
+            HwInterfaceSetDdcGain(1);
+          }
+        }
         HwInterfaceSetTrigger();
         ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
           CenterFreq, true);
+        HwInterfaceGpReg0(FirCicIsFir);
 #endif
         if (RxThread == 1)
         {
           ReturnStatus = RxDemodulateCreateThread(DebugMode,
             OfdmParams.ModOrder, OfdmParams.Nfft, OfdmParams.CpLen,
             OfdmTiming.OfdmSymbolsPerFrame, &OfdmCalcParams,
-            SwSynchronization, LoopbackBytes);
+            SwSynchronization, LoopbackBytes, DacSampleSave);
           if (ReturnStatus.Status == RETURN_STATUS_FAIL)
           {
             printf("%s", ReturnStatus.ErrString);
@@ -666,7 +787,10 @@ int main(int argc, char **argv)
 //////////////////////////////////////////////////////////////////////////
 #ifndef NO_DEVMEM
       case 11:
-        ReturnStatus = DirectDmaPlToPsThread(GpReg1);
+        HwInterfaceResetTrigger();
+        printf("AdcSave = %d, DacSave = %d\n", AdcSampleSave,
+          DacSampleSave);
+        ReturnStatus=DirectDmaPlToPsThread(AdcSampleSave||DacSampleSave);
         if (ReturnStatus.Status == RETURN_STATUS_FAIL)
         {
           printf("%s", ReturnStatus.ErrString);
@@ -677,7 +801,6 @@ int main(int argc, char **argv)
       case 12:
         DirectDmaPlToPsThreadCancel();
         break;
-#endif
 
 //////////////////////////////////////////////////////////////////////////
       case 13:
@@ -694,6 +817,7 @@ int main(int argc, char **argv)
           HwInterfaceSineToneSet(0);
         }
         break;
+#endif
 
 //////////////////////////////////////////////////////////////////////////
       case 14:
@@ -731,21 +855,53 @@ int main(int argc, char **argv)
 //////////////////////////////////////////////////////////////////////////
       case 15:
         printf("GP Reg 0 ('0'-CIC / '1'-FIR DUC/DDC): ");
-        ScanfRet = scanf("%d", &GpReg0);
-        HwInterfaceGpReg0(GpReg0);
+        ScanfRet = scanf("%d", &FirCicIsFir);
+        HwInterfaceGpReg0(FirCicIsFir);
         printf("GP Reg 0 ('0'-Normal Demod Path / '1'-Save Raw "
-          "ADC samples): ");
-        ScanfRet = scanf("%d", &GpReg1);
-        HwInterfaceGpReg1(GpReg1);
-        if (GpReg1) // Save ADC samples
+          "ADC/DAC samples): ");
+        ScanfRet = scanf("%d", &SampleSave);
+        if (SampleSave)
         {
-          LoopbackBytes = (OfdmParams.Nfft+
-            OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame)*4*
-            DacParams.Interp*4;
-          DirectDmaSetNumBytesForLoopback(LoopbackBytes);
+          printf("Save Raw ADC samples: ('0'-Off / '1'-On): ");
+          ScanfRet = scanf("%d", &AdcSampleSave);
+          HwInterfaceGpReg1(AdcSampleSave);
+          printf("Save Raw DAC samples: ('0'-Off / '1'-On): ");
+          ScanfRet = scanf("%d", &DacSampleSave);
+          HwInterfaceSetDacSampleSave(DacSampleSave);
+          if (AdcSampleSave) // Save ADC samples
+          {
+            LoopbackBytes = (OfdmParams.Nfft+
+              OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame)*4*
+              DacParams.Interp*4;
+            DirectDmaSetNumBytesForLoopback(LoopbackBytes);
+          }
+          else if (DacSampleSave)
+          {
+            printf("Save samples at interpolator output: "
+              "('0'-No / '1'-Yes): ");
+            ScanfRet = scanf("%d", &FirSampleSave);
+            HwInterfaceSetFirSampleSave(FirSampleSave);
+            if (FirSampleSave)
+            {
+              HwInterfaceSetFirstDacSampleSave((NFFT_ZC+
+                OfdmParams.CpLen)*DacParams.Interp);
+              LoopbackBytes = (OfdmParams.Nfft+
+                OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame)*4*2*
+                DacParams.Interp;
+            }
+            else
+            {
+              HwInterfaceSetFirstDacSampleSave((NFFT_ZC+
+                OfdmParams.CpLen)*DacParams.Interp);
+              LoopbackBytes = (OfdmParams.Nfft+
+                OfdmParams.CpLen)*(OfdmTiming.OfdmSymbolsPerFrame)*4*
+                DacParams.Interp;
+            }
+            DirectDmaSetNumBytesForLoopback(LoopbackBytes);
+          }
+          else
+            LoopbackBytes = 0;
         }
-        else
-          LoopbackBytes = 0;
         break;
 
 //////////////////////////////////////////////////////////////////////////

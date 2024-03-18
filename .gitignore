@@ -30,3 +30,5 @@ bitfiles
 Xilinx/SW_Source/ofdm_v2/ofdm_desktop
 Xilinx/SW_Source/ofdm_v2/ofdm
 *tar*
+*.csv
+tek*

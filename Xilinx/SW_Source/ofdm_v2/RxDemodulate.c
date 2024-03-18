@@ -289,7 +289,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString, "RxDemodulateFft: "
-        "pthreadState end\n");
+        "Quitting pthread\n");
       return ReturnStatus;
     }
 
@@ -451,34 +451,68 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   return ReturnStatus;
 }
 
-ReturnStatusType RxDemodulateSaveRawAdcSamples(unsigned Bytes)
+ReturnStatusType RxDemodulateSaveRawSamples(unsigned Bytes, unsigned
+  DacSel)
 {
   ReturnStatusType ReturnStatus;
-  FILE *AdcSampleFile = NULL;
+  FILE *SampleFile = NULL;
   int32_T *BufferInData = NULL;
+  unsigned BufferStatus;
 
-  AdcSampleFile = fopen("files/RxAdcRawSamples.txt", "w");
-  if (AdcSampleFile == NULL)
+  if (DacSel)
+    SampleFile = fopen("files/RxDacRawSamples.txt", "w");
+  else
+    SampleFile = fopen("files/RxAdcRawSamples.txt", "w");
+  if (SampleFile == NULL)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
     sprintf(ReturnStatus.ErrString,
-      "RxDemodulateSaveRawAdcSamples: Failed to open "
+      "RxDemodulateSaveRawSamples: Failed to open "
       "files/RxAdcRawSamples.txt\n");
     return ReturnStatus;
   }
-  printf("RxDemodulateSaveRawAdcSamples: Opened file "
-    "files/RxAdcRawSamples.txt\n");
+  if (DacSel)
+  {
+    printf("RxDemodulateSaveRawSamples: Opened file "
+      "files/RxDacRawSamples.txt\n");
+  }
+  else
+  {
+    printf("RxDemodulateSaveRawSamples: Opened file "
+      "files/RxAdcRawSamples.txt\n");
+  }
+
+  while (1)
+  {
+    if (pthreadState == 1)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "RxDemodulateFft: "
+        "Quitting pthread\n");
+      return ReturnStatus;
+    }
+
+    BufferStatus = DirectDmaBuffReadStatus();
+    if (BufferStatus)
+    {
+      break;
+    }
+  }
 
   BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer();
 
   for (unsigned i = 0; i < Bytes/4; i++)
   {
-    fprintf(AdcSampleFile,"%d\n", (BufferInData[i] & 0x0000FFFF));
-    fprintf(AdcSampleFile,"%d\n", 
-      (BufferInData[i] & 0xFFFF0000)>>16);
+    fprintf(SampleFile,"%d\n", 
+      (int16_t)(BufferInData[i] & 0x0000FFFF));
+    fprintf(SampleFile,"%d\n", 
+      (int16_t)((BufferInData[i] & 0xFFFF0000)>>16));
   }
 
-  printf("RxDemodulateSaveRawAdcSamples: Saved ADC samples\n");
+  if (DacSel)
+    printf("RxDemodulateSaveRawSamples: Saved DAC samples\n");
+  else
+    printf("RxDemodulateSaveRawSamples: Saved ADC samples\n");
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -524,7 +558,7 @@ void RxDemodulateCancelThread(void)
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   unsigned ModOrder, unsigned Nfft, unsigned CpLen, unsigned 
   OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams,
-  bool DeleteSym1, unsigned LoopBackBytes)
+  bool DeleteSym1, unsigned LoopBackBytes, unsigned DacSel)
 {
   ReturnStatusType ReturnStatus;
   int RetVal;
@@ -539,6 +573,7 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   args->CpLen = CpLen;
   args->OfdmSymbols = OfdmSymbols;
   args->LoopBackBytes = LoopBackBytes;
+  args->DacSel = DacSel;
   args->OfdmCalcParams = OfdmCalcParams;
 
   ReturnStatus = RxDemodulateCheckThreadRunning();
@@ -580,7 +615,8 @@ void *RxDemodulateThread(void *arg)
   }
   else
   {
-    ReturnStatus = RxDemodulateSaveRawAdcSamples(args->LoopBackBytes);
+    ReturnStatus = RxDemodulateSaveRawSamples(args->LoopBackBytes,
+      args->DacSel);
   }
 
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)

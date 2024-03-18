@@ -265,14 +265,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   int16_T *ReloadBuffer = NULL;
   int16_T tmp;
 
-  if (Nfft > 4096)
-  {
-    NfftLoop = 4096;
-  }
-  else
-  {
-    NfftLoop = Nfft;
-  }
+  NfftLoop = 4096;
 
   memset(ReloadBufferUnOrdered, 0, sizeof(ReloadBufferUnOrdered));
 
@@ -399,8 +392,17 @@ void HwInterfaceGpReg1(unsigned Val)
 
 void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples)
 {
+  unsigned RegValue;
+  if (FpgaClkSamples < 2) // Set to negligable samples if 0
+  {
+    RegValue = 2;
+  }
+  else
+  {
+    RegValue = FpgaClkSamples;
+  }
   FpgaInterfaceWrite32(GPIO_5_BASE_ADDR+SYMBOL_GUARD_OFFSET,
-    FpgaClkSamples, GlobalMute);
+    RegValue, GlobalMute);
 }
 
 void HwInterfaceSetMixerGain(unsigned GainShift)
@@ -447,6 +449,32 @@ void HwInterfaceSetTrigger(void)
     0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
     1<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
+}
+
+void HwInterfaceResetTrigger(void)
+{
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
+    0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
+}
+
+void HwInterfaceSetFirstDacSampleSave(unsigned samples)
+{
+  FpgaInterfaceWrite(GPIO_7_BASE_ADDR, samples,
+    DAC_FIRST_SAMPLE_SAVE_MASK, GlobalMute);
+}
+
+void HwInterfaceSetDacSampleSave(unsigned Enable)
+{
+  unsigned RegVal = Enable << DAC_SAMPLE_SAVE_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR + DAC_SAMPLE_SAVE_OFFSET,
+    RegVal, DAC_SAMPLE_SAVE_MASK, GlobalMute);
+}
+
+void HwInterfaceSetFirSampleSave(unsigned Enable)
+{
+  unsigned RegVal = Enable << FIR_SAMPLE_SAVE_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR + FIR_SAMPLE_SAVE_OFFSET,
+    RegVal, FIR_SAMPLE_SAVE_MASK, GlobalMute);
 }
 
 double HwInterfaceReadDucPeak(void)

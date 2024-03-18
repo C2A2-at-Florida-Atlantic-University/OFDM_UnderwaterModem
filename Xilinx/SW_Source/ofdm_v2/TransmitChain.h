@@ -32,7 +32,8 @@
 
 //#define DEFAULT_SYNC_THRESHOLD 0x00A00000
 //#define DEFAULT_SYNC_THRESHOLD 0x02200000 // Verified with sync loopback
-#define DEFAULT_SYNC_THRESHOLD 0x02000000 // Verified with wire loopback
+//#define DEFAULT_SYNC_THRESHOLD 0x02000000 // Verified with wire loopback
+#define DEFAULT_SYNC_THRESHOLD 0x00700000 // Verified with wire loopback
 
 #define SIZE_OF_CALC_OFDM_PARAMS32 96
 

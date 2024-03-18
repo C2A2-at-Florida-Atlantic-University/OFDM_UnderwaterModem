@@ -435,7 +435,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
   // Take FFTSHIFT of ZC sequence
   for (unsigned i = 0; i < NFFT_ZC; i++)
   {
-    if (i < Nfft/2)
+    if (i < NFFT_ZC/2)
     {
       IfftInData[i+NFFT_ZC/2].re = (int16_t)ZcFreqSequence[i].re;
       IfftInData[i+NFFT_ZC/2].im = (int16_t)ZcFreqSequence[i].im; 
@@ -448,7 +448,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
   }
 
   // IFFT
-  Ifft(IfftInData,NfftSize,Nfft,IfftOutStruct);
+  Ifft(IfftInData,NfftSize,NFFT_ZC,IfftOutStruct);
 
   for (unsigned i = 0; i < NFFT_ZC+CpLen; i++)
   {
@@ -489,6 +489,10 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
     if (IfftFile != NULL)
     {
       fclose(IfftFile);
+    }
+    if (TxFreqIfftInput != NULL)
+    {
+      fclose(TxFreqIfftInput);
     }
   }
 

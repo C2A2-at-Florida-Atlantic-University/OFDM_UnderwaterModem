@@ -48,6 +48,7 @@
 #define GPIO_4_BASE_ADDR 0x40010800
 #define GPIO_5_BASE_ADDR 0x40010A00
 #define GPIO_6_BASE_ADDR 0x40010C00
+#define GPIO_7_BASE_ADDR 0x40010E00
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -233,6 +234,16 @@
 #define GP_REG_1_MASK 0x80000000
 #define GP_REG_1_MASK_OFFSET 31
 
+#define DAC_FIRST_SAMPLE_SAVE_MASK 0x00FFFFFF
+
+#define DAC_SAMPLE_SAVE_OFFSET 8
+#define DAC_SAMPLE_SAVE_MASK 0x10000000
+#define DAC_SAMPLE_SAVE_MASK_OFFSET 28
+
+#define FIR_SAMPLE_SAVE_OFFSET 8
+#define FIR_SAMPLE_SAVE_MASK 0x20000000
+#define FIR_SAMPLE_SAVE_MASK_OFFSET 29
+
 extern void HwInterfaceStartTx(void);
 extern void HwInterfaceStopTx(void);
 extern void HwInterfaceConfigFftCore(void);
@@ -280,5 +291,9 @@ void HwInterfaceTxOn(unsigned Sel);
 void HwInterfaceGpReg0(unsigned Val);
 void HwInterfaceGpReg1(unsigned Val);
 void HwInterfaceSyncGuardLoopback(unsigned Enable);
+void HwInterfaceResetTrigger(void);
+void HwInterfaceSetFirstDacSampleSave(unsigned samples);
+void HwInterfaceSetDacSampleSave(unsigned Enable);
+void HwInterfaceSetFirSampleSave(unsigned Enable);
 
 #endif

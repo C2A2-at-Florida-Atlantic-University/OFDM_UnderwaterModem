@@ -100,7 +100,11 @@ unsigned *FpgaInterfaceGetReloadBuffer()
 
 unsigned *FpgaInterfaceGetRxBuffer(void)
 {
+#ifdef NO_DEVMEM
+  return (unsigned *)TxModulateGetTxBuffer();
+#else
   return (unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
+#endif
 }
 
 unsigned *FpgaInterfaceClearRxBuffer(void)

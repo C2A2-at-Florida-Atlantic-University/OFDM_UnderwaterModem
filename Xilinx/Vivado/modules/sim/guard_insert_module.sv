@@ -23,7 +23,7 @@ module guard_insert_module();
 
   logic [31:0]                      guard_cycles = 32'd10; // 10
   logic [13:0]                      nfft = 14'd31; // 32
-  logic [11:0]                      cp_len = 12'd4; // 5
+  logic [11:0]                      cp_len = 12'd7; // 8
   //logic [11:0]                      cp_len = '0;
 
   int                               countval;

@@ -14,7 +14,7 @@
 #define ADC_SAMPLE_RATE_KHZ 40000 // 40 Msps
 
 #define CENTER_FREQUENCY_KHZ_MAX 550
-#define CENTER_FREQUENCY_KHZ_MIN 10
+#define CENTER_FREQUENCY_KHZ_MIN 0
 
 typedef struct {
   double BandWidth;
