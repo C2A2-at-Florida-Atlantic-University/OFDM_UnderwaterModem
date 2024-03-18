@@ -8,13 +8,13 @@
 #include "ReturnStatus.h"
 #include "rtwtypes.h"
 
-#define DEFAULT_CENTER_FREQUENCY_KHZ 250
+#define DEFAULT_CENTER_FREQUENCY_KHZ 275
 
 #define DAC_SAMPLE_RATE_KHZ 10000 // 10 Msps
 #define ADC_SAMPLE_RATE_KHZ 40000 // 40 Msps
 
-#define CENTER_FREQUENCY_KHZ_MAX 500
-#define CENTER_FREQUENCY_KHZ_MIN 10
+#define CENTER_FREQUENCY_KHZ_MAX 550
+#define CENTER_FREQUENCY_KHZ_MIN 0
 
 typedef struct {
   double BandWidth;

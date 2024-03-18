@@ -280,6 +280,7 @@ proc create_root_design { parentCell } {
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
   set i_sync_offset [ create_bd_port -dir I -from 10 -to 0 i_sync_offset ]
   set i_threshold [ create_bd_port -dir I -from 31 -to 0 i_threshold ]
+  set o_max_detected [ create_bd_port -dir O o_max_detected ]
   set sync_enable [ create_bd_port -dir I -type rst sync_enable ]
 
   # Create instance: AXIS_Splitter_0, and set properties
@@ -297,11 +298,13 @@ proc create_root_design { parentCell } {
   # Create instance: cordic_0, and set properties
   set cordic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:cordic cordic_0 ]
   set_property -dict [ list \
+   CONFIG.Architectural_Configuration {Word_Serial} \
    CONFIG.Compensation_Scaling {Embedded_Multiplier} \
    CONFIG.Data_Format {SignedFraction} \
    CONFIG.Functional_Selection {Translate} \
    CONFIG.Input_Width {32} \
    CONFIG.Output_Width {32} \
+   CONFIG.Pipelining_Mode {Maximum} \
  ] $cordic_0
 
   # Create instance: fir_compiler_imag, and set properties
@@ -445,7 +448,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]
   connect_bd_net -net i_threshold_0_1 [get_bd_ports i_threshold] [get_bd_pins max_thresh_0/i_threshold]
   connect_bd_net -net i_trig_offset_0_1 [get_bd_ports i_sync_offset] [get_bd_pins synchronizer_0/i_trig_offset]
-  connect_bd_net -net max_thresh_0_o_max_detected [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
+  connect_bd_net -net max_thresh_0_o_max_detected [get_bd_ports o_max_detected] [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
   connect_bd_net -net resetn_0_1 [get_bd_ports aresetn] [get_bd_pins fir_compiler_imag/aresetn] [get_bd_pins fir_compiler_real/aresetn] [get_bd_pins fir_reconfig_imag/aresetn] [get_bd_pins fir_reconfig_real/aresetn]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconstant_1_dout [get_bd_pins fir_reconfig_imag/coeff_sel] [get_bd_pins fir_reconfig_real/coeff_sel] [get_bd_pins xlconstant_1/dout]

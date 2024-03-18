@@ -71,6 +71,7 @@ begin
 
   m_axis_tdata                    <= s_axis_tdata;
   m_axis_tvalid                   <= s_axis_tvalid;
+  --m_axis_tvalid                   <= i_trigger;
 
   o_peak_sample                   <= r_peak_sample;
 

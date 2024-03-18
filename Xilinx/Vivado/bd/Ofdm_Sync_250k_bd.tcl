@@ -132,6 +132,7 @@ if { $bCheckIPs == 1 } {
 user.org:user:AXIS_Splitter:*\
 xilinx.com:ip:cordic:*\
 xilinx.com:ip:fir_compiler:*\
+user.org:user:fir_reconfig:*\
 xilinx.com:ip:xlconstant:*\
 "
 
@@ -239,19 +240,47 @@ proc create_root_design { parentCell } {
    CONFIG.TUSER_WIDTH {0} \
    ] $S_AXIS
 
+  set S_AXIS_RELOAD_IMAG [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S_AXIS_RELOAD_IMAG ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {2} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $S_AXIS_RELOAD_IMAG
+
+  set S_AXIS_RELOAD_REAL [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 S_AXIS_RELOAD_REAL ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {2} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $S_AXIS_RELOAD_REAL
+
 
   # Create ports
   set aclk [ create_bd_port -dir I -type clk aclk ]
   set_property -dict [ list \
-   CONFIG.ASSOCIATED_BUSIF {S_AXIS:M_AXIS} \
+   CONFIG.ASSOCIATED_BUSIF {S_AXIS:M_AXIS:S_AXIS_RELOAD_IMAG:S_AXIS_RELOAD_REAL} \
    CONFIG.ASSOCIATED_RESET {aresetn:sync_enable} \
  ] $aclk
   set aresetn [ create_bd_port -dir I -type rst aresetn ]
   set i_cp_len [ create_bd_port -dir I -from 11 -to 0 i_cp_len ]
-  set i_nfft [ create_bd_port -dir I -from 11 -to 0 i_nfft ]
+  set i_guard_cycles [ create_bd_port -dir I -from 31 -to 0 i_guard_cycles ]
+  set i_nfft [ create_bd_port -dir I -from 13 -to 0 i_nfft ]
   set i_symbols [ create_bd_port -dir I -from 3 -to 0 i_symbols ]
   set i_sync_offset [ create_bd_port -dir I -from 10 -to 0 i_sync_offset ]
   set i_threshold [ create_bd_port -dir I -from 31 -to 0 i_threshold ]
+  set o_max_detected [ create_bd_port -dir O o_max_detected ]
   set sync_enable [ create_bd_port -dir I -type rst sync_enable ]
 
   # Create instance: AXIS_Splitter_0, and set properties
@@ -281,8 +310,9 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
+   CONFIG.Coefficient_File {c:/O/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_q.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
+   CONFIG.Coefficient_Reload {true} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
    CONFIG.Coefficient_Structure {Inferred} \
@@ -304,8 +334,9 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.Clock_Frequency {100.0} \
    CONFIG.CoefficientSource {COE_File} \
-   CONFIG.Coefficient_File {/home/jared/Projects/OFDM_UnderwaterModem/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
+   CONFIG.Coefficient_File {c:/O/Xilinx/Vivado/modules/data/zc_4096_nfft_2048_ZC_13_root_i.coe} \
    CONFIG.Coefficient_Fractional_Bits {0} \
+   CONFIG.Coefficient_Reload {true} \
    CONFIG.Coefficient_Sets {1} \
    CONFIG.Coefficient_Sign {Signed} \
    CONFIG.Coefficient_Structure {Inferred} \
@@ -313,7 +344,9 @@ proc create_root_design { parentCell } {
    CONFIG.ColumnConfig {11} \
    CONFIG.Data_Fractional_Bits {0} \
    CONFIG.Data_Width {16} \
+   CONFIG.DisplayReloadOrder {true} \
    CONFIG.Filter_Architecture {Systolic_Multiply_Accumulate} \
+   CONFIG.Gen_MIF_from_COE {false} \
    CONFIG.Has_ARESETn {true} \
    CONFIG.M_DATA_Has_TREADY {true} \
    CONFIG.Output_Rounding_Mode {Truncate_LSBs} \
@@ -321,6 +354,12 @@ proc create_root_design { parentCell } {
    CONFIG.Quantization {Integer_Coefficients} \
    CONFIG.Sample_Frequency {0.25} \
  ] $fir_compiler_real
+
+  # Create instance: fir_reconfig_imag, and set properties
+  set fir_reconfig_imag [ create_bd_cell -type ip -vlnv user.org:user:fir_reconfig fir_reconfig_imag ]
+
+  # Create instance: fir_reconfig_real, and set properties
+  set fir_reconfig_real [ create_bd_cell -type ip -vlnv user.org:user:fir_reconfig fir_reconfig_real ]
 
   # Create instance: iq_concat_0, and set properties
   set block_name iq_concat
@@ -372,31 +411,45 @@ proc create_root_design { parentCell } {
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_0 ]
 
+  # Create instance: xlconstant_1, and set properties
+  set xlconstant_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant xlconstant_1 ]
+  set_property -dict [ list \
+   CONFIG.CONST_WIDTH {4} \
+ ] $xlconstant_1
+
   # Create interface connections
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M00_AXIS [get_bd_intf_pins AXIS_Splitter_0/M00_AXIS] [get_bd_intf_pins synchronizer_0/s_axis]
   connect_bd_intf_net -intf_net AXIS_Splitter_0_M01_AXIS [get_bd_intf_pins AXIS_Splitter_0/M01_AXIS] [get_bd_intf_pins iq_split_0/s_axis]
   connect_bd_intf_net -intf_net AXIS_Splitter_1_M00_AXIS [get_bd_intf_pins AXIS_Splitter_1/M00_AXIS] [get_bd_intf_pins max_thresh_0/s_axis]
   connect_bd_intf_net -intf_net AXIS_Splitter_1_M01_AXIS [get_bd_intf_pins AXIS_Splitter_1/M01_AXIS] [get_bd_intf_pins synchronizer_0/s_axis_abs_ila]
+  connect_bd_intf_net -intf_net S00_AXIS_0_1 [get_bd_intf_ports S_AXIS_RELOAD_IMAG] [get_bd_intf_pins fir_reconfig_imag/S00_AXIS]
+  connect_bd_intf_net -intf_net S00_AXIS_0_2 [get_bd_intf_ports S_AXIS_RELOAD_REAL] [get_bd_intf_pins fir_reconfig_real/S00_AXIS]
   connect_bd_intf_net -intf_net S_AXIS_1 [get_bd_intf_ports S_AXIS] [get_bd_intf_pins AXIS_Splitter_0/S00_AXIS]
   connect_bd_intf_net -intf_net cordic_0_M_AXIS_DOUT [get_bd_intf_pins AXIS_Splitter_1/S00_AXIS] [get_bd_intf_pins cordic_0/M_AXIS_DOUT]
   connect_bd_intf_net -intf_net fir_compiler_imag_M_AXIS_DATA [get_bd_intf_pins fir_compiler_imag/M_AXIS_DATA] [get_bd_intf_pins iq_concat_0/s_axis_imag]
   connect_bd_intf_net -intf_net fir_compiler_real_M_AXIS_DATA [get_bd_intf_pins fir_compiler_real/M_AXIS_DATA] [get_bd_intf_pins iq_concat_0/s_axis_real]
+  connect_bd_intf_net -intf_net fir_reconfig_imag_M00_AXIS [get_bd_intf_pins fir_compiler_imag/S_AXIS_RELOAD] [get_bd_intf_pins fir_reconfig_imag/M00_AXIS]
+  connect_bd_intf_net -intf_net fir_reconfig_imag_M01_AXIS [get_bd_intf_pins fir_compiler_imag/S_AXIS_CONFIG] [get_bd_intf_pins fir_reconfig_imag/M01_AXIS]
+  connect_bd_intf_net -intf_net fir_reconfig_real_M00_AXIS [get_bd_intf_pins fir_compiler_real/S_AXIS_RELOAD] [get_bd_intf_pins fir_reconfig_real/M00_AXIS]
+  connect_bd_intf_net -intf_net fir_reconfig_real_M01_AXIS [get_bd_intf_pins fir_compiler_real/S_AXIS_CONFIG] [get_bd_intf_pins fir_reconfig_real/M01_AXIS]
   connect_bd_intf_net -intf_net iq_concat_0_m_axis [get_bd_intf_pins cordic_0/S_AXIS_CARTESIAN] [get_bd_intf_pins iq_concat_0/m_axis]
   connect_bd_intf_net -intf_net iq_split_0_m_axis_imag [get_bd_intf_pins fir_compiler_imag/S_AXIS_DATA] [get_bd_intf_pins iq_split_0/m_axis_imag]
   connect_bd_intf_net -intf_net iq_split_0_m_axis_real [get_bd_intf_pins fir_compiler_real/S_AXIS_DATA] [get_bd_intf_pins iq_split_0/m_axis_real]
   connect_bd_intf_net -intf_net synchronizer_0_m_axis [get_bd_intf_ports M_AXIS] [get_bd_intf_pins synchronizer_0/m_axis]
 
   # Create port connections
-  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
+  connect_bd_net -net aclk_0_1 [get_bd_ports aclk] [get_bd_pins AXIS_Splitter_0/axis_aclk] [get_bd_pins AXIS_Splitter_1/axis_aclk] [get_bd_pins cordic_0/aclk] [get_bd_pins fir_compiler_imag/aclk] [get_bd_pins fir_compiler_real/aclk] [get_bd_pins fir_reconfig_imag/aclk] [get_bd_pins fir_reconfig_real/aclk] [get_bd_pins iq_concat_0/axis_aclk] [get_bd_pins iq_split_0/axis_aclk] [get_bd_pins max_thresh_0/axis_aclk] [get_bd_pins synchronizer_0/axis_aclk]
   connect_bd_net -net aresetn_0_1 [get_bd_ports sync_enable] [get_bd_pins synchronizer_0/aresetn]
   connect_bd_net -net i_cp_len_0_1 [get_bd_ports i_cp_len] [get_bd_pins synchronizer_0/i_cp_len]
+  connect_bd_net -net i_guard_cycles_0_1 [get_bd_ports i_guard_cycles] [get_bd_pins synchronizer_0/i_guard_cycles]
   connect_bd_net -net i_nfft_0_1 [get_bd_ports i_nfft] [get_bd_pins synchronizer_0/i_nfft]
   connect_bd_net -net i_symbols_0_1 [get_bd_ports i_symbols] [get_bd_pins synchronizer_0/i_symbols]
   connect_bd_net -net i_threshold_0_1 [get_bd_ports i_threshold] [get_bd_pins max_thresh_0/i_threshold]
   connect_bd_net -net i_trig_offset_0_1 [get_bd_ports i_sync_offset] [get_bd_pins synchronizer_0/i_trig_offset]
-  connect_bd_net -net max_thresh_0_o_max_detected [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
-  connect_bd_net -net resetn_0_1 [get_bd_ports aresetn] [get_bd_pins fir_compiler_imag/aresetn] [get_bd_pins fir_compiler_real/aresetn]
+  connect_bd_net -net max_thresh_0_o_max_detected [get_bd_ports o_max_detected] [get_bd_pins max_thresh_0/o_max_detected] [get_bd_pins synchronizer_0/i_max_sync]
+  connect_bd_net -net resetn_0_1 [get_bd_ports aresetn] [get_bd_pins fir_compiler_imag/aresetn] [get_bd_pins fir_compiler_real/aresetn] [get_bd_pins fir_reconfig_imag/aresetn] [get_bd_pins fir_reconfig_real/aresetn]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins AXIS_Splitter_0/tready_select] [get_bd_pins AXIS_Splitter_1/tready_select] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net xlconstant_1_dout [get_bd_pins fir_reconfig_imag/coeff_sel] [get_bd_pins fir_reconfig_real/coeff_sel] [get_bd_pins xlconstant_1/dout]
 
   # Create address segments
 

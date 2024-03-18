@@ -9,6 +9,7 @@ add_files -fileset sim_1 [glob sim/*.sv]
 # Add instantiated IP
 import_ip ip/mult_gen_0.xci
 import_ip ip/ila_0.xci
+import_ip ip/ila_1.xci
 import_ip ip/dds_compiler_0.xci
 import_ip ip/duc_fir_compiler.xci
 

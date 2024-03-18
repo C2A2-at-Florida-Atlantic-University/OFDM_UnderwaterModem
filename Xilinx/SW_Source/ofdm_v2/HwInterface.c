@@ -32,6 +32,28 @@ void HwInterfaceSetGlobalMute(bool GlobalMuteSelect)
   GlobalMute = GlobalMuteSelect;
 }
 
+void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
+{
+  if (DucDdcLoopSel == 0) // Program zero, tlast is passthrough
+  {
+    if (!GlobalMute)
+      printf("HwinterfaceSetDmaTlastGen: Clearing DMA Tlast Gen\n");
+    FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET, 0,
+      GlobalMute);
+  }
+  else // Program sample to generate tlast pulse on
+  {
+#ifdef DEBUG
+    printf("HwInterfaceSetDmaTlastGen: Program tlast to be on "
+      "%dth sample\n", Samples);
+#endif
+    if (!GlobalMute)
+      printf("HwinterfaceSetDmaTlastGen: Configuring DMA Tlast Gen\n");
+    FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET,
+      Samples-1, GlobalMute);
+  }
+}
+
 void HwInterfaceEnableDac(void)
 {
   unsigned RegValue;
@@ -118,6 +140,26 @@ void HwInterfaceReturnAdcStatus(void)
     printf("HwInterfaceAdcStatus: ERROR: ADC out of range\n");
   else
     printf("HwInterfaceAdcStatus: ADC within range\n");
+}
+
+void HwInterfaceDmaLoopback(unsigned Enable)
+{
+  unsigned RegValue = Enable;
+  RegValue = RegValue << DMA_LOOPBACK_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceDmaLoopback: Setting DMA Loop %d\n", Enable);
+  FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, RegValue,
+    DMA_LOOPBACK_MASK, GlobalMute);
+}
+
+void HwInterfaceSyncLoopback(unsigned Enable)
+{
+  unsigned RegValue = Enable;
+  RegValue = RegValue << SYNC_LOOPBACK_MASK_OFFSET;
+  if (!GlobalMute)
+    printf("HwInterfaceSyncLoopback: Setting Sync Loop %d\n", Enable);
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_LOOPBACK_OFFSET,
+    RegValue, SYNC_LOOPBACK_MASK, GlobalMute);
 }
 
 void HwInterfaceConfigureSignalParams(unsigned Interpolation,
@@ -223,14 +265,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   int16_T *ReloadBuffer = NULL;
   int16_T tmp;
 
-  if (Nfft > 4096)
-  {
-    NfftLoop = 4096;
-  }
-  else
-  {
-    NfftLoop = Nfft;
-  }
+  NfftLoop = 4096;
 
   memset(ReloadBufferUnOrdered, 0, sizeof(ReloadBufferUnOrdered));
 
@@ -341,10 +376,33 @@ void HwInterfaceTxOn(unsigned Sel)
     Sel<<TX_ON_MASK_OFFSET,TX_ON_MASK,GlobalMute);
 }
 
+void HwInterfaceGpReg0(unsigned Val)
+{
+  unsigned RegVal = Val << GP_REG_0_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+GP_REG_0_OFFSET,
+    RegVal, GP_REG_0_MASK, GlobalMute);
+}
+
+void HwInterfaceGpReg1(unsigned Val)
+{
+  unsigned RegVal = Val << GP_REG_1_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_2_BASE_ADDR+GP_REG_1_OFFSET,
+    RegVal, GP_REG_1_MASK, GlobalMute);
+}
+
 void HwInterfaceSetGuardPeriod(unsigned FpgaClkSamples)
 {
+  unsigned RegValue;
+  if (FpgaClkSamples < 2) // Set to negligable samples if 0
+  {
+    RegValue = 2;
+  }
+  else
+  {
+    RegValue = FpgaClkSamples;
+  }
   FpgaInterfaceWrite32(GPIO_5_BASE_ADDR+SYMBOL_GUARD_OFFSET,
-    FpgaClkSamples, GlobalMute);
+    RegValue, GlobalMute);
 }
 
 void HwInterfaceSetMixerGain(unsigned GainShift)
@@ -357,6 +415,17 @@ void HwInterfaceSetMixerGain(unsigned GainShift)
     GainShift, GAIN_SHIFT_MASK, GlobalMute);
 }
 
+void HwInterfaceSetFirGain(unsigned GainShift)
+{
+  // 0 - 0dB
+  // 1 - 6dB
+  // 2 - 12dB
+  // etc
+  unsigned RegValue = GainShift << GAIN_SHIFT_FIR_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_3_BASE_ADDR+GAIN_SHIFT_FIR_OFFSET,
+    RegValue, GAIN_SHIFT_FIR_MASK, GlobalMute);
+}
+
 void HwInterfaceSetDdcGain(unsigned GainShift)
 {
   // 0 - 0dB
@@ -367,12 +436,45 @@ void HwInterfaceSetDdcGain(unsigned GainShift)
     GainShift<<DDC_GAIN_MASK_OFFSET, DDC_GAIN_MASK, GlobalMute);
 }
 
+void HwInterfaceSyncGuardLoopback(unsigned Enable)
+{
+  unsigned RegVal = Enable << SYNC_GUARD_LOOPBACK_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+SYNC_GUARD_LOOPBACK_OFFSET,
+    RegVal, SYNC_GUARD_LOOPBACK_MASK, GlobalMute);
+}
+
 void HwInterfaceSetTrigger(void)
 {
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
     0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
     1<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
+}
+
+void HwInterfaceResetTrigger(void)
+{
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR+TRIGGER_OFFSET,
+    0<<TRIGGER_MASK_OFFSET,TRIGGER_MASK, GlobalMute);
+}
+
+void HwInterfaceSetFirstDacSampleSave(unsigned samples)
+{
+  FpgaInterfaceWrite(GPIO_7_BASE_ADDR, samples,
+    DAC_FIRST_SAMPLE_SAVE_MASK, GlobalMute);
+}
+
+void HwInterfaceSetDacSampleSave(unsigned Enable)
+{
+  unsigned RegVal = Enable << DAC_SAMPLE_SAVE_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR + DAC_SAMPLE_SAVE_OFFSET,
+    RegVal, DAC_SAMPLE_SAVE_MASK, GlobalMute);
+}
+
+void HwInterfaceSetFirSampleSave(unsigned Enable)
+{
+  unsigned RegVal = Enable << FIR_SAMPLE_SAVE_MASK_OFFSET;
+  FpgaInterfaceWrite(GPIO_0_BASE_ADDR + FIR_SAMPLE_SAVE_OFFSET,
+    RegVal, FIR_SAMPLE_SAVE_MASK, GlobalMute);
 }
 
 double HwInterfaceReadDucPeak(void)

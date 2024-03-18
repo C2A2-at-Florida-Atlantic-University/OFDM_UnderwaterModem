@@ -25,6 +25,10 @@ ReturnStatusType PowerPeakDuc(void)
 
   Peak = HwInterfaceReadDucPeak();
   PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
+  // Mixer supports 16 bit samples but DAC only 14. Extra gain is
+  // added before mixer so that at output of mixer data will 
+  // be full scale 14 bits -- acounting for some loss in mixer
+  PeakDbfs = PeakDbfs - 0.3;
 
   printf("PowerPeakDuc: Peak DUC power: %lf dBFS\n", PeakDbfs);
 

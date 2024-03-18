@@ -222,16 +222,12 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   char FileName[32];
   char FileName2[32];
   int32_T *BufferInData = NULL;
-  int BufferSelect;
-  bool BuffReadStatus0;
-  bool BuffReadStatus1;
-  bool BuffReadStatus2;
-  bool CurrentReadStatus;
   cint16_T *FftInData = NULL;
   creal_T *FftOutData = NULL;
   emxArray_creal_T *FftOutStruct = NULL;
   int NfftSize[1];
   int NfftInt = (int)Nfft;
+  unsigned BufferStatus;
   unsigned ScanfRet = 0;
   unsigned LoopCount;
   unsigned i2, StartSample;
@@ -293,40 +289,26 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
     {
       ReturnStatus.Status = RETURN_STATUS_FAIL;
       sprintf(ReturnStatus.ErrString, "RxDemodulateFft: "
-        "pthreadState end\n");
+        "Quitting pthread\n");
       return ReturnStatus;
     }
 
-    BufferSelect = DirectDmaBuffReadStatus(&BuffReadStatus0, 
-      &BuffReadStatus1, &BuffReadStatus2);
-    switch (BufferSelect) {
-      case (RX_BUFFER_0):
-        CurrentReadStatus = BuffReadStatus0;
-        break;
-      case (RX_BUFFER_1):
-        CurrentReadStatus = BuffReadStatus1;
-        break;
-      case (RX_BUFFER_2):
-        CurrentReadStatus = BuffReadStatus2;
-        break;
-      case (TX_BUFFER_LOOPBACK):
-        CurrentReadStatus = true;
-        printf("RxDemodulateFft: Performing TX Buffer Loopback Demod\n");
-        break;
-    }
-    if (CurrentReadStatus)
+    BufferStatus = DirectDmaBuffReadStatus();
+    if (BufferStatus)
     {
       break;
     }
+#ifdef NO_DEVMEM
     if (DeleteSym1)
     {
       break;
     }
+#endif
 
   }
   printf("RxDemodulateFft: OFDM frame received and CMA buffer filled\n");
 
-  BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer(BufferSelect);
+  BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer();
 
   if (DebugMode)
   {
@@ -469,6 +451,73 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   return ReturnStatus;
 }
 
+ReturnStatusType RxDemodulateSaveRawSamples(unsigned Bytes, unsigned
+  DacSel)
+{
+  ReturnStatusType ReturnStatus;
+  FILE *SampleFile = NULL;
+  int32_T *BufferInData = NULL;
+  unsigned BufferStatus;
+
+  if (DacSel)
+    SampleFile = fopen("files/RxDacRawSamples.txt", "w");
+  else
+    SampleFile = fopen("files/RxAdcRawSamples.txt", "w");
+  if (SampleFile == NULL)
+  {
+    ReturnStatus.Status = RETURN_STATUS_FAIL;
+    sprintf(ReturnStatus.ErrString,
+      "RxDemodulateSaveRawSamples: Failed to open "
+      "files/RxAdcRawSamples.txt\n");
+    return ReturnStatus;
+  }
+  if (DacSel)
+  {
+    printf("RxDemodulateSaveRawSamples: Opened file "
+      "files/RxDacRawSamples.txt\n");
+  }
+  else
+  {
+    printf("RxDemodulateSaveRawSamples: Opened file "
+      "files/RxAdcRawSamples.txt\n");
+  }
+
+  while (1)
+  {
+    if (pthreadState == 1)
+    {
+      ReturnStatus.Status = RETURN_STATUS_FAIL;
+      sprintf(ReturnStatus.ErrString, "RxDemodulateFft: "
+        "Quitting pthread\n");
+      return ReturnStatus;
+    }
+
+    BufferStatus = DirectDmaBuffReadStatus();
+    if (BufferStatus)
+    {
+      break;
+    }
+  }
+
+  BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer();
+
+  for (unsigned i = 0; i < Bytes/4; i++)
+  {
+    fprintf(SampleFile,"%d\n", 
+      (int16_t)(BufferInData[i] & 0x0000FFFF));
+    fprintf(SampleFile,"%d\n", 
+      (int16_t)((BufferInData[i] & 0xFFFF0000)>>16));
+  }
+
+  if (DacSel)
+    printf("RxDemodulateSaveRawSamples: Saved DAC samples\n");
+  else
+    printf("RxDemodulateSaveRawSamples: Saved ADC samples\n");
+
+  ReturnStatus.Status = RETURN_STATUS_SUCCESS;
+  return ReturnStatus;
+}
+
 ReturnStatusType RxDemodulateCheckThreadRunning(void)
 {
   ReturnStatusType ReturnStatus;
@@ -508,7 +557,8 @@ void RxDemodulateCancelThread(void)
 
 ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   unsigned ModOrder, unsigned Nfft, unsigned CpLen, unsigned 
-  OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams)
+  OfdmSymbols, Calculated_Ofdm_Parameters *OfdmCalcParams,
+  bool DeleteSym1, unsigned LoopBackBytes, unsigned DacSel)
 {
   ReturnStatusType ReturnStatus;
   int RetVal;
@@ -517,10 +567,13 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
   args = (struct thread_args *)malloc(SIZE_OF_CALC_OFDM_PARAMS32);
 
   args->DebugMode = DebugMode;
+  args->Sym1 = DeleteSym1;
   args->ModOrder = ModOrder;
   args->Nfft = Nfft;
   args->CpLen = CpLen;
   args->OfdmSymbols = OfdmSymbols;
+  args->LoopBackBytes = LoopBackBytes;
+  args->DacSel = DacSel;
   args->OfdmCalcParams = OfdmCalcParams;
 
   ReturnStatus = RxDemodulateCheckThreadRunning();
@@ -554,9 +607,17 @@ void *RxDemodulateThread(void *arg)
   ReturnStatusType ReturnStatus;
   struct thread_args *args = (struct thread_args *) arg;
 
-  ReturnStatus = RxDemodulateBufferData(args->DebugMode, 
-    false, args->ModOrder, args->Nfft, args->CpLen,
-    args->OfdmSymbols);
+  if (args->LoopBackBytes == 0)
+  {
+    ReturnStatus = RxDemodulateBufferData(args->DebugMode, 
+      args->Sym1, args->ModOrder, args->Nfft, args->CpLen,
+      args->OfdmSymbols);
+  }
+  else
+  {
+    ReturnStatus = RxDemodulateSaveRawSamples(args->LoopBackBytes,
+      args->DacSel);
+  }
 
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
@@ -566,6 +627,11 @@ void *RxDemodulateThread(void *arg)
   }
 
   HwInterfaceDisableAdc();
+
+  if (args->LoopBackBytes != 0)
+  {
+    return NULL;
+  }
 
   ReturnStatus = Ber(false, args->ModOrder, args->OfdmSymbols,
     args->OfdmCalcParams);

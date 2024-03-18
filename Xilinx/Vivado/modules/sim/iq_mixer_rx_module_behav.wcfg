@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="iq_mixer_rx_module_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="iq_mixer_rx_module" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="89.633 ns"></ZoomStartTime>
+      <ZoomEndTime time="154.972 ns"></ZoomEndTime>
+      <Cursor1Time time="109.751 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="390"></NameColumnWidth>
+      <ValueColumnWidth column_width="192"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="25" />
+   <wvobject fp_name="/iq_mixer_rx_module/r_clk" type="logic">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/r_nRst" type="logic">
+      <obj_property name="ElementShortName">r_nRst</obj_property>
+      <obj_property name="ObjectShortName">r_nRst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tdata[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata" type="array">
+      <obj_property name="ElementShortName">s_axis_dds_tdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_dds_tdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus405" type="vbus">
+      <obj_property name="label">i</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[15]" type="logic">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">[15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[14]" type="logic">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">[14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[13]" type="logic">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">[13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[12]" type="logic">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">[12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[11]" type="logic">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">[11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[10]" type="logic">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">[10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[9]" type="logic">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">[9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[8]" type="logic">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">[8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[7]" type="logic">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[6]" type="logic">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[5]" type="logic">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[4]" type="logic">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[2]" type="logic">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[1]" type="logic">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[0]" type="logic">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus388" type="vbus">
+      <obj_property name="label">q</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[31]" type="logic">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">[31]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[30]" type="logic">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">[30]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[29]" type="logic">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">[29]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[28]" type="logic">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">[28]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[27]" type="logic">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">[27]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[26]" type="logic">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">[26]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[25]" type="logic">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">[25]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[24]" type="logic">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">[24]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[23]" type="logic">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">[23]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[22]" type="logic">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">[22]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[21]" type="logic">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">[21]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[20]" type="logic">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">[20]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[19]" type="logic">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">[19]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[18]" type="logic">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">[18]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[17]" type="logic">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">[17]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tdata[16]" type="logic">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">[16]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/s_axis_dds_tvalid" type="logic">
+      <obj_property name="ElementShortName">s_axis_dds_tvalid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_dds_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/m_axis_real_tdata" type="array">
+      <obj_property name="ElementShortName">m_axis_real_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_real_tdata[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/m_axis_real_tvalid" type="logic">
+      <obj_property name="ElementShortName">m_axis_real_tvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axis_real_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/m_axis_imag_tdata" type="array">
+      <obj_property name="ElementShortName">m_axis_imag_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_imag_tdata[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/m_axis_imag_tvalid" type="logic">
+      <obj_property name="ElementShortName">m_axis_imag_tvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axis_imag_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/i_sample" type="array">
+      <obj_property name="ElementShortName">i_sample[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_sample[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/q_sample" type="array">
+      <obj_property name="ElementShortName">q_sample[31:0]</obj_property>
+      <obj_property name="ObjectShortName">q_sample[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/cos_sample" type="array">
+      <obj_property name="ElementShortName">cos_sample[15:0]</obj_property>
+      <obj_property name="ObjectShortName">cos_sample[15:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/sin_sample" type="array">
+      <obj_property name="ElementShortName">sin_sample[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sin_sample[15:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/real_sample" type="array">
+      <obj_property name="ElementShortName">real_sample[15:0]</obj_property>
+      <obj_property name="ObjectShortName">real_sample[15:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/w_tvalid" type="logic">
+      <obj_property name="ElementShortName">w_tvalid</obj_property>
+      <obj_property name="ObjectShortName">w_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/w_tvalid1" type="logic">
+      <obj_property name="ElementShortName">w_tvalid1</obj_property>
+      <obj_property name="ObjectShortName">w_tvalid1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_real_inst/A" type="array">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_real_inst/B" type="array">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_real_inst/P" type="array">
+      <obj_property name="ElementShortName">P[31:0]</obj_property>
+      <obj_property name="ObjectShortName">P[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_imaginary_inst/A" type="array">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_imaginary_inst/B" type="array">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/iq_mixer_rx_module/DUT/mult_gen_imaginary_inst/P" type="array">
+      <obj_property name="ElementShortName">P[31:0]</obj_property>
+      <obj_property name="ObjectShortName">P[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>

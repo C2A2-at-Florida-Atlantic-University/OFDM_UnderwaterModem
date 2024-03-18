@@ -9,9 +9,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 
-entity iq_mixer_10M is
+entity iq_mixer_rx_100M is
   generic(
-    g_CYCLES_PER_SAMPLE           : std_logic_vector(3 downto 0) := "1010"
+    g_ILA                         : boolean := false
   );
   port(
     axis_aclk                     : in  std_logic;
@@ -19,26 +19,28 @@ entity iq_mixer_10M is
 
     s_axis_tdata                  : in  std_logic_vector(15 downto 0);
     s_axis_tvalid                 : in  std_logic;
-    s_axis_tready                 : out std_logic;
      
     s_axis_dds_tdata              : in  std_logic_vector(31 downto 0);
     s_axis_dds_tvalid             : in  std_logic;
 
-    m_axis_tdata                  : out std_logic_vector(15 downto 0);
-    m_axis_tvalid                 : out std_logic;
-    m_axis_tlast                  : out std_logic;
-    m_axis_tready                 : in  std_logic
-  );
-end entity iq_mixer_10M;
+    m_axis_real_tdata             : out std_logic_vector(15 downto 0);
+    m_axis_real_tvalid            : out std_logic;
 
-architecture RTL of iq_mixer_10M is
+    m_axis_imag_tdata             : out std_logic_vector(15  downto 0);
+    m_axis_imag_tvalid            : out std_logic;
+
+    i_gain_shift                  : in  std_logic_vector(2 downto 0)
+  );
+end entity iq_mixer_rx_100M;
+
+architecture RTL of iq_mixer_rx_100M is
 
   attribute X_INTERFACE_INFO      : string;
   attribute X_INTERFACE_PARAMETER : string;
   
   attribute X_INTERFACE_INFO      of axis_aclk    : signal is "xilinx.com:signal:clock:1.0 axis_aclk CLK";
   attribute X_INTERFACE_PARAMETER of axis_aclk    : 
-    signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:s_axis_dds:m_axis, FREQ_HZ 100000000";
+    signal is "ASSOCIATED_BUSIF axis_aclk:s_axis:s_axis_dds:m_axis_real:m_axis_imag, FREQ_HZ 100000000";
 
   component mult_gen_0 is
     port(
@@ -49,19 +51,28 @@ architecture RTL of iq_mixer_10M is
     );
   end component mult_gen_0;
 
+  component ila_1 is
+    port(
+      clk                         : in  std_logic;
+      probe0                      : in  std_logic_vector(100 downto 0)
+    );
+  end component ila_1;
+
+  signal probe0                   : std_logic_vector(100 downto 0);
+
   signal i_sample                 : std_logic_vector(31 downto 0) := (others => '0');
   signal q_sample                 : std_logic_vector(31 downto 0) := (others => '0');
-  signal cos_sample               : std_logic_vector(15 downto 0)  := (others => '0');
-  signal sin_sample               : std_logic_vector(15 downto 0)  := (others => '0');
+  signal cos_sample               : std_logic_vector(15 downto 0) := (others => '0');
+  signal sin_sample               : std_logic_vector(15 downto 0) := (others => '0');
   signal real_sample              : std_logic_vector(15 downto 0) := (others => '0');
 
-  constant READY                  : std_logic_vector(1 downto 0)  := "00";
-  constant MIX_I                  : std_logic_vector(1 downto 0)  := "01";
-  constant SAMPLE_I               : std_logic_vector(1 downto 0)  := "10";
-  constant SAMPLE_Q               : std_logic_vector(1 downto 0)  := "11";
+  signal w_tvalid                 : std_logic := '0';
+  signal w_tvalid1                : std_logic := '0';
 
-  signal Current_State            : std_logic_vector(1 downto 0)  := READY;
-  signal Next_State               : std_logic_vector(1 downto 0)  := READY;
+  signal r_axis_real_tdata        : std_logic_vector(15 downto 0);
+  signal r_axis_real_tvalid       : std_logic;
+  signal r_axis_imag_tdata        : std_logic_vector(15 downto 0);
+  signal r_axis_imag_tvalid       : std_logic;
 
 begin
 
@@ -83,114 +94,47 @@ begin
       P                           => q_sample
     );
 
-  -- Process to assign Current State
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-      Current_State               <= Next_State;
+      real_sample                 <= s_axis_tdata;
+      cos_sample                  <= s_axis_dds_tdata(15 downto 0);
+      sin_sample                  <= s_axis_dds_tdata(31 downto 16);
+      w_tvalid                    <= s_axis_tvalid and s_axis_dds_tvalid;
+      w_tvalid1                   <= w_tvalid;
     end if;
   end process;
 
-  -- Process describing State machine
   process(axis_aclk)
   begin
     if rising_edge(axis_aclk) then
-
-      case Current_State is
-
-        when READY =>
-          if s_axis_tvalid = '1' then
-            real_sample           <= s_axis_tdata;
-            cos_sample            <= s_axis_dds_tdata(15 downto 0);
-            sin_sample            <= s_axis_dds_tdata(31 downto 16);
-          end if;
-
-        when others =>
-          NULL;
-
-      end case;
+      r_axis_real_tdata           <= 
+        i_sample(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
+      r_axis_imag_tdata           <= 
+        q_sample(31-to_integer(unsigned(i_gain_shift)) downto 16-to_integer(unsigned(i_gain_shift)));
+      r_axis_real_tvalid          <= w_tvalid1;
+      r_axis_imag_tvalid          <= w_tvalid1;
     end if;
   end process;
 
-  -- Process describing next state
-  process(
-    Current_State,
-    s_axis_tvalid,
-    m_axis_tready
-  ) begin
+  m_axis_real_tdata               <= r_axis_real_tdata;
+  m_axis_imag_tdata               <= r_axis_imag_tdata;
+  m_axis_real_tvalid              <= r_axis_real_tvalid;
+  m_axis_imag_tvalid              <= r_axis_imag_tvalid;
 
-    case Current_State is 
-
-      when READY => 
-        if s_axis_tvalid = '1' then
-          Next_State              <= MIX_I;
-        else
-          Next_State              <= READY;
-        end if;
-
-      when MIX_I =>
-        Next_State                <= SAMPLE_I;
-
-      when SAMPLE_I =>
-        if m_axis_tready = '1' then
-          Next_State              <= SAMPLE_Q;
-        else
-          Next_State              <= SAMPLE_I;
-        end if;
-
-      when SAMPLE_Q =>
-        if m_axis_tready = '1' then
-          Next_State              <= READY;
-        else
-          Next_State              <= SAMPLE_Q;
-        end if;
-
-      when others =>
-        Next_State                <= SAMPLE_Q;
-
-    end case;
-  end process;
-
-  -- Process assigning output products
-  process(
-    Current_State,
-    i_sample,
-    q_sample
-  ) begin
+  ila_gen : if g_ILA generate
     
-    case Current_State is
+    probe0                        <= real_sample & cos_sample & sin_sample & 
+                                     r_axis_real_tdata & r_axis_imag_tdata & 
+                                     r_axis_real_tvalid & r_axis_imag_tvalid &
+                                     w_tvalid & w_tvalid1 & X"0000" & '0';
 
-      when READY =>
-        s_axis_tready             <= '1';
-        m_axis_tdata              <= (others => '0');
-        m_axis_tlast              <= '0';
-        m_axis_tvalid             <= '0';
-      
-      when MIX_I =>
-        s_axis_tready             <= '0';
-        m_axis_tvalid             <= '0';
-        m_axis_tlast              <= '0';
-        m_axis_tdata              <= (others => '0');
+    ila_inst : ila_1
+      port map(
+        clk                       => axis_aclk,
+        probe0                    => probe0
+      );
 
-      when SAMPLE_I =>
-        s_axis_tready             <= '0';
-        m_axis_tvalid             <= '1';
-        m_axis_tlast              <= '0';
-        m_axis_tdata              <= i_sample(31 downto 16);
-
-      when SAMPLE_Q =>
-        s_axis_tready             <= '1';
-        m_axis_tvalid             <= '1';
-        m_axis_tlast              <= '1';
-        m_axis_tdata              <= q_sample(31 downto 16);
-
-      when others =>
-        s_axis_tready             <= '0';
-        m_axis_tdata              <= (others => '0');
-        m_axis_tlast              <= '0';
-        m_axis_tvalid             <= '0';
-
-    end case;
-  end process;
+  end generate;
 
 end architecture RTL;

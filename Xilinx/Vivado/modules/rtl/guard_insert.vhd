@@ -241,9 +241,13 @@ begin
         m_axis_tlast                <= s_axis_tlast;
 
       when GUARD =>
+        --s_axis_tready               <= '0';
+        --w_axis_tvalid               <= '0';
+        --w_axis_tdata                <= (others => '0');
+        --m_axis_tlast                <= '0';
         s_axis_tready               <= '0';
-        w_axis_tvalid               <= '0';
-        w_axis_tdata                <= (others => '0');
+        w_axis_tvalid               <= '1';
+        w_axis_tdata                <= X"00000000";
         m_axis_tlast                <= '0';
 
       when others =>

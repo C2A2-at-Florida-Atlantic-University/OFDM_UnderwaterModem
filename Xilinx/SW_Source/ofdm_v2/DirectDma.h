@@ -9,19 +9,17 @@
 
 void DirectDmaPsToPlInit(unsigned start);
 ReturnStatusType DirectDmaPsToPl(unsigned Bytes);
-ReturnStatusType DirectDmaPlToPsThread(void);
+ReturnStatusType DirectDmaPlToPsThread(unsigned RawSampleSave);
 void DirectDmaPlToPsInit(unsigned start);
 void *DirectDmaPlToPs(void *arg);
 void DirectDmaPlToPsThreadCancel(void);
 void DirectDmaSetGlobalMute(bool GlobalMuteSelect);
 void DirectDmaSetNumBytesForLoopback(unsigned Bytes);
-int DirectDmaBuffReadStatus(bool *Status0, bool *Status1, bool
-  *Status2);
+unsigned DirectDmaBuffReadStatus(void);
 void DirectDmaMm2sIrqClear(void);
 void DirectDmaS2mmIrqClear(void);
 void DirectDmaMm2sStatus(void);
 void DirectDmaS2mmStatus(void);
-void DirectDmaSetTxBufferLoop(unsigned Sel);
 ReturnStatusType DirectDmaCheckThreadRunning(void);
 //ReturnStatusType(void)
 

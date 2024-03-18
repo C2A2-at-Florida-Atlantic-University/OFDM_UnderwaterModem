@@ -473,13 +473,6 @@ proc create_root_design { parentCell } {
      return 1
    }
   
-  # Create instance: xpm_cdc_gen_0, and set properties
-  set xpm_cdc_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_0 ]
-  set_property -dict [ list \
-   CONFIG.INIT_SYNC_FF {true} \
-   CONFIG.WIDTH {16} \
- ] $xpm_cdc_gen_0
-
   # Create instance: xpm_cdc_gen_1, and set properties
   set xpm_cdc_gen_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xpm_cdc_gen xpm_cdc_gen_1 ]
   set_property -dict [ list \
@@ -497,16 +490,15 @@ proc create_root_design { parentCell } {
   connect_bd_net -net ADC_control_1 [get_bd_ports ADC_control] [get_bd_pins AD9244_to_AXIS_M_0/control]
   connect_bd_net -net ADCdata_1 [get_bd_ports ADCdata] [get_bd_pins AD9244_to_AXIS_M_0/ADCdata]
   connect_bd_net -net DDC_Mixer_o_iq_square_0 [get_bd_ports o_iq_square_sum_ddc] [get_bd_pins DDC_Mixer/o_iq_square_sum_ddc]
-  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DDC_Mixer/aclk] [get_bd_pins xpm_cdc_gen_0/src_clk] [get_bd_pins xpm_cdc_gen_1/src_clk]
-  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins peak_sample_40M_0/aclk] [get_bd_pins xpm_cdc_gen_0/dest_clk] [get_bd_pins xpm_cdc_gen_1/dest_clk]
+  connect_bd_net -net aclk_1 [get_bd_ports aclk] [get_bd_pins DDC_Mixer/aclk] [get_bd_pins xpm_cdc_gen_1/src_clk]
+  connect_bd_net -net aclk_40M_1 [get_bd_ports aclk_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aclk] [get_bd_pins DDC_Mixer/aclk_40M] [get_bd_pins peak_sample_40M_0/aclk] [get_bd_pins xpm_cdc_gen_1/dest_clk]
   connect_bd_net -net aresetn_40M_1 [get_bd_ports aresetn_40M] [get_bd_pins AD9244_to_AXIS_M_0/m00_axis_aresetn] [get_bd_pins DDC_Mixer/aresetn_40M]
-  connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins xpm_cdc_gen_0/src_in]
+  connect_bd_net -net decimate_ratio_1 [get_bd_ports decimate_ratio] [get_bd_pins DDC_Mixer/decimate_ratio]
   connect_bd_net -net i_gain_shift_0_1 [get_bd_ports i_gain_shift_mixer] [get_bd_pins DDC_Mixer/i_gain_shift_mixer]
   connect_bd_net -net i_gain_shift_0_3 [get_bd_ports i_gain_shift_ddc] [get_bd_pins DDC_Mixer/i_gain_shift_ddc]
   connect_bd_net -net i_trigger_1 [get_bd_ports i_trigger] [get_bd_pins DDC_Mixer/i_trigger] [get_bd_pins xpm_cdc_gen_1/src_in]
   connect_bd_net -net peak_sample_40M_0_o_peak_sample_40M [get_bd_ports o_peak_sample_adc] [get_bd_pins peak_sample_40M_0/o_peak_sample_40M]
   connect_bd_net -net s_axis_phase_tdata_0_1 [get_bd_ports Fc_scaled] [get_bd_pins DDC_Mixer/Fc_scaled]
-  connect_bd_net -net xpm_cdc_gen_0_dest_out [get_bd_pins DDC_Mixer/decimate_ratio] [get_bd_pins xpm_cdc_gen_0/dest_out]
   connect_bd_net -net xpm_cdc_gen_1_dest_out [get_bd_pins peak_sample_40M_0/i_trigger] [get_bd_pins xpm_cdc_gen_1/dest_out]
 
   # Create address segments

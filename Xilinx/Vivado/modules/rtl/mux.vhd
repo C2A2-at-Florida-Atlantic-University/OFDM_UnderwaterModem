@@ -52,8 +52,8 @@ begin
     m_axis_tvalid                 <= s_axis0_tvalid when i_select = '0' else s_axis1_tvalid;
     m_axis_tlast                  <= s_axis0_tlast  when i_select = '0' else s_axis1_tlast;
     
-    s_axis0_tready                <= m_axis_tready  when i_select = '0' else '0';
-    s_axis1_tready                <= m_axis_tready  when i_select = '1' else '0';
+    s_axis0_tready                <= m_axis_tready;
+    s_axis1_tready                <= m_axis_tready;
   end generate gen_combinatorial;
 
   gen_sequential : if g_USE_REGISTER generate

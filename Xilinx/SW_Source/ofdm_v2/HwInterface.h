@@ -37,8 +37,9 @@
 #define FpgaClkRate 100000000 // 100MHz
 #define AdcClkRate 40000000 // 40MHz
 // MAX input voltage of ~0.3V before distortion using 10 dB RX gain
-#define DEFAULT_RX_GAIN_DB 14 // in dB
-#define DEFAULT_SYNCHRONIZER_OFFSET -10
+#define DEFAULT_RX_GAIN_DB 16 // in dB
+//#define DEFAULT_SYNCHRONIZER_OFFSET -16 // Verified with sync loopback
+#define DEFAULT_SYNCHRONIZER_OFFSET 0 // Verified with wire loopback
 
 #define GPIO_0_BASE_ADDR 0x40010000
 #define GPIO_1_BASE_ADDR 0x40010200
@@ -47,6 +48,7 @@
 #define GPIO_4_BASE_ADDR 0x40010800
 #define GPIO_5_BASE_ADDR 0x40010A00
 #define GPIO_6_BASE_ADDR 0x40010C00
+#define GPIO_7_BASE_ADDR 0x40010E00
 
 #define FC_SCALED_OFFSET 0x0
 #define FC_SCALED_MASK 0xFFFFFFFF
@@ -81,6 +83,10 @@
 #define DUC_INTERP_RATIO_OFFSET 0x0
 #define DUC_INTERP_RATIO_MASK 0x0000FFFF
 
+#define DMA_LOOPBACK_OFFSET 0x0
+#define DMA_LOOPBACK_MASK_OFFSET 16
+#define DMA_LOOPBACK_MASK 0x00010000
+
 #define OFDM_SYMBOLS_OFFSET 0x0
 #define OFDM_SYMBOLS_MASK_OFFSET 17
 #define OFDM_SYMBOLS_MASK 0x001E0000
@@ -95,9 +101,16 @@
 #define CP_LEN_MASK_OFFSET 14
 #define CP_LEN_MASK 0x03FFC000
 
+#define SYNC_LOOPBACK_OFFSET 0x8
+#define SYNC_LOOPBACK_MASK_OFFSET 26
+#define SYNC_LOOPBACK_MASK 0x04000000
+
 #define SYNC_OFFSET_OFFSET 0x0
 #define SYNC_OFFSET_MASK_OFFSET 21
 #define SYNC_OFFSET_MASK 0xFFE00000
+
+#define DMA_TLAST_GEN_OFFSET 0x0
+#define DMA_TLAST_GEN_MASK 0xFFFFFFFF
 
 #define SYNC_ENABLE_OFFSET 0x8
 #define SYNC_ENABLE_MASK_OFFSET 27
@@ -192,6 +205,10 @@
 #define ADC_PEAK_MASK 0xFFFF0000
 #define ADC_PEAK_MASK_OFFSET 16
 
+#define GAIN_SHIFT_FIR_OFFSET 8
+#define GAIN_SHIFT_FIR_MASK 0x30
+#define GAIN_SHIFT_FIR_MASK_OFFSET 4
+
 #define TRIGGER_OFFSET 8
 #define TRIGGER_MASK 0x01000000
 #define TRIGGER_MASK_OFFSET 24
@@ -203,7 +220,29 @@
 #define GAIN_SHIFT_OFFSET 8
 #define GAIN_SHIFT_MASK 0x00000007
 
+#define SYNC_GUARD_LOOPBACK_OFFSET 8
+#define SYNC_GUARD_LOOPBACK_MASK 0x08000000
+#define SYNC_GUARD_LOOPBACK_MASK_OFFSET 27
+
 #define DDC_PEAK_OFFSET 8
+
+#define GP_REG_0_OFFSET 8
+#define GP_REG_0_MASK 0x40000000
+#define GP_REG_0_MASK_OFFSET 30
+
+#define GP_REG_1_OFFSET 8
+#define GP_REG_1_MASK 0x80000000
+#define GP_REG_1_MASK_OFFSET 31
+
+#define DAC_FIRST_SAMPLE_SAVE_MASK 0x00FFFFFF
+
+#define DAC_SAMPLE_SAVE_OFFSET 8
+#define DAC_SAMPLE_SAVE_MASK 0x10000000
+#define DAC_SAMPLE_SAVE_MASK_OFFSET 28
+
+#define FIR_SAMPLE_SAVE_OFFSET 8
+#define FIR_SAMPLE_SAVE_MASK 0x20000000
+#define FIR_SAMPLE_SAVE_MASK_OFFSET 29
 
 extern void HwInterfaceStartTx(void);
 extern void HwInterfaceStopTx(void);
@@ -246,7 +285,15 @@ unsigned HwInterfaceReadDacPeak(void);
 double HwInterfaceReadDdcPeak(void);
 double HwInterfaceReadDucPeak(void);
 void HwInterfaceSetMixerGain(unsigned GainShift);
+void HwInterfaceSetFirGain(unsigned GainShift);
 void HwInterfaceSetDdcGain(unsigned GainShift);
 void HwInterfaceTxOn(unsigned Sel);
+void HwInterfaceGpReg0(unsigned Val);
+void HwInterfaceGpReg1(unsigned Val);
+void HwInterfaceSyncGuardLoopback(unsigned Enable);
+void HwInterfaceResetTrigger(void);
+void HwInterfaceSetFirstDacSampleSave(unsigned samples);
+void HwInterfaceSetDacSampleSave(unsigned Enable);
+void HwInterfaceSetFirSampleSave(unsigned Enable);
 
 #endif
