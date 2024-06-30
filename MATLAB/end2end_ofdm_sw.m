@@ -3,7 +3,7 @@ clear; clc; close all; fclose all; format long;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Preset = 916;
+Preset = 1016;
 Test = 0;
 % "ZF", "MMSE", "ZF Averaged", "LS", "Ideal"
 % "Sym1Pilot" % Use entire 1st OFDM Symbol to estimate channel for all sym
@@ -22,7 +22,7 @@ Test = 0;
 % Take OFDM Modem SW FFT input and Equalize in MATLAB instead of OFDM SW
     MAT_DEMOD = true;
 % Enable CFO Correction on OFDM Modem SW captured data
-    ADD_CFO_CORR = true;
+    ADD_CFO_CORR = false;
 % Enable CFO Correction on OFDM Matlab simulated data
     ADD_MAT_CFO_CORR = false;
 % Use all raw OFDM SW files from desktop OFDM app else use from Modem lib
@@ -34,12 +34,14 @@ Test = 0;
 % Compare Multipath channel with Channel Estimate
     COMP_EST = false;
 % Plot MATLAB Channel Estimate else plot OFDM Modem Channel Estimate
-    PLOT_MAT_CH_EST = true;
+    PLOT_MAT_CH_EST = false;
 % Use Comb type pilot format else use alternating pilots
     PILOT_COMB_FORMAT = true;
 % Assume all CFO is caused by doppler. Use CFO est to correct for doppler.
 % If false, use CFO est to correct for CFO offset. Only for MATLAB sim
     DOPPLER_PROC = false;
+% Estimate and Compensate for Timing Offset
+    TA_EST_COMP = true;
 % Perform estimation and correction for phase rotation from sym to sym
     PHASE_AVG = true;
 % Filter multiple channel estimates instead of averaging
@@ -146,7 +148,7 @@ sync_samples_early = 2;             % Num of samples to synchronize early
 doppler_sync_samples_early = 1;       % samp to sync early for doppler
 force_doppler_sync = 0;               % Force doppler synchronization
 pilot_density = 0.5;                  % Pilot to data ratio
-DAC_FS = 10000000;                    % Dac sample rate
+DAC_FS = 40000000;                    % Dac sample rate
 ADC_FS = 40000000;                    % ADC sample rate
 nfft_p = 32*nfft;                     % NFFT for plotting spectrum
 speed_sound = 1500;                   % Speed of sound underwater
@@ -1319,6 +1321,42 @@ end
 % MODEM Channel Estimation:
 %%%%% Get LS Channel estimate %%%%%
 H = conj(P_RX_modem) ./ conj(reference_pilot);
+%%%%% Timing offset estimation %%%%%
+e_pa = zeros(1,ofdm_symbols);               % Phase shift estimate
+TA_est = zeros(1,ofdm_symbols);             % Timing offset estimate
+for i=1:ofdm_symbols
+    for K=1:pilot_carriers-2
+        e_pa(i) = e_pa(i) + H(K,i) * H(K+2,i)';
+    end
+    TA_est(i) = angle(e_pa(i))*nfft/(2*pi*4);
+end
+TA_comp = exp(1j*2*pi*(1:nfft)'.*TA_est/nfft);
+% if ~PILOT_COMB_FORMAT
+%     TA_comp_H = zeros(pilot_carriers,ofdm_symbols);
+%     for i=1:ofdm_symbols
+%         TA_comp_tmp = TA_comp(:,i);
+%         TA_comp_tmp(any(isnan(pilot_index_nan(:,i)),2),:) = [];
+%         TA_comp_H(:,i) = TA_comp_tmp;
+%     end
+% else
+    TA_comp_H = TA_comp;
+    TA_comp_H(any(isnan(pilot_index_nan),2),:) = [];
+%end
+
+figure(),subplot(2,2,1),plot(real(TA_comp(:,1))),title('In-Phase')
+xlabel('Sub-Carrier Index'),subplot(2,2,2),plot(imag(TA_comp(:,1)))
+title('Quadrature'),xlabel('Sub-Carrier Index'),subplot(2,2,3)
+plot(real(TA_comp_H(:,1))),title('In-Phase'),xlabel('Pilot-Carrier Index')
+subplot(2,2,4),plot(imag(TA_comp_H(:,1))),title('Quadrature')
+xlabel('Pilot-Carrier Index'),sgtitle('TA Compensation')
+
+%%%%% Timing offset correction %%%%%
+if TA_EST_COMP
+    H = H .* TA_comp_H;
+    fft_modem_eq = fft_modem_eq .* TA_comp;
+end
+table(TA_est)
+
 %%%%% Estimate and correct for phase offsets between symbols %%%%%
 if PHASE_AVG
     phase_sym_rot = zeros(1,ofdm_symbols);
@@ -1326,28 +1364,33 @@ if PHASE_AVG
     for i = 1:ofdm_symbols
         phase_sym_next = H(:,i);
         phase_sym_rot(i) = mean(angle(phase_sym1./phase_sym_next));
+        %phase_sym_rot(i) = angle(mean(phase_sym1)/mean(phase_sym_next));
     end
     H = H.*exp(1i*phase_sym_rot);
     fft_modem_eq = fft_modem_eq .* exp(-1i*phase_sym_rot);
-%     phase_sym_rot = zeros(1,ofdm_symbols);
-%     phase_sym1 = angle(H(:,1));
-%     for i = 1:ofdm_symbols
-%         phase_sym_next = angle(H(:,i));
-%         phase_sym_rot(i) = mean(phase_sym1./phase_sym_next);
-%     end
-%     H = H.*exp(1i*phase_sym_rot);
-%     fft_modem_eq = fft_modem_eq .* exp(-1i*phase_sym_rot);
 end
-% if PHASE_AVG
-%     phase_sym_rot = zeros(1,ofdm_symbols);
-%     phase_sym1 = mean(angle(H(:,1)));
-%     for i = 1:ofdm_symbols
-%         phase_sym_next = mean(angle(H(:,i)));
-%         phase_sym_rot(i) = phase_sym1./phase_sym_next;
-%     end
-%     H = H.*exp(1i*phase_sym_rot);
-%     fft_modem_eq = fft_modem_eq .* exp(-1i*phase_sym_rot);
-% end
+
+%%%%% Get Ideal Channel to compare with estimated channel %%%%%
+fft_modem_eq_tmp = fft_modem_eq;
+%fft_modem_eq_tmp = fft_modem;
+fft_modem_eq_tmp(zp_index,:) = [];
+H_ideal3 = conj(fft_modem_eq_tmp) ./ ...
+    conj(tx_pilot_data);
+%%%%% Use entire sym1 as pilots, rest of syms are data %%%%%
+if (EQUALIZER_METHOD == "Sym1Pilot" || EQUALIZER_METHOD== "SymAvg")
+    H_sym1 = H_ideal3(:,1);
+    H_sym1 = repmat(H_sym1, [1 ofdm_symbols]);
+    H_interp_modem_sym1=interp1([pilot_index,data_index], ...
+        H_sym1,1:nfft,interp_method,"extrap");
+end
+%%%%% Interpolate Ideal channel to all NFFT sub-carriers %%%%%
+H_interp_modem_ideal = zeros(nfft,ofdm_symbols);
+for i=1:ofdm_symbols
+    tmp_pilot_data_index = pilot_data_index(:,i);
+    tmp_pilot_data_index(any(isnan(pilot_data_index),2),:) = [];
+    H_interp_modem_ideal(:,i) = interp1(tmp_pilot_data_index, ...
+        H_ideal3(:,i),1:nfft,interp_method,"extrap");
+end
 %%%%% Interpolate estimates at pilots to all sub-carriers %%%%%
 H_interp_modem_orig = zeros(nfft,ofdm_symbols);
 for i=1:ofdm_symbols
@@ -1355,15 +1398,13 @@ for i=1:ofdm_symbols
         1:nfft,interp_method,"extrap");
 end
 %%%%% For Alternating pilots, interpolate next sym pilots %%%%%
-if (~PILOT_COMB_FORMAT && EQUALIZER_METHOD ~= "ZF Averaged")
+if (~PILOT_COMB_FORMAT && EQUALIZER_METHOD ~= "ZF AVERAGED")
     H_interp_modem = H_interp_modem_orig;
     for i=1:ofdm_symbols
         if i<ofdm_symbols
-            H_interp_modem(:,i) = ...
-                mean(H_interp_modem_orig(:,i:i+1),2);
+            H_interp_modem(:,i) = mean(H_interp_modem(:,i:i+1),2);
         else
-            H_interp_modem(:,i) = ...
-                mean(H_interp_modem_orig(:,i-1:i),2);
+            H_interp_modem(:,i) = mean(H_interp_modem(:,i-1:i), 2);
         end
     end
 else
@@ -1379,43 +1420,14 @@ if EQUALIZER_METHOD == "ZF Averaged"
         for i=1:ofdm_symbols
             w = [w_flip(end-i+2:end) w_default(1:end-i+1)];
             w = w/sum(w);
-            H_interp_modem(:,i)=sum(H_interp_modem_filt.*w,2);
+            H_interp_modem(:,i) = sum(H_interp_modem_filt.*w,2);
         end
     else
         H_interp_modem = mean(H_interp_modem,2);
-        H_interp_modem = ...
-            repmat(H_interp_modem, [1 ofdm_symbols]);
+        H_interp_modem = repmat(H_interp_modem, [1 ofdm_symbols]);
     end
 end
-%%%%% Get Ideal Channel to compare with estimated channel %%%%%
-fft_modem_eq_tmp = fft_modem_eq;
-fft_modem_eq_tmp(zp_index,:) = [];
-H_ideal3 = conj(fft_modem_eq_tmp) ./ ...
-    conj(tx_pilot_data);
-%%%%% Use entire sym1 as pilots, rest of syms are data %%%%%
-if (EQUALIZER_METHOD == "Sym1Pilot" || EQUALIZER_METHOD== "SymAvg")
-    if (EQUALIZER_METHOD == "SymAvg")
-        H_sym1 = mean(H_ideal3,2);
-    else
-        H_sym1 = H_ideal3(:,1);
-    end
-    H_sym1 = repmat(H_sym1, [1 ofdm_symbols]);
-    H_interp_modem_sym1=interp1([pilot_index,data_index], ...
-        H_sym1,1:nfft,interp_method,"extrap");
-end
-if (EQUALIZER_METHOD == "Sym1Pilot" || EQUALIZER_METHOD== "SymAvg")
-    H_interp = H_interp_sym1;
-    H_interp_doppler2 = H_interp_doppler2_sym1;
-    H_interp_modem = H_interp_modem_sym1;
-end
-%%%%% Interpolate Ideal channel to all NFFT sub-carriers %%%%%
-H_interp_modem_ideal = zeros(nfft,ofdm_symbols);
-for i=1:ofdm_symbols
-    tmp_pilot_data_index = pilot_data_index(:,i);
-    tmp_pilot_data_index(any(isnan(pilot_data_index),2),:) = [];
-    H_interp_modem_ideal(:,i) = interp1(tmp_pilot_data_index, ...
-        H_ideal3(:,i),1:nfft,interp_method,"extrap");
-end
+
 %%%%% Get time domain taps of Modem channel %%%%%
 modem_ch = zeros(nfft,ofdm_symbols);
 for i = 1:ofdm_symbols

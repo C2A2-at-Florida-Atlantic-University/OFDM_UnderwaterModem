@@ -20,10 +20,14 @@ Test = 2;
 % Assume all CFO is caused by doppler. Use CFO est to correct for doppler.
 % If false, use CFO est to correct for CFO offset. Only for MATLAB sim
     DOPPLER_PROC = true;
+% Use resampler for doppler compensation else use separate interp/decimate
+    DOPPLER_RESAMPLER = true;
+% Use FIR Interp/decimate for doppler resampling else use CIC
+    DOPPLER_FIR = false;
 % Perform estimation and correction for phase rotation from sym to sym
     PHASE_AVG = true;
 % Filter multiple channel estimates instead of averaging
-    FILTER_CH_EST = true;
+    FILTER_CH_EST = false;
 % Perform power measurements
     POWER_MEASURE = false;
 % Plot ideal QAM scatter points on top of RX constellations
@@ -35,7 +39,7 @@ Test = 2;
 % Enable frequency domain timing offset estimation and compensation
     TA_EST_COMP = true;
 % Enable frequency domain frequency offset estimation and compensation
-    CFO_EST_COMP = false;
+    CFO_EST_COMP = true;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OFDM Parameters
@@ -57,11 +61,10 @@ nfft_zc = 4096;                       % NFFT for Zadoff-Chu sequence
 ZC_root = 13;                         % Zadoff-Chu root index
 ZC_length = nfft_zc/2;                % Zadoff-Chu Sequence Length
 doppler_cp_offset = round(cp_len/32); % Num of CP samples*2 to not use
-sync_samples_early = 10;             % Num of samples to synchronize early
-doppler_sync_samples_early = 0;       % samp to sync early for doppler
-force_doppler_sync = -10;               % Force doppler synchronization
+sync_samples_early = 0;             % Force sync offset for AWGN Channel
+force_doppler_sync = -0;               % Force sync offset for Doppler CH
 pilot_density = 0.5;                  % Pilot to data ratio
-DAC_FS = 1000000;                    % Dac sample rate
+DAC_FS = 10000000;                    % Dac sample rate
 nfft_p = 32*nfft;                     % NFFT for plotting spectrum
 speed_sound = 1500;                   % Speed of sound underwater
 duc_ddc_loss_gain = 2;                % Loss of Matlab DUC
@@ -77,7 +80,7 @@ snr_db = 30;                          % Signal-to-Noise ratio in dB
 multipath = [0 0 0.3 1 0 1 0.9 0.1 0 0 0 1];
 multipath = 1;
 %speed = 2;                            % Doppler In m/s
-speed = 0.1;
+speed = 0.05;
 
 cfo = 0;                              % Carrier frequency offset
 spo = 0;                              % Sample phase offset
@@ -535,7 +538,7 @@ ofdm_rx_sync_doppler = filter(multipath,1,ofdm_rx_sync_doppler);
 % Plot spectrum of FFT input
 figure(),plot(F/1000,10*log10(abs(fftshift(fft(ofdm_rx_sync_doppler,...
     nfft_p))))),xlabel('kHz'),ylabel('dB')
-title('MATLAB Sim FFT Input Spectrum')
+title('MATLAB Sim FFT Input Spectrum Before Doppler Compensation')
 
 % Serial to parrallel
 ofdm_rx_signal_par=reshape(ofdm_rx_sync_signal, ...
@@ -627,182 +630,85 @@ if DOPPLER_PROC
     k_est = (-mean(cfo_est_doppler)/Fc)+1;% Estimate doppler scaling factor
     Fs_doppler_sample = DAC_FS/k;         % Resample rate
     Fs_doppler_sample_est = DAC_FS/k_est; % Estimated resample rate
-    Fs_Delta = DAC_FS - Fs_doppler_sample;% Doppler Delta
-    Fs_doppler_diff = Fs_doppler_sample - Fs_doppler_sample_est;
-    table(k,k_est,Fs_doppler_sample,Fs_doppler_sample_est, ...
-        Fs_Delta, Fs_doppler_diff)
-    k_actual = k;
-    k_est = k;
+    Fc_doppler_shift_Hz = Fs_doppler_sample - DAC_FS;
+    Fc_doppler_shift_Hz_est = Fs_doppler_sample_est - DAC_FS;
+    base_doppler_shift_Hz = BW/k - BW;
+    base_doppler_shift_Hz_est = BW/k_est - BW;
+    table(k,k_est,Fs_doppler_sample,Fs_doppler_sample_est)
+    table(Fc_doppler_shift_Hz,Fc_doppler_shift_Hz_est)
+    table(base_doppler_shift_Hz,base_doppler_shift_Hz_est)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Resample with doppler shift factor
-    P = round(DAC_FS/k_est);  Q = round(DAC_FS);
-    if P*Q >= 2^31
-        re_scale = 2^31/(P*Q)
-        P = floor(P*sqrt(re_scale)); Q = floor(Q*sqrt(re_scale));
-        warning('Re-Scaled P/Q')
+    P = round(DAC_FS/k_est/Interp_val);  Q = round(DAC_FS/Interp_val);
+    %P = (1/k_est/Interp_val);  Q = (1/Interp_val);
+    tmp = reshape(ofdm_cfo_doppler, [1 ofdm_symbols*nfft]);
+    if DOPPLER_RESAMPLER
+        if P*Q >= 2^31
+            re_scale = 2^31/(P*Q)
+            P = floor(P*sqrt(re_scale)); Q = floor(Q*sqrt(re_scale));
+            warning('Re-Scaled down P/Q')
+        else
+            re_scale = 2^31/(P*Q)
+            P = floor(P*sqrt(re_scale)); Q = floor(Q*sqrt(re_scale));
+            warning('Re-Scaled up P/Q')
+        end
+        ofdm_tx_signal_doppler2 = resample(tmp,P,Q);
+    else
+        if DOPPLER_FIR
+            num_fir_taps_doppler = 512;
+            fir_taps_P_doppler = fir1(num_fir_taps_doppler,1/P);
+            fir_taps_P_doppler = fir_taps_P_doppler / sqrt(sum(...
+                fir_taps_P_doppler.^2));
+            filter_delay_P_doppler = floor(length(fir_taps_P_doppler)/2);
+            up_doppler = upsample(tmp,P);
+            up_doppler = [up_doppler,zeros(1,filter_delay_P_doppler)];
+            up_duc_doppler = filter(fir_taps_P_doppler, 1, up_doppler);
+            clear up_doppler;
+            up_duc_doppler(1:filter_delay) = [];
+
+            fir_taps_Q_doppler = fir1(num_fir_taps_doppler,1/Q);
+            fir_taps_Q_doppler = fir_taps_Q_doppler / sqrt(sum( ...
+                fir_taps_Q_doppler.^2));
+            filter_delay_Q_doppler = floor(length(fir_taps_Q_doppler)/2);
+            down_ddc_doppler = [up_duc_doppler zeros(1,filter_delay)];
+            clear up_duc_doppler;
+            down_ddc_doppler_filt = filter(fir_taps_Q_doppler, 1, ...
+                down_ddc_doppler);
+            clear down_ddc_doppler;
+            down_ddc_doppler_filt(1:filter_delay_Q_doppler) = [];
+            ofdm_tx_signal_doppler2 = downsample(down_ddc_doppler_filt, ...
+                Q);
+            clear down_ddc_doppler_filt;
+%         elseif DOPPLER_CIC
+%             % Read Captured Xilinx CIC Filter impulse Response:
+%             file = fopen('../Xilinx/Vivado/modules/sim/cic_duc_test_out.txt','r');
+%             cic_impulse = fscanf(file,"%d, %d\n",[2 79]);
+%             cic_impulse = complex(cic_impulse(1,:),cic_impulse(2,:));
+%             cic_impulse = cic_impulse / sum(cic_impulse); % Normalize
+%             up_doppler = upsample(tmp,P);
+%             up_doppler_cic = filter(cic_impulse,1,up_doppler);
+
+            
+        end
     end
-    ofdm_tx_signal_doppler2 = resample(ofdm_tx_signal_doppler,P,Q);
-    if (length(ofdm_tx_signal_doppler2) > length(ofdm_tx_signal_ch))
-        ofdm_tx_signal_doppler2 = ofdm_tx_signal_doppler2(1:length( ...
-            ofdm_tx_signal_ch));
-    elseif (length(ofdm_tx_signal_doppler2) < length(ofdm_tx_signal_ch))
+    if (length(ofdm_tx_signal_doppler2) > length(tmp))
+        ofdm_tx_signal_doppler2 = ofdm_tx_signal_doppler2(1:length(tmp));
+    elseif (length(ofdm_tx_signal_doppler2) < length(tmp))
         ofdm_tx_signal_doppler2 = [ofdm_tx_signal_doppler2 zeros(1, ...
-            length(ofdm_tx_signal_ch) - length(ofdm_tx_signal_doppler2))];
+            length(tmp) - length(ofdm_tx_signal_doppler2))];
     end
-%     ofdm_tx_signal_doppler2 = resample(ofdm_tx_signal_doppler,P,Q);
-%     if (length(ofdm_tx_signal_doppler2) > length(ddc_doppler))
-%         ofdm_tx_signal_doppler2 = ofdm_tx_signal_doppler2(1:length( ...
-%             ddc_doppler));
-%     elseif (length(ofdm_tx_signal_doppler2) < length(ddc_doppler))
-%         ofdm_tx_signal_doppler2 = [ofdm_tx_signal_doppler2 zeros(1, ...
-%             length(ddc_doppler)-length(ofdm_tx_signal_doppler2))];
-%     end
-%     ddc_doppler2 = ofdm_tx_signal_doppler2.';
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % IQ Mixer RX
-    i_ddc_doppler2 = ofdm_tx_signal_doppler2 .* cos(2*pi*Fc*t_up);
-    q_ddc_doppler2 = ofdm_tx_signal_doppler2 .* -sin(2*pi*Fc*t_up);
-    ddc_signal_doppler2 = complex(i_ddc_doppler2,q_ddc_doppler2);
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % DDC
-    ddc_doppler_real2 = decimate(real(ddc_signal_doppler2), ...
-        Interp_val,4096,'Fir');
-    ddc_doppler_imag2 = decimate(imag(ddc_signal_doppler2), ...
-        Interp_val,4096,'Fir');
-    ddc_doppler2 = complex(ddc_doppler_real2,ddc_doppler_imag2);
-    ddc_doppler2 = duc_ddc_loss_gain * ddc_doppler2.';
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Synchronization
-    sync_corr_doppler2 = abs(filter(sync_coef,1,ddc_doppler2));
-    [val3,ind3] = max(sync_corr_doppler2);
-    ind3 = ind3-doppler_sync_samples_early...
-        +gp_samples+force_doppler_sync+cp_len;
-    ofdm_rx_sync_doppler2 = ddc_doppler2;
-    ofdm_rx_sync_doppler2([1:ind3, ...
-        ind3+1+(nfft+cp_len+gp_samples)*ofdm_symbols:end]) = [];
-    if length(ofdm_rx_sync_doppler2)~=(nfft+cp_len+gp_samples)*ofdm_symbols
-        tmp = zeros(1,(nfft+cp_len+gp_samples)*ofdm_symbols- ...
-            length(ofdm_rx_sync_doppler2)).';
-        ofdm_rx_sync_doppler2 = [ofdm_rx_sync_doppler2;tmp];
-        warning('Deleted too much of UW-A signal 2')
-    end
-    doppler_sync_offset2 = (ind3-gp_samples)-(ind-gp_samples);
-    %display(doppler_sync_offset2)
-
-    vertical_lines(1) = [];
-    vertical_lines_doppler2 = zeros(1,ofdm_symbols*3);
-    line_label(1) = [];
-    for i=1:ofdm_symbols
-        if i==1
-            vertical_lines_doppler2(i) = ind3;
-            vertical_lines_doppler2(i+1)=vertical_lines_doppler2(i)+cp_len;
-            vertical_lines_doppler2(i+2)=vertical_lines_doppler2(i+1)+nfft;
-        else
-            vertical_lines_doppler2(3*i-2) = ...
-                vertical_lines_doppler2(3*i-3)+gp_samples;
-            vertical_lines_doppler2(3*i-1) = ...
-                vertical_lines_doppler2(3*i-2)+cp_len;
-            vertical_lines_doppler2(3*i) = ...
-                vertical_lines_doppler(3*i-1)+nfft;
-        end
-    end
-
-    % Plot syncronization timing after resampling
-    figure(),subplot(3,1,1),plot(t_p/1000,real(ofdm_tx_signal_ser),...
-        'LineWidth',2),hold on,plot(t_p/1000,real(ddc_doppler2))
-    for i=1:length(vertical_lines)
-        if i==1
-            xline(vertical_lines(i)*Ts/1000,'--b',line_label{i}, ...
-                'LabelHorizontalAlignment','left')
-        else
-            xline(vertical_lines(i)*Ts/1000,'--b',line_label{i})
-            xline(vertical_lines_doppler2(i-1)*Ts/1000,'--r', ...
-                line_label{i},'LabelVerticalAlignment','bottom');
-        end
-    end
-    legend('Ideal Channel','MATLAB UW-A Channel','Ideal Timing',...
-        'MATLAB UW-A Timing'),xlabel('Time (ms)'),title('In Phase')
-    subplot(3,1,2)
-    plot(t_p/1000,imag(ofdm_tx_signal_ser),'LineWidth',2),hold on
-    plot(t_p/1000,imag(ddc_doppler2))
-    for i = 1:length(vertical_lines)
-        if i == 1
-            xline(vertical_lines(i)*Ts/1000,'--b',line_label{i}, ...
-                'LabelHorizontalAlignment','left')
-        else
-            xline(vertical_lines(i)*Ts/1000,'--b',line_label{i})
-            xline(vertical_lines_doppler2(i-1)*Ts/1000,'--r',...
-                line_label{i},'LabelVerticalAlignment','bottom');
-        end
-    end
-    legend('Ideal Channel','MATLAB UW-A Channel','Ideal Timing',...
-        'MATLAB UW-A Timing')
-    xlabel('Time (ms)'),title('Quadrature'),subplot(3,1,3)
-    plot(t_p/1000,sync_corr_filt),hold on,plot(t_p/1000,sync_corr_doppler2)
-    vertical_lines = [ind3-gp_samples-cp_len vertical_lines];
-    line_label = ["UW-A Sync", line_label];
-    xline(vertical_lines(2)*Ts/1000,'--b',line_label{2}, ...
-        'LabelHorizontalAlignment','left')
-    xline(vertical_lines(1)*Ts/1000,'--r',line_label{1}, ...
-        'LabelHorizontalAlignment','Left','LabelVerticalAlignment',...
-        'bottom')
-    legend('Ideal Channel','MATLAB UW-A Channel','Ideal Timing',...
-        'MATLAB UW-A Timing')
-    title('Synchronizer Correlator Output')
-    sgtitle('Baseband OFDM Signal After Re-Sampler')
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Add multipath at baseband (too many taps to model at pass band)
-    ofdm_rx_sync_doppler2 = filter(multipath,1,ofdm_rx_sync_doppler2);
-
-    % Serial to Parallel
-    ofdm_rx_doppler_par2=reshape(ofdm_rx_sync_doppler2, ...
-        [nfft+cp_len+gp_samples ofdm_symbols]);
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Residual CFO Estimation and Correction (OPTIONAL)
-    ofdm_rx_doppler_par2(end-gp_samples+1:end,:) = [];
-    
-    % Add white noise at baseband
-    if BASEBAND_AWGN
-        ofdm_rx_doppler_par_pwr = mean(abs(ofdm_rx_doppler_par2).^2);
-        noise_pwr = ofdm_rx_doppler_par_pwr / snr;
-        noise = sqrt(noise_pwr) .* randn(size(ofdm_rx_doppler_par2));
-        ofdm_rx_doppler_par2 = ofdm_rx_doppler_par2 + noise;
-    end
-        
-    % Save and remove CP
-    cp_rm_doppler2 = ofdm_rx_doppler_par2;
-    cp_rm_doppler2(1:cp_len,:) = [];
-    
-    ofdm_cfo_doppler2 = zeros(nfft,ofdm_symbols);
-    cfo_est2 = 0;
-    cfo_est_doppler2 = zeros(1,ofdm_symbols);
-    for i = 1:ofdm_symbols
-        cp_cfo_begin = ofdm_rx_doppler_par2(doppler_cp_offset+1:cp_len- ...
-            doppler_cp_offset,i); % Obtain CP at beginning of symbol
-        cp_cfo_end = ofdm_rx_doppler_par2(nfft+1+doppler_cp_offset: ...
-            end-doppler_cp_offset,i); % Obtain CP at end of symbol
-        %cp_cfo_begin = ofdm_rx_doppler_par(1:cp_len,i);
-        %cp_cfo_end = ofdm_rx_doppler_par(nfft+1:end,i);
-        tmp = cp_cfo_end.*conj(cp_cfo_begin); % Correlate
-        sum_val = sum(tmp);
-        tan_val = atan2(imag(sum_val),real(sum_val));
-        normalized_cfo_est = 1*tan_val;
-        cfo_est = normalized_cfo_est*scs;
-        cfo_est_doppler2(i) = cfo_est/2/pi;
-        ofdm_cfo_doppler2(:,i) = cp_rm_doppler2(:,i).* ...
-            (cos(cfo_est*t(1:nfft))+1i*sin(cfo_est*t(1:nfft)))';
-    end
-    ofdm_cfo_doppler2 = cp_rm_doppler2; % Bypass optional CFO Correction
-    table(cfo_est_doppler2)
+    ofdm_cfo_doppler2 = ofdm_tx_signal_doppler2; % Bypass optional CFO Correction
 else
     ofdm_cfo_doppler2 = ofdm_cfo_doppler;
 end
+[]
+% Plot
+% Plot spectrum of FFT input
+figure(),plot(F/1000,10*log10(abs(fftshift(fft(ofdm_cfo_doppler2,...
+    nfft_p))))),xlabel('kHz'),ylabel('dB')
+title('MATLAB Sim FFT Input Spectrum After Doppler Compensation')
+ofdm_cfo_doppler2 = reshape(ofdm_cfo_doppler2, [nfft,ofdm_symbols]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FFT
@@ -935,41 +841,41 @@ e_cfo_rep = repmat(e_cfo, [1 ofdm_symbols]);
 % e_cfo_rep = exp(1j*e_cfo_rep.*(1:ofdm_symbols));
 % e_cfo_interp_rep = exp(1j*e_cfo_interp_rep.*(1:ofdm_symbols));
 %e_cfo_rep = exp(-1j*ones(nfft,1)*e_cfo_rep.*(0:ofdm_symbols-1));
-e_cfo_rep = exp(-1j*ones(1,ofdm_symbols).*(0:nfft-1)'.*(0:nfft-1)'*2*pi*cfo);
-e_cfo_rep = exp(-1j*2*pi*cfo*(0:nfft-1)'/nfft);
-e_cfo_rep = repmat(e_cfo_rep, [1 ofdm_symbols]);
-e_cfo_interp_rep = e_cfo_rep;
-if ~PILOT_COMB_FORMAT
-    e_cfo_rep = zeros(pilot_carriers,ofdm_symbols);
-    for i=1:ofdm_symbols
-        e_cfo_rep_tmp=e_cfo_interp_rep(:,i);
-        e_cfo_rep_tmp(any(isnan(pilot_index_nan(:,i)),2),:) = [];
-        e_cfo_rep(:,i) = e_cfo_rep_tmp;
-    end
-else
-    e_cfo_rep(any(isnan(pilot_index_nan),2),:) = [];
-end
+% e_cfo_rep = exp(-1j*ones(1,ofdm_symbols).*(0:nfft-1)'.*(0:nfft-1)'*2*pi*cfo);
+% e_cfo_rep = exp(-1j*2*pi*cfo*(0:nfft-1)'/nfft);
+% e_cfo_rep = repmat(e_cfo_rep, [1 ofdm_symbols]);
+% e_cfo_interp_rep = e_cfo_rep;
+% if ~PILOT_COMB_FORMAT
+%     e_cfo_rep = zeros(pilot_carriers,ofdm_symbols);
+%     for i=1:ofdm_symbols
+%         e_cfo_rep_tmp=e_cfo_interp_rep(:,i);
+%         e_cfo_rep_tmp(any(isnan(pilot_index_nan(:,i)),2),:) = [];
+%         e_cfo_rep(:,i) = e_cfo_rep_tmp;
+%     end
+% else
+%     e_cfo_rep(any(isnan(pilot_index_nan),2),:) = [];
+% end
 
 figure()
-for i=1:4
-    x_lim = [pilot_index(1),pilot_index(end,1)];
-    subplot(2,2,1),plot(real(e_cfo_interp_rep(:,i))),title('In-Phase')
-    xlim(x_lim),xlabel('Sub-Carrier Index'),hold on,subplot(2,2,2)
-    plot(imag(e_cfo_interp_rep(:,i))),title('Quadrature')
-    xlabel('Sub-Carrier Index'),xlim(x_lim),hold on,subplot(2,2,3)
-    plot(abs(e_cfo_interp_rep(:,i))),title('Magnitude')
-    xlim(x_lim),xlabel('Sub-Carrier Index'),hold on,subplot(2,2,4)
-    plot(angle(e_cfo_interp_rep(:,i))),title('Phase'),xlim(x_lim)
-    xlabel('Sub-Carrier Index'),hold on
-end
-subplot(2,2,1),legend('Symbol 0','Symbol 1','Symbol 2','Symbol 3')
-sgtitle('CFO Compensation')
+% for i=1:4
+%     x_lim = [pilot_index(1),pilot_index(end,1)];
+%     subplot(2,2,1),plot(real(e_cfo_interp_rep(:,i))),title('In-Phase')
+%     xlim(x_lim),xlabel('Sub-Carrier Index'),hold on,subplot(2,2,2)
+%     plot(imag(e_cfo_interp_rep(:,i))),title('Quadrature')
+%     xlabel('Sub-Carrier Index'),xlim(x_lim),hold on,subplot(2,2,3)
+%     plot(abs(e_cfo_interp_rep(:,i))),title('Magnitude')
+%     xlim(x_lim),xlabel('Sub-Carrier Index'),hold on,subplot(2,2,4)
+%     plot(angle(e_cfo_interp_rep(:,i))),title('Phase'),xlim(x_lim)
+%     xlabel('Sub-Carrier Index'),hold on
+% end
+% subplot(2,2,1),legend('Symbol 0','Symbol 1','Symbol 2','Symbol 3')
+% sgtitle('CFO Compensation')
 
 %%%% Frequency offset compensation %%%%%
 
 if CFO_EST_COMP
-    %H = H .* (e_cfo_rep);
-    %fft_doppler_eq2 = fft_doppler_eq2 .* (e_cfo_interp_rep);
+    H = H .* (e_cfo_rep);
+    fft_doppler_eq2 = fft_doppler_eq2 .* (e_cfo_rep);
 end
 %%%%% Estimate and correct for phase offsets between symbols %%%%%
 if PHASE_AVG
