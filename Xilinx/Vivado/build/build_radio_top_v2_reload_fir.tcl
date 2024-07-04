@@ -14,15 +14,15 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/modules
 source file_list.tcl
 cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/bd
 
-source ADC_Chain_FIR_250k_bd.tcl
-source DAC_Chain_FIR_250k_bd.tcl
-source Ofdm_Sync_250k_reload_bd.tcl
+#source ADC_Chain_FIR_250k_bd.tcl
+#source DAC_Chain_FIR_250k_bd.tcl
+#source Ofdm_Sync_250k_reload_bd.tcl
 #source ADC_Chain_FIR_100k_bd.tcl
 #source DAC_Chain_FIR_100k_bd.tcl
 #source Ofdm_Sync_100k_reload_bd.tcl
-#source ADC_Chain_FIR_50k_bd.tcl
-#source DAC_Chain_FIR_50k_bd.tcl
-#source Ofdm_Sync_50k_reload_bd.tcl
+source ADC_Chain_FIR_50k_bd.tcl
+source DAC_Chain_FIR_50k_bd.tcl
+source Ofdm_Sync_50k_reload_bd.tcl
 
 source PS_Zynq_v2_bd.tcl
 source Radio_Top_v2_reload_FIR_bd.tcl
@@ -36,7 +36,7 @@ cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/constraints
 add_files -fileset constrs_1 -norecurse SDUAMconstraints.xdc
 set_property -name {xsim.simulate.runtime} -value {} -objects [get_filesets sim_1]
 
-if (0) {
+if (1) {
   launch_runs synth_1 -jobs 24
   wait_on_run synth_1
   launch_runs impl_1 -to_step write_bitstream

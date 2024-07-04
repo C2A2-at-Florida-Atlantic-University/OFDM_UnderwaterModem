@@ -2,8 +2,8 @@ clear;clc;close all;fclose('all');format long;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Preset = 816;
-Test = 0;
+Preset = 416;
+Test = 1;
 
 %%%%% Generic Simulation Settings %%%%%
 % Use Preset/Test for config and modem analysis else MATLAB only analysis
@@ -27,9 +27,9 @@ Test = 0;
 % Perform CFO Estimation and Compensation 
     CFO_COMP = true;
 % Slope CFO estimates from 1 symbol to the next
-    CFO_EST_SLOPE = true;
+    CFO_EST_SLOPE = false;
 % Channel Estimation Method: "LS" or "LS Averaged"
-    CH_EST_METHOD = "LS Averaged";
+    CH_EST_METHOD = "LS";
 % Channel Estimation Frequency Interpolation method
     interp_method = 'linear';
 % Filter channel estimates across OFDM symbols aka Time-Domain Smoothing
@@ -104,6 +104,8 @@ cic_scale = 50;                       % Scaling of CIC
 num_fir_taps = 4096;                  % Number of FIR taps for DUC/DDC
 symbol_plot = ofdm_symbols;           % Set number of Symbols to plot
 gp_samples = round(symbol_guard_ms / 1000 * BW);
+%LS_avg_win_size = ofdm_symbols;
+LS_avg_win_size = 2;                  % Num of OFDM symbols to Avg LS Est
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculated OFDM Parameters
@@ -780,7 +782,12 @@ H_interp_doppler = interp1(pilot_index(:,1), H, 1:nfft, interp_method, ...
 if CH_EST_METHOD == "LS Averaged"
     if TEMPORAL_SMOOTHING
         H_interp_doppler_filt = H_interp_doppler;
-        w_default = linspace(2,1,ofdm_symbols);
+        if LS_avg_win_size ~= ofdm_symbols
+            w_default = linspace(2,1,LS_avg_win_size);
+            w_default = [w_default zeros(1,ofdm_symbols-LS_avg_win_size)];
+        else
+            w_default = linspace(2,1,ofdm_symbols);
+        end
         w_flip = flip(w_default);
         w_flip(end) = [];
         for i=1:ofdm_symbols
