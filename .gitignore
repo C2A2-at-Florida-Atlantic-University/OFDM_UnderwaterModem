@@ -29,6 +29,8 @@ bitfiles
 *.asv
 Xilinx/SW_Source/ofdm_v2/ofdm_desktop
 Xilinx/SW_Source/ofdm_v2/ofdm
+Xilinx/SW_Source/reyax/reyax
+Xilinx/SW_Source/ofdm_v2_reyax/ofdm
 *tar*
 *.csv
 tek*

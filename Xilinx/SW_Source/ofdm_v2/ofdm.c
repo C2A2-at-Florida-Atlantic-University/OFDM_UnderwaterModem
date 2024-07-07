@@ -178,8 +178,6 @@ int main(int argc, char **argv)
 
   SwSynchronization = false;
   SyncLoopSel = 0;
-  GpReg0 = 1; // Select FIR by default
-  GpReg1 = 0; // Select full demod path
 
   ReturnStatus = FpgaInterfaceSetup();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)

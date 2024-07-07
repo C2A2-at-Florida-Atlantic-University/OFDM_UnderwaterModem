@@ -22,7 +22,9 @@ ReturnStatusType PowerPeakDuc(void)
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
 
+  /*
   ReyaxTtyMessageSend(" ");
+  */
 
   Peak = HwInterfaceReadDucPeak();
   PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
@@ -31,7 +33,7 @@ ReturnStatusType PowerPeakDuc(void)
   // be full scale 14 bits -- acounting for some loss in mixer
   PeakDbfs = PeakDbfs - 0.3;
 
-  ReyaxTtyMessageSend("PowerPeakDuc: Peak DUC power: %lf dBFS", PeakDbfs);
+  ReyaxTtyMessageSend("Peak DUC power: %lf dBFS", PeakDbfs);
 
   if (PeakDbfs > 0)
   {
@@ -47,7 +49,9 @@ ReturnStatusType PowerPeakDuc(void)
     ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
   }
 
+  /*
   ReyaxTtyMessageSend(" ");
+  */
 
   return ReturnStatus;
 }
@@ -62,7 +66,7 @@ ReturnStatusType PowerPeakDdc(void)
   Peak = HwInterfaceReadDdcPeak();
   PeakDbfs = 10*log10(Peak/pow(2.0,MAX_BITS-1));
 
-  ReyaxTtyMessageSend("PowerPeakDdc: Peak DDC power: %lf dBFS", PeakDbfs);
+  ReyaxTtyMessageSend("Peak DDC power: %lf dBFS", PeakDbfs);
 
   if (PeakDbfs > 0)
   {
@@ -73,7 +77,9 @@ ReturnStatusType PowerPeakDdc(void)
 
   PowerPeakAdc();
 
+  /*
   ReyaxTtyMessageSend(" ");
+  */
 
   return ReturnStatus;
 }
@@ -88,7 +94,7 @@ ReturnStatusType PowerPeakDac(void)
 
   MaxValDbfs = 10*log10(((double)MaxVal)/pow(2.0,MAX_BITS-1));
 
-  ReyaxTtyMessageSend("PowerPeakDac: Peak DAC power: (sample %d) = %lf "
+  ReyaxTtyMessageSend("Peak DAC power: (sample %d) = %lf "
     "dBFS", MaxVal, MaxValDbfs);
 
   if (MaxValDbfs > 0)
@@ -112,7 +118,7 @@ void PowerPeakAdc(void)
 
   MaxValDbfs = 10*log10(((double)MaxVal)/pow(2.0,MAX_BITS-1));
 
-  ReyaxTtyMessageSend("PowerPeakAdc: Peak ADC power: (sample %d) = %lf "
+  ReyaxTtyMessageSend("Peak ADC power: (sample %d) = %lf "
     "dBFS", MaxVal, MaxValDbfs);
 
   if (MaxValDbfs == 0.0)
@@ -210,10 +216,12 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
 
   if (TxSel)
   {
+    /*
     ReyaxTtyMessageSend(" ");
     ReyaxTtyMessageSend("  Sync Symbol:       \tPower: "
       "%8.5lf dBFS \tPeak: %8.5lf dBFS \tPAPR: %8.5lf dB ",
     SyncValDbfs, MaxSyncDbfs, MaxSyncDbfs - SyncValDbfs);
+    */
     if (SyncValDbfs > 0 || MaxSyncDbfs > 0)
     {
       ReyaxTtyMessageSend("\tERROR: Power too high");
@@ -222,16 +230,20 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
         "Turning off TX and stopping transmission\n");
     }
   }
+  /*
   ReyaxTtyMessageSend(" ");
+  */
   for (unsigned OfdmSymbolCount = 0; OfdmSymbolCount < OfdmSymbols;
     OfdmSymbolCount++)
   {
     SumValTotalDbfs = SumValTotalDbfs + SumValDbfs[OfdmSymbolCount];
-    ReyaxTtyMessageSend("  OFDM Symbol %2d: \tPower: %8.5lf dBFS \t"
-      "Peak: %8.5lf dBFS "
-      "\tPAPR: %8.5lf dB ",OfdmSymbolCount, SumValDbfs[OfdmSymbolCount],
+    /*
+    ReyaxTtyMessageSend("OFDM Symbol %2d: Power: %8.5lf dBFS "
+      "Peak: %8.5lf dBFS PAPR: %8.5lf dB ",
+      OfdmSymbolCount, SumValDbfs[OfdmSymbolCount],
       MaxValDbfs[OfdmSymbolCount], MaxValDbfs[OfdmSymbolCount] -
       SumValDbfs[OfdmSymbolCount]);
+    */
     if (SumValDbfs[OfdmSymbolCount] > 0 ||
       MaxValDbfs[OfdmSymbolCount] > 0)
     {
@@ -250,7 +262,9 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
     }
     else
     {
+      /*
       ReyaxTtyMessageSend(" ");
+      */
     }
     if (MaxValDbfs[OfdmSymbolCount] > MaxValTotal)
     {
@@ -258,7 +272,9 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
     }
   }
 
+  /*
   ReyaxTtyMessageSend(" ");
+  */
   if (TxSel)
   {
     if (MaxValTotal < MaxSyncDbfs)
@@ -273,9 +289,9 @@ ReturnStatusType Power(unsigned Nfft, unsigned CpLen, unsigned
   ReyaxTtyMessageSend("Power: OFDM Frame Peak  dBFS %8.5lf", MaxValTotal);
   ReyaxTtyMessageSend("Power: OFDM Frame PAPR  dB   %8.5lf\n", 
     MaxValTotal - SumValTotalDbfs);
-  ReyaxTtyMessageSend("Power: Current %s gain: %lf (%lf dB), "
-    "Recommend Adjustment "
-    "by %lf dB (Total: %lf dB)\n", Text, TxGain, TxGainDb,
+  ReyaxTtyMessageSend("Current %s gain: %lf (%lf dB), ",
+    Text, TxGain, TxGainDb);
+  ReyaxTtyMessageSend("Rec Adj by %lf dB (Total: %lf dB)\n", 
     -1.0*MaxValTotal, TxGainDb-MaxValTotal);
 
   return ReturnStatus;
