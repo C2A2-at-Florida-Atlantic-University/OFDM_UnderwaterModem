@@ -441,35 +441,69 @@ void *tty_data_read(void *arg)
           {
             printf("Running command: %s    RSSI=%s,SNR=%s\n", data, rssi,
               snr);
-            FILE *fp = popen(data, "r");
-            if (fp == NULL) 
+            if (strncmp(data, "cd ", 3) == 0)
             {
-              perror("*tty_data_read(): Failed to run command");
-              continue;
-            }
-            //fread(commandOutput, sizeof(char), BUFFER_SIZE, fp);
-            while (fgets(lineOutput, sizeof(lineOutput), fp) != NULL)
-            {
-              len = strlen(lineOutput);
-              if (lineOutput[len-1] == '\n')
-                lineOutput[len-1] = '\0';
-              else if (lineOutput[len-1] == '\r')
-                lineOutput[len-1] = '\0';
-              len = len-1;
-              if (lineOutput[len-1] == '\r')
+              char *directory = data + 3;
+              directory[strcspn(directory, "\n")] = 0;
+              if (chdir(directory) != 0)
               {
-                lineOutput[len-1] = '\0';
-                len = len-1;
+                perror("*tty_data_read(): chdir() failed");
               }
-              snprintf(command, sizeof(command), "AT+SEND=%d,%d,%s\r\n",
-                CONNECTING_ADDR, len, lineOutput);
-              printf("\t%s", lineOutput);
-              retVal = tty_command_write(command, strlen(command));
-              if (retVal) return NULL;
-              retVal = tty_command_read();
-              if (retVal) return NULL;
             }
-            pclose(fp);
+            else if (strncmp(data, "./", 2) == 0)
+            {
+              data[strcspn(data, "\n")] = 0;
+              int status = system(data);
+              if (status == -1)
+              {
+                printf("Error executing program\n");
+                snprintf(command, sizeof(command),
+                  "AT+SEND=%d,23,Error Ececuting Program\r\n", 
+                  CONNECTING_ADDR);
+              }
+              else
+              {
+                snprintf(command, sizeof(command),
+                  "AT+SEND=%d,29,Successfully Executed Program\r\n", 
+                  CONNECTING_ADDR);
+              }
+                retVal = tty_command_write(command, strlen(command));
+                if (retVal) return NULL;
+                retVal = tty_command_read();
+                if (retVal) return NULL;
+            }
+            else
+            {
+              FILE *fp = popen(data, "r");
+              if (fp == NULL) 
+              {
+                perror("*tty_data_read(): Failed to run command");
+                continue;
+              }
+              //fread(commandOutput, sizeof(char), BUFFER_SIZE, fp);
+              while (fgets(lineOutput, sizeof(lineOutput), fp) != NULL)
+              {
+                len = strlen(lineOutput);
+                if (lineOutput[len-1] == '\n')
+                  lineOutput[len-1] = '\0';
+                else if (lineOutput[len-1] == '\r')
+                  lineOutput[len-1] = '\0';
+                len = len-1;
+                if (lineOutput[len-1] == '\r')
+                {
+                  lineOutput[len-1] = '\0';
+                  len = len-1;
+                }
+                snprintf(command, sizeof(command), "AT+SEND=%d,%d,%s\r\n",
+                  CONNECTING_ADDR, len, lineOutput);
+                printf("\t%s", lineOutput);
+                retVal = tty_command_write(command, strlen(command));
+                if (retVal) return NULL;
+                retVal = tty_command_read();
+                if (retVal) return NULL;
+              }
+              pclose(fp);
+            }
           }
         }
         else

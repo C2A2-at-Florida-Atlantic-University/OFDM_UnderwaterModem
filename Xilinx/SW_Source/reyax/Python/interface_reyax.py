@@ -3,7 +3,7 @@ import threading
 import sys
 
 # Configure the serial port
-serial_port = '/dev/ttyUSB1'
+serial_port = '/dev/ttyUSB2'
 self_address = 1
 address = 2 # Address of conneced REYAX device
 baud_rate = 115200
@@ -25,7 +25,8 @@ def read_from_reyax():
             received_data = parts[2]
             rssi = parts[3]
             snr = parts[4]
-            print(f"{received_data}        RSSI={rssi},SNR={snr}")
+            # print(f"{received_data}        RSSI={rssi},SNR={snr}")
+            print(f"{received_data}")
           except IndexError:
             #print("Error: Received data is not in the expected format")
             print(f"{data}")
