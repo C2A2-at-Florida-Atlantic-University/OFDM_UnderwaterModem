@@ -90,7 +90,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool DeleteSym1,
         "RxDemodulateBufferData: Failed to open %s\n", FileNameOut);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("RxDemodulateBufferData: Opened file %s", 
+    ReyaxTtyMessageSend("Opened file %s", 
       FileNameOut);
     // Write header information to file
     fprintf(RxFreqFile, "%d,\n%d,\n%d,\n", Nfft, ModOrder, OfdmSymbols);
@@ -107,7 +107,7 @@ ReturnStatusType RxDemodulateBufferData(bool DebugMode, bool DeleteSym1,
         "RxDemodulateBufferData: Failed to open %s\n", FileNameOut1);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("RxDemodulateBufferData: Opened file %s", 
+    ReyaxTtyMessageSend("Opened file %s", 
       FileNameOut1);
     // Write header information to file
     fprintf(RxDemodFile, "%d\n%d\n%d\n", Nfft, ModOrder, OfdmSymbols);
@@ -309,7 +309,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
 #endif
 
   }
-  ReyaxTtyMessageSend("RxDemodulateFft: OFDM frame received and CMA "
+  ReyaxTtyMessageSend("OFDM frame received and CMA "
     "buffer filled");
 
   BufferInData = (int32_T *)FpgaInterfaceGetRxBuffer();
@@ -325,7 +325,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
         "RxDemodulateFft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("RxDemodulateFft: Opened file %s", FileName);
+    ReyaxTtyMessageSend("Opened file %s", FileName);
     fprintf(FftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName2, "files/RxFftSamples%d.txt", 1);
     TimeFile = fopen(FileName2, "w");
@@ -336,7 +336,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
         "RxDemodulateFft: Failed to open %s\n", FileName2);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("RxDemodulateFft: Opened file %s", FileName2);
+    ReyaxTtyMessageSend("Opened file %s", FileName2);
   }
 
   LoopCount = OfdmSymbols;
@@ -376,7 +376,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
 #ifdef TIME_SAMPLE_DEBUG
         if (i == 1 && j == CpLen)
         {
-          ReyaxTtyMessageSend("\nRxDemodulateFft: Time domain data:");
+          ReyaxTtyMessageSend("\nTime domain data:");
         }
         if (i == 1 && j < CpLen+12)
         {
@@ -418,7 +418,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
 #ifdef FREQ_SAMPLE_DEBUG
       if (i == 0)
       {
-        ReyaxTtyMessageSend("\nRxDemodulateFft: Frequency domain data:");
+        ReyaxTtyMessageSend("\nFrequency domain data:");
       }
       if (i < 12)
       {
@@ -477,12 +477,12 @@ ReturnStatusType RxDemodulateSaveRawSamples(unsigned Bytes, unsigned
   }
   if (DacSel)
   {
-    ReyaxTtyMessageSend("RxDemodulateSaveRawSamples: Opened file "
+    ReyaxTtyMessageSend("Opened file "
       "files/RxDacRawSamples.txt");
   }
   else
   {
-    ReyaxTtyMessageSend("RxDemodulateSaveRawSamples: Opened file "
+    ReyaxTtyMessageSend("Opened file "
       "files/RxAdcRawSamples.txt");
   }
 
@@ -514,9 +514,9 @@ ReturnStatusType RxDemodulateSaveRawSamples(unsigned Bytes, unsigned
   }
 
   if (DacSel)
-    ReyaxTtyMessageSend("RxDemodulateSaveRawSamples: Saved DAC samples");
+    ReyaxTtyMessageSend("Saved DAC samples");
   else
-    ReyaxTtyMessageSend("RxDemodulateSaveRawSamples: Saved ADC samples");
+    ReyaxTtyMessageSend("Saved ADC samples");
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -536,7 +536,7 @@ ReturnStatusType RxDemodulateCheckThreadRunning(void)
     }
     else
     {
-      ReyaxTtyMessageSend("RxDemodulateCheckThreadRunning: RX "
+      ReyaxTtyMessageSend("RX "
         "Demodulation Thread not Running");
     }
   }
@@ -555,7 +555,7 @@ void RxDemodulateCancelThread(void)
   }
   else
   {
-    ReyaxTtyMessageSend("RxDemodulateCancelThread: Pthread already "
+    ReyaxTtyMessageSend("Pthread already "
       "stopped");
   }
 }
@@ -602,7 +602,7 @@ ReturnStatusType RxDemodulateCreateThread(bool DebugMode,
       " ERROR: Failed to create thread for demodulation\n");
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("RxDemodulateCreateThread: Started Demod Thread");
+  ReyaxTtyMessageSend("Started Demod Thread");
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 }
@@ -627,7 +627,7 @@ void *RxDemodulateThread(void *arg)
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
     ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
-    ReyaxTtyMessageSend("RxDemodulateThread: FAIL: Exiting Thread");
+    ReyaxTtyMessageSend("FAIL: Exiting Thread");
     return NULL;
   }
 
@@ -645,6 +645,6 @@ void *RxDemodulateThread(void *arg)
     ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
   }
 
-  ReyaxTtyMessageSend("RxDemodulateThread: SUCCESS: Exiting Thread");
+  ReyaxTtyMessageSend("SUCCESS: Exiting Thread");
   return NULL;
 }

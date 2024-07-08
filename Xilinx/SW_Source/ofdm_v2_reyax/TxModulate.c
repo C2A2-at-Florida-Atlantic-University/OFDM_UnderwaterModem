@@ -67,7 +67,7 @@ ReturnStatusType TxAllocateQamFileData(unsigned ModOrder, unsigned Nfft,
       "TxAllocateQamFileData: Unable to open file %s\n", FileNamePath);
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("TxAllocateQamFileData: Opened file %s", 
+  ReyaxTtyMessageSend("Opened file %s", 
     FileNamePath);
 
   IfftBufferPtr = (creal_T *)
@@ -169,7 +169,7 @@ ReturnStatusType TxAllocateGetPilotData(unsigned ModOrder)
   }
 
 #ifdef DEBUG
-  ReyaxTtyMessageSend("TxAllocateGetPilotData: Opened File %s", FileName);
+  ReyaxTtyMessageSend("Opened File %s", FileName);
 #endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
@@ -189,7 +189,7 @@ ReturnStatusType TxModulateDigitalGain(int GainDB)
     //DigitalGain = (uint16_T)(((double)MAX_SAMPLE_VALUE)*Pow);
     DigitalGain = (uint16_T)(((double)MAX_FREQ_SAMPLE_VALUE)*Pow);
 #ifdef DEBUG
-    ReyaxTtyMessageSend("TxModulateDigitalGain: Set Digital gain to %d "
+    ReyaxTtyMessageSend("Set Digital gain to %d "
     "dBFS = %d", GainDB, DigitalGain);
 #endif
   }
@@ -217,7 +217,7 @@ uint16_T TxModulateGetScalarGain(void)
 void TxModulateSetIfftGain(double GainDB)
 {
   IfftGain = pow(10.0,GainDB/10.0);
-  ReyaxTtyMessageSend("TxModulateGetIfftGain: Ifft Gain = %lf dB = %lf",
+  ReyaxTtyMessageSend("Ifft Gain = %lf dB = %lf",
     GainDB, IfftGain);
 }
 
@@ -229,7 +229,7 @@ double TxModulateGetIfftGain()
 void TxModulateSetSyncGain(double GainDB)
 {
   SyncGain = pow(10.0,GainDB/10.0);
-  ReyaxTtyMessageSend("TxModulateSetSyncGain: Sync Symbol Extra Gain = "
+  ReyaxTtyMessageSend("Sync Symbol Extra Gain = "
     "%lf dB = %lf", GainDB, SyncGain);
 }
 
@@ -304,7 +304,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("TxModulateIfft: Opened file %s", FileName);
+    ReyaxTtyMessageSend("Opened file %s", FileName);
     fprintf(IfftFileInt, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName, "files/TxIfftSamples%d.txt", 1);
     IfftFile = fopen(FileName, "w");
@@ -315,7 +315,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("TxModulateIfft: Opened file %s", FileName);
+    ReyaxTtyMessageSend("Opened file %s", FileName);
     fprintf(IfftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName, "files/TxFreqData%d.txt", 1);
     TxFreqIfftInput = fopen(FileName, "w");
@@ -327,7 +327,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
-    ReyaxTtyMessageSend("TxModulateIfft: Opened file %s", FileName);
+    ReyaxTtyMessageSend("Opened file %s", FileName);
     fprintf(TxFreqIfftInput, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
 
@@ -388,7 +388,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
 #ifdef SAMPLE_DEBUG
       if (i == 0 && j == 0)
       {
-        ReyaxTtyMessageSend("\nTxModulateIfft: Time domain data:");
+        ReyaxTtyMessageSend("\nTime domain data:");
       }
       if (j < 12 && i == 1)
       {

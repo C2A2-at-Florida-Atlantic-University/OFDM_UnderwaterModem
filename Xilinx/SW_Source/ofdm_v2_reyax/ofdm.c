@@ -434,15 +434,13 @@ int main(int argc, char **argv)
 
 //////////////////////////////////////////////////////////////////////////
       case 4:
-        ReyaxTtyMessageSend("\tEnter TX Frequency Domain Digital Gain "
-          "(Default: "
+        ReyaxTtyMessageSend("\tEnter TX Freq Dig Gain (Def: "
           "%d dBFS): ", DEFAULT_FREQ_DIGITAL_GAIN_DBFS);
         ReyaxTtyDataRead(&TxGainDb, INT_READ);
-        ReyaxTtyMessageSend("\tEnter TX Time Domain Digital Gain "
-          "(Default: %lf dB): ", DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB);
+        ReyaxTtyMessageSend("\tEnter TX Time Dig Gain "
+          "(Def: %lf dB): ", DEFAULT_ADDITIONAL_TIME_DOMAIN_GAIN_DB);
         ReyaxTtyDataRead(&TxGainDbTime, DOUBLE_READ);
-        ReyaxTtyMessageSend("\tEnter Extra Synchronization Symbol Gain "
-          "(Default: "
+        ReyaxTtyMessageSend("\tEnter Extra Sync Sym Gain (Def: "
           "%lf dB): ", DEFAULT_ADDITIONAL_SYNCHRONIZATION_GAIN_DB);
         ReyaxTtyDataRead(&SyncSymbolGainDB, DOUBLE_READ);
         ReyaxTtyMessageSend("\tEnter RX Gain (Default: %d dB): ", 
@@ -528,8 +526,10 @@ int main(int argc, char **argv)
           OfdmTiming.OfdmSymbolsPerFrame);
         ReyaxTtyMessageSend("\n\tSub-Carrers Digital Gain: %d dBFS = %d",
           TxGainDb, TxModulateGetScalarGain());
-        ReyaxTtyMessageSend("\tTX IFFT Gain:             %lf dB = %lf",
-          TxGainDbTime, TxModulateGetIfftGain());
+        ReyaxTtyMessageSend("\tTX IFFT Gain:             %lf dB",
+          TxGainDbTime);
+        ReyaxTtyMessageSend("\tTX IFFT Gain:             %lf",
+          TxModulateGetIfftGain());
         ReyaxTtyMessageSend("\tSync Symbol Extra Gain    %lf dB = %lf",
           SyncSymbolGainDB, TxModulateGetSyncGain());
         ReyaxTtyMessageSend("\tRX Gain dB                %d dB",
@@ -702,7 +702,7 @@ int main(int argc, char **argv)
         HwInterfaceTxOn(~TxOff);
         HwInterfaceGpReg0(FirCicIsFir);
         ReturnStatus = DirectDmaPsToPl(NumBytes);
-        ReyaxTtyMessageSend("Wait for %lfus to finish Transmission ... ",
+        ReyaxTtyMessageSend("Wait for %lfus to finish Transmission",
           OfdmCalcParams.Symbol.Time*(OfdmTiming.OfdmSymbolsPerFrame+
           1)*2*1000);
         usleep(OfdmCalcParams.Symbol.Time*(

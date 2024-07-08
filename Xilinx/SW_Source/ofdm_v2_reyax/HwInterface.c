@@ -38,7 +38,7 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
   if (DucDdcLoopSel == 0) // Program zero, tlast is passthrough
   {
     if (!GlobalMute)
-      ReyaxTtyMessageSend("HwinterfaceSetDmaTlastGen: Clearing DMA "
+      ReyaxTtyMessageSend("Clearing DMA "
         "Tlast Gen");
     FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET, 0,
       GlobalMute);
@@ -46,11 +46,11 @@ void HwInterfaceSetDmaTlastGen(bool DucDdcLoopSel, unsigned Samples)
   else // Program sample to generate tlast pulse on
   {
 #ifdef DEBUG
-    ReyaxTtyMessageSend("HwInterfaceSetDmaTlastGen: Program tlast to "
+    ReyaxTtyMessageSend("Program tlast to "
       "be on %dth sample", Samples);
 #endif
     if (!GlobalMute)
-      ReyaxTtyMessageSend("HwinterfaceSetDmaTlastGen: Configuring DMA "
+      ReyaxTtyMessageSend("Configuring DMA "
         "Tlast Gen");
     FpgaInterfaceWrite32(GPIO_3_BASE_ADDR+DMA_TLAST_GEN_OFFSET,
       Samples-1, GlobalMute);
@@ -65,16 +65,16 @@ void HwInterfaceEnableDac(void)
   RegValue = (RegValue & ADC_CONTROL_MASK) >> ADC_CONTROL_MASK_OFFSET;
   if (RegValue != 0)
   {
-    ReyaxTtyMessageSend("HwInterfaceEnableDac: ERROR: ADC Enabled, not "
+    ReyaxTtyMessageSend("ERROR: ADC Enabled, not "
       "turning on DAC");
-    ReyaxTtyMessageSend("HwInterfaceEnableDac: Disabling DAC/PA");
+    ReyaxTtyMessageSend("Disabling DAC/PA");
     HwInterfaceDisableDac();
   }
   else
   {
     RegValue = ENABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
     if (!GlobalMute)
-      ReyaxTtyMessageSend("HwInterfaceEnableDac: Enabling DAC and PA");
+      ReyaxTtyMessageSend("Enabling DAC and PA");
     FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue, 
       DAC_CONTROL_MASK, GlobalMute);
   }
@@ -85,7 +85,7 @@ void HwInterfaceDisableDac(void)
   unsigned RegValue;
   RegValue = DISABLE_DAC_PWR_AMP << DAC_CONTROL_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceDisableDac: Disabling DAC and PA");
+    ReyaxTtyMessageSend("Disabling DAC and PA");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DAC_CONTROL_OFFSET, RegValue,
     DAC_CONTROL_MASK, GlobalMute);
 }
@@ -98,21 +98,21 @@ void HwInterfaceEnableAdc(void)
   RegValue = (RegValue & DAC_CONTROL_MASK) >> DAC_CONTROL_MASK_OFFSET;
   if (RegValue != 0)
   {
-    ReyaxTtyMessageSend("HwInterfaceEnableAdc: ERROR: DAC/PA Enabled, "
+    ReyaxTtyMessageSend("ERROR: DAC/PA Enabled, "
       "not turning on ADC");
-    ReyaxTtyMessageSend("HwInterfaceEnableAdc: Disabling ADC");
+    ReyaxTtyMessageSend("Disabling ADC");
     HwInterfaceDisableAdc();
   }
   else
   {
     RegValue = (ADC_ENABLE+ADC_CLEAR_OVERRUN+ADC_CLEAR_OTR) << 
       ADC_CONTROL_MASK_OFFSET;
-    ReyaxTtyMessageSend("HwInterfaceEnableAdc: Enabling ADC");
+    ReyaxTtyMessageSend("Enabling ADC");
     FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
       ADC_CONTROL_MASK, GlobalMute);
     RegValue = (ADC_ENABLE) << 
       ADC_CONTROL_MASK_OFFSET;
-    ReyaxTtyMessageSend("HwInterfaceEnableAdc: Clearing over run and "
+    ReyaxTtyMessageSend("Clearing over run and "
       "OTR");
     FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
       ADC_CONTROL_MASK, GlobalMute);
@@ -124,7 +124,7 @@ void HwInterfaceDisableAdc(void)
   unsigned RegValue;
   RegValue = ADC_DISABLE << ADC_CONTROL_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceDisableAdc: Disabling ADC");
+    ReyaxTtyMessageSend("Disabling ADC");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+ADC_CONTROL_OFFSET, RegValue,
     ADC_CONTROL_MASK, GlobalMute);
 }
@@ -135,16 +135,16 @@ void HwInterfaceReturnAdcStatus(void)
   FpgaInterfaceRead32(GPIO_1_BASE_ADDR+ADC_STATUS_OFFSET, &RegValue,
     GlobalMute);
   if (RegValue & ADC_STATUS_STREAM_ENABLE)
-    ReyaxTtyMessageSend("HwInterfaceAdcStatus: ADC Stream on");
+    ReyaxTtyMessageSend("ADC Stream on");
   else
-    ReyaxTtyMessageSend("HwInterfaceAdcStatus: ADC Stream off");
+    ReyaxTtyMessageSend("ADC Stream off");
   if ((RegValue & ADC_STATUS_OVER_RUN) > ADC_STATUS_OVER_RUN_OFFSET)
-    ReyaxTtyMessageSend("HwInterfaceAdcStatus: Missed samples from ADC "
+    ReyaxTtyMessageSend("Missed samples from ADC "
       "stream");
   if ((RegValue & ADC_STATUS_OTR) > ADC_STATUS_OTR_OFFSET)
-    ReyaxTtyMessageSend("HwInterfaceAdcStatus: ERROR: ADC out of range");
+    ReyaxTtyMessageSend("ERROR: ADC out of range");
   else
-    ReyaxTtyMessageSend("HwInterfaceAdcStatus: ADC within range");
+    ReyaxTtyMessageSend("ADC within range");
 }
 
 void HwInterfaceDmaLoopback(unsigned Enable)
@@ -152,7 +152,7 @@ void HwInterfaceDmaLoopback(unsigned Enable)
   unsigned RegValue = Enable;
   RegValue = RegValue << DMA_LOOPBACK_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceDmaLoopback: Setting DMA Loop %d", 
+    ReyaxTtyMessageSend("Setting DMA Loop %d", 
       Enable);
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, RegValue,
     DMA_LOOPBACK_MASK, GlobalMute);
@@ -163,7 +163,7 @@ void HwInterfaceSyncLoopback(unsigned Enable)
   unsigned RegValue = Enable;
   RegValue = RegValue << SYNC_LOOPBACK_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceSyncLoopback: Setting Sync Loop %d", 
+    ReyaxTtyMessageSend("Setting Sync Loop %d", 
     Enable);
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+SYNC_LOOPBACK_OFFSET,
     RegValue, SYNC_LOOPBACK_MASK, GlobalMute);
@@ -174,24 +174,24 @@ void HwInterfaceConfigureSignalParams(unsigned Interpolation,
 {
   unsigned RegValue = Interpolation;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwinterfaceConfigureSignalParams: Setting "
+    ReyaxTtyMessageSend("Setting "
       "Interp Factor");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+DUC_INTERP_RATIO_OFFSET,
     RegValue, DUC_INTERP_RATIO_MASK, GlobalMute);
   RegValue = Decimation;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwinterfaceConfigureSignalParams: Setting "
+    ReyaxTtyMessageSend("Setting "
       "Decim Factor");
   FpgaInterfaceWrite(GPIO_0_BASE_ADDR+DECIMATE_RADIO_OFFSET,
     RegValue, DECIMATE_RADIO_MASK, GlobalMute);
   RegValue = FcScaledDac;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwinterfaceConfigureSignalParams: Setting DAC "
+    ReyaxTtyMessageSend("Setting DAC "
       "FC");
   FpgaInterfaceWrite32(GPIO_0_BASE_ADDR+FC_SCALED_OFFSET,
     RegValue, GlobalMute);
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwinterfaceConfigureSignalParams: Setting ADC "
+    ReyaxTtyMessageSend("Setting ADC "
       "FC");
   // ADC DDS requires specific value
   RegValue = FcScaledAdc;
@@ -206,23 +206,23 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
   ReturnStatusType ReturnStatus;
   unsigned RegValue;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceConfigureSynchronizer: Config Nfft");
+    ReyaxTtyMessageSend("Config Nfft");
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+NFFT_OFFSET, Nfft-1, NFFT_MASK,
     GlobalMute);
   RegValue = (CpLen-1) << CP_LEN_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceConfigureSynchronizer: Config CP "
+    ReyaxTtyMessageSend("Config CP "
       "Length");
   FpgaInterfaceWrite(GPIO_2_BASE_ADDR+CP_LEN_OFFSET, RegValue,
     CP_LEN_MASK, GlobalMute);
   RegValue = (OfdmSymbols-1) << OFDM_SYMBOLS_MASK_OFFSET;
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceConfigureSynchronizer: Config OFDM "
+    ReyaxTtyMessageSend("Config OFDM "
       "Symbols");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+OFDM_SYMBOLS_OFFSET, RegValue,
     OFDM_SYMBOLS_MASK, GlobalMute);
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceConfigureSynchronizer: Config "
+    ReyaxTtyMessageSend("Config "
       "Threshold");
   FpgaInterfaceWrite32(GPIO_2_BASE_ADDR+SYNC_THRESHOLD_OFFSET,
     Threshold, GlobalMute);
@@ -234,7 +234,7 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
     return ReturnStatus;
   }
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceConfigureSynchronizer: Config Sync "
+    ReyaxTtyMessageSend("Config Sync "
       "Offset");
   FpgaInterfaceWrite(GPIO_1_BASE_ADDR+SYNC_OFFSET_OFFSET,
     SyncOffset<<SYNC_OFFSET_MASK_OFFSET, SYNC_OFFSET_MASK, GlobalMute);
@@ -245,7 +245,7 @@ ReturnStatusType HwInterfaceConfigureSynchronizer(unsigned Nfft,
 void HwInterfaceSynchronizerStatus(bool Enable)
 {
   if (!GlobalMute)
-    ReyaxTtyMessageSend("HwInterfaceSynchronizerStatus: Set Sync Status "
+    ReyaxTtyMessageSend("Set Sync Status "
       "%d", Enable);
   if (Enable)
   {
@@ -314,7 +314,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       "HwInterfaceLoadZcSequence: Failed to open %s\n", FileNamePath);
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("HwInterfaceLoadZcSequence: Opened file %s", 
+  ReyaxTtyMessageSend("Opened file %s", 
     FileNamePath);
 
   sprintf(FileNamePath, "files/FIR_Sync_Reload_order_%d.txt", (unsigned) 
@@ -329,7 +329,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       "HwInterfaceLoadZcSequence: Failed to open %s\n", FileNamePath);
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("HwInterfaceLoadZcSequence: Opened file %s", 
+  ReyaxTtyMessageSend("Opened file %s", 
     FileNamePath);
 
   for (unsigned i = 0; i < NfftLoop; i++)
@@ -367,7 +367,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
       &DmaInterrupt, true);
     if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
     {
-      ReyaxTtyMessageSend("HwInterfaceLoadZcSequence: Finished DMA "
+      ReyaxTtyMessageSend("Finished DMA "
         "Reload transaction %d", IqSelect);
       // Reset done bit when done
       FpgaInterfaceWrite(DMA_RELOAD_BASE_ADDR+DMA_STATUS_OFFSET,
@@ -550,7 +550,7 @@ ReturnStatusType HwInterfaceSetVga(int gain)
   if ((int) gain < -4.5)
     gain = -4.0;
 
-  ReyaxTtyMessageSend("HwInterfaceSetVga: Setting gain to %d", gain);
+  ReyaxTtyMessageSend("Setting gain to %d", gain);
   
   if (gain < 10) // Use LO setting on VGA
   {
@@ -602,13 +602,13 @@ void HwInterfaceSetVgaHiLo(unsigned value)
   }
   else
   {
-    ReyaxTtyMessageSend("HwInterfaceSetVgaHiLo: ERROR: Wrong GPIO "
+    ReyaxTtyMessageSend("ERROR: Wrong GPIO "
       "setting");
   }
 
   if (RetVal == -1)
   {
-    ReyaxTtyMessageSend("HwINterfaceSetVgaHiLo: ERROR: issue with "
+    ReyaxTtyMessageSend("ERROR: issue with "
       "write");
   }
 }
@@ -644,7 +644,7 @@ ReturnStatusType HwInterfaceGpioSetup(void)
   if (RetVal == -1)
   {
     perror("HwInterfaceGpioSetup:");
-    ReyaxTtyMessageSend("HwInterfaceGpioSetup: WARNING: Could not "
+    ReyaxTtyMessageSend("WARNING: Could not "
       "unexport GPIO20");
   }
   close(GpioFile);
@@ -666,7 +666,7 @@ ReturnStatusType HwInterfaceGpioSetup(void)
   if (RetVal == -1)
   {
     perror("HwInterfaceGpioSetup:");
-    ReyaxTtyMessageSend("HwInterfaceGpioSetup: WARNING: Could not set "
+    ReyaxTtyMessageSend("WARNING: Could not set "
       "GPIO20 through /sys/class/gpio/export");
   }
   close(GpioFile);
@@ -690,7 +690,7 @@ ReturnStatusType HwInterfaceGpioSetup(void)
   if (GpioFile == -1 || RetVal == -1)
   {
     ReturnStatus.Status = RETURN_STATUS_FAIL;
-    ReyaxTtyMessageSend(ReturnStatus.ErrString, "ERROR: Could not open "
+    sprintf(ReturnStatus.ErrString, "ERROR: Could not open "
       "\"/sys/class/gpio/gpio886/value\"...");
     return ReturnStatus;
   }

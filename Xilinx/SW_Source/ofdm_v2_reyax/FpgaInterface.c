@@ -57,7 +57,7 @@ ReturnStatusType FpgaInterfaceSetup(void)
   }
 
 #ifdef DEBUG
-  ReyaxTtyMessageSend("FpgaInterfaceSetup: Allocated page size of 0x%X", 
+  ReyaxTtyMessageSend("Allocated page size of 0x%X", 
     FPGA_REG_SPAN);
 #endif
 #endif
@@ -69,10 +69,10 @@ ReturnStatusType FpgaInterfaceSetup(void)
 unsigned *FpgaInterfaceGetTxBuffer()
 {
 #ifdef NO_DEVMEM
-  ReyaxTtyMessageSend("FpgaInterfaceGetTxBuffer: NO_DEVMEM defined");
+  ReyaxTtyMessageSend("NO_DEVMEM defined");
   return FpgaVirtualAddr;
 #else
-  ReyaxTtyMessageSend("FpgaInterfaceGetTxBuffer: Returning CMA area");
+  ReyaxTtyMessageSend("Returning CMA area");
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
@@ -80,15 +80,15 @@ unsigned *FpgaInterfaceGetTxBuffer()
 unsigned *FpgaInterfaceClearTxBuffer()
 {
 #ifdef DEBUG
-  ReyaxTtyMessageSend("FpgaInterfaceClearTxBuffer: Clear TX Buffer");
+  ReyaxTtyMessageSend("Clear TX Buffer");
 #endif
 
 #ifdef NO_DEVMEM
-  ReyaxTtyMessageSend("FpgaInterfaceClearTxBuffer: NO_DEVMEM defined");
+  ReyaxTtyMessageSend("NO_DEVMEM defined");
   memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
-  ReyaxTtyMessageSend("FpgaInterfaceClearTxBuffer: Clearing CMA area");
+  ReyaxTtyMessageSend("Clearing CMA area");
   memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
@@ -111,11 +111,11 @@ unsigned *FpgaInterfaceGetRxBuffer(void)
 unsigned *FpgaInterfaceClearRxBuffer(void)
 {
 #ifdef NO_DEVEM
-  ReyaxTtyMessageSend("FpgaInterfaceClearRxBuffer: NO_DEVMEM defined");
+  ReyaxTtyMessageSend("NO_DEVMEM defined");
   memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_SPAN), 0, RX_BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+RX_BUFFER_SPAN);
 #else
-  ReyaxTtyMessageSend("FpgaInterfaceClearRxBuffer: Clearing CMA RX area");
+  ReyaxTtyMessageSend("Clearing CMA RX area");
   memset((unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE), 0,
     RX_BUFFER_SPAN);
   return(unsigned *)(FpgaVirtualAddr+RX_BUFFER_BASE);
@@ -126,7 +126,7 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue, bool mute)
 {
   if (!mute)
   {
-    ReyaxTtyMessageSend("\tFpgaInterfaceRead32: About to read from addr "
+    ReyaxTtyMessageSend("\tAbout to read from addr "
       "0x%X", addr);
   }
 
@@ -136,7 +136,7 @@ void FpgaInterfaceRead32(unsigned addr, unsigned *pValue, bool mute)
   *pValue = *((unsigned *)(FpgaVirtualAddr+addr));
   if (!mute)
   {
-    ReyaxTtyMessageSend("\tFpgaInterfaceRead32: Read 0x%X from 0x%X", 
+    ReyaxTtyMessageSend("\tRead 0x%X from 0x%X", 
       *pValue, addr);
   }
 #endif
@@ -147,7 +147,7 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value, bool mute)
 #ifdef WRITE_DEBUG
   if (!mute)
   {
-    ReyaxTtyMessageSend("\tFpgaInterfaceWrite32: About to write 0x%X to "
+    ReyaxTtyMessageSend("\tAbout to write 0x%X to "
       "0x%X", value, addr);
   }
 #endif
@@ -159,7 +159,7 @@ void FpgaInterfaceWrite32(unsigned addr, unsigned value, bool mute)
 #ifdef DEBUG
   if (!mute)
   {
-    ReyaxTtyMessageSend("\tFpgaInterfaceWrite32: Wrote 0x%X to 0x%X", 
+    ReyaxTtyMessageSend("\tWrote 0x%X to 0x%X", 
       value, addr);
   }
 #endif

@@ -29,7 +29,7 @@ ReturnStatusType EqualizerChFileOpen(void)
       "EqualizerChFileOpen: Failed to open %s\n", FileName);
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("EqualizerChFileOpen: Opened %s to Write CH "
+  ReyaxTtyMessageSend("Opened %s to Write CH "
     "Estimate", FileName);
 
   ReturnStatus.Status = RETURN_STATUS_FAIL;
@@ -59,7 +59,7 @@ ReturnStatusType EqualizerTxPilotOpen(unsigned ModOrder)
       "EqualizerTxPilotOpen: Failed to open %s\n", FileName1);
     return ReturnStatus;
   }
-  ReyaxTtyMessageSend("EqualizerTxPilotOpen: Opened Reference Pilot "
+  ReyaxTtyMessageSend("Opened Reference Pilot "
     "file %s", FileName1);
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

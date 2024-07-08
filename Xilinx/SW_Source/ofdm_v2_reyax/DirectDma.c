@@ -43,7 +43,7 @@ void DirectDmaMm2sStatus(void)
 {
   unsigned RegVal;
   FpgaInterfaceRead32(DMA_BASE_ADDR, &RegVal, GlobalMute);
-  ReyaxTtyMessageSend("DirectDmaMm2sStatus: Status: 0x%X", RegVal);
+  ReyaxTtyMessageSend("Status: 0x%X", RegVal);
 }
 
 void DirectDmaS2mmStatus(void)
@@ -51,7 +51,7 @@ void DirectDmaS2mmStatus(void)
   unsigned RegVal;
   FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_STATUS_OFFSET, &RegVal, 
     GlobalMute);
-  ReyaxTtyMessageSend("DirectDmaS2mmStatus: Status: 0x%X", RegVal);
+  ReyaxTtyMessageSend("Status: 0x%X", RegVal);
 }
 
 unsigned DirectDmaBuffReadStatus(void)
@@ -105,12 +105,13 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     BytesRemaining = Bytes;
   }
 
-  ReyaxTtyMessageSend("DirectDmaPsToPl: Requested %d  = 0x%X byte DMA "
+  ReyaxTtyMessageSend("Requested %d  = 0x%X byte DMA "
     "transaction", Bytes, Bytes);
-  ReyaxTtyMessageSend("DirectDmaPsToPl: Breaking into %d DMA "
-    "transactions of <= %d = 0x%X Bytes", LoopCount, BUFFER_SPAN, 
-    BUFFER_SPAN);
-  ReyaxTtyMessageSend("DirectDmaPsToPl: Last DMA transaction: %d  = "
+  ReyaxTtyMessageSend("Breaking into %d DMA transactions",
+    LoopCount);
+  ReyaxTtyMessageSend(
+    "\tof <= %d = 0x%X Bytes", BUFFER_SPAN,BUFFER_SPAN);
+  ReyaxTtyMessageSend("Last DMA transaction: %d  = "
     "0x%X bytes",
     BytesRemaining, BytesRemaining);
 
@@ -152,7 +153,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
         &DmaInterrupt, true);
       if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
       {
-        ReyaxTtyMessageSend("DirectDmaPsToPl: DMA Transaction loop%d "
+        ReyaxTtyMessageSend("DMA Transaction loop%d "
           "complete", i);
         // Clear Interrupt
         FpgaInterfaceWrite(DMA_BASE_ADDR+DMA_STATUS_OFFSET,
@@ -186,7 +187,7 @@ ReturnStatusType DirectDmaCheckThreadRunning(void)
     }
     else
     {
-      ReyaxTtyMessageSend("DirectDmacheckThreadRunning: S2MM Thread "
+      ReyaxTtyMessageSend("S2MM Thread "
         "stopped");
     }
   }
@@ -222,7 +223,7 @@ ReturnStatusType DirectDmaPlToPsThread(unsigned RawSampleSave)
   }
   else
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPsThread: Started S2MM Thread");
+    ReyaxTtyMessageSend("Started S2MM Thread");
   }
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
@@ -234,12 +235,12 @@ void DirectDmaPlToPsThreadCancel(void)
   ReturnStatus = DirectDmaCheckThreadRunning();
   if (ReturnStatus.Status == RETURN_STATUS_FAIL)
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPsThreadCancel: Pthread still "
+    ReyaxTtyMessageSend("Pthread still "
       "running");
   }
   else
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPsThreadCancel: Pthread already "
+    ReyaxTtyMessageSend("Pthread already "
       "stopped");
   }
 }
@@ -271,7 +272,7 @@ void *DirectDmaPlToPs(void *arg)
   RegValue &= DMA_LOOPBACK_MASK;
   if (RegValue)
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPs: DMA loopback detected, "
+    ReyaxTtyMessageSend("DMA loopback detected, "
       "programming %d byte transaction", LoopBackBytes);
     FpgaInterfaceWrite32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET,
       LoopBackBytes, GlobalMute);
@@ -282,11 +283,11 @@ void *DirectDmaPlToPs(void *arg)
   {
     if ((int)arg)
     {
-      ReyaxTtyMessageSend("DirectDmaPlToPs: Saving %d bytes of raw "
+      ReyaxTtyMessageSend("Saving %d bytes of raw "
         "DAC/ADC samples", LoopBackBytes);
       if (LoopBackBytes > RX_BUFFER_SPAN)
       {
-        ReyaxTtyMessageSend("DirectDmaPlToPs: ERROR: Requested DMA "
+        ReyaxTtyMessageSend("ERROR: Requested DMA "
           "transaction is too large, max %d bytes", RX_BUFFER_SPAN);
         return NULL;
       }
@@ -319,38 +320,38 @@ void *DirectDmaPlToPs(void *arg)
   FpgaInterfaceRead32(DMA_BASE_ADDR+DMAS_LENGTH_OFFSET, &ActualBytes,
     GlobalMute);
 #ifdef DEBUG
-  ReyaxTtyMessageSend("DirectDmaPlToPs: Read %d bytes", ActualBytes);
+  ReyaxTtyMessageSend("Read %d bytes", ActualBytes);
 #endif
 
   if (ActualBytes != BUFFER_SPAN)
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPs: DMA ERROR: "
+    ReyaxTtyMessageSend("DMA ERROR: "
     "Number of bytes read, %d,\n\tdoes not match expected number of "
     "bytes %d, pthread closing ...", ActualBytes, BUFFER_SPAN);
   }
 
 #ifdef DEBUG
-  ReyaxTtyMessageSend("\t\tDirectDmaPlToPs: Wrote to buffer");
+  ReyaxTtyMessageSend("\t\tWrote to buffer");
 #endif
 
   DirectDmaPlToPsInit(0);
   DirectDmaS2mmIrqClear();
   DmaPlToPsComplete = 1;
 
-  ReyaxTtyMessageSend("DirectDmaPlToPs: PL to PS transaction finished");
+  ReyaxTtyMessageSend("PL to PS transaction finished");
   // Read if transfer was a mm2s => s2mm loopback
   FpgaInterfaceRead32(GPIO_1_BASE_ADDR+DMA_LOOPBACK_OFFSET, 
     &RegValue, GlobalMute);
   RegValue &= DMA_LOOPBACK_MASK;
   if (RegValue)
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPs: DMA Loopback complete. "
+    ReyaxTtyMessageSend("DMA Loopback complete. "
       "Exiting thread");
   }
 
   if ((int)arg)
   {
-    ReyaxTtyMessageSend("DirectDmaPlToPs: Raw ADC sample save complete. "
+    ReyaxTtyMessageSend("Raw ADC sample save complete. "
       "Exiting thread\n");
   }
 

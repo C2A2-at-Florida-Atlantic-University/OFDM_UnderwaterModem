@@ -51,7 +51,7 @@ void TransmitChainCalcParams(Ofdm_Parameters_Type *OfdmParams,
   DataIndex = (unsigned *)malloc(MAX_NFFT*4);
   if (ZpIndex==NULL||PilotIndex==NULL||DataIndex==NULL)
   {
-    ReyaxTtyMessageSend("TransmitChainCalcParams: Error unable to "
+    ReyaxTtyMessageSend("Error unable to "
       "mallox Index");
   }
   memset(ZpIndex, 0, MAX_NFFT*4);
@@ -271,41 +271,41 @@ void TransmitChainPrintCalcParams(Calculated_Ofdm_Parameters
   *OfdmCalcParams)
 {
   ReyaxTtyMessageSend("\n\n");
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: Scs %lf", 
+  ReyaxTtyMessageSend("Scs %lf", 
     OfdmCalcParams->Scs);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: Symbol Samples "
+  ReyaxTtyMessageSend("Symbol Samples "
     "%d", OfdmCalcParams->Symbol.Samples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: Symbol "
+  ReyaxTtyMessageSend("Symbol "
     "FpgaClkSamples %d\n", OfdmCalcParams->Symbol.FpgaClkSamples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: Symbol Time %lf", 
+  ReyaxTtyMessageSend("Symbol Time %lf", 
     OfdmCalcParams->Symbol.Time);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: SymbolGuard "
+  ReyaxTtyMessageSend("SymbolGuard "
     "Samples %d", OfdmCalcParams->SymbolGuard.Samples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: SymbolGuard "
+  ReyaxTtyMessageSend("SymbolGuard "
     "FpgaClkSamples %d", OfdmCalcParams->SymbolGuard.FpgaClkSamples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: Symbol Guard Time "
+  ReyaxTtyMessageSend("Symbol Guard Time "
     "%lf", OfdmCalcParams->SymbolGuard.Time);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: FrameGuard Samples "
+  ReyaxTtyMessageSend("FrameGuard Samples "
     "%d", OfdmCalcParams->FrameGuard.Samples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: FrameGuard "
+  ReyaxTtyMessageSend("FrameGuard "
     "FpgaClkSamples %d", OfdmCalcParams->FrameGuard.FpgaClkSamples);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: FrameGuard Time "
+  ReyaxTtyMessageSend("FrameGuard Time "
     "%lf", OfdmCalcParams->FrameGuard.Time);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: SymbolDataRate "
+  ReyaxTtyMessageSend("SymbolDataRate "
     "%lf", OfdmCalcParams->SymbolDataRate);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: FrameDataRate "
+  ReyaxTtyMessageSend("FrameDataRate "
     "%lf", OfdmCalcParams->FrameDataRate);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: NfftScaled %d", 
+  ReyaxTtyMessageSend("NfftScaled %d", 
     OfdmCalcParams->NfftScaled);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: FirstPilotCarrier "
+  ReyaxTtyMessageSend("FirstPilotCarrier "
     "%d", OfdmCalcParams->FirstPilotCarrier);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: LastPilotCarrier "
+  ReyaxTtyMessageSend("LastPilotCarrier "
     "%d", OfdmCalcParams->LastPilotCarrier);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: NumDataCarriers "
+  ReyaxTtyMessageSend("NumDataCarriers "
     "%d", OfdmCalcParams->NumDataCarriers);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: NumPilotCarriers "
+  ReyaxTtyMessageSend("NumPilotCarriers "
     "%d", OfdmCalcParams->NumPilotCarriers);
-  ReyaxTtyMessageSend("TransmitChainPrintCalcParams: NumZpCarriers %d",
+  ReyaxTtyMessageSend("NumZpCarriers %d",
     OfdmCalcParams->NumZpCarriers);
   ReyaxTtyMessageSend("\n");
 }
