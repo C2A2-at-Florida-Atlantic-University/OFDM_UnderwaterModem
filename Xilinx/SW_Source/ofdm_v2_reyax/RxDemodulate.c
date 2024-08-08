@@ -449,7 +449,7 @@ ReturnStatusType RxDemodulateFft(bool DebugMode, bool DeleteSym1,
   free(FftInData);
   free(FftOutData);
   free(FftOutStruct);
-  ReyaxTtyMessageSend("%d", ScanfRet); // Get rid of warnings
+  //ReyaxTtyMessageSend("%d", ScanfRet); // Get rid of warnings
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

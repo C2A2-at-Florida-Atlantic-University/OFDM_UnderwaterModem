@@ -105,6 +105,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
     BytesRemaining = Bytes;
   }
 
+  /*
   ReyaxTtyMessageSend("Requested %d  = 0x%X byte DMA "
     "transaction", Bytes, Bytes);
   ReyaxTtyMessageSend("Breaking into %d DMA transactions",
@@ -114,6 +115,7 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
   ReyaxTtyMessageSend("Last DMA transaction: %d  = "
     "0x%X bytes",
     BytesRemaining, BytesRemaining);
+  */
 
   FpgaInterfaceClearTxBuffer();
   // Get pointers to buffers
@@ -153,8 +155,10 @@ ReturnStatusType DirectDmaPsToPl(unsigned Bytes)
         &DmaInterrupt, true);
       if (!((DmaInterrupt & DMA_IOC_IRQ_MASK) == 0))
       {
+        /*
         ReyaxTtyMessageSend("DMA Transaction loop%d "
           "complete", i);
+        */
         // Clear Interrupt
         FpgaInterfaceWrite(DMA_BASE_ADDR+DMA_STATUS_OFFSET,
           DMA_IOC_IRQ_MASK, DMA_IOC_IRQ_MASK, GlobalMute);

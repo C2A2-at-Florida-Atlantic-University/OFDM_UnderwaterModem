@@ -2,8 +2,8 @@ clear;clc;close all;fclose('all');format long;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Preset = 416;
-Test = 1;
+Preset = 0;
+Test = 11;
 
 %%%%% Generic Simulation Settings %%%%%
 % Use Preset/Test for config and modem analysis else MATLAB only analysis

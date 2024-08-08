@@ -377,7 +377,7 @@ ReturnStatusType HwInterfaceLoadZcSequence(unsigned Nfft, unsigned
   }
   
   // Get rid of warnings
-  ReyaxTtyMessageSend("%d", ScanfRet);
+  //ReyaxTtyMessageSend("%d", ScanfRet);
   // Put DMA back in reset
   FpgaInterfaceWrite32(DMA_RELOAD_BASE_ADDR, DMA_RESET, GlobalMute);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;

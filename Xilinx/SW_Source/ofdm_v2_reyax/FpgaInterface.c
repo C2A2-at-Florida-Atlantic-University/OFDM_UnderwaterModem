@@ -36,7 +36,7 @@ ReturnStatusType FpgaInterfaceSetup(void)
   memset(FpgaVirtualAddr, 0, 2*BUFFER_SPAN);
   // Get rid of warnings:
   FpgaRegDevice = 0;
-  ReyaxTtyMessageSend("%d",FpgaRegDevice);
+  //ReyaxTtyMessageSend("%d",FpgaRegDevice);
 #else
   if ((FpgaRegDevice = open("/dev/mem", (O_RDWR | O_SYNC))) == -1)
   {
@@ -72,23 +72,31 @@ unsigned *FpgaInterfaceGetTxBuffer()
   ReyaxTtyMessageSend("NO_DEVMEM defined");
   return FpgaVirtualAddr;
 #else
+  /*
   ReyaxTtyMessageSend("Returning CMA area");
+  */
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif
 }
 
 unsigned *FpgaInterfaceClearTxBuffer()
 {
+  /*
 #ifdef DEBUG
   ReyaxTtyMessageSend("Clear TX Buffer");
 #endif
+  */
 
 #ifdef NO_DEVMEM
+  /*
   ReyaxTtyMessageSend("NO_DEVMEM defined");
+  */
   memset(FpgaVirtualAddr, 0, BUFFER_SPAN);
   return FpgaVirtualAddr;
 #else
+  /*
   ReyaxTtyMessageSend("Clearing CMA area");
+  */
   memset((unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE), 0, BUFFER_SPAN);
   return (unsigned *)(FpgaVirtualAddr+TX_BUFFER_BASE);
 #endif

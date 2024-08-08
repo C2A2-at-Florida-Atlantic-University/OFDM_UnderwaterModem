@@ -3,7 +3,7 @@ import threading
 import sys
 
 # Configure the serial port
-serial_port = '/dev/ttyUSB2'
+serial_port = '/dev/ttyUSB1'
 self_address = 1
 address = 2 # Address of conneced REYAX device
 baud_rate = 115200

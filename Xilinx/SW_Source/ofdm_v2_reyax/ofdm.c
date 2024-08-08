@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <termios.h>
+#include <fcntl.h>
+#include <pthread.h>
 #include "ReturnStatus.h"
 #include "FpgaInterface.h"
 #include "TransmitChain.h"
@@ -27,6 +30,11 @@ Calculated_Ofdm_Parameters OfdmCalcParams;
 Dac_Parameters_Type DacParams;
 static FILE *OfdmInfoFile;
 static FILE *PresetFile = NULL;
+int loopCount = 0;
+int loopBreakout = 0;
+pthread_t loopBreakoutThread;
+
+void* monitor_input(void *arg);
 
 int main(int argc, char **argv)
 {
@@ -595,139 +603,133 @@ int main(int argc, char **argv)
         DacParams = DacChainGetDacParams();
         ScalarGain = TxModulateGetScalarGain();
 
-        ReturnStatus = TxAllocateQamFileData(OfdmParams.ModOrder, 
-          OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+        loopBreakout = 0;
+        loopCount = 0;
+        ReyaxTtyMessageSend("Press Enter to interrupt "
+          "the transmit loop...\n");
+        if (pthread_create(&loopBreakoutThread, NULL, 
+          monitor_input, NULL))
         {
-          ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+          ReyaxTtyMessageSend("pthread_create for loopBreakout "
+            "failed\n");
           break;
         }
+        //usleep(2000000);
 
-        ReturnStatus = TxModulateIfft(DebugMode, OfdmParams.Nfft,
-          OfdmParams.ModOrder, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame, 13);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
-          break;
-        }
+        do {
+          ReturnStatus = TxAllocateQamFileData(OfdmParams.ModOrder, 
+            OfdmParams.Nfft, OfdmTiming.OfdmSymbolsPerFrame);
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            //ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+            break;
+          }
 
-        ReturnStatus = Power(OfdmParams.Nfft, OfdmParams.CpLen,
-          OfdmTiming.OfdmSymbolsPerFrame, TxModulateGetIfftGain(), 1,
-          NULL);
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
-          TxModulateFreeTxBuffer();
-          break;
-        }
+          ReturnStatus = TxModulateIfft(DebugMode, OfdmParams.Nfft,
+            OfdmParams.ModOrder, OfdmParams.CpLen,
+            OfdmTiming.OfdmSymbolsPerFrame, 13);
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            //ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+            break;
+          }
+          /*
+
+          ReturnStatus = Power(OfdmParams.Nfft, OfdmParams.CpLen,
+            OfdmTiming.OfdmSymbolsPerFrame, TxModulateGetIfftGain(), 1,
+            NULL);
+          */
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            //ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+            TxModulateFreeTxBuffer();
+            break;
+          }
         
-        NumBytes = ((OfdmParams.Nfft+OfdmParams.CpLen)*
-          (OfdmTiming.OfdmSymbolsPerFrame)+NFFT_ZC+OfdmParams.CpLen)*4;
-        if (DmaLoopSel)
-        {
-          ReyaxTtyMessageSend("Setting Pad samples to 0 for DMA "
-            "loopback");
-          PadSamples = 0;
-        }
-        else
-        {
-          ReyaxTtyMessageSend("Allocating Pad samples for FIR filter");
-          PadSamples = NUM_DUC_DDC_COEF/2 + NUM_PAD_SAMPLES;
-        }
-        NumBytes = NumBytes + (PadSamples * 4);
-/*
-        if (TxOff)
-        {
-          DirectDmaSetTxBufferLoop(1);
-          ReyaxTtyMessageSend("Skipping TX transmission and exiting. "
-            "Buffer available for demodulation\n");
-          break;
-        }
-*/
-#ifndef NO_DEVMEM
-        HwInterfaceSetTrigger();
-        ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
-          CenterFreq, true);
-        ReturnStatus = HwInterfaceConfigureSynchronizer(
-          OfdmParams.Nfft, OfdmParams.CpLen, 
-          OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
-          SyncOffset);
-        HwInterfaceSynchronizerStatus(true);
-        HwInterfaceEnableDac();
-        if (FirCicIsFir == 0)
-        {
-          //HwInterfaceSetMixerGain(2);  // Validated For CIC
-          //PowerExtraTxGain(2.9,NumBytes/4); // Validated 
-          HwInterfaceSetMixerGain(1);// For CIC
-          //PowerExtraTxGain(2.8,NumBytes/4); // 6dB loss in Mixer
-          PowerExtraTxGain(0,NumBytes/4); // 6dB loss in Mixer
-        }
-        else
-        {
-          //printf("Enter FIR gain (default 2): ");
-          //ScanfRet = scanf("%lf", &GainSel);
-          //HwInterfaceSetFirGain((unsigned)GainSel);
-          //printf("Enter TX gain (default 0): ");
-          //ScanfRet = scanf("%lf", &GainSel);
-          //PowerExtraTxGain(GainSel,NumBytes/4); // 6dB loss in DUC FIR
-          //printf("Enter mixer gain (default 2): ");
-          //ScanfRet = scanf("%lf", &GainSel);
-          //HwInterfaceSetMixerGain((unsigned)GainSel);// For FIR
-          if (OfdmParams.BandWidth == 250.0)
+          NumBytes = ((OfdmParams.Nfft+OfdmParams.CpLen)*
+            (OfdmTiming.OfdmSymbolsPerFrame)+NFFT_ZC+OfdmParams.CpLen)*4;
+          if (DmaLoopSel)
           {
-            HwInterfaceSetMixerGain(2);// For FIR
-            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
-            HwInterfaceSetFirGain(2);
-          }
-          else if (OfdmParams.BandWidth == 100.0)
-          {
-            HwInterfaceSetMixerGain(2);// For FIR
-            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
-            HwInterfaceSetFirGain(1);
-          }
-          else if (OfdmParams.BandWidth == 50.0)
-          {
-            HwInterfaceSetMixerGain(2);
-            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
-            HwInterfaceSetFirGain(1);
+            //ReyaxTtyMessageSend("Setting Pad samples to 0 for DMA "
+            //  "loopback");
+            PadSamples = 0;
           }
           else
           {
-            HwInterfaceSetMixerGain(2);// For FIR
-            PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
-            HwInterfaceSetFirGain(2);
+            //ReyaxTtyMessageSend("Allocating Pad samples for FIR filter");
+            PadSamples = NUM_DUC_DDC_COEF/2 + NUM_PAD_SAMPLES;
           }
-        }
-        HwInterfaceTxOn(~TxOff);
-        HwInterfaceGpReg0(FirCicIsFir);
-        ReturnStatus = DirectDmaPsToPl(NumBytes);
-        ReyaxTtyMessageSend("Wait for %lfus to finish Transmission",
-          OfdmCalcParams.Symbol.Time*(OfdmTiming.OfdmSymbolsPerFrame+
-          1)*2*1000);
-        usleep(OfdmCalcParams.Symbol.Time*(
-          OfdmTiming.OfdmSymbolsPerFrame+1)*2*1000);
-        if (TxOff)
-        {
-          ReyaxTtyMessageSend("\n\tTX transmission turned off -- no "
-            "output");
-        }
-        //HwInterfaceDisableDac();
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
-        }
-        ReturnStatus = PowerPeakDuc();
-        if (ReturnStatus.Status == RETURN_STATUS_FAIL)
-        {
-          ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
-        }
-        ReyaxTtyMessageSend("Finished");
-       break;
-#else
-        ReyaxTtyMessageSend("Skipped DMA transfer of : %d Bytes", 
-          NumBytes);
-#endif
+          NumBytes = NumBytes + (PadSamples * 4);
+
+          HwInterfaceSetTrigger();
+          ReturnStatus = DacChainSetDacParams(OfdmParams.BandWidth,
+            CenterFreq, true); // Prints a 0
+          ReturnStatus = HwInterfaceConfigureSynchronizer(
+            OfdmParams.Nfft, OfdmParams.CpLen, 
+            OfdmTiming.OfdmSymbolsPerFrame, SyncThreshold,
+            SyncOffset);
+          //HwInterfaceSynchronizerStatus(true);
+          HwInterfaceEnableDac();
+          if (FirCicIsFir == 0)
+          {
+            HwInterfaceSetMixerGain(1);// For CIC
+            PowerExtraTxGain(0,NumBytes/4); // 6dB loss in Mixer
+          }
+          else
+          {
+            if (OfdmParams.BandWidth == 250.0)
+            {
+              HwInterfaceSetMixerGain(2);// For FIR
+              PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+              HwInterfaceSetFirGain(2);
+            }
+            else if (OfdmParams.BandWidth == 100.0)
+            {
+              HwInterfaceSetMixerGain(2);// For FIR
+              PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+              HwInterfaceSetFirGain(1);
+            }
+            else if (OfdmParams.BandWidth == 50.0)
+            {
+              HwInterfaceSetMixerGain(2);
+              PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+              HwInterfaceSetFirGain(1);
+            }
+            else
+            {
+              HwInterfaceSetMixerGain(2);// For FIR
+              PowerExtraTxGain(0.0,NumBytes/4); // 6dB loss in DUC FIR
+              HwInterfaceSetFirGain(2);
+            }
+          }
+          HwInterfaceTxOn(~TxOff);
+          HwInterfaceGpReg0(FirCicIsFir);
+          ReturnStatus = DirectDmaPsToPl(NumBytes);
+          usleep(OfdmCalcParams.Symbol.Time*(
+            OfdmTiming.OfdmSymbolsPerFrame+1)*2*1000);
+          if (TxOff)
+          {
+            //ReyaxTtyMessageSend("\n\tTX transmission turned off -- no "
+              //"output");
+          }
+          //HwInterfaceDisableDac();
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            //ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+          }
+          ReturnStatus = PowerPeakDuc();
+          if (ReturnStatus.Status == RETURN_STATUS_FAIL)
+          {
+            //ReyaxTtyMessageSend("%s", ReturnStatus.ErrString);
+          }
+          loopCount++;
+
+        } while (loopBreakout == 0);
+
+        //pthread_join(loopBreakoutThread, NULL);
+        ReyaxTtyMessageSend("Breakout %d", loopBreakout);
+        ReyaxTtyMessageSend("Total TX transmissions: %d", loopCount);
+
         break;
 
 //////////////////////////////////////////////////////////////////////////
@@ -1015,4 +1017,12 @@ int main(int argc, char **argv)
   HwInterfaceSynchronizerStatus(false);
 
   return 0;
+}
+
+void* monitor_input(void *arg)
+{
+  unsigned buffer;
+  ReyaxTtyDataRead(&buffer, UNSIGNED_READ);
+  loopBreakout = 1; // Set the flag
+  return NULL;
 }

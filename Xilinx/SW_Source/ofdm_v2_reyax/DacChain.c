@@ -26,8 +26,10 @@ ReturnStatusType DacChainSetDacParams(double BandWidth, unsigned Fc,
   double BitWidth = 4294967295.0;
 #endif
 
+  /*
   ReyaxTtyMessageSend("Valid Freq Range: %d "
     "kHz - %d kHz", CENTER_FREQUENCY_KHZ_MIN, CENTER_FREQUENCY_KHZ_MAX);
+  */
 
   if ((Fc - BandWidth/2.0) < (double)CENTER_FREQUENCY_KHZ_MIN)
   {
@@ -72,7 +74,7 @@ ReturnStatusType DacChainSetDacParams(double BandWidth, unsigned Fc,
 
   // Get rid of warnings
   if (Configure)
-    ReyaxTtyMessageSend("0");
+    NULL;
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;

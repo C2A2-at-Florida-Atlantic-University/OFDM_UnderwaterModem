@@ -29,7 +29,7 @@ static FILE *PilotDataFile; // Pilot code
 
 void TxModulatePrintCrealType(creal_T Data)
 {
-  ReyaxTtyMessageSend("\t\t%lf + j%lf", Data.re, Data.im);
+  //ReyaxTtyMessageSend("\t\t%lf + j%lf", Data.re, Data.im);
 }
 
 ReturnStatusType TxAllocateQamFileData(unsigned ModOrder, unsigned Nfft,
@@ -67,8 +67,10 @@ ReturnStatusType TxAllocateQamFileData(unsigned ModOrder, unsigned Nfft,
       "TxAllocateQamFileData: Unable to open file %s\n", FileNamePath);
     return ReturnStatus;
   }
+  /*
   ReyaxTtyMessageSend("Opened file %s", 
     FileNamePath);
+  */
 
   IfftBufferPtr = (creal_T *)
     malloc((MAX_NFFT+MAX_CP_LEN)*MAX_OFDM_SYMBOLS*16);
@@ -169,7 +171,9 @@ ReturnStatusType TxAllocateGetPilotData(unsigned ModOrder)
   }
 
 #ifdef DEBUG
+  /*
   ReyaxTtyMessageSend("Opened File %s", FileName);
+  */
 #endif
 
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
@@ -189,8 +193,8 @@ ReturnStatusType TxModulateDigitalGain(int GainDB)
     //DigitalGain = (uint16_T)(((double)MAX_SAMPLE_VALUE)*Pow);
     DigitalGain = (uint16_T)(((double)MAX_FREQ_SAMPLE_VALUE)*Pow);
 #ifdef DEBUG
-    ReyaxTtyMessageSend("Set Digital gain to %d "
-    "dBFS = %d", GainDB, DigitalGain);
+    //ReyaxTtyMessageSend("Set Digital gain to %d "
+    //"dBFS = %d", GainDB, DigitalGain);
 #endif
   }
   else
@@ -217,8 +221,8 @@ uint16_T TxModulateGetScalarGain(void)
 void TxModulateSetIfftGain(double GainDB)
 {
   IfftGain = pow(10.0,GainDB/10.0);
-  ReyaxTtyMessageSend("Ifft Gain = %lf dB = %lf",
-    GainDB, IfftGain);
+  //ReyaxTtyMessageSend("Ifft Gain = %lf dB = %lf",
+    //GainDB, IfftGain);
 }
 
 double TxModulateGetIfftGain()
@@ -229,8 +233,8 @@ double TxModulateGetIfftGain()
 void TxModulateSetSyncGain(double GainDB)
 {
   SyncGain = pow(10.0,GainDB/10.0);
-  ReyaxTtyMessageSend("Sync Symbol Extra Gain = "
-    "%lf dB = %lf", GainDB, SyncGain);
+  //ReyaxTtyMessageSend("Sync Symbol Extra Gain = "
+    //"%lf dB = %lf", GainDB, SyncGain);
 }
 
 double TxModulateGetSyncGain()
@@ -304,7 +308,9 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
+    /*
     ReyaxTtyMessageSend("Opened file %s", FileName);
+    */
     fprintf(IfftFileInt, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName, "files/TxIfftSamples%d.txt", 1);
     IfftFile = fopen(FileName, "w");
@@ -315,7 +321,9 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
+    /*
     ReyaxTtyMessageSend("Opened file %s", FileName);
+    */
     fprintf(IfftFile, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
     sprintf(FileName, "files/TxFreqData%d.txt", 1);
     TxFreqIfftInput = fopen(FileName, "w");
@@ -327,7 +335,9 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
         "TxModulateIfft: Failed to open %s\n", FileName);
       return ReturnStatus;
     }
+    /*
     ReyaxTtyMessageSend("Opened file %s", FileName);
+    */
     fprintf(TxFreqIfftInput, "%d,\n%d,\n%d,\n", Nfft, OfdmSymbols, CpLen);
   }
 
@@ -388,13 +398,13 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
 #ifdef SAMPLE_DEBUG
       if (i == 0 && j == 0)
       {
-        ReyaxTtyMessageSend("\nTime domain data:");
+        //ReyaxTtyMessageSend("\nTime domain data:");
       }
       if (j < 12 && i == 1)
       {
-        ReyaxTtyMessageSend("\tSymbol %d: Nfft %d: \n\t%lf+j%lf",
-          i,j,IfftOutData[j].re,
-          IfftOutData[j].im);
+        //ReyaxTtyMessageSend("\tSymbol %d: Nfft %d: \n\t%lf+j%lf",
+        //  i,j,IfftOutData[j].re,
+        //  IfftOutData[j].im);
       }
 #endif
     }
@@ -503,7 +513,7 @@ ReturnStatusType TxModulateIfft(bool DebugMode, unsigned Nfft,
   TxModulateClose();
 
   // Get rid of warnings
-  ReyaxTtyMessageSend("%d, %d", ScanfRet, ModOrder);
+  //ReyaxTtyMessageSend("%d, %d", ScanfRet, ModOrder);
   ReturnStatus.Status = RETURN_STATUS_SUCCESS;
   return ReturnStatus;
 } // ReturnStatusType TxModulateIfft
