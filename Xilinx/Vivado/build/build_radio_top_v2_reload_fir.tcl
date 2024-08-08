@@ -41,6 +41,7 @@ if (1) {
   wait_on_run synth_1
   launch_runs impl_1 -to_step write_bitstream
   wait_on_run impl_1
+  cd $FAU_OFDM_REPO_PATH/Xilinx/Vivado/build/radio_top_v2_reload_fir
   write_hw_platform -fixed -include_bit -force -file Radio_Top_v2_wrapper.xsa
 }
 
