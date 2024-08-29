@@ -2,8 +2,8 @@ clear;clc;close all;fclose('all');format long;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Preset = 0;
-Test = 11;
+Preset = 12;
+Test = 10;
 
 %%%%% Generic Simulation Settings %%%%%
 % Use Preset/Test for config and modem analysis else MATLAB only analysis
@@ -496,6 +496,10 @@ ofdm_rx_signal_par=reshape(ofdm_rx_sync_signal, ...
 if MODEM_ANALYSIS
     ofdm_rx_doppler_par = reshape(fft_sw1, [nfft+cp_len+gp_samples ...
         ofdm_symbols]);
+    % Plot
+    figure(),plot(F/1000,10*log10(abs(fftshift(fft(fft_sw1, ...
+        nfft_p))))),xlabel('kHz'),ylabel('dB')
+    title('DDC Output Spectrum')
 else
     ofdm_rx_doppler_par=reshape(ofdm_rx_sync_doppler, ...
         [nfft+cp_len+gp_samples ofdm_symbols]);
@@ -947,9 +951,10 @@ evm = comm.EVM(AveragingDimensions=2);
 evm_carriers = evm(qam_mod_data,Z_EQ_ZF);
 carriers_plot(data_index(:,1)) = evm_carriers;
 
-figure(),subplot(2,1,1),bar(y1,carriers_plot),ax=gca;ax.YLim=y_lim;
+figure(),subplot(2,1,1),bar(y1,carriers_plot)%,ax=gca;%ax.YLim=y_lim;
 xlabel('Sub-Carriers'),ylabel('%')
 title({'UW-A Channel','Averaged Across Sub-Carriers'}),subplot(2,1,2)
-bar(y_ofdm,evm_ofdm),ax=gca;ax.YLim=y_lim;xlabel('OFDM_Symbols')
+bar(y_ofdm,evm_ofdm)%,ax=gca;ax.YLim=y_lim;
+xlabel('OFDM_Symbols')
 ylabel('%'),title({'UW-A Channel','Averaged Across OFDM Symbols'})
 sgtitle('EVM')
