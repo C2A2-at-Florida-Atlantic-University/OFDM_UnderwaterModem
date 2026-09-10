@@ -1,0 +1,22 @@
+Version 10
+Common:
+sudo fpgautil -b /home/petalinux/firmware/Radio_Top_v2_wrapper.bit.bin (S10 board)
+sudo fpgautil -b /home/petalinux/firmware/SDUAM_wrapper_10.bit.bin (M10 board)
+sudo fpgautil -b /home/petalinux/firmware/SDUAM_wrapper_20.bit.bin (M20 board)
+
+TX
+sudo fpgautil -b S10_dac.bit.bin (S10 board)
+sudo fpgautil -b M10_dac.bit.bin (M10 board)
+sudo fpgautil -b M20_dac.bit.bin (M20 board)
+sudo python -u lfm_tx_iq_sg_cyclic_frame_ids.py --tx-frames 6 --packet-frames 18 --quiet-tx (BPSK)
+sudo python -u lfm_tx_iq_sg_cyclic_qpsk_frame_ids.py --tx-frames 6 --packet-frames 18 --quiet-tx (QPSK)
+
+RX
+sudo fpgautil -b S10_adc.bit.bin (S10 board)
+sudo fpgautil -b M10_adc.bit.bin (M10 board)
+sudo fpgautil -b M20_adc.bit.bin (M20 board)
+sudo python lfm_rx_iq_sg_capture_frame_ids.py --tx-frames 6 (BPSK)
+sudo python lfm_rx_iq_sg_capture_qpsk_frame_ids.py --tx-frames 6 (QPSK)
+
+for post processing:
+sudo python lfm_rx_iq_sg_capture_frame_ids.py --analyze-only lfm_iq_rx_capture_u32.bin --tx-frames 6
